@@ -1,0 +1,66 @@
+import { Pressable, StyleSheet, Text } from "react-native";
+
+import { authTheme } from "../auth-theme";
+
+type AuthButtonProps = {
+  label: string;
+  onPress?: () => void;
+  variant?: "primary" | "secondary";
+};
+
+export function AuthButton({
+  label,
+  onPress,
+  variant = "primary",
+}: AuthButtonProps) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.button,
+        variant === "secondary" ? styles.secondaryButton : styles.primaryButton,
+        pressed && styles.pressed,
+      ]}
+    >
+      <Text
+        style={[
+          styles.label,
+          variant === "secondary" ? styles.secondaryLabel : styles.primaryLabel,
+        ]}
+      >
+        {label}
+      </Text>
+    </Pressable>
+  );
+}
+
+const styles = StyleSheet.create({
+  button: {
+    minHeight: 56,
+    borderRadius: authTheme.radius.pill,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: authTheme.spacing.lg,
+  },
+  primaryButton: {
+    backgroundColor: authTheme.colors.accent,
+  },
+  secondaryButton: {
+    backgroundColor: authTheme.colors.cardBackground,
+    borderWidth: 1,
+    borderColor: authTheme.colors.mutedAccent,
+  },
+  pressed: {
+    opacity: 0.86,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "800",
+  },
+  primaryLabel: {
+    color: authTheme.colors.accentText,
+  },
+  secondaryLabel: {
+    color: authTheme.colors.mutedAccent,
+  },
+});
