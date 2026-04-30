@@ -21,4 +21,4 @@ RUN npx expo export --platform web
 EXPOSE 8080
 
 # Serve the exported web build
-CMD ["npx", "expo", "serve", "/app", "--port", "8080"]
+CMD ["npx", "expo", "serve", "/app/dist", "--port", "8080"]
