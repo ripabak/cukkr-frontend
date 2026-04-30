@@ -43,30 +43,6 @@ export default function Index() {
           </Link>
         </View>
 
-        {/* Onboarding Pages */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Onboarding Pages</Text>
-          <Link href="/splash" asChild>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Onboarding - Splash</Text>
-            </TouchableOpacity>
-          </Link>
-          <Link href="/feature-1" asChild>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Onboarding - Feature 1</Text>
-            </TouchableOpacity>
-          </Link>
-          <Link href="/feature-2" asChild>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Onboarding - Feature 2</Text>
-            </TouchableOpacity>
-          </Link>
-          <Link href="/feature-3" asChild>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Onboarding - Feature 3</Text>
-            </TouchableOpacity>
-          </Link>
-        </View>
       </View>
     </ScrollView>
   );
