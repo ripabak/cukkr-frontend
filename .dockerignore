@@ -1,0 +1,21 @@
+# Dependency folders
+node_modules
+
+# Build outputs
+dist
+.expo
+
+# VCS and editor
+.git
+.gitignore
+.vscode
+
+# Docker artifacts
+Dockerfile
+
+# Documentation and design assets not needed for build context
+docs
+ui-ux-pages-pngs
+
+# OS artifacts
+.DS_Store
