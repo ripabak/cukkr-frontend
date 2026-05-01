@@ -33,6 +33,71 @@ export default function Index() {
           </Link>
         </View>
 
+        {/* Home / Dashboard */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Home</Text>
+          <Link href="/home-dashboard" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Home Dashboard</Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
+
+        {/* Workspace Pages */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Workspace Pages</Text>
+          <Link href="/switch-barbershop" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Switch Barbershop</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/create-barbershop-name-logo" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Create Barbershop — Name & Logo</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/create-barbershop-invite-barber-empty" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Invite Barber (Empty)</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/create-barbershop-invite-barber-filled" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Invite Barber (Filled)</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/create-barbershop-first-service" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Create First Service</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/create-barbershop-success" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Create Barbershop — Success</Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
+
+        {/* Barbershop Pages */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Barbershop Pages</Text>
+          <Link href="/barbershop-settings" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Barbershop Settings</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/edit-barbershop-info" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Edit Barbershop Info</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/edit-booking-url" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Edit Booking URL</Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
+
         {/* Auth Pages */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Auth Pages</Text>
