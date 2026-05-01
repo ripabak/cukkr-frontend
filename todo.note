@@ -1,0 +1,8 @@
+- Perlu adanya ENUM global untuk in-progress dan waiting
+- middleware
+- bottom bar belum berfungsi
+- layout belum terpusat
+---- home Dashboard butuh layout yang ada bottombar
+- header belum terpusat - buat group
+- implementasi hooks dan store belum ada
+- [penting] ganti style pakai nativewind
