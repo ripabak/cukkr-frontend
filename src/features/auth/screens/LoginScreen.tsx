@@ -18,10 +18,12 @@ export function LoginScreen() {
   const handleLogin = async () => {
     if (!identifier || !password) return;
     setLoading(true);
-    const { error } = await authClient.signIn.email({
+    const { data, error } = await authClient.signIn.email({
       email: identifier,
       password: password,
     });
+    console.log(data)
+    console.log(error)
     setLoading(false);
 
     if (error) {
