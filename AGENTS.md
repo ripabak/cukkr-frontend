@@ -44,3 +44,7 @@ src/                              # Business logic and reusable code
 - **(feature-scope)**: Used in `app` to group a set of related pages under one router scope without adding a path segment. 
 - **src/features/**: Each feature has an isolated module structure with its own components, screens, services, and utils.
 - **src/components/**, **src/services/**, and **src/utils/**: Shared code that is reusable across the whole application.
+
+
+### Error explained
+- if related to existing href link like `<Link href="/path" asChild>` like `Argument of type '"/path"' is not assignable` when running `npx tsc --noEmit`, maybe because need to generate the expo type first by running `npx expo start` and ctrl-c to stop server.
