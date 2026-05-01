@@ -168,6 +168,36 @@ export default function Index() {
           </Link>
         </View>
 
+        {/* Customer Management Pages */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Customer Management</Text>
+          <Link href="/customer-management" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Customer Management</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/send-messages-to-customers" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Send Messages To Customers</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/customer-detail-general" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Customer Detail — General</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/customer-detail-books" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Customer Detail — Books</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/customer-detail-messages" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Customer Detail — Messages</Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
+
         {/* Auth Pages */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Auth Pages</Text>
