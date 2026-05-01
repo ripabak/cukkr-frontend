@@ -1,7 +1,8 @@
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 
+import { authClient } from "@/src/lib/auth-client";
 import { authTheme } from "../auth-theme";
 import { AuthButton } from "../components/AuthButton";
 import { AuthFooterPrompt } from "../components/AuthFooterPrompt";
@@ -9,8 +10,27 @@ import { AuthScreenShell } from "../components/AuthScreenShell";
 import { AuthTextField } from "../components/AuthTextField";
 
 export function LoginScreen() {
+  const router = useRouter();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    if (!identifier || !password) return;
+    setLoading(true);
+    const { error } = await authClient.signIn.email({
+      email: identifier,
+      password: password,
+    });
+    setLoading(false);
+
+    if (error) {
+      Alert.alert("Error", error.message || "Failed to login");
+      return;
+    }
+
+    router.replace("/");
+  };
 
   return (
     <AuthScreenShell
@@ -44,7 +64,11 @@ export function LoginScreen() {
         </Link>
       </View>
 
-      <AuthButton label="Login" />
+      <AuthButton
+        label={loading ? "Logging in..." : "Login"}
+        onPress={handleLogin}
+        disabled={loading}
+      />
     </AuthScreenShell>
   );
 }

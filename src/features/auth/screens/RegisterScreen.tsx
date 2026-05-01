@@ -1,6 +1,8 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
+import { Alert } from "react-native";
 
+import { authClient } from "@/src/lib/auth-client";
 import { AuthButton } from "../components/AuthButton";
 import { AuthFooterPrompt } from "../components/AuthFooterPrompt";
 import { AuthScreenShell } from "../components/AuthScreenShell";
@@ -12,6 +14,44 @@ export function RegisterScreen() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleRegister = async () => {
+    if (!name || !identifier || !password || !confirmPassword) return;
+    if (password !== confirmPassword) {
+      Alert.alert("Error", "Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+    const { data, error } = await authClient.signUp.email({
+      name,
+      email: identifier,
+      password,
+    });
+
+    if (error) {
+      setLoading(false);
+      Alert.alert("Error", error.message || "Failed to register");
+      return;
+    }
+
+    const { error: sendError } = await authClient.emailOtp.sendVerificationOtp({
+      email: identifier,
+      type: "email-verification",
+    });
+    setLoading(false);
+
+    if (sendError) {
+      Alert.alert("Error", sendError.message || "Failed to send OTP");
+      return;
+    }
+
+    router.push({
+      pathname: "/verify-account",
+      params: { email: identifier },
+    });
+  };
 
   return (
     <AuthScreenShell
@@ -60,7 +100,11 @@ export function RegisterScreen() {
         value={confirmPassword}
       />
 
-      <AuthButton label="Create Account" onPress={() => router.push("/verify-account")} />
+      <AuthButton
+        label={loading ? "Creating Account..." : "Create Account"}
+        onPress={handleRegister}
+        disabled={loading}
+      />
     </AuthScreenShell>
   );
 }
