@@ -51,9 +51,14 @@ Setelah item selesai:
 - Lanjutkan ke item berikutnya dalam fase yang sama.
 - Setelah semua item dalam fase selesai, laporkan ringkasan ke user dan **berhenti** — jangan otomatis mulai fase berikutnya tanpa konfirmasi.
 
+### Langkah 6 — Git commit
+- Sebelum melakukan commit, pastikan check error dengan `npx tsc --noEmit` dan `npm run lint`. Lakukan perbaikan jika ada error.
+- Tambahkan `git add` dan buat commit dengan pesan yang jelas, misalnya: `feat: implement slicing untuk <nama halaman/komponen>`. kemudian push ke branch origin dev.
+
 ## Referensi File
 - Tracking: [docs/track_pages_and_components.md](../../../docs/track_pages_and_components.md)
 - Deskripsi halaman: [docs/ui-ux-pages-descriptions.md](../../../docs/ui-ux-pages-descriptions.md)
 - PNG referensi: `ui-ux-pages-pngs/` (baca per item, bukan semua sekaligus)
 - Navigasi debug: [app/index.tsx](../../../app/index.tsx)
 - Struktur proyek: [AGENTS.md](../../../AGENTS.md)
+
