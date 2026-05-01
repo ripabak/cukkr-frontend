@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ScreenHeader } from '@/src/components/ScreenHeader';
 import { BookingTypeToggle } from '@/src/components/BookingTypeToggle';
@@ -78,13 +79,6 @@ export function NewAppointmentScreen() {
           services={MOCK_SERVICES}
           onServicePress={() => router.push('/select-services' as any)}
         />
-        {showTimePicker ? (
-          <TimePickerModal
-            visible
-            onConfirm={handleTimeConfirm}
-            onClose={() => setShowTimePicker(false)}
-          />
-        ) : null}
       </ScrollView>
       <View style={styles.footer}>
         <PrimaryButton label="New Appointment" onPress={() => {}} />
@@ -94,6 +88,11 @@ export function NewAppointmentScreen() {
         selectedDate={selectedDate}
         onSelect={handleDateSelect}
         onClose={() => setShowCalendar(false)}
+      />
+      <TimePickerModal
+        visible={showTimePicker}
+        onConfirm={handleTimeConfirm}
+        onClose={() => setShowTimePicker(false)}
       />
     </SafeAreaView>
   );

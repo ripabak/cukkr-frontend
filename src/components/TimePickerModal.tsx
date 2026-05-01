@@ -1,13 +1,14 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
-  FlatList,
+  ScrollView,
   TouchableOpacity,
   StyleSheet,
   ViewStyle,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Modal,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -43,7 +44,13 @@ function ScrollPicker({
   onSelect: (index: number) => void;
   renderItem: (item: number | string) => string;
 }) {
-  const flatRef = useRef<FlatList>(null);
+  const scrollRef = useRef<ScrollView>(null);
+
+  useEffect(() => {
+    setTimeout(() => {
+      scrollRef.current?.scrollTo({ y: selectedIndex * ITEM_HEIGHT, animated: false });
+    }, 100);
+  }, []);
 
   const handleMomentumEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const index = Math.round(e.nativeEvent.contentOffset.y / ITEM_HEIGHT);
@@ -53,26 +60,20 @@ function ScrollPicker({
 
   return (
     <View style={pickerStyles.col}>
-      <FlatList
-        ref={flatRef}
-        data={items}
-        keyExtractor={(_, i) => String(i)}
+      <ScrollView
+        ref={scrollRef}
         showsVerticalScrollIndicator={false}
         snapToInterval={ITEM_HEIGHT}
         decelerationRate="fast"
         onMomentumScrollEnd={handleMomentumEnd}
-        initialScrollIndex={selectedIndex}
-        getItemLayout={(_, index) => ({
-          length: ITEM_HEIGHT,
-          offset: ITEM_HEIGHT * index,
-          index,
-        })}
         contentContainerStyle={{ paddingVertical: ITEM_HEIGHT }}
         style={{ height: ITEM_HEIGHT * VISIBLE_COUNT }}
-        renderItem={({ index, item }) => (
+      >
+        {items.map((item, index) => (
           <TouchableOpacity
+            key={String(index)}
             onPress={() => {
-              flatRef.current?.scrollToIndex({ index, animated: true });
+              scrollRef.current?.scrollTo({ y: index * ITEM_HEIGHT, animated: true });
               onSelect(index);
             }}
             style={pickerStyles.item}
@@ -86,8 +87,8 @@ function ScrollPicker({
               {renderItem(item)}
             </Text>
           </TouchableOpacity>
-        )}
-      />
+        ))}
+      </ScrollView>
       <View style={pickerStyles.selectionBar} pointerEvents="none" />
     </View>
   );
@@ -142,8 +143,10 @@ export function TimePickerModal({
   if (!visible) return null;
 
   return (
-    <View style={[styles.container, style]}>
-      <View style={styles.columns}>
+    <Modal visible={visible} transparent animationType="fade">
+      <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={onClose}>
+        <TouchableOpacity activeOpacity={1} style={[styles.container, style]}>
+          <View style={styles.columns}>
         <ScrollPicker
           items={HOURS}
           selectedIndex={hourIndex}
@@ -169,13 +172,22 @@ export function TimePickerModal({
         activeOpacity={0.8}
         style={styles.confirmBtn}
       >
-        <Ionicons name="checkmark" size={20} color="#FFFFFF" />
+          <Ionicons name="checkmark" size={20} color="#FFFFFF" />
+        </TouchableOpacity>
       </TouchableOpacity>
-    </View>
+      </TouchableOpacity>
+    </Modal>
   );
 }
 
 const styles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
   container: {
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
