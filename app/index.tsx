@@ -96,6 +96,36 @@ export default function Index() {
               <Text style={styles.buttonText}>Edit Booking URL</Text>
             </TouchableOpacity>
           </Link>
+          <Link href="/barbers-management" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Barbers Management</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/invite-barber" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Invite Barber</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/services-management" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Services Management</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/service-detail" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Service Detail</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/add-or-edit-service" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Add / Edit Service</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/open-hours" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Open Hours</Text>
+            </TouchableOpacity>
+          </Link>
         </View>
 
         {/* Auth Pages */}
