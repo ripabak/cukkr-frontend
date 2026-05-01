@@ -50,7 +50,7 @@ After completing an item:
 
 ### Step 6 — Git commit
 - Before committing, ensure there are no errors using `npx tsc --noEmit` and `npm run lint`. Fix any issues if found.
-- Run `git add` and create a clear commit message, for example: `feat: implement slicing for <page/component name>`, then push to the `dev` branch.
+- Run `git add` and create a clear commit message, for example: `feat: implement slicing for <page/component name>`, then push to the `origin dev` branch.
 
 ## File References
 - Tracking: [docs/track_pages_and_components.md](../../../docs/track_pages_and_components.md)
