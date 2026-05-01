@@ -8,6 +8,31 @@ export default function Index() {
         <Text style={styles.title}>Cukkr Frontend - Navigation</Text>
         <Text style={styles.subtitle}>Choose a page to test:</Text>
 
+        {/* Onboarding Pages */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Onboarding Pages</Text>
+          <Link href="/onboarding-splash" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Onboarding Splash</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/onboarding-easy-booking" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Easy Booking</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/onboarding-run-barbershop" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Run Barbershop</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/onboarding-customer-happy" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Customer Happy</Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
+
         {/* Auth Pages */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Auth Pages</Text>
