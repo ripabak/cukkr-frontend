@@ -128,6 +128,46 @@ export default function Index() {
           </Link>
         </View>
 
+        {/* Schedule & Booking Pages */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Schedule & Booking Pages</Text>
+          <Link href="/schedule-active-bookings" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Schedule — Active Bookings</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/history-bookings" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>History Bookings</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/booking-detail-request" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Booking Detail — Request</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/booking-detail-waiting" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Booking Detail — Waiting</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/booking-detail-in-progress" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Booking Detail — In Progress</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/booking-detail-result" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Booking Detail — Result</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/notifications-list" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Notifications</Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
+
         {/* Auth Pages */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Auth Pages</Text>
