@@ -6,11 +6,13 @@ import { OnboardingCard } from "../components/OnboardingCard";
 import { OnboardingContainer } from "../components/OnboardingContainer";
 import { OnboardingIndicator } from "../components/OnboardingIndicator";
 import { OnboardingTheme } from "../onboarding-theme";
+import { useOnboardingStore } from "../stores/onboardingStore";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 export function OnboardingCustomerHappyScreen() {
   const router = useRouter();
+  const markOnboardingSeen = useOnboardingStore((s) => s.markOnboardingSeen);
 
   return (
     <OnboardingContainer style={styles.container}>
@@ -40,9 +42,7 @@ export function OnboardingCustomerHappyScreen() {
         <OnboardingIndicator current={2} total={3} />
 
         <View style={styles.textContent}>
-          <Text style={styles.heading}>
-            Customer Happy,{"\n"}Barber Happy
-          </Text>
+          <Text style={styles.heading}>Customer Happy,{"\n"}Barber Happy</Text>
           <Text style={styles.body}>
             Smooth bookings for customers, clear schedules{"\n"}
             for barbers.{"\n"}
@@ -54,7 +54,10 @@ export function OnboardingCustomerHappyScreen() {
 
         <OnboardingButton
           label="Get Started"
-          onPress={() => router.replace("/login")}
+          onPress={() => {
+            markOnboardingSeen();
+            router.replace("/login");
+          }}
           variant="secondary"
           style={styles.button}
         />
