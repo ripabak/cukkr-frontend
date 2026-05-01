@@ -198,6 +198,51 @@ export default function Index() {
           </Link>
         </View>
 
+        {/* Admin Booking Creation (Phase 6) */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Admin Booking Creation</Text>
+          <Link href="/new-appointment" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>New Appointment</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/new-walk-in" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>New Walk-In</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/select-barber" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Select Barber</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/select-services" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Select Services</Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
+
+        {/* User Profile (Phase 6) */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>User Profile</Text>
+          <Link href="/user-profile" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>User Profile</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/edit-user-profile-fields" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Edit Profile Fields</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link href="/verify-contact" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Verify Contact</Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
+
         {/* Auth Pages */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Auth Pages</Text>
