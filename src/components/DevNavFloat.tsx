@@ -1,15 +1,15 @@
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
-    Animated,
-    Dimensions,
-    Modal,
-    PanResponder,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-    View,
+  Animated,
+  Dimensions,
+  Modal,
+  PanResponder,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from "react-native";
 
 /** Pill dimensions */
@@ -24,7 +24,7 @@ export function DevNavFloat() {
   const [visible, setVisible] = useState(false);
   const router = useRouter();
 
-  const { width: screenW, height: screenH } = Dimensions.get("window");
+  const { height: screenH } = Dimensions.get("window");
 
   const posRef = useRef({ x: -TUCK, y: screenH - 160 });
   const pan = useRef(new Animated.ValueXY(posRef.current)).current;
