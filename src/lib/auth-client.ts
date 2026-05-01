@@ -4,7 +4,7 @@ import { createAuthClient } from "better-auth/react";
 import * as SecureStore from "expo-secure-store";
 
 export const authClient = createAuthClient({
-    baseURL: "https://cukkr-backend-dev.fire.my.id",
+    baseURL: process.env.EXPO_PUBLIC_ENV_AUTH_URL,
     plugins: [
         expoClient({
             scheme: "cukkrfrontend",

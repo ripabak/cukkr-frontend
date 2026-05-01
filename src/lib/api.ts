@@ -3,7 +3,7 @@ import axios from "axios";
 import { authClient } from "./auth-client";
 
 const api = axios.create({
-    baseURL: "https://cukkr-backend-dev.fire.my.id/api",
+    baseURL: process.env.EXPO_PUBLIC_ENV_API_URL,
 });
 
 api.interceptors.request.use(async (config) => {
