@@ -3,6 +3,7 @@
 ## Project Structure
 
 ### Notation
+
 - **(feature-scope)**: A folder in parentheses represents a route group or scope. It groups related screens and layouts without creating an extra path segment in the router.
 - **feature-name**: A placeholder for any feature module under `src/features`.
 
@@ -40,11 +41,27 @@ src/                              # Business logic and reusable code
 ```
 
 ### Organization Pattern
+
 - **app/**: Contains route definitions and layout wiring.
-- **(feature-scope)**: Used in `app` to group a set of related pages under one router scope without adding a path segment. 
+- **(feature-scope)**: Used in `app` to group a set of related pages under one router scope without adding a path segment.
 - **src/features/**: Each feature has an isolated module structure with its own components, screens, services, and utils.
 - **src/components/**, **src/services/**, and **src/utils/**: Shared code that is reusable across the whole application.
 
-
 ### Error explained
+
 - if related to existing href link like `<Link href="/path" asChild>` like `Argument of type '"/path"' is not assignable` when running `npx tsc --noEmit`, maybe because need to generate the expo type first by running `npx expo start` and ctrl-c to stop server.
+
+## Key Documentation
+
+Every agent must read these docs before starting any work:
+
+| Document                    | Path                                 | Purpose                                                                            |
+| --------------------------- | ------------------------------------ | ---------------------------------------------------------------------------------- |
+| **Project structure**       | `docs/project-structure.md`          | Full directory tree, tech stack, feature modules, shared components, dev commands  |
+| **Coding conventions**      | `docs/project-conventions.md`        | Theme system, component patterns, naming rules, screen layout rules, testing setup |
+| **Page/component tracking** | `docs/track_pages_and_components.md` | Implementation status for all pages and components (slicing, UI functional, API)   |
+| **Page descriptions**       | `docs/ui-ux-pages-descriptions.md`   | UI/UX intent for each page derived from design files                               |
+| **Component index**         | `docs/component-index.md`            | All components grouped by category for quick lookup                                |
+
+Update `docs/project-conventions.md` whenever a new pattern is established.
+Update `docs/track_pages_and_components.md` whenever a page, component, or infrastructure item is created or modified.
