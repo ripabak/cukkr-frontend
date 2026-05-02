@@ -1,7 +1,6 @@
 import { useOnboardingStore } from "@/src/features/onboarding/stores/onboardingStore";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Platform } from "react-native";
 
 export default function Index() {
   const router = useRouter();
@@ -21,6 +20,8 @@ export default function Index() {
       },
     );
 
+    useOnboardingStore.persist.rehydrate();
+
     setHasHydrated(useOnboardingStore.persist.hasHydrated());
 
     return () => {
@@ -33,12 +34,7 @@ export default function Index() {
     if (!hasHydrated) return;
 
     const href = hasSeenOnboarding ? "/home" : "/onboarding-splash";
-
-    if (Platform.OS === "web") {
-      window.location.replace(href);
-      return;
-    }
-
+    console.log("Navigating to:", href, "hasHydrated:", hasHydrated);
     router.replace(href);
   }, [hasHydrated, hasSeenOnboarding, router]);
 
