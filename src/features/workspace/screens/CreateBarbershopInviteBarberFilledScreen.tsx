@@ -1,74 +1,73 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import { WizardProgress } from '@/src/components/WizardProgress';
-import { InviteRow } from '@/src/components/InviteRow';
-import { TextInputField } from '@/src/components/TextInputField';
-import { SecondaryButton } from '@/src/components/SecondaryButton';
-import { PrimaryButton } from '@/src/components/PrimaryButton';
+import { InviteRow } from "@/src/components/InviteRow";
+import { PrimaryButton } from "@/src/components/PrimaryButton";
+import { ScreenShell } from "@/src/components/ScreenShell";
+import { SecondaryButton } from "@/src/components/SecondaryButton";
+import { TextInputField } from "@/src/components/TextInputField";
+import { WizardProgress } from "@/src/components/WizardProgress";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+
+// --- MOCK DATA ---
+const MOCK_INVITED_BARBERS = [
+  { id: "1", email: "rifa@gmail.com" },
+  { id: "2", email: "rifafaruqi@gmail.com" },
+];
 
 export function CreateBarbershopInviteBarberFilledScreen() {
   const router = useRouter();
-  const [barber, setBarber] = useState('');
+  const [barber, setBarber] = useState("");
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <WizardProgress totalSteps={3} currentStep={1} style={styles.wizard} />
-        <Text style={styles.title}>Invite Barber</Text>
-        <Text style={styles.subtitle}>Inviting barber to your barbershop</Text>
-        <Text style={styles.barbersLabel}>{"Barbershop's barbers"}</Text>
-        <InviteRow email="rifa@gmail.com" onRemove={() => {}} />
-        <InviteRow email="rifafaruqi@gmail.com" onRemove={() => {}} style={styles.inviteRowTop} />
-        <TextInputField
-          label="Add Barber"
-          placeholder="email / phone number *"
-          value={barber}
-          onChangeText={setBarber}
-          style={styles.inputTop}
+    <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
+      <WizardProgress totalSteps={3} currentStep={1} style={styles.wizard} />
+      <Text style={styles.title}>Invite Barber</Text>
+      <Text style={styles.subtitle}>Inviting barber to your barbershop</Text>
+      <Text style={styles.barbersLabel}>{"Barbershop's barbers"}</Text>
+      {MOCK_INVITED_BARBERS.map((barber, index) => (
+        <InviteRow
+          key={barber.id}
+          email={barber.email}
+          onRemove={() => {}}
+          style={index > 0 ? styles.inviteRowTop : undefined}
         />
-        <SecondaryButton
-          label="Invite"
-          style={styles.inviteBtn}
-        />
-        <View style={styles.flex} />
-        <PrimaryButton
-          label="Next"
-          onPress={() => router.push('/create-barbershop-first-service')}
-        />
-      </View>
-    </SafeAreaView>
+      ))}
+      <TextInputField
+        label="Add Barber"
+        placeholder="email / phone number *"
+        value={barber}
+        onChangeText={setBarber}
+        style={styles.inputTop}
+      />
+      <SecondaryButton label="Invite" style={styles.inviteBtn} />
+      <View style={styles.flex} />
+      <PrimaryButton
+        label="Next"
+        onPress={() => router.push("/create-barbershop-first-service")}
+      />
+    </ScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#EEEEE0',
-  },
-  container: {
-    flex: 1,
-    padding: 24,
-  },
   wizard: {
     marginBottom: 32,
   },
   title: {
     fontSize: 28,
-    fontWeight: '700',
-    color: '#1A1A1A',
+    fontWeight: "700",
+    color: "#1A1A1A",
   },
   subtitle: {
     fontSize: 14,
-    color: '#666666',
+    color: "#666666",
     marginTop: 8,
     marginBottom: 24,
   },
   barbersLabel: {
     fontSize: 15,
-    fontWeight: '600',
-    color: '#1A1A1A',
+    fontWeight: "600",
+    color: "#1A1A1A",
     marginBottom: 12,
   },
   inviteRowTop: {
@@ -79,8 +78,8 @@ const styles = StyleSheet.create({
   },
   inviteBtn: {
     marginTop: 12,
-    alignSelf: 'center',
-    width: 'auto',
+    alignSelf: "center",
+    width: "auto",
     paddingHorizontal: 32,
   },
   flex: {
