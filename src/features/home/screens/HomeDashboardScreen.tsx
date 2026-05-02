@@ -1,28 +1,30 @@
-import { BottomTabBar } from "@/src/components/BottomTabBar";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { MetricCard } from "@/src/components/MetricCard";
+import { ScreenShell } from "@/src/components/ScreenShell";
 import { ShortcutTile } from "@/src/components/ShortcutTile";
 import { WorkspacePill } from "@/src/components/WorkspacePill";
+import {
+  ActivityCard,
+  RecentActivity,
+} from "@/src/features/home/components/ActivityCard";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-type RecentActivity = {
-  id: string;
-  time: string;
-  duration: string;
-  name?: string;
-  type: "in-progress" | "waiting";
+// --- MOCK DATA ---
+const MOCK_WORKSPACE_NAME = "Hendra Barbershop";
+const MOCK_USER_NAME = "James Comberan";
+const MOCK_PIN = "345678";
+const MOCK_BOOKING_URL = "cukrr.com/hendra-barbershop";
+const MOCK_METRICS = {
+  todaySchedule: "5",
+  walkIn: "2",
+  appointment: "2",
+  inProgress: "2",
+  waiting: "3",
 };
 
-const RECENT_ACTIVITIES: RecentActivity[] = [
+const MOCK_RECENT_ACTIVITIES: RecentActivity[] = [
   {
     id: "1",
     time: "12m ago",
@@ -45,7 +47,7 @@ const RECENT_ACTIVITIES: RecentActivity[] = [
     type: "waiting",
   },
   {
-    id: "3",
+    id: "4",
     time: "12m ago",
     duration: "30 mins",
     name: "Ethan James",
@@ -53,164 +55,110 @@ const RECENT_ACTIVITIES: RecentActivity[] = [
   },
 ];
 
-function ActivityCard({ item }: { item: RecentActivity }) {
-  const accentColor = item.type === "in-progress" ? "#2196F3" : "#EBA109";
-  return (
-    <View style={[styles.activityCard, styles.activityCardTop]}>
-      <View style={[styles.activityCircle, { backgroundColor: "#F2F2F7" }]}>
-        <Ionicons name="people" size={24} color={accentColor} />
-      </View>
-      <Text style={[styles.activityTime, { color: accentColor }]}>
-        {item.time}
-      </Text>
-      {item.name ? (
-        <View style={styles.activityRightStack}>
-          <Text style={[styles.activityName, { color: accentColor }]}>
-            {item.name}
-          </Text>
-          <Text style={[styles.activityDuration, { color: accentColor }]}>
-            {item.duration}
-          </Text>
-        </View>
-      ) : (
-        <Text style={[styles.activityDuration, { color: accentColor }]}>
-          {item.duration}
-        </Text>
-      )}
-    </View>
-  );
-}
-
 export function HomeDashboardScreen() {
   const [showPinModal, setShowPinModal] = useState(false);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.outer}>
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.topRow}>
-            <WorkspacePill name="Hendra Barbershop" />
-            <View style={styles.notifCircle}>
-              <Ionicons
-                name="notifications-outline"
-                size={20}
-                color="#1A1A1A"
-              />
-            </View>
-          </View>
-
-          <View style={styles.greetingRow}>
-            <View style={styles.avatar} />
-            <View style={styles.greetingText}>
-              <Text style={styles.greetingSmall}>Good Morning,</Text>
-              <Text style={styles.greetingName}>James Comberan</Text>
-            </View>
-          </View>
-
-          <View style={styles.pinCard}>
-            <View style={styles.pinTopRow}>
-              <Text style={styles.pinLabel}>Walk-In PIN</Text>
-              <Ionicons name="server-outline" size={16} color="#666666" />
-            </View>
-            <View style={styles.pinValueRow}>
-              <Text style={styles.pinValue}>345678</Text>
-              <TouchableOpacity
-                onPress={() => setShowPinModal(true)}
-                style={styles.refreshBtn}
-              >
-                <Ionicons name="refresh-outline" size={20} color="#666666" />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.linkPill}>
-              <Text style={styles.linkText}>cukrr.com/hendra-barbershop</Text>
-              <Ionicons
-                name="copy-outline"
-                size={14}
-                color="#1A1A1A"
-                style={styles.copyIcon}
-              />
-            </View>
-          </View>
-
-          <View style={styles.metricsSection}>
-            <View style={styles.metricsRow}>
-              <MetricCard
-                label="Today's Schedule"
-                value="5"
-                style={styles.metricFlex}
-              />
-              <MetricCard
-                label="Walk-In"
-                value="2"
-                icon={<Ionicons name="people" size={18} color="#1A1A1A" />}
-                style={styles.metricFlex}
-              />
-              <MetricCard
-                label="Appoint."
-                value="2"
-                icon={<Ionicons name="calendar" size={18} color="#1A1A1A" />}
-                style={styles.metricFlex}
-              />
-            </View>
-            <View style={[styles.metricsRow, styles.metricsRowTop]}>
-              <MetricCard
-                label="In Progress"
-                value="2"
-                accentColor="#2196F3"
-                style={styles.metricFlex}
-              />
-              <MetricCard
-                label="Waiting"
-                value="3"
-                accentColor="#FF9800"
-                style={styles.metricFlex}
-              />
-            </View>
-          </View>
-
-          <View style={styles.shortcutsCard}>
-            <ShortcutTile
-              label="Barbers"
-              icon={<Ionicons name="people" size={24} color="#1A1A1A" />}
-            />
-            <ShortcutTile
-              label="Customers"
-              icon={<Ionicons name="person" size={24} color="#1A1A1A" />}
-            />
-            <ShortcutTile
-              label="Services"
-              icon={<Ionicons name="cut" size={24} color="#1A1A1A" />}
-            />
-          </View>
-
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginTop: 20,
-              paddingHorizontal: 4,
-            }}
-          >
-            <Text style={styles.recentLabel}>Upcoming</Text>
-            {/* buat jadi button */}
-            <Text style={styles.seeMore}>See more</Text>
-          </View>
-          {RECENT_ACTIVITIES.map((item) => (
-            <ActivityCard key={item.id} item={item} />
-          ))}
-        </ScrollView>
-
-        <View style={styles.tabBarWrapper}>
-          <BottomTabBar activeTab="home" onTabPress={() => {}} />
+    <ScreenShell contentStyle={styles.scrollContentPadding}>
+      <View style={styles.topRow}>
+        <WorkspacePill name={MOCK_WORKSPACE_NAME} />
+        <View style={styles.notifCircle}>
+          <Ionicons name="notifications-outline" size={20} color="#1A1A1A" />
         </View>
       </View>
 
+      <View style={styles.greetingRow}>
+        <View style={styles.avatar} />
+        <View style={styles.greetingText}>
+          <Text style={styles.greetingSmall}>Good Morning,</Text>
+          <Text style={styles.greetingName}>{MOCK_USER_NAME}</Text>
+        </View>
+      </View>
+
+      <View style={styles.pinCard}>
+        <View style={styles.pinTopRow}>
+          <Text style={styles.pinLabel}>Walk-In PIN</Text>
+          <Ionicons name="server-outline" size={16} color="#666666" />
+        </View>
+        <View style={styles.pinValueRow}>
+          <Text style={styles.pinValue}>{MOCK_PIN}</Text>
+          <TouchableOpacity
+            onPress={() => setShowPinModal(true)}
+            style={styles.refreshBtn}
+          >
+            <Ionicons name="refresh-outline" size={20} color="#666666" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.linkPill}>
+          <Text style={styles.linkText}>{MOCK_BOOKING_URL}</Text>
+          <Ionicons
+            name="copy-outline"
+            size={14}
+            color="#1A1A1A"
+            style={styles.copyIcon}
+          />
+        </View>
+      </View>
+
+      <View style={styles.metricsSection}>
+        <View style={styles.metricsRow}>
+          <MetricCard
+            label="Today's Schedule"
+            value={MOCK_METRICS.todaySchedule}
+            style={styles.metricFlex}
+          />
+          <MetricCard
+            label="Walk-In"
+            value={MOCK_METRICS.walkIn}
+            icon={<Ionicons name="people" size={18} color="#1A1A1A" />}
+            style={styles.metricFlex}
+          />
+          <MetricCard
+            label="Appoint."
+            value={MOCK_METRICS.appointment}
+            icon={<Ionicons name="calendar" size={18} color="#1A1A1A" />}
+            style={styles.metricFlex}
+          />
+        </View>
+        <View style={[styles.metricsRow, styles.metricsRowTop]}>
+          <MetricCard
+            label="In Progress"
+            value={MOCK_METRICS.inProgress}
+            accentColor="#2196F3"
+            style={styles.metricFlex}
+          />
+          <MetricCard
+            label="Waiting"
+            value={MOCK_METRICS.waiting}
+            accentColor="#FF9800"
+            style={styles.metricFlex}
+          />
+        </View>
+      </View>
+
+      <View style={styles.shortcutsCard}>
+        <ShortcutTile
+          label="Barbers"
+          icon={<Ionicons name="people" size={24} color="#1A1A1A" />}
+        />
+        <ShortcutTile
+          label="Customers"
+          icon={<Ionicons name="person" size={24} color="#1A1A1A" />}
+        />
+        <ShortcutTile
+          label="Services"
+          icon={<Ionicons name="cut" size={24} color="#1A1A1A" />}
+        />
+      </View>
+
+      <View style={styles.upcomingRow}>
+        <Text style={styles.recentLabel}>Upcoming</Text>
+        {/* buat jadi button */}
+        <Text style={styles.seeMore}>See more</Text>
+      </View>
+      {MOCK_RECENT_ACTIVITIES.map((item) => (
+        <ActivityCard key={item.id} item={item} />
+      ))}
       <ConfirmationModal
         visible={showPinModal}
         title="Reset Walk-In PIN?"
@@ -221,25 +169,11 @@ export function HomeDashboardScreen() {
         onCancel={() => setShowPinModal(false)}
         onConfirm={() => setShowPinModal(false)}
       />
-    </SafeAreaView>
+    </ScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#EEEEE0",
-  },
-  outer: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 120,
-  },
   topRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -350,46 +284,16 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#7D7D7D",
   },
-  activityCard: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 50,
-    padding: 12,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  activityCardTop: {
-    marginTop: 8,
-  },
-  activityCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 12,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  activityTime: {
-    fontSize: 13,
-    color: "#666666",
+  upcomingRow: {
     flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 20,
+    paddingHorizontal: 4,
   },
-  activityRightStack: {
-    alignItems: "flex-end",
-    marginRight: 8,
-  },
-  activityName: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: "#1A1A1A",
-  },
-  activityDuration: {
-    fontSize: 12,
-    color: "#666666",
-  },
-  tabBarWrapper: {
-    paddingHorizontal: 20,
-    paddingBottom: 24,
-    backgroundColor: "#EEEEE0",
+  scrollContentPadding: {
+    paddingBottom: 100,
   },
   seeMore: {
     fontSize: 13,
