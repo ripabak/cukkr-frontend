@@ -6,7 +6,7 @@ type Tab = "home" | "stats" | "schedule" | "profile";
 
 interface Props {
   activeTab: Tab;
-  onTabPress: (tab: Tab) => void;
+  onTabPress?: (tab: Tab) => void;
   style?: ViewStyle;
 }
 
@@ -28,7 +28,7 @@ export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
         return (
           <TouchableOpacity
             key={tab.key}
-            onPress={() => onTabPress(tab.key)}
+            onPress={() => onTabPress?.(tab.key)}
             activeOpacity={0.7}
             style={styles.tab}
           >
