@@ -169,6 +169,60 @@ Exception: dynamic values that depend on props (e.g. `{ backgroundColor: color }
 - `ScrollView` with `contentContainerStyle={{ flexGrow: 1 }}` — **never** `flex: 1` inside `contentContainerStyle`.
 - Sticky CTAs, bottom tab bars, and floating buttons sit **outside** any `ScrollView`, inside the `SafeAreaView`.
 
+> **Preferred:** Use `ScreenShell` or `FormShell` instead of writing this boilerplate manually. See Section 4a below.
+
+---
+
+## 4a. Layout Components
+
+### MobileFrame — Web viewport constraint
+
+Applied once in `app/_layout.tsx`. All screens automatically render in a centered 390px frame on web; passthrough `<View style={{ flex: 1 }}>` on native.
+
+```tsx
+// app/_layout.tsx — already wired
+<MobileFrame>
+  <View style={{ flex: 1 }}>
+    <Stack screenOptions={{ headerShown: false }} />
+  </View>
+</MobileFrame>
+```
+
+### ScreenShell — Standard scrollable screen
+
+Use for any screen that is primarily scrollable and has **no TextInput** fields.
+
+```tsx
+<ScreenShell
+  headerSlot={<ScreenHeader onBack={() => router.back()} />}  // sticky above scroll
+  footerSlot={<BottomTabBar activeTab="home" />}              // sticky below scroll
+  overlaySlot={sortVisible ? <SortMenu ... /> : null}         // absolute overlays (NOT RN Modal)
+  backgroundColor="#F5F4E8"                                    // optional, default: AppTheme.colors.bg
+  contentStyle={{ paddingBottom: 24 }}                        // optional scrollContent override
+>
+  {/* scrollable content */}
+</ScreenShell>
+```
+
+**When to use `overlaySlot`:** For `SortMenu`, `StatusFilterMenu`, `OverflowMenu` — these render a backdrop + absolute-positioned view directly in the component tree (not React Native Modal). They **must** be outside ScrollView or they will be clipped.
+
+**React Native Modal-based components** (`ConfirmationModal`, `AlertModal`, `CalendarModal`, `TimePickerModal`, `SwipeConfirmationModal`) use `<Modal>` from `react-native` and render above everything regardless of JSX position — place them anywhere in `children`.
+
+### FormShell — Keyboard-aware scrollable screen
+
+Identical API to `ScreenShell` but wraps the ScrollView in `KeyboardAvoidingView`. Use whenever the screen has `TextInput` fields.
+
+```tsx
+<FormShell
+  headerSlot={
+    <ScreenHeader title="Edit Profile" onBack={() => router.back()} />
+  }
+  backgroundColor="#F5F4E8"
+>
+  <TextInputField label="Name" value={name} onChangeText={setName} />
+</FormShell>
+```
+
 ---
 
 ## 5. Navigation Patterns

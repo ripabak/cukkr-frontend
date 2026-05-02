@@ -21,12 +21,11 @@ const MOCK_PIN = "345678";
 
 const MOCK_METRICS = { todaySchedule: 5, walkIn: 2 };
 
-const MOCK_ITEMS: ItemType[] = [
-  { id: "1", label: "..." },
-];
+const MOCK_ITEMS: ItemType[] = [{ id: "1", label: "..." }];
 ```
 
 **Aturan:**
+
 - Satu konstanta per nilai skalar (`string`, `number`, `boolean`)
 - Satu konstanta per array/objek data
 - Beri prefix `MOCK_` agar mudah dicari saat wiring ke API nanti
@@ -37,6 +36,7 @@ const MOCK_ITEMS: ItemType[] = [
 ### 2. Pecah UI besar menjadi komponen feature-local
 
 Setiap blok UI yang:
+
 - Lebih dari ~15 baris JSX, **atau**
 - Punya data/state sendiri, **atau**
 - Berulang (`.map()`)
@@ -44,6 +44,7 @@ Setiap blok UI yang:
 → Ekstrak ke `src/features/<feature>/components/NamaKomponen.tsx`
 
 **Aturan penamaan:**
+
 - Nama komponen deskriptif, bukan generik: `WalkInPinCard`, bukan `Card`
 - Jika dipakai di 2+ fitur → pindah ke `src/components/`
 
@@ -98,15 +99,15 @@ export function ScreenName() {
 
 ## Urutan Pengerjaan (per screen)
 
-| Step | Tindakan |
-|---|---|
-| 1 | Baca screen target, identifikasi semua nilai hardcoded |
-| 2 | Identifikasi blok UI yang layak jadi komponen (>15 baris / berulang) |
-| 3 | Buat file komponen di `src/features/<feature>/components/` |
-| 4 | Kumpulkan semua hardcode ke konstanta `MOCK_*` di atas screen |
-| 5 | Ganti JSX screen dengan komponen baru + mock data |
-| 6 | Hapus style yang sudah pindah ke komponen |
-| 7 | Jalankan `npx tsc --noEmit` — pastikan tidak ada error |
+| Step | Tindakan                                                             |
+| ---- | -------------------------------------------------------------------- |
+| 1    | Baca screen target, identifikasi semua nilai hardcoded               |
+| 2    | Identifikasi blok UI yang layak jadi komponen (>15 baris / berulang) |
+| 3    | Buat file komponen di `src/features/<feature>/components/`           |
+| 4    | Kumpulkan semua hardcode ke konstanta `MOCK_*` di atas screen        |
+| 5    | Ganti JSX screen dengan komponen baru + mock data                    |
+| 6    | Hapus style yang sudah pindah ke komponen                            |
+| 7    | Jalankan `npx tsc --noEmit` — pastikan tidak ada error               |
 
 ---
 
@@ -114,28 +115,30 @@ export function ScreenName() {
 
 Centang saat selesai:
 
-### Phase 2 — App shell
-- [ ] `src/features/home/screens/HomeDashboardScreen.tsx`
-- [ ] `src/features/workspace/screens/SwitchBarbershopScreen.tsx`
-- [ ] `src/features/workspace/screens/CreateBarbershopNameLogoScreen.tsx`
-- [ ] `src/features/workspace/screens/CreateBarbershopInviteBarberEmptyScreen.tsx`
-- [ ] `src/features/workspace/screens/CreateBarbershopInviteBarberFilledScreen.tsx`
-- [ ] `src/features/workspace/screens/CreateBarbershopFirstServiceScreen.tsx`
-- [ ] `src/features/workspace/screens/CreateBarbershopSuccessScreen.tsx`
-- [ ] `src/features/barbershop/screens/BarbershopSettingsScreen.tsx`
-- [ ] `src/features/barbershop/screens/EditBarbershopInfoScreen.tsx`
-- [ ] `src/features/barbershop/screens/EditBookingUrlScreen.tsx`
+### Phase 2 — App shell ✓ done — 2026-05-03
 
-### Phase 3+ — Schedule, Profile, Barbershop ops
-- [ ] `src/features/schedule/screens/ScheduleActiveBookingsScreen.tsx`
-- [ ] `src/features/schedule/screens/BookingDetailInProgressScreen.tsx`
-- [ ] `src/features/schedule/screens/BookingDetailRequestScreen.tsx`
-- [ ] `src/features/schedule/screens/NewAppointmentScreen.tsx`
-- [ ] `src/features/schedule/screens/NewWalkInScreen.tsx`
-- [ ] `src/features/profile/screens/UserProfileScreen.tsx`
-- [ ] `src/features/barbershop/screens/BarbersManagementScreen.tsx`
-- [ ] `src/features/barbershop/screens/ServicesManagementScreen.tsx`
-- [ ] `src/features/barbershop/screens/CustomerManagementScreen.tsx`
+- [x] `src/features/home/screens/HomeDashboardScreen.tsx`
+- [x] `src/features/workspace/screens/SwitchBarbershopScreen.tsx`
+- [x] `src/features/workspace/screens/CreateBarbershopNameLogoScreen.tsx`
+- [x] `src/features/workspace/screens/CreateBarbershopInviteBarberEmptyScreen.tsx`
+- [x] `src/features/workspace/screens/CreateBarbershopInviteBarberFilledScreen.tsx`
+- [x] `src/features/workspace/screens/CreateBarbershopFirstServiceScreen.tsx`
+- [x] `src/features/workspace/screens/CreateBarbershopSuccessScreen.tsx`
+- [x] `src/features/barbershop/screens/BarbershopSettingsScreen.tsx`
+- [x] `src/features/barbershop/screens/EditBarbershopInfoScreen.tsx`
+- [x] `src/features/barbershop/screens/EditBookingUrlScreen.tsx`
+
+### Phase 3+ — Schedule, Profile, Barbershop ops ✓ done — 2026-05-03
+
+- [x] `src/features/schedule/screens/ScheduleActiveBookingsScreen.tsx`
+- [x] `src/features/schedule/screens/BookingDetailInProgressScreen.tsx`
+- [x] `src/features/schedule/screens/BookingDetailRequestScreen.tsx`
+- [x] `src/features/schedule/screens/NewAppointmentScreen.tsx`
+- [x] `src/features/schedule/screens/NewWalkInScreen.tsx`
+- [x] `src/features/profile/screens/UserProfileScreen.tsx`
+- [x] `src/features/barbershop/screens/BarbershopManagementScreen.tsx`
+- [x] `src/features/barbershop/screens/ServicesManagementScreen.tsx`
+- [x] `src/features/barbershop/screens/CustomerManagementScreen.tsx`
 
 ---
 

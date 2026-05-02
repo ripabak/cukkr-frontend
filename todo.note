@@ -2,7 +2,9 @@
 - middleware
 - bottom bar belum berfungsi
 - layout belum terpusat
+---- [PENTING] buat layoutnya agar mobile first
 ---- home Dashboard butuh layout yang ada bottombar
+
 - header belum terpusat - buat group
 - implementasi hooks dan store belum ada
 - [penting] ganti style pakai nativewind
