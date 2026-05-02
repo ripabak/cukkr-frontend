@@ -11,8 +11,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "types:sync": "type-share-eden-elysia sync",
-    "types:watch": "type-share-eden-elysia watch",
+    "types:sync": "npx type-share-eden-elysia sync https://cukkr-backend-dev.fire.my.id/types/app.d.ts",
+    "types:watch": "npx type-share-eden-elysia watch https://cukkr-backend-dev.fire.my.id/types/app.d.ts",
     "lint": "expo lint",
     "test": "jest --watchAll"
   },
@@ -60,7 +60,7 @@
     "eslint-config-expo": "~10.0.0",
     "jest": "~29.7.0",
     "jest-expo": "~54.0.17",
-    "type-share-eden-elysia": "^0.1.0",
+    "type-share-eden-elysia": "^0.1.1",
     "typescript": "~5.9.2"
   },
   "private": true
