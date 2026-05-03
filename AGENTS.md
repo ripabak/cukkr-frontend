@@ -27,15 +27,20 @@ src/                              # Business logic and reusable code
 │   ├── auth/                     # Example feature module
 │   │   ├── auth-theme.ts         # Theme and styling constants
 │   │   ├── components/           # Feature-specific UI components
+│   │   ├── hooks/                # Custom React hooks (useQuery, useMutation)
 │   │   ├── screens/              # Screen implementations
 │   │   ├── services/             # Feature API and business logic
 │   │   └── utils/                # Feature helper utilities
 │   └── feature-name/             # Placeholder for another feature module
 │       ├── feature-name-theme.ts # Theme and styling constants
 │       ├── components/           # Feature-specific UI components
+│       ├── hooks/                # Custom React hooks (useQuery, useMutation)
 │       ├── screens/              # Screen implementations
 │       ├── services/             # Feature API and business logic
 │       └── utils/                # Feature helper utilities
+├── lib/                          # Core library setup
+│   ├── providers/                # Context providers (QueryProvider, ToastProvider)
+│   └── TANSTACK_QUERY_EXAMPLES.md # TanStack Query usage examples
 ├── services/                     # Global reusable services
 └── utils/                        # Global reusable utilities
 ```
@@ -86,6 +91,69 @@ src/                              # Business logic and reusable code
 - **Presentational only.** Components receive data via props and call callbacks; they don't fetch data or manage async state.
 - **Example**: `AuthTextField` (feature-specific) wraps styling; screens pass `value`, `onChangeText`, `label` as props.
 
+### Hooks (TanStack Query)
+- **Encapsulate query and mutation logic.** Hooks wrap service calls with automatic caching, refetching, and error handling via TanStack Query.
+- **Query hooks for fetching data.** Use `useQuery()` for reads; automatically cached and revalidated. Example: `useBarbershopCurrent()` fetches current barbershop data.
+- **Mutation hooks for side effects.** Use `useMutation()` for creates/updates/deletes. Example: `useUpdateBarbershopSettings()` updates settings and invalidates related queries.
+- **Live in `hooks/` folder.** Each feature has `hooks/index.ts` that barrel-exports all custom hooks for clean imports.
+- **Query keys are centralized.** Query keys defined in hooks ensure consistency for cache invalidation and debugging. Example: `BARBERSHOP_QUERY_KEYS = { all: ['barbershop'], list: () => [...], current: () => [...] }`.
+- **Hooks handle invalidation.** On mutation success, hooks automatically invalidate related query keys via `queryClient.invalidateQueries()`. Screens don't manage cache directly.
+- **Screens use hooks, not services directly for data.** Screens import hooks and call `const { data, isLoading } = useBarbershopCurrent()` instead of calling `barbershopService.getCurrent()` manually.
+- **Error & loading states from hooks.** Hooks return `{ data, isLoading, error, isPending }` for UI feedback without manual state management.
+- **Example**: `useInviteBarber()` returns `{ mutate, isPending, error }`; screen calls `mutate({ email })` and shows `isPending` in button or `error` in toast.
+
+## Data Flow Architecture
+
+### Query Flow (Reading Data)
+```
+Screen Component
+    ↓
+Imports & calls custom hook (e.g., useBarbershopCurrent())
+    ↓
+Hook uses TanStack Query (useQuery)
+    ↓
+Query calls service function (e.g., barbershopService.getCurrent())
+    ↓
+Service imports & uses API client (authClient, app.api)
+    ↓
+API call to backend
+    ↓
+Response cached by TanStack Query
+    ↓
+Screen receives { data, isLoading, error } & renders UI
+```
+
+### Mutation Flow (Writing Data)
+```
+Screen Component
+    ↓
+User action (button press, form submit)
+    ↓
+Screen calls mutation hook (e.g., const { mutate } = useInviteBarber())
+    ↓
+mutate({ email: '...' })
+    ↓
+Hook uses TanStack Query (useMutation)
+    ↓
+Mutation calls service function (e.g., barbersService.inviteSingle())
+    ↓
+Service imports & uses API client (authClient, app.api)
+    ↓
+API call to backend
+    ↓
+On success: Hook invalidates related queries → re-fetches data
+    ↓
+Screen receives onSuccess/onError callback
+    ↓
+Screen shows toast feedback & updates UI
+```
+
+### Key Points
+- **Screens import hooks, not services.** Hooks handle caching & invalidation automatically.
+- **Services remain lightweight.** They only wrap API clients; TanStack Query handles the rest.
+- **No manual state management for API data.** `useQuery` and `useMutation` handle `isLoading`, `error`, `data`.
+- **Cache is shared.** Multiple screens using same query get cached data; automatic refetch on focus/reconnect.
+
 ## Common Issues & Solutions
 
 **Expo routing type errors**: If you see `Argument of type '"/path"' is not assignable` for Link href, run `npx expo start` then Ctrl+C. This generates Expo routing types.
@@ -103,6 +171,8 @@ Every agent must read these docs before starting any work:
 | **Component index**         | `docs/component-index.md`            | All components grouped by category for quick lookup                                |
 | **Toast examples**          | `docs-guides/TOAST_USAGE_EXAMPLES.md` | Real-world toast implementation examples and patterns                             |
 | **Auth & Organization**     | `docs-guides/AUTH_AND_ORGANIZATION.md` | Auth client setup, organization management, and implementation patterns             |
+| **TanStack Query Setup**    | `src/lib/TANSTACK_QUERY_SETUP.md`   | Data fetching patterns, hook usage, error handling, best practices for queries & mutations |
+| **TanStack Query Examples** | `src/lib/TANSTACK_QUERY_EXAMPLES.md` | Real-world implementation examples, refactoring guide, performance tips             |
 
 Update `docs/project-conventions.md` whenever a new pattern is established.
 Update `docs/track_pages_and_components.md` whenever a page, component, or infrastructure item is created or modified.
