@@ -1,12 +1,13 @@
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { SelectionRow } from "@/src/components/SelectionRow";
-import { authClient } from "@/src/lib/auth-client";
+import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { barbershopService } from "../services";
+import { barbershopService, organizationService } from "../services";
+import { getErrorMessage } from "../utils/error-handler";
 
 interface Barbershop {
   id: string;
@@ -17,6 +18,7 @@ interface Barbershop {
 
 export function SwitchBarbershopScreen() {
   const router = useRouter();
+  const toast = useToast();
   const [barbershops, setBarbershops] = useState<Barbershop[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -30,20 +32,19 @@ export function SwitchBarbershopScreen() {
       const data = await barbershopService.getList();
       setBarbershops(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error("Error loading barbershops:", error);
-      Alert.alert("Error", "Failed to load barbershops");
+      toast.error(getErrorMessage(error));
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleSelectBarbershop = async (barbershopId: string) => {
-    const { data, error } = await authClient.organization.setActive({
-      organizationId: barbershopId
-    })
-    console.log("Switched Barberbshop")
-    console.log(data)
-    router.back();
+    try {
+      await organizationService.setActive(barbershopId);
+      router.back();
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
   };
 
   return (

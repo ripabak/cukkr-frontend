@@ -1,42 +1,36 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert } from "react-native";
 
-import { authClient } from "@/src/lib/auth-client";
+import { useToast } from "@/src/lib/providers";
 import { AuthButton } from "../components/AuthButton";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { AuthTextField } from "../components/AuthTextField";
-
-function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
+import { otpService } from "../services";
+import { isValidEmail } from "../utils/validation";
 
 export function ForgotPasswordScreen() {
   const router = useRouter();
+  const toast = useToast();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleContinue = async () => {
     if (!email.trim()) {
-      Alert.alert("Error", "Please enter your email address");
+      toast.error("Please enter your email address");
       return;
     }
 
     if (!isValidEmail(email)) {
-      Alert.alert("Error", "Please enter a valid email address");
+      toast.error("Please enter a valid email address");
       return;
     }
 
     setLoading(true);
-    const { error } = await authClient.emailOtp.sendVerificationOtp({
-      email,
-      type: "forget-password",
-    });
+    const { error } = await otpService.sendVerificationOtp(email, "forget-password");
     setLoading(false);
 
     if (error) {
-      Alert.alert("Error", error.message || "Failed to send reset OTP");
+      toast.error(error.message || "Failed to send reset OTP");
       return;
     }
 

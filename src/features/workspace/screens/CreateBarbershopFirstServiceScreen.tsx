@@ -4,16 +4,18 @@ import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { TextInputField } from "@/src/components/TextInputField";
 import { WizardProgress } from "@/src/components/WizardProgress";
-import { servicesService } from "../services";
+import { useToast } from "@/src/lib/providers";
+import { servicesService, organizationService } from "../services";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
 import { validateServiceName, validatePrice, validateDuration } from "../utils/form-validators";
-import { authClient } from "@/src/lib/auth-client";
+import { getErrorMessage } from "../utils/error-handler";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Alert } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 export function CreateBarbershopFirstServiceScreen() {
   const router = useRouter();
+  const toast = useToast();
   const { formData, updateFormData } = useCreateBarbershopForm();
   const [serviceName, setServiceName] = useState(formData.serviceName || "");
   const [description, setDescription] = useState(formData.description || "");
@@ -24,29 +26,29 @@ export function CreateBarbershopFirstServiceScreen() {
   const handleFinish = async () => {
     const nameValidation = validateServiceName(serviceName);
     if (!nameValidation.isValid) {
-      Alert.alert("Validation Error", nameValidation.message);
+      toast.error(nameValidation.message);
       return;
     }
 
     const priceNum = parseInt(price, 10);
     const priceValidation = validatePrice(priceNum);
     if (!priceValidation.isValid) {
-      Alert.alert("Validation Error", priceValidation.message);
+      toast.error(priceValidation.message);
       return;
     }
 
     const durationNum = parseInt(duration, 10);
     const durationValidation = validateDuration(durationNum);
     if (!durationValidation.isValid) {
-      Alert.alert("Validation Error", durationValidation.message);
+      toast.error(durationValidation.message);
       return;
     }
 
     setIsCreating(true);
 
     try {
-      // Step 1: Create organization (barbershop) using better-auth
-      const { data: org, error: orgError } = await authClient.organization.create({
+      // Step 1: Create organization (barbershop)
+      const org = await organizationService.create({
         name: formData.name!,
         slug: formData.slug!,
         metadata: {
@@ -55,18 +57,8 @@ export function CreateBarbershopFirstServiceScreen() {
         },
       });
 
-      if (orgError || !org) {
-        throw new Error(orgError?.message || "Failed to create organization");
-      }
-
       // Step 2: Set organization as active
-      const { error: setActiveError } = await authClient.organization.setActive({
-        organizationId: org.id,
-      });
-
-      if (setActiveError) {
-        throw new Error(setActiveError.message || "Failed to set active organization");
-      }
+      await organizationService.setActive(org.id);
 
       // Step 3: Create service in the organization
       const serviceResponse = await servicesService.create({
@@ -85,11 +77,7 @@ export function CreateBarbershopFirstServiceScreen() {
 
       router.push("/create-barbershop-invite-barber-empty");
     } catch (error) {
-      console.error("Error creating barbershop/service:", error);
-      Alert.alert(
-        "Error",
-        error instanceof Error ? error.message : "Failed to create barbershop"
-      );
+      toast.error(getErrorMessage(error));
     } finally {
       setIsCreating(false);
     }

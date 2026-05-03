@@ -1,12 +1,13 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
-import { authClient } from "@/src/lib/auth-client";
+import { useToast } from "@/src/lib/providers";
 import { authTheme } from "../auth-theme";
 import { AuthButton } from "../components/AuthButton";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { OtpCodeInput } from "../components/OtpCodeInput";
+import { otpService } from "../services";
 
 function useCountdown(initialSeconds: number) {
   const [secondsLeft, setSecondsLeft] = useState(initialSeconds);
@@ -47,6 +48,7 @@ function useCountdown(initialSeconds: number) {
 
 export function VerifyAccountScreen() {
   const router = useRouter();
+  const toast = useToast();
   const { email } = useLocalSearchParams<{ email: string }>();
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
@@ -56,14 +58,11 @@ export function VerifyAccountScreen() {
   const handleVerify = async () => {
     if (!otp) return;
     setLoading(true);
-    const { error } = await authClient.emailOtp.verifyEmail({
-      email,
-      otp,
-    });
+    const { error } = await otpService.verifyEmail(email, otp);
     setLoading(false);
 
     if (error) {
-      Alert.alert("Error", error.message || "Failed to verify OTP");
+      toast.error(error.message || "Failed to verify OTP");
       return;
     }
 
@@ -73,17 +72,17 @@ export function VerifyAccountScreen() {
   const handleResend = async () => {
     if (!email) return;
     setResending(true);
-    const { error } = await authClient.emailOtp.sendVerificationOtp({
+    const { error } = await otpService.sendVerificationOtp(
       email,
-      type: "email-verification",
-    });
+      "email-verification"
+    );
     setResending(false);
 
     if (error) {
-      Alert.alert("Error", error.message || "Failed to send OTP");
+      toast.error(error.message || "Failed to send OTP");
     } else {
       countdown.reset();
-      Alert.alert("Success", "OTP sent successfully");
+      toast.success("OTP sent successfully");
     }
   };
 

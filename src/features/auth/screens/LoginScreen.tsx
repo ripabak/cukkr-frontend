@@ -1,16 +1,18 @@
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { authClient } from "@/src/lib/auth-client";
+import { useToast } from "@/src/lib/providers";
 import { authTheme } from "../auth-theme";
 import { AuthButton } from "../components/AuthButton";
 import { AuthFooterPrompt } from "../components/AuthFooterPrompt";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { AuthTextField } from "../components/AuthTextField";
+import { authService } from "../services";
 
 export function LoginScreen() {
   const router = useRouter();
+  const toast = useToast();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,16 +20,11 @@ export function LoginScreen() {
   const handleLogin = async () => {
     if (!identifier || !password) return;
     setLoading(true);
-    const { data, error } = await authClient.signIn.email({
-      email: identifier,
-      password: password,
-    });
-    console.log(data)
-    console.log(error)
+    const { error } = await authService.signIn(identifier, password);
     setLoading(false);
 
     if (error) {
-      Alert.alert("Error", error.message || "Failed to login");
+      toast.error(error.message || "Failed to login");
       return;
     }
 

@@ -1,15 +1,17 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert } from "react-native";
 
-import { authClient } from "@/src/lib/auth-client";
+import { useToast } from "@/src/lib/providers";
 import { AuthButton } from "../components/AuthButton";
 import { AuthFooterPrompt } from "../components/AuthFooterPrompt";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { AuthTextField } from "../components/AuthTextField";
+import { authService, otpService } from "../services";
+import { passwordsMatch } from "../utils/validation";
 
 export function RegisterScreen() {
   const router = useRouter();
+  const toast = useToast();
   const [name, setName] = useState("");
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -18,32 +20,28 @@ export function RegisterScreen() {
 
   const handleRegister = async () => {
     if (!name || !identifier || !password || !confirmPassword) return;
-    if (password !== confirmPassword) {
-      Alert.alert("Error", "Passwords do not match");
+    if (!passwordsMatch(password, confirmPassword)) {
+      toast.error("Passwords do not match");
       return;
     }
 
     setLoading(true);
-    const { data, error } = await authClient.signUp.email({
-      name,
-      email: identifier,
-      password,
-    });
+    const { error } = await authService.signUp(name, identifier, password);
 
     if (error) {
       setLoading(false);
-      Alert.alert("Error", error.message || "Failed to register");
+      toast.error(error.message || "Failed to register");
       return;
     }
 
-    const { error: sendError } = await authClient.emailOtp.sendVerificationOtp({
-      email: identifier,
-      type: "email-verification",
-    });
+    const { error: sendError } = await otpService.sendVerificationOtp(
+      identifier,
+      "email-verification"
+    );
     setLoading(false);
 
     if (sendError) {
-      Alert.alert("Error", sendError.message || "Failed to send OTP");
+      toast.error(sendError.message || "Failed to send OTP");
       return;
     }
 

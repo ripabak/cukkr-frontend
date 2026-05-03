@@ -1,21 +1,19 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert } from "react-native";
 
-import { authClient } from "@/src/lib/auth-client";
+import { useToast } from "@/src/lib/providers";
 import { AuthButton } from "../components/AuthButton";
 import { AuthFooterPrompt } from "../components/AuthFooterPrompt";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { AuthTextField } from "../components/AuthTextField";
+import { otpService } from "../services";
+import { isValidPassword, passwordsMatch } from "../utils/validation";
 
 const MIN_PASSWORD_LENGTH = 8;
 
-function isValidPassword(password: string): boolean {
-  return password.length >= MIN_PASSWORD_LENGTH;
-}
-
 export function CreatePasswordScreen() {
   const router = useRouter();
+  const toast = useToast();
   const { email, otp } = useLocalSearchParams<{
     email: string;
     otp: string;
@@ -26,39 +24,35 @@ export function CreatePasswordScreen() {
 
   const handleContinue = async () => {
     if (!password || !confirmPassword) {
-      Alert.alert("Error", "Please fill in all fields");
+      toast.error("Please fill in all fields");
       return;
     }
 
-    if (!isValidPassword(password)) {
-      Alert.alert("Error", `Password must be at least ${MIN_PASSWORD_LENGTH} characters`);
+    if (!isValidPassword(password, MIN_PASSWORD_LENGTH)) {
+      toast.error(`Password must be at least ${MIN_PASSWORD_LENGTH} characters`);
       return;
     }
 
-    if (password !== confirmPassword) {
-      Alert.alert("Error", "Passwords do not match");
+    if (!passwordsMatch(password, confirmPassword)) {
+      toast.error("Passwords do not match");
       return;
     }
 
     if (!email || !otp) {
-      Alert.alert("Error", "Missing email or OTP. Please try again.");
+      toast.error("Missing email or OTP. Please try again.");
       return;
     }
 
     setLoading(true);
-    const { error } = await authClient.emailOtp.resetPassword({
-      email,
-      otp,
-      password,
-    });
+    const { error } = await otpService.resetPassword(email, otp, password);
     setLoading(false);
 
     if (error) {
-      Alert.alert("Error", error.message || "Failed to reset password");
+      toast.error(error.message || "Failed to reset password");
       return;
     }
 
-    Alert.alert("Success", "Password reset successfully");
+    toast.success("Password reset successfully");
     router.replace("/login");
   };
 

@@ -1,12 +1,13 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
-import { authClient } from "@/src/lib/auth-client";
+import { useToast } from "@/src/lib/providers";
 import { authTheme } from "../auth-theme";
 import { AuthButton } from "../components/AuthButton";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { OtpCodeInput } from "../components/OtpCodeInput";
+import { otpService } from "../services";
 
 function useCountdown(initialSeconds: number) {
   const [secondsLeft, setSecondsLeft] = useState(initialSeconds);
@@ -47,6 +48,7 @@ function useCountdown(initialSeconds: number) {
 
 export function VerifyOtpScreen() {
   const router = useRouter();
+  const toast = useToast();
   const { email, isPasswordReset } = useLocalSearchParams<{
     email: string;
     isPasswordReset?: string;
@@ -58,23 +60,23 @@ export function VerifyOtpScreen() {
   const handleResend = async () => {
     if (!email) return;
     setResending(true);
-    const { error } = await authClient.emailOtp.sendVerificationOtp({
+    const { error } = await otpService.sendVerificationOtp(
       email,
-      type: isPasswordReset === "true" ? "forget-password" : "email-verification",
-    });
+      isPasswordReset === "true" ? "forget-password" : "email-verification"
+    );
     setResending(false);
 
     if (error) {
-      Alert.alert("Error", error.message || "Failed to send OTP");
+      toast.error(error.message || "Failed to send OTP");
     } else {
       countdown.reset();
-      Alert.alert("Success", "OTP sent successfully");
+      toast.success("OTP sent successfully");
     }
   };
 
   const handleContinue = () => {
     if (otp.length < 4) {
-      Alert.alert("Error", "Please enter a valid OTP");
+      toast.error("Please enter a valid OTP");
       return;
     }
 
