@@ -62,6 +62,8 @@ Every agent must read these docs before starting any work:
 | **Page/component tracking** | `docs/track_pages_and_components.md` | Implementation status for all pages and components (slicing, UI functional, API)   |
 | **Page descriptions**       | `docs/ui-ux-pages-descriptions.md`   | UI/UX intent for each page derived from design files                               |
 | **Component index**         | `docs/component-index.md`            | All components grouped by category for quick lookup                                |
+| **Toast examples**          | `docs-guides/TOAST_USAGE_EXAMPLES.md` | Real-world toast implementation examples and patterns                             |
+| **Auth & Organization**     | `docs-guides/AUTH_AND_ORGANIZATION.md` | Auth client setup, organization management, and implementation patterns             |
 
 Update `docs/project-conventions.md` whenever a new pattern is established.
 Update `docs/track_pages_and_components.md` whenever a page, component, or infrastructure item is created or modified.

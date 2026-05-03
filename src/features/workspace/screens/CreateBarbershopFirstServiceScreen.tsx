@@ -1,26 +1,108 @@
 import { MultilineInputField } from "@/src/components/MultilineInputField";
 import { PrefixedInputField } from "@/src/components/PrefixedInputField";
+import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { TextInputField } from "@/src/components/TextInputField";
 import { WizardProgress } from "@/src/components/WizardProgress";
+import { servicesService } from "../services";
+import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
+import { validateServiceName, validatePrice, validateDuration } from "../utils/form-validators";
+import { authClient } from "@/src/lib/auth-client";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
-// --- MOCK DATA ---
-const MOCK_INITIAL_PRICE = "40000";
-const MOCK_INITIAL_DURATION = "30";
+import { StyleSheet, Text, View, Alert } from "react-native";
 
 export function CreateBarbershopFirstServiceScreen() {
   const router = useRouter();
-  const [serviceName, setServiceName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState(MOCK_INITIAL_PRICE);
-  const [duration, setDuration] = useState(MOCK_INITIAL_DURATION);
+  const { formData, updateFormData } = useCreateBarbershopForm();
+  const [serviceName, setServiceName] = useState(formData.serviceName || "");
+  const [description, setDescription] = useState(formData.description || "");
+  const [price, setPrice] = useState(formData.servicePrice?.toString() || "");
+  const [duration, setDuration] = useState(formData.serviceDuration?.toString() || "");
+  const [isCreating, setIsCreating] = useState(false);
+
+  const handleFinish = async () => {
+    const nameValidation = validateServiceName(serviceName);
+    if (!nameValidation.isValid) {
+      Alert.alert("Validation Error", nameValidation.message);
+      return;
+    }
+
+    const priceNum = parseInt(price, 10);
+    const priceValidation = validatePrice(priceNum);
+    if (!priceValidation.isValid) {
+      Alert.alert("Validation Error", priceValidation.message);
+      return;
+    }
+
+    const durationNum = parseInt(duration, 10);
+    const durationValidation = validateDuration(durationNum);
+    if (!durationValidation.isValid) {
+      Alert.alert("Validation Error", durationValidation.message);
+      return;
+    }
+
+    setIsCreating(true);
+
+    try {
+      // Step 1: Create organization (barbershop) using better-auth
+      const { data: org, error: orgError } = await authClient.organization.create({
+        name: formData.name!,
+        slug: formData.slug!,
+        metadata: {
+          description: formData.description,
+          address: formData.address,
+        },
+      });
+
+      if (orgError || !org) {
+        throw new Error(orgError?.message || "Failed to create organization");
+      }
+
+      // Step 2: Set organization as active
+      const { error: setActiveError } = await authClient.organization.setActive({
+        organizationId: org.id,
+      });
+
+      if (setActiveError) {
+        throw new Error(setActiveError.message || "Failed to set active organization");
+      }
+
+      // Step 3: Create service in the organization
+      const serviceResponse = await servicesService.create({
+        name: serviceName,
+        price: priceNum,
+        duration: durationNum,
+        description: description || null,
+      });
+
+      updateFormData({
+        serviceName,
+        servicePrice: priceNum,
+        serviceDuration: durationNum,
+        serviceId: serviceResponse?.id,
+      });
+
+      router.push("/create-barbershop-invite-barber-empty");
+    } catch (error) {
+      console.error("Error creating barbershop/service:", error);
+      Alert.alert(
+        "Error",
+        error instanceof Error ? error.message : "Failed to create barbershop"
+      );
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const isValid =
+    validateServiceName(serviceName).isValid &&
+    validatePrice(parseInt(price, 10)).isValid &&
+    validateDuration(parseInt(duration, 10)).isValid;
 
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
-      <WizardProgress totalSteps={3} currentStep={2} style={styles.wizard} />
+      <WizardProgress totalSteps={3} currentStep={1} style={styles.wizard} />
       <Text style={styles.title}>Create Your First Service</Text>
       <Text style={styles.subtitle}>
         This will be the default service for your barbershop. You can change it
@@ -40,21 +122,24 @@ export function CreateBarbershopFirstServiceScreen() {
         style={styles.descInput}
       />
       <Text style={styles.fieldLabel}>Price</Text>
-      <PrefixedInputField prefix="Rp" value={price} onChangeText={setPrice} />
+      <PrefixedInputField
+        prefix="Rp"
+        value={price}
+        onChangeText={setPrice}
+      />
       <Text style={[styles.fieldLabel, styles.fieldLabelTop]}>Duration</Text>
       <PrefixedInputField
-        prefix="In Minutes"
+        prefix="Minutes"
         value={duration}
         onChangeText={setDuration}
       />
       <View style={styles.flex} />
-      <TouchableOpacity
-        style={styles.finishBtn}
-        activeOpacity={0.8}
-        onPress={() => router.push("/create-barbershop-success")}
-      >
-        <Text style={styles.finishLabel}>Finish</Text>
-      </TouchableOpacity>
+      <PrimaryButton
+        label="Finish Setup"
+        style={styles.button}
+        onPress={handleFinish}
+        disabled={!isValid || isCreating}
+      />
     </ScreenShell>
   );
 }
@@ -91,16 +176,7 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: 32,
   },
-  finishBtn: {
-    backgroundColor: "#C6FF4D",
-    borderRadius: 999,
-    paddingVertical: 16,
-    alignItems: "center",
+  button: {
     marginBottom: 16,
-  },
-  finishLabel: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#1A1A1A",
   },
 });

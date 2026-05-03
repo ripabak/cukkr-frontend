@@ -1,14 +1,19 @@
 import { GradientButton } from "@/src/components/GradientButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text } from "react-native";
-
-// --- MOCK DATA ---
-const MOCK_BARBERSHOP_NAME = "Hendra Barbershop";
 
 export function CreateBarbershopSuccessScreen() {
   const router = useRouter();
+  const { formData, resetFormData } = useCreateBarbershopForm();
+  const barbershopName = formData.name || "Your Barbershop";
+
+  const handleOpenBarbershop = async () => {
+    resetFormData();
+    router.replace("/");
+  };
 
   return (
     <ScreenShell
@@ -21,13 +26,12 @@ export function CreateBarbershopSuccessScreen() {
     >
       <Text style={styles.title}>Congratulation 🎉</Text>
       <Text style={styles.subtitle}>
-        {`Your barbershop, "${MOCK_BARBERSHOP_NAME}," has been created.`}
+        {`Your barbershop, "${barbershopName}," has been created.`}
       </Text>
       <GradientButton
         label="Open My Barbershop"
-        icon="login"
         style={styles.button}
-        onPress={() => router.replace("/home-dashboard")}
+        onPress={handleOpenBarbershop}
       />
     </ScreenShell>
   );

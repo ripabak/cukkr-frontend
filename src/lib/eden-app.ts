@@ -18,15 +18,8 @@ export const app = treaty<App>(
       };
     },
 
-    onResponse: async (response) => {
-      if (response.status === 401) {
-        console.error("Unauthorized request", { status: response.status });
-      }
-      return response;
-    },
-
     fetch: {
-      credentials: "include"
+      credentials: "include",
     },
   }
 );

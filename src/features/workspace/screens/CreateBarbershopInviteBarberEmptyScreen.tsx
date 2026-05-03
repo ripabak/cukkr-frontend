@@ -3,30 +3,102 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { SecondaryButton } from "@/src/components/SecondaryButton";
 import { TextInputField } from "@/src/components/TextInputField";
 import { WizardProgress } from "@/src/components/WizardProgress";
+import { barbersService } from "../services";
+import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
+import { validateEmail, validatePhoneNumber } from "../utils/form-validators";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Alert } from "react-native";
 
 export function CreateBarbershopInviteBarberEmptyScreen() {
   const router = useRouter();
+  const { formData, updateFormData } = useCreateBarbershopForm();
   const [barber, setBarber] = useState("");
+
+  const parseBarberInput = (input: string): { email?: string; phone?: string } | null => {
+    const trimmed = input.trim();
+
+    if (trimmed.includes("@")) {
+      const emailValidation = validateEmail(trimmed);
+      if (emailValidation.isValid) {
+        return { email: trimmed };
+      }
+      return null;
+    }
+
+    const phoneValidation = validatePhoneNumber(trimmed);
+    if (phoneValidation.isValid) {
+      return { phone: trimmed };
+    }
+
+    return null;
+  };
+
+  const handleAddBarber = async () => {
+    const parsed = parseBarberInput(barber);
+    if (!parsed) {
+      Alert.alert(
+        "Invalid Input",
+        "Please enter a valid email or phone number"
+      );
+      return;
+    }
+
+    const currentInvites = formData.barberInvites || [];
+    const isDuplicate = currentInvites.some(
+      (invite) =>
+        invite.email === parsed.email || invite.phone === parsed.phone
+    );
+
+    if (isDuplicate) {
+      Alert.alert("Duplicate", "This barber is already in the invite list");
+      return;
+    }
+
+    try {
+      await barbersService.inviteSingle(parsed);
+      const newInvites = [...currentInvites, parsed];
+      updateFormData({ barberInvites: newInvites });
+      setBarber("");
+
+      if (newInvites.length > 0) {
+        router.push("/create-barbershop-invite-barber-filled");
+      }
+    } catch (error) {
+      console.error("Error inviting barber:", error);
+      Alert.alert(
+        "Error",
+        error instanceof Error ? error.message : "Failed to invite barber"
+      );
+    }
+  };
+
+  const handleSkip = () => {
+    updateFormData({ barberInvites: [] });
+    router.push("/create-barbershop-success");
+  };
 
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
-      <WizardProgress totalSteps={3} currentStep={1} style={styles.wizard} />
+      <WizardProgress totalSteps={3} currentStep={2} style={styles.wizard} />
       <Text style={styles.title}>Invite Barber</Text>
       <Text style={styles.subtitle}>Inviting barber to your barbershop</Text>
       <TextInputField
         label="Add Barber"
-        placeholder="email / phone number *"
+        placeholder="email / phone number"
         value={barber}
         onChangeText={setBarber}
+        keyboardType="email-address"
       />
-      <SecondaryButton label="Invite" style={styles.inviteBtn} />
+      <SecondaryButton
+        label="Invite"
+        style={styles.inviteBtn}
+        onPress={handleAddBarber}
+      />
       <View style={styles.flex} />
       <PrimaryButton
-        label="Skip"
-        onPress={() => router.push("/create-barbershop-first-service")}
+        label="Continue"
+        onPress={handleSkip}
       />
     </ScreenShell>
   );
