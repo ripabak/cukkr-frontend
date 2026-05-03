@@ -47,9 +47,48 @@ src/                              # Business logic and reusable code
 - **src/features/**: Each feature has an isolated module structure with its own components, screens, services, and utils.
 - **src/components/**, **src/services/**, and **src/utils/**: Shared code that is reusable across the whole application.
 
-### Error explained
+## Feature Architecture Guidelines
 
-- if related to existing href link like `<Link href="/path" asChild>` like `Argument of type '"/path"' is not assignable` when running `npx tsc --noEmit`, maybe because need to generate the expo type first by running `npx expo start` and ctrl-c to stop server.
+### Screens
+- **Entry point for user interaction.** Screens handle user input, display data, and orchestrate async operations.
+- **Never import external API clients directly** (e.g., `authClient`, `app.api`). Always use services.
+- **No business logic or data transformation.** Logic lives in services; screens call them and handle results.
+- **UI feedback via toast, never Alert.** All success, error, and info messages use `useToast()` from `@/src/lib/providers`.
+- **Wrap async service calls in try-catch.** Convert errors to user-friendly messages via `getErrorMessage(error)` utility.
+- **Example**: Login screen imports `authService`, calls `authService.signIn()`, and displays result via `toast.success()` or `toast.error()`.
+
+### Services
+- **Single responsibility.** One service file = one cohesive domain or operation type (e.g., `auth.service.ts` for login/signup, `otp.service.ts` for OTP flows).
+- **Wrap external clients.** Services are the only place that imports and calls `authClient`, `app.api`, or third-party API clients.
+- **Throw errors, not return error objects.** Service methods throw descriptive Error objects on failure; screens catch them.
+- **Pure functions where possible.** No side effects; no direct UI updates (no toast, no navigation inside services).
+- **Typed contracts.** Export an object with strongly-typed async methods. Provide JSDoc comments for complex operations.
+- **Barrel export via index.ts.** All services in a feature expose themselves through `services/index.ts` for clean imports.
+- **Example**: `authService.signIn(email, password)` throws on error; caller in screen catches and shows `toast.error()`.
+
+### Utils
+- **Helper functions and constants.** Stateless, reusable logic that doesn't call external APIs.
+- **Validation functions** (e.g., `isValidEmail()`, `validatePrice()`). Return validation result objects with `{ isValid, message }`.
+- **Error converters** (e.g., `getErrorMessage(error)` extracts message from various error types safely).
+- **Data transformers** (e.g., `slug-generator.ts` creates slugs from barbershop names).
+- **No side effects.** Utils are pure utility functions; they never call services, APIs, or update UI state.
+- **Example**: `isValidEmail(email)` returns `boolean`; `getErrorMessage(error)` safely extracts error message string.
+
+### Context (if multi-step forms or complex state)
+- **Centralize multi-step form state.** When a flow spans multiple screens (e.g., create barbershop over 5 steps), use Context to share state.
+- **Only for form/wizard state, not API data.** Context holds form field values and step progress; API responses are managed by individual screens.
+- **Provide via Provider at feature root.** Wrap feature screens in a Context Provider in the layout or root component.
+- **Example**: `CreateBarbershopContext` holds name, slug, address across screens; each screen updates via `updateFormData()`.
+
+### Components
+- **Feature-specific UI components live in `components/` folder.** Reusable buttons, inputs, modals for this feature.
+- **Global components in `src/components/`.** Shared across entire app (e.g., `PrimaryButton`, `ScreenHeader`).
+- **Presentational only.** Components receive data via props and call callbacks; they don't fetch data or manage async state.
+- **Example**: `AuthTextField` (feature-specific) wraps styling; screens pass `value`, `onChangeText`, `label` as props.
+
+## Common Issues & Solutions
+
+**Expo routing type errors**: If you see `Argument of type '"/path"' is not assignable` for Link href, run `npx expo start` then Ctrl+C. This generates Expo routing types.
 
 ## Key Documentation
 
