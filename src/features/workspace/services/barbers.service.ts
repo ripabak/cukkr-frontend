@@ -24,38 +24,46 @@ export const barbersService = {
   },
 
   async cancelInvitation(invitationId: string) {
-    const { data: response, error } = await (app.api.barbers.invite as any)[invitationId].delete();
+    const { data: response, error } = await authClient.organization.cancelInvitation({
+      invitationId
+    })
 
     if (error || !response) {
       throw new Error("Failed to cancel invitation");
     }
-    return response.data;
+    return response;
   },
 
   async removeMember(memberId: string) {
-    const { data: response, error } = await (app.api.barbers as any)[memberId].delete();
+    const { data: response, error } = await authClient.organization.removeMember({
+      memberIdOrEmail: memberId
+    });
 
     if (error || !response) {
       throw new Error("Failed to remove member");
     }
-    return response.data;
+    return response;
   },
 
   async acceptInvitation(invitationId: string) {
-    const { data: response, error } = await (app.api.barbers.invitations as any)[invitationId].accept.post({});
+    const { data: response, error } = await authClient.organization.acceptInvitation({
+      invitationId
+    });
 
     if (error || !response) {
       throw new Error("Failed to accept invitation");
     }
-    return response.data;
+    return response;
   },
 
   async declineInvitation(invitationId: string) {
-    const { data: response, error } = await (app.api.barbers.invitations as any)[invitationId].decline.post({});
+    const { data: response, error } = await authClient.organization.rejectInvitation({
+      invitationId
+    });
 
     if (error || !response) {
       throw new Error("Failed to decline invitation");
     }
-    return response.data;
-  },
+    return response;
+  }
 };

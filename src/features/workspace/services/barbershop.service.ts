@@ -1,3 +1,4 @@
+import { authClient } from "@/src/lib/auth-client";
 import { app } from "@/src/lib/eden-app";
 
 export const barbershopService = {
@@ -22,13 +23,17 @@ export const barbershopService = {
     return response.data?.available || false;
   },
 
-  async getList() {
-    const { data: response, error } = await app.api.barbershop.list.get();
+  async getList(query: string | undefined) {
+    const { data: response, error } = await authClient.organization.list({
+      query: {
+        name: query
+      }
+    })
 
     if (error || !response) {
       throw new Error("Failed to fetch barbershop list");
     }
-    return response.data || [];
+    return response || [];
   },
 
   async getCurrent() {
@@ -56,11 +61,13 @@ export const barbershopService = {
   },
 
   async leave(orgId: string) {
-    const { data: response, error } = await (app.api.barbershop as any)[orgId].leave.delete();
+    const { data: response, error } = await authClient.organization.leave({
+      organizationId: orgId
+    });
 
     if (error || !response) {
       throw new Error("Failed to leave barbershop");
     }
-    return response.data;
+    return response;
   },
 };

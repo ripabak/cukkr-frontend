@@ -8,10 +8,10 @@ const BARBERSHOP_QUERY_KEYS = {
   slugCheck: (slug: string) => [...BARBERSHOP_QUERY_KEYS.all, 'slug-check', slug] as const,
 };
 
-export function useBarbershopList() {
+export function useBarbershopList(query?: string) {
   return useQuery({
     queryKey: BARBERSHOP_QUERY_KEYS.list(),
-    queryFn: () => barbershopService.getList(),
+    queryFn: () => barbershopService.getList(query),
   });
 }
 
