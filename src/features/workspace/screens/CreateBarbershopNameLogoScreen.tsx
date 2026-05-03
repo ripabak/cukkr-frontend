@@ -4,98 +4,59 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { TextInputField } from "@/src/components/TextInputField";
 import { WizardProgress } from "@/src/components/WizardProgress";
 import { useRouter } from "expo-router";
-import React, { useCallback, useState, useEffect, useRef } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
-import { barbershopService } from "../services";
+import { useBarbershopSlugCheck } from "../hooks";
 import { useToast } from "@/src/lib/providers";
-import { getErrorMessage } from "@/src/lib/utils";
 import { validateBarbershopName } from "../utils/form-validators";
 import { generateSlug } from "../utils/slug-generator";
-
-const SLUG_CHECK_DELAY = 500; // ms
 
 export function CreateBarbershopNameLogoScreen() {
   const router = useRouter();
   const toast = useToast();
   const { formData, updateFormData } = useCreateBarbershopForm();
   const [name, setName] = useState(formData.name || "");
-  const [isCheckingSlug, setIsCheckingSlug] = useState(false);
-  const [slugAvailable, setSlugAvailable] = useState<boolean | null>(null);
-  const [slugCheckMessage, setSlugCheckMessage] = useState("");
-  const slugCheckTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Debounced slug checker
-  useEffect(() => {
-    // Clear previous timeout
-    if (slugCheckTimeoutRef.current) {
-      clearTimeout(slugCheckTimeoutRef.current);
-    }
-
-    // Validate name first
-    const validation = validateBarbershopName(name);
-    if (!validation.isValid) {
-      setSlugAvailable(null);
-      setSlugCheckMessage("");
-      return;
-    }
-
-    // Set timeout for slug check
-    setIsCheckingSlug(true);
-    setSlugCheckMessage("Checking availability...");
-
-    slugCheckTimeoutRef.current = setTimeout(async () => {
-      try {
-        const slug = generateSlug(name);
-        const available = await barbershopService.checkSlugAvailability(slug);
-        setSlugAvailable(available);
-        setSlugCheckMessage(available ? "Available ✓" : "Not available");
-      } catch (error) {
-        toast.error(getErrorMessage(error), 2000);
-        setSlugAvailable(false);
-        setSlugCheckMessage("Error checking availability");
-      } finally {
-        setIsCheckingSlug(false);
-      }
-    }, SLUG_CHECK_DELAY);
-
-    // Cleanup on unmount
-    return () => {
-      if (slugCheckTimeoutRef.current) {
-        clearTimeout(slugCheckTimeoutRef.current);
-      }
-    };
-  }, [name]);
+  const validation = validateBarbershopName(name);
+  const slug = useMemo(() => generateSlug(name), [name]);
+  const { data: isAvailable, isLoading: isCheckingSlug, error } = useBarbershopSlugCheck(slug);
 
   const handleNameChange = useCallback((text: string) => {
     setName(text);
   }, []);
 
-  const handleCreate = async () => {
-    const validation = validateBarbershopName(name);
+  const handleCreate = () => {
     if (!validation.isValid) {
       Alert.alert("Validation Error", validation.message);
       return;
     }
 
-    if (slugAvailable !== true) {
-      Alert.alert("Error", "Please check that the barbershop name is available");
+    if (isAvailable !== true) {
+      Alert.alert("Error", "Barbershop name is not available");
       return;
     }
 
-    const slug = generateSlug(name);
     updateFormData({ name, slug });
     router.push("/create-barbershop-first-service");
   };
 
-  const slug = generateSlug(name);
-  const isValid = validateBarbershopName(name).isValid && slugAvailable === true;
-  const messageColor =
-    slugCheckMessage === "Available ✓"
-      ? "#34C759"
-      : slugCheckMessage === "Not available"
-        ? "#FF3B30"
-        : "#FF9500";
+  const isValid = validation.isValid && isAvailable === true;
+
+  let slugMessage = "";
+  let messageColor = "#FF9500";
+  if (isCheckingSlug) {
+    slugMessage = "Checking availability...";
+  } else if (error) {
+    slugMessage = "Error checking availability";
+    messageColor = "#FF3B30";
+  } else if (isAvailable === true) {
+    slugMessage = "Available ✓";
+    messageColor = "#34C759";
+  } else if (isAvailable === false) {
+    slugMessage = "Not available";
+    messageColor = "#FF3B30";
+  }
 
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
@@ -113,9 +74,9 @@ export function CreateBarbershopNameLogoScreen() {
       {name && (
         <View style={styles.slugInfo}>
           <Text style={styles.slugLabel}>URL: {slug}</Text>
-          {slugCheckMessage && (
+          {slugMessage && (
             <Text style={[styles.slugMessage, { color: messageColor }]}>
-              {slugCheckMessage}
+              {slugMessage}
             </Text>
           )}
         </View>

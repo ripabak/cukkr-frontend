@@ -4,7 +4,7 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { SecondaryButton } from "@/src/components/SecondaryButton";
 import { TextInputField } from "@/src/components/TextInputField";
 import { WizardProgress } from "@/src/components/WizardProgress";
-import { barbersService } from "../services";
+import { useInviteBarber } from "../hooks";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
 import { validateEmail, validatePhoneNumber } from "../utils/form-validators";
 import { useRouter } from "expo-router";
@@ -15,7 +15,7 @@ export function CreateBarbershopInviteBarberFilledScreen() {
   const router = useRouter();
   const { formData, updateFormData } = useCreateBarbershopForm();
   const [barber, setBarber] = useState("");
-  const [isRemoving, setIsRemoving] = useState<string | null>(null);
+  const { mutate: inviteBarber, isPending: isInviting } = useInviteBarber();
 
   const invitedBarbers = formData.barberInvites || [];
 
@@ -38,7 +38,7 @@ export function CreateBarbershopInviteBarberFilledScreen() {
     return null;
   };
 
-  const handleAddBarber = async () => {
+  const handleAddBarber = () => {
     const parsed = parseBarberInput(barber);
     if (!parsed) {
       Alert.alert(
@@ -58,36 +58,28 @@ export function CreateBarbershopInviteBarberFilledScreen() {
       return;
     }
 
-    try {
-      await barbersService.inviteSingle(parsed);
-      const newInvites = [...invitedBarbers, parsed];
-      updateFormData({ barberInvites: newInvites });
-      setBarber("");
-    } catch (error) {
-      console.error("Error inviting barber:", error);
-      Alert.alert(
-        "Error",
-        error instanceof Error ? error.message : "Failed to invite barber"
-      );
-    }
+    inviteBarber({ email: parsed.email || parsed.phone || "" }, {
+      onSuccess: () => {
+        const newInvites = [...invitedBarbers, parsed];
+        updateFormData({ barberInvites: newInvites });
+        setBarber("");
+      },
+      onError: (error) => {
+        Alert.alert(
+          "Error",
+          error.message || "Failed to invite barber"
+        );
+      },
+    });
   };
 
-  const handleRemoveBarber = async (email?: string, phone?: string) => {
-    const key = email || phone;
-    if (!key) return;
+  const handleRemoveBarber = (email?: string, phone?: string) => {
+    if (!email && !phone) return;
 
-    setIsRemoving(key);
-    try {
-      const newInvites = invitedBarbers.filter(
-        (invite) => invite.email !== email && invite.phone !== phone
-      );
-      updateFormData({ barberInvites: newInvites });
-    } catch (error) {
-      console.error("Error removing barber:", error);
-      Alert.alert("Error", "Failed to remove barber from list");
-    } finally {
-      setIsRemoving(null);
-    }
+    const newInvites = invitedBarbers.filter(
+      (invite) => invite.email !== email && invite.phone !== phone
+    );
+    updateFormData({ barberInvites: newInvites });
   };
 
   const handleContinue = () => {
@@ -125,7 +117,7 @@ export function CreateBarbershopInviteBarberFilledScreen() {
         keyboardType="email-address"
       />
       <SecondaryButton
-        label="Invite"
+        label={isInviting ? "Inviting..." : "Invite"}
         style={styles.inviteBtn}
         onPress={handleAddBarber}
       />

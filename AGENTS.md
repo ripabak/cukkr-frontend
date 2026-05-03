@@ -156,6 +156,8 @@ Screen shows toast feedback & updates UI
 
 ## Common Issues & Solutions
 
+**TypeScript errors**: Always run `npx tsc --noEmit` after changes. Fix any TS errors immediately—don't leave type issues for later.
+
 **Expo routing type errors**: If you see `Argument of type '"/path"' is not assignable` for Link href, run `npx expo start` then Ctrl+C. This generates Expo routing types.
 
 ## Key Documentation

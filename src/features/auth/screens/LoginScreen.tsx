@@ -3,32 +3,34 @@ import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { useToast } from "@/src/lib/providers";
+import { useSignIn } from "../hooks";
 import { authTheme } from "../auth-theme";
 import { AuthButton } from "../components/AuthButton";
 import { AuthFooterPrompt } from "../components/AuthFooterPrompt";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { AuthTextField } from "../components/AuthTextField";
-import { authService } from "../services";
 
 export function LoginScreen() {
   const router = useRouter();
   const toast = useToast();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { mutate: signIn, isPending } = useSignIn();
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
     if (!identifier || !password) return;
-    setLoading(true);
-    const { error } = await authService.signIn(identifier, password);
-    setLoading(false);
 
-    if (error) {
-      toast.error(error.message || "Failed to login");
-      return;
-    }
-
-    router.replace("/");
+    signIn(
+      { email: identifier, password },
+      {
+        onSuccess: () => {
+          router.replace("/");
+        },
+        onError: (error) => {
+          toast.error(error.message || "Failed to login");
+        },
+      }
+    );
   };
 
   return (
@@ -64,9 +66,9 @@ export function LoginScreen() {
       </View>
 
       <AuthButton
-        label={loading ? "Logging in..." : "Login"}
+        label={isPending ? "Logging in..." : "Login"}
         onPress={handleLogin}
-        disabled={loading}
+        disabled={isPending}
       />
     </AuthScreenShell>
   );

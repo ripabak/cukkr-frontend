@@ -3,48 +3,26 @@ import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { SelectionRow } from "@/src/components/SelectionRow";
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { barbershopService, organizationService } from "../services";
-import { getErrorMessage } from "../utils/error-handler";
-
-interface Barbershop {
-  id: string;
-  name: string;
-  slug: string;
-  role: string;
-}
+import { useBarbershopList, useSetActiveOrganization } from "../hooks";
 
 export function SwitchBarbershopScreen() {
   const router = useRouter();
   const toast = useToast();
-  const [barbershops, setBarbershops] = useState<Barbershop[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: barbershops = [], isLoading } = useBarbershopList();
+  const { mutate: setActive } = useSetActiveOrganization();
 
-  useEffect(() => {
-    loadBarbershops();
-  }, []);
-
-  const loadBarbershops = async () => {
-    setIsLoading(true);
-    try {
-      const data = await barbershopService.getList();
-      setBarbershops(Array.isArray(data) ? data : []);
-    } catch (error) {
-      toast.error(getErrorMessage(error));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSelectBarbershop = async (barbershopId: string) => {
-    try {
-      await organizationService.setActive(barbershopId);
-      router.back();
-    } catch (error) {
-      toast.error(getErrorMessage(error));
-    }
+  const handleSelectBarbershop = (barbershopId: string) => {
+    setActive(barbershopId, {
+      onSuccess: () => {
+        router.back();
+      },
+      onError: (error) => {
+        toast.error("Failed to switch barbershop: " + error.message);
+      },
+    });
   };
 
   return (

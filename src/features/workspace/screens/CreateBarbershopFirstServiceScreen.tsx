@@ -5,7 +5,8 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { TextInputField } from "@/src/components/TextInputField";
 import { WizardProgress } from "@/src/components/WizardProgress";
 import { useToast } from "@/src/lib/providers";
-import { servicesService, organizationService } from "../services";
+import { servicesService } from "../services";
+import { useCreateOrganization, useSetActiveOrganization } from "../hooks";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
 import { validateServiceName, validatePrice, validateDuration } from "../utils/form-validators";
 import { getErrorMessage } from "../utils/error-handler";
@@ -21,9 +22,10 @@ export function CreateBarbershopFirstServiceScreen() {
   const [description, setDescription] = useState(formData.description || "");
   const [price, setPrice] = useState(formData.servicePrice?.toString() || "");
   const [duration, setDuration] = useState(formData.serviceDuration?.toString() || "");
-  const [isCreating, setIsCreating] = useState(false);
+  const { mutate: createOrg, isPending: isCreatingOrg } = useCreateOrganization();
+  const { mutate: setActive, isPending: isSettingActive } = useSetActiveOrganization();
 
-  const handleFinish = async () => {
+  const handleFinish = () => {
     const nameValidation = validateServiceName(serviceName);
     if (!nameValidation.isValid) {
       toast.error(nameValidation.message);
@@ -44,43 +46,52 @@ export function CreateBarbershopFirstServiceScreen() {
       return;
     }
 
-    setIsCreating(true);
-
-    try {
-      // Step 1: Create organization (barbershop)
-      const org = await organizationService.create({
+    // Step 1: Create organization (barbershop)
+    createOrg(
+      {
         name: formData.name!,
         slug: formData.slug!,
         metadata: {
           description: formData.description,
           address: formData.address,
         },
-      });
+      },
+      {
+        onSuccess: async (org) => {
+          // Step 2: Set organization as active
+          setActive(org.id, {
+            onSuccess: async () => {
+              // Step 3: Create service in the organization
+              try {
+                const serviceResponse = await servicesService.create({
+                  name: serviceName,
+                  price: priceNum,
+                  duration: durationNum,
+                  description: description || null,
+                });
 
-      // Step 2: Set organization as active
-      await organizationService.setActive(org.id);
+                updateFormData({
+                  serviceName,
+                  servicePrice: priceNum,
+                  serviceDuration: durationNum,
+                  serviceId: serviceResponse?.id,
+                });
 
-      // Step 3: Create service in the organization
-      const serviceResponse = await servicesService.create({
-        name: serviceName,
-        price: priceNum,
-        duration: durationNum,
-        description: description || null,
-      });
-
-      updateFormData({
-        serviceName,
-        servicePrice: priceNum,
-        serviceDuration: durationNum,
-        serviceId: serviceResponse?.id,
-      });
-
-      router.push("/create-barbershop-invite-barber-empty");
-    } catch (error) {
-      toast.error(getErrorMessage(error));
-    } finally {
-      setIsCreating(false);
-    }
+                router.push("/create-barbershop-invite-barber-empty");
+              } catch (error) {
+                toast.error(getErrorMessage(error));
+              }
+            },
+            onError: (error) => {
+              toast.error("Failed to set active organization: " + error.message);
+            },
+          });
+        },
+        onError: (error) => {
+          toast.error("Failed to create organization: " + error.message);
+        },
+      }
+    );
   };
 
   const isValid =
@@ -123,10 +134,10 @@ export function CreateBarbershopFirstServiceScreen() {
       />
       <View style={styles.flex} />
       <PrimaryButton
-        label="Finish Setup"
+        label={isCreatingOrg || isSettingActive ? "Setting up..." : "Finish Setup"}
         style={styles.button}
         onPress={handleFinish}
-        disabled={!isValid || isCreating}
+        disabled={!isValid || isCreatingOrg || isSettingActive}
       />
     </ScreenShell>
   );

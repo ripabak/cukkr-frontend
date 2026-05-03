@@ -3,7 +3,7 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { SecondaryButton } from "@/src/components/SecondaryButton";
 import { TextInputField } from "@/src/components/TextInputField";
 import { WizardProgress } from "@/src/components/WizardProgress";
-import { barbersService } from "../services";
+import { useInviteBarber } from "../hooks";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
 import { validateEmail, validatePhoneNumber } from "../utils/form-validators";
 import { useRouter } from "expo-router";
@@ -14,6 +14,7 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
   const router = useRouter();
   const { formData, updateFormData } = useCreateBarbershopForm();
   const [barber, setBarber] = useState("");
+  const { mutate: inviteBarber, isPending: isInviting } = useInviteBarber();
 
   const parseBarberInput = (input: string): { email?: string; phone?: string } | null => {
     const trimmed = input.trim();
@@ -34,12 +35,21 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
     return null;
   };
 
-  const handleAddBarber = async () => {
+  const handleAddBarber = () => {
     const parsed = parseBarberInput(barber);
     if (!parsed) {
       Alert.alert(
         "Invalid Input",
         "Please enter a valid email or phone number"
+      );
+      return;
+    }
+
+    // Only email-based invitations are supported
+    if (!parsed.email) {
+      Alert.alert(
+        "Email Required",
+        "Please enter an email address for invitation"
       );
       return;
     }
@@ -55,22 +65,23 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
       return;
     }
 
-    try {
-      await barbersService.inviteSingle(parsed);
-      const newInvites = [...currentInvites, parsed];
-      updateFormData({ barberInvites: newInvites });
-      setBarber("");
+    inviteBarber({ email: parsed.email }, {
+      onSuccess: () => {
+        const newInvites = [...currentInvites, parsed];
+        updateFormData({ barberInvites: newInvites });
+        setBarber("");
 
-      if (newInvites.length > 0) {
-        router.push("/create-barbershop-invite-barber-filled");
-      }
-    } catch (error) {
-      console.error("Error inviting barber:", error);
-      Alert.alert(
-        "Error",
-        error instanceof Error ? error.message : "Failed to invite barber"
-      );
-    }
+        if (newInvites.length > 0) {
+          router.push("/create-barbershop-invite-barber-filled");
+        }
+      },
+      onError: (error) => {
+        Alert.alert(
+          "Error",
+          error.message || "Failed to invite barber"
+        );
+      },
+    });
   };
 
   const handleSkip = () => {
