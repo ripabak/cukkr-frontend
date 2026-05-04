@@ -5,14 +5,14 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { TextInputField } from "@/src/components/TextInputField";
 import { WizardProgress } from "@/src/components/WizardProgress";
 import { useToast } from "@/src/lib/providers";
-import { servicesService } from "../services";
-import { useCreateOrganization, useSetActiveOrganization } from "../hooks";
-import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
-import { validateServiceName, validatePrice, validateDuration } from "../utils/form-validators";
-import { getErrorMessage } from "../utils/error-handler";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
+import { useCreateOrganization, useSetActiveOrganization } from "../hooks";
+import { servicesService } from "../services";
+import { getErrorMessage } from "../utils/error-handler";
+import { validateDuration, validatePrice, validateServiceName } from "../utils/form-validators";
 
 export function CreateBarbershopFirstServiceScreen() {
   const router = useRouter();
@@ -79,6 +79,7 @@ export function CreateBarbershopFirstServiceScreen() {
 
                 router.push("/create-barbershop-invite-barber-empty");
               } catch (error) {
+                console.log(error)
                 toast.error(getErrorMessage(error));
               }
             },
