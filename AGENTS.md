@@ -160,6 +160,58 @@ Screen shows toast feedback & updates UI
 
 **Expo routing type errors**: If you see `Argument of type '"/path"' is not assignable` for Link href, run `npx expo start` then Ctrl+C. This generates Expo routing types.
 
+## Eden Treaty API Client
+
+The app uses **Eden Treaty** (`@elysia/eden`) as a type-safe API client. All API requests go through `src/lib/eden-app.ts`.
+
+### Setup
+- **Client**: `src/lib/eden-app.ts` creates a treaty client typed by the backend Elysia `App`
+- **Backend types**: `src/types/app.d.ts` (auto-generated from backend, includes all endpoints and types)
+- **Authentication**: Automatically includes auth cookies via `onRequest` hook in `eden-app.ts`
+
+### Basic Usage in Services
+```typescript
+import { app } from "@/src/lib/eden-app";
+
+// Call an API endpoint (example: GET /api/barbershop)
+const response = await app.api.barbershop.get();
+const { data } = response.data; // Fully typed response
+
+// Call with parameters (example: POST /api/services)
+const response = await app.api.services.post({
+  name: "Haircut",
+  price: 50000,
+  duration: 30,
+});
+
+// Call with path params (example: GET /api/services/:id)
+const response = await app.api.services[":id"].get({
+  params: { id: "service-123" },
+});
+
+// Call with query params (example: GET /api/services?sort=name_asc)
+const response = await app.api.services.get({
+  query: { sort: "name_asc" },
+});
+```
+
+### Error Handling
+- All API calls may throw errors; wrap in try-catch in services
+- Services throw errors; screens catch and convert to user messages via `getErrorMessage()`
+- See `TANSTACK_QUERY_SETUP.md` for hook-level error handling
+
+### Common Endpoints
+Check `src/types/app.d.ts` for complete endpoint list. Key endpoints include:
+- **Barbershop**: `app.api.barbershop` (GET, POST, PATCH, settings, logo)
+- **Services**: `app.api.services` (CRUD, toggle-active, set-default, image upload)
+- **Bookings**: `app.api.bookings` (CRUD, status update, accept/decline, reassign)
+- **Customers**: `app.api.customers` (list, get, bookings, notes)
+- **Auth**: `app.api.auth.phone` (send-otp, verify-otp)
+- **Me**: `app.api.me` (get profile, patch, avatar upload, change-phone)
+- **Notifications**: `app.api.notifications` (list, read, actions)
+- **Analytics**: `app.api.analytics` (get stats by range)
+- **Public**: `app.api.public` (barbershop details, availability, booking, walk-in)
+
 ## Key Documentation
 
 Every agent must read these docs before starting any work:
@@ -173,6 +225,7 @@ Every agent must read these docs before starting any work:
 | **Component index**         | `docs/component-index.md`            | All components grouped by category for quick lookup                                |
 | **Toast examples**          | `docs-guides/TOAST_USAGE_EXAMPLES.md` | Real-world toast implementation examples and patterns                             |
 | **Auth & Organization**     | `docs-guides/AUTH_AND_ORGANIZATION.md` | Auth client setup, organization management, and implementation patterns             |
+| **Eden Treaty API Guide**   | `AGENTS.md` (above)                  | Type-safe API client setup, common endpoints, basic usage examples                 |
 | **TanStack Query Setup**    | `src/lib/TANSTACK_QUERY_SETUP.md`   | Data fetching patterns, hook usage, error handling, best practices for queries & mutations |
 | **TanStack Query Examples** | `src/lib/TANSTACK_QUERY_EXAMPLES.md` | Real-world implementation examples, refactoring guide, performance tips             |
 
