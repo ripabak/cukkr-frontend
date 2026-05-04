@@ -6,15 +6,15 @@ import { authClient } from "./auth-client";
 export const app = treaty<App>(
   process.env.EXPO_PUBLIC_ENV_API_URL!,
   {
-    onRequest: async (path, options) => {
+    onRequest: async () => {
       const cookies = authClient.getCookie();
+      const headers = {
+        "Cookie": cookies,
+      };
 
       return {
-        ...options,
-        headers: {
-          ...(options?.headers || {}),
-          ...(cookies ? { Cookie: cookies } : {}),
-        },
+        headers,
+        credentials: "omit"
       };
     },
 

@@ -92,15 +92,49 @@ src/                              # Business logic and reusable code
 - **Example**: `AuthTextField` (feature-specific) wraps styling; screens pass `value`, `onChangeText`, `label` as props.
 
 ### Hooks (TanStack Query)
-- **Encapsulate query and mutation logic.** Hooks wrap service calls with automatic caching, refetching, and error handling via TanStack Query.
+- **Only for data queries that need caching.** Use TanStack Query for reads where multiple screens share the same data and caching improves UX.
 - **Query hooks for fetching data.** Use `useQuery()` for reads; automatically cached and revalidated. Example: `useBarbershopCurrent()` fetches current barbershop data.
-- **Mutation hooks for side effects.** Use `useMutation()` for creates/updates/deletes. Example: `useUpdateBarbershopSettings()` updates settings and invalidates related queries.
+- **Mutation hooks for API writes that affect queries.** Use `useMutation()` with `onSuccess` cache invalidation. Example: `useUpdateBarbershopSettings()` updates settings and invalidates related queries.
 - **Live in `hooks/` folder.** Each feature has `hooks/index.ts` that barrel-exports all custom hooks for clean imports.
 - **Query keys are centralized.** Query keys defined in hooks ensure consistency for cache invalidation and debugging. Example: `BARBERSHOP_QUERY_KEYS = { all: ['barbershop'], list: () => [...], current: () => [...] }`.
 - **Hooks handle invalidation.** On mutation success, hooks automatically invalidate related query keys via `queryClient.invalidateQueries()`. Screens don't manage cache directly.
-- **Screens use hooks, not services directly for data.** Screens import hooks and call `const { data, isLoading } = useBarbershopCurrent()` instead of calling `barbershopService.getCurrent()` manually.
+- **Screens use hooks for data queries.** Screens import hooks and call `const { data, isLoading } = useBarbershopCurrent()` instead of calling service directly.
 - **Error & loading states from hooks.** Hooks return `{ data, isLoading, error, isPending }` for UI feedback without manual state management.
-- **Example**: `useInviteBarber()` returns `{ mutate, isPending, error }`; screen calls `mutate({ email })` and shows `isPending` in button or `error` in toast.
+- **Example**: `useUpdateBarbershopSettings()` returns `{ mutate, isPending, error }`; screen calls `mutate(data)` and shows `isPending` in button.
+
+### AuthClient Operations (No TanStack Query)
+- **Direct service calls, no React Query wrapper.** authClient operations (login, logout, password change, verify OTP) are simple, one-off actions that don't need caching.
+- **Use `useState` for loading states.** Screens track `isLoading` via `useState`, not React Query. Example: `const [isLoading, setIsLoading] = useState(false)`.
+- **Service method direct calls.** Screens call `await authService.signIn(email, password)` directly with try-catch, no mutation hook.
+- **No cache invalidation needed.** These operations don't affect cached queries or require refetching. Session refresh is handled by `useGetSession()` query hook separately.
+- **When to use authClient direct:**
+  - Login, signup, logout
+  - Password changes, verification flows (OTP, email verify)
+  - Profile updates (name, email, image)
+- **When to use React Query (getSession):**
+  - Fetching current user session (use `useGetSession()` hook for caching)
+  - On session change, invalidate cache via hook's `onSuccess`
+- **Example flow:**
+  ```typescript
+  // ✅ CORRECT: Direct service call with useState
+  const [isLoading, setIsLoading] = useState(false);
+  const handleLogin = async () => {
+    setIsLoading(true);
+    try {
+      await authService.signIn(email, password);
+      toast.success("Logged in");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // ❌ WRONG: Wrapping authClient in useMutation
+  const { mutate, isPending } = useMutation({
+    mutationFn: (data) => authService.signIn(data.email, data.password),
+  });
+  ```
 
 ## Data Flow Architecture
 
@@ -123,19 +157,19 @@ Response cached by TanStack Query
 Screen receives { data, isLoading, error } & renders UI
 ```
 
-### Mutation Flow (Writing Data)
+### Mutation Flow (Writing Data with Cache Invalidation)
 ```
 Screen Component
     ↓
 User action (button press, form submit)
     ↓
-Screen calls mutation hook (e.g., const { mutate } = useInviteBarber())
+Screen calls mutation hook (e.g., const { mutate } = useUpdateBarbershopSettings())
     ↓
-mutate({ email: '...' })
+mutate({ name: '...' })
     ↓
 Hook uses TanStack Query (useMutation)
     ↓
-Mutation calls service function (e.g., barbersService.inviteSingle())
+Mutation calls service function (e.g., barbershopService.updateSettings())
     ↓
 Service imports & uses API client (authClient, app.api)
     ↓
@@ -148,11 +182,34 @@ Screen receives onSuccess/onError callback
 Screen shows toast feedback & updates UI
 ```
 
+### AuthClient Operation Flow (Direct Service Calls)
+```
+Screen Component
+    ↓
+User action (button press, form submit)
+    ↓
+Screen calls service directly (e.g., await authService.signIn(email, password))
+    ↓
+setIsLoading(true) via useState
+    ↓
+Service calls authClient (authClient.signIn.email({...}))
+    ↓
+API call to backend
+    ↓
+On success: Screen navigates or shows toast.success()
+On error: Screen shows toast.error(getErrorMessage(error))
+    ↓
+setIsLoading(false) in finally block
+    ↓
+UI updates immediately (no cache involved)
+```
+
 ### Key Points
-- **Screens import hooks, not services.** Hooks handle caching & invalidation automatically.
-- **Services remain lightweight.** They only wrap API clients; TanStack Query handles the rest.
-- **No manual state management for API data.** `useQuery` and `useMutation` handle `isLoading`, `error`, `data`.
-- **Cache is shared.** Multiple screens using same query get cached data; automatic refetch on focus/reconnect.
+- **For data queries: Use hooks, not services.** Hooks handle caching & invalidation automatically.
+- **For authClient operations: Call services directly with try-catch.** No React Query wrapper needed; use `useState` for loading.
+- **Services remain lightweight.** They only wrap API clients; no business logic beyond API calls.
+- **Cache is smart and selective.** Only cache data that multiple screens share (queries). Skip caching for one-off operations (authClient).
+- **AuthClient operations use direct async/await:** No mutation hooks, no cache invalidation, just simple error handling in screens.
 
 ## Common Issues & Solutions
 
@@ -206,8 +263,6 @@ Check `src/types/app.d.ts` for complete endpoint list. Key endpoints include:
 - **Services**: `app.api.services` (CRUD, toggle-active, set-default, image upload)
 - **Bookings**: `app.api.bookings` (CRUD, status update, accept/decline, reassign)
 - **Customers**: `app.api.customers` (list, get, bookings, notes)
-- **Auth**: `app.api.auth.phone` (send-otp, verify-otp)
-- **Me**: `app.api.me` (get profile, patch, avatar upload, change-phone)
 - **Notifications**: `app.api.notifications` (list, read, actions)
 - **Analytics**: `app.api.analytics` (get stats by range)
 - **Public**: `app.api.public` (barbershop details, availability, booking, walk-in)
@@ -231,3 +286,7 @@ Every agent must read these docs before starting any work:
 
 Update `docs/project-conventions.md` whenever a new pattern is established.
 Update `docs/track_pages_and_components.md` whenever a page, component, or infrastructure item is created or modified.
+
+
+## Constraints
+- don't use `any` as much as possible, use them with proper TypeScript types, use any when the options are just any or unknown, if you can make proper typescript types, make it.

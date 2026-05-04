@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { useToast } from "@/src/lib/providers";
-import { useSignIn } from "../hooks";
+import { authService } from "../services";
 import { authTheme } from "../auth-theme";
 import { AuthButton } from "../components/AuthButton";
 import { AuthFooterPrompt } from "../components/AuthFooterPrompt";
@@ -15,22 +15,21 @@ export function LoginScreen() {
   const toast = useToast();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const { mutate: signIn, isPending } = useSignIn();
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!identifier || !password) return;
 
-    signIn(
-      { email: identifier, password },
-      {
-        onSuccess: () => {
-          router.replace("/");
-        },
-        onError: (error) => {
-          toast.error(error.message || "Failed to login");
-        },
-      }
-    );
+    setLoading(true);
+    try {
+      await authService.signIn(identifier, password);
+      router.replace("/");
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to login";
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -66,9 +65,9 @@ export function LoginScreen() {
       </View>
 
       <AuthButton
-        label={isPending ? "Logging in..." : "Login"}
+        label={loading ? "Logging in..." : "Login"}
         onPress={handleLogin}
-        disabled={isPending}
+        disabled={loading}
       />
     </AuthScreenShell>
   );

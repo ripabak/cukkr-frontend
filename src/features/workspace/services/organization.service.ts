@@ -22,8 +22,8 @@ export const organizationService = {
       organizationId,
     });
 
-    if (error) {
-      throw new Error(error.message || "Failed to set active organization");
+    if (error || !response) {
+      throw new Error(error?.message || "Failed to set active organization");
     }
     return response;
   },

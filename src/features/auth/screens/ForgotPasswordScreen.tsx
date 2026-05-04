@@ -26,18 +26,18 @@ export function ForgotPasswordScreen() {
     }
 
     setLoading(true);
-    const { error } = await otpService.sendVerificationOtp(email, "forget-password");
-    setLoading(false);
-
-    if (error) {
-      toast.error(error.message || "Failed to send reset OTP");
-      return;
+    try {
+      await otpService.sendVerificationOtp(email, "forget-password");
+      router.push({
+        pathname: "/verify-otp",
+        params: { email, isPasswordReset: "true" },
+      });
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to send reset OTP";
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
     }
-
-    router.push({
-      pathname: "/verify-otp",
-      params: { email, isPasswordReset: "true" },
-    });
   };
 
   return (

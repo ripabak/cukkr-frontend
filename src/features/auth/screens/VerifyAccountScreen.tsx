@@ -58,31 +58,28 @@ export function VerifyAccountScreen() {
   const handleVerify = async () => {
     if (!otp) return;
     setLoading(true);
-    const { error } = await otpService.verifyEmail(email, otp);
-    setLoading(false);
-
-    if (error) {
-      toast.error(error.message || "Failed to verify OTP");
-      return;
+    try {
+      await otpService.verifyEmail(email, otp);
+      router.replace("/");
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to verify OTP";
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
     }
-
-    router.replace("/");
   };
 
   const handleResend = async () => {
     if (!email) return;
     setResending(true);
-    const { error } = await otpService.sendVerificationOtp(
-      email,
-      "email-verification"
-    );
-    setResending(false);
-
-    if (error) {
-      toast.error(error.message || "Failed to send OTP");
-    } else {
+    try {
+      await otpService.sendVerificationOtp(email, "email-verification");
       countdown.reset();
-      toast.success("OTP sent successfully");
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to send OTP";
+      toast.error(errorMessage);
+    } finally {
+      setResending(false);
     }
   };
 

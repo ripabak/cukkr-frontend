@@ -60,17 +60,18 @@ export function VerifyOtpScreen() {
   const handleResend = async () => {
     if (!email) return;
     setResending(true);
-    const { error } = await otpService.sendVerificationOtp(
-      email,
-      isPasswordReset === "true" ? "forget-password" : "email-verification"
-    );
-    setResending(false);
-
-    if (error) {
-      toast.error(error.message || "Failed to send OTP");
-    } else {
+    try {
+      await otpService.sendVerificationOtp(
+        email,
+        isPasswordReset === "true" ? "forget-password" : "email-verification"
+      );
       countdown.reset();
       toast.success("OTP sent successfully");
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to send OTP";
+      toast.error(errorMessage);
+    } finally {
+      setResending(false);
     }
   };
 

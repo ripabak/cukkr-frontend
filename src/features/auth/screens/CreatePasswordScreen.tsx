@@ -44,16 +44,16 @@ export function CreatePasswordScreen() {
     }
 
     setLoading(true);
-    const { error } = await otpService.resetPassword(email, otp, password);
-    setLoading(false);
-
-    if (error) {
-      toast.error(error.message || "Failed to reset password");
-      return;
+    try {
+      await otpService.resetPassword(email, otp, password);
+      toast.success("Password reset successfully");
+      router.replace("/login");
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to reset password";
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
     }
-
-    toast.success("Password reset successfully");
-    router.replace("/login");
   };
 
   const isFormValid = password && confirmPassword && password === confirmPassword;
