@@ -1,0 +1,46 @@
+import React from 'react';
+import { View, Text, StyleSheet, ViewStyle } from 'react-native';
+
+interface Props {
+  label: string;
+  value: string;
+  style?: ViewStyle;
+}
+
+export function ComputedSummaryRow({ label, value, style }: Props) {
+  return (
+    <View style={[styles.container, style]}>
+      <View style={styles.divider} />
+      <View style={styles.row}>
+        <Text style={styles.label}>{label}</Text>
+        <Text style={styles.value}>{value}</Text>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {},
+  divider: {
+    height: 1,
+    backgroundColor: '#E0DDD0',
+    marginHorizontal: 16,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+  },
+  label: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1A1A1A',
+  },
+  value: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#1A1A1A',
+  },
+});

@@ -1,17 +1,64 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
 
+import { useToast } from "@/src/lib/providers";
+import { useSignUp } from "../hooks";
 import { AuthButton } from "../components/AuthButton";
 import { AuthFooterPrompt } from "../components/AuthFooterPrompt";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { AuthTextField } from "../components/AuthTextField";
+import { otpService } from "../services";
+import { passwordsMatch } from "../utils/validation";
 
 export function RegisterScreen() {
   const router = useRouter();
+  const toast = useToast();
   const [name, setName] = useState("");
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [sendingOtp, setSendingOtp] = useState(false);
+  const { mutate: signUp, isPending } = useSignUp();
+
+  const handleRegister = async () => {
+    if (!name || !identifier || !password || !confirmPassword) return;
+    if (!passwordsMatch(password, confirmPassword)) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    signUp(
+      { name, email: identifier, password },
+      {
+        onSuccess: async () => {
+          setSendingOtp(true);
+          try {
+            const { error: sendError } = await otpService.sendVerificationOtp(
+              identifier,
+              "email-verification"
+            );
+            setSendingOtp(false);
+
+            if (sendError) {
+              toast.error(sendError.message || "Failed to send OTP");
+              return;
+            }
+
+            router.push({
+              pathname: "/verify-account",
+              params: { email: identifier },
+            });
+          } catch (error) {
+            setSendingOtp(false);
+            toast.error("Failed to send OTP");
+          }
+        },
+        onError: (error) => {
+          toast.error(error.message || "Failed to register");
+        },
+      }
+    );
+  };
 
   return (
     <AuthScreenShell
@@ -60,7 +107,11 @@ export function RegisterScreen() {
         value={confirmPassword}
       />
 
-      <AuthButton label="Create Account" onPress={() => router.push("/verify-account")} />
+      <AuthButton
+        label={isPending || sendingOtp ? "Creating Account..." : "Create Account"}
+        onPress={handleRegister}
+        disabled={isPending || sendingOtp}
+      />
     </AuthScreenShell>
   );
 }

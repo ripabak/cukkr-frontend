@@ -6,20 +6,24 @@ type AuthButtonProps = {
   label: string;
   onPress?: () => void;
   variant?: "primary" | "secondary";
+  disabled?: boolean;
 };
 
 export function AuthButton({
   label,
   onPress,
   variant = "primary",
+  disabled,
 }: AuthButtonProps) {
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       style={({ pressed }) => [
         styles.button,
         variant === "secondary" ? styles.secondaryButton : styles.primaryButton,
         pressed && styles.pressed,
+        disabled && styles.disabled,
       ]}
     >
       <Text
@@ -52,6 +56,9 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.86,
+  },
+  disabled: {
+    opacity: 0.5,
   },
   label: {
     fontSize: 16,

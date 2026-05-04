@@ -1,7 +1,9 @@
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
+import { useToast } from "@/src/lib/providers";
+import { useSignIn } from "../hooks";
 import { authTheme } from "../auth-theme";
 import { AuthButton } from "../components/AuthButton";
 import { AuthFooterPrompt } from "../components/AuthFooterPrompt";
@@ -9,8 +11,27 @@ import { AuthScreenShell } from "../components/AuthScreenShell";
 import { AuthTextField } from "../components/AuthTextField";
 
 export function LoginScreen() {
+  const router = useRouter();
+  const toast = useToast();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const { mutate: signIn, isPending } = useSignIn();
+
+  const handleLogin = () => {
+    if (!identifier || !password) return;
+
+    signIn(
+      { email: identifier, password },
+      {
+        onSuccess: () => {
+          router.replace("/");
+        },
+        onError: (error) => {
+          toast.error(error.message || "Failed to login");
+        },
+      }
+    );
+  };
 
   return (
     <AuthScreenShell
@@ -44,7 +65,11 @@ export function LoginScreen() {
         </Link>
       </View>
 
-      <AuthButton label="Login" />
+      <AuthButton
+        label={isPending ? "Logging in..." : "Login"}
+        onPress={handleLogin}
+        disabled={isPending}
+      />
     </AuthScreenShell>
   );
 }
