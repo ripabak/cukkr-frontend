@@ -28,4 +28,25 @@ export const authService = {
 
     return data;
   },
+
+  async changePassword(currentPassword: string, newPassword: string) {
+    const { data, error } = await authClient.changePassword({
+      currentPassword,
+      newPassword,
+    });
+
+    if (error) {
+      throw new Error(error.message || "Failed to change password");
+    }
+
+    return data;
+  },
+
+  async signOut() {
+    const { error } = await authClient.signOut();
+
+    if (error) {
+      throw new Error(error.message || "Failed to sign out");
+    }
+  },
 };

@@ -6,21 +6,19 @@ import { AuthButton } from "../components/AuthButton";
 import { AuthFooterPrompt } from "../components/AuthFooterPrompt";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { AuthTextField } from "../components/AuthTextField";
-import { otpService } from "../services";
-import { isValidPassword, passwordsMatch } from "../utils/validation";
+import { useResetPassword } from "../hooks";
+import { getErrorMessage } from "../utils/error-handler";
+import { validatePassword, validatePasswordsMatch } from "../utils/validation";
 
 const MIN_PASSWORD_LENGTH = 8;
 
 export function CreatePasswordScreen() {
   const router = useRouter();
   const toast = useToast();
-  const { email, otp } = useLocalSearchParams<{
-    email: string;
-    otp: string;
-  }>();
+  const { email, otp } = useLocalSearchParams<{ email: string; otp: string }>();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { mutateAsync: resetPassword, isPending } = useResetPassword();
 
   const handleContinue = async () => {
     if (!password || !confirmPassword) {
@@ -28,13 +26,15 @@ export function CreatePasswordScreen() {
       return;
     }
 
-    if (!isValidPassword(password, MIN_PASSWORD_LENGTH)) {
-      toast.error(`Password must be at least ${MIN_PASSWORD_LENGTH} characters`);
+    const passwordResult = validatePassword(password, MIN_PASSWORD_LENGTH);
+    if (!passwordResult.isValid) {
+      toast.error(passwordResult.message);
       return;
     }
 
-    if (!passwordsMatch(password, confirmPassword)) {
-      toast.error("Passwords do not match");
+    const matchResult = validatePasswordsMatch(password, confirmPassword);
+    if (!matchResult.isValid) {
+      toast.error(matchResult.message);
       return;
     }
 
@@ -43,16 +43,12 @@ export function CreatePasswordScreen() {
       return;
     }
 
-    setLoading(true);
     try {
-      await otpService.resetPassword(email, otp, password);
+      await resetPassword({ email, otp, password });
       toast.success("Password reset successfully");
       router.replace("/login");
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to reset password";
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     }
   };
 
@@ -89,9 +85,9 @@ export function CreatePasswordScreen() {
       />
 
       <AuthButton
-        label={loading ? "Resetting..." : "Reset Password"}
+        label={isPending ? "Resetting..." : "Reset Password"}
         onPress={handleContinue}
-        disabled={loading || !isFormValid}
+        disabled={isPending || !isFormValid}
       />
     </AuthScreenShell>
   );

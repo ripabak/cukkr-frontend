@@ -2,12 +2,13 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 
 import { useToast } from "@/src/lib/providers";
-import { authService, otpService } from "../services";
 import { AuthButton } from "../components/AuthButton";
 import { AuthFooterPrompt } from "../components/AuthFooterPrompt";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { AuthTextField } from "../components/AuthTextField";
-import { passwordsMatch } from "../utils/validation";
+import { useSignUp, useSendVerificationOtp } from "../hooks";
+import { getErrorMessage } from "../utils/error-handler";
+import { validatePasswordsMatch } from "../utils/validation";
 
 export function RegisterScreen() {
   const router = useRouter();
@@ -16,33 +17,28 @@ export function RegisterScreen() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const { mutateAsync: signUp, isPending: signingUp } = useSignUp();
+  const { mutateAsync: sendOtp, isPending: sendingOtp } = useSendVerificationOtp();
+  const isPending = signingUp || sendingOtp;
 
   const handleRegister = async () => {
     if (!name || !identifier || !password || !confirmPassword) return;
-    if (!passwordsMatch(password, confirmPassword)) {
-      toast.error("Passwords do not match");
+
+    const match = validatePasswordsMatch(password, confirmPassword);
+    if (!match.isValid) {
+      toast.error(match.message);
       return;
     }
 
-    setIsLoading(true);
     try {
-      // Sign up user
-      await authService.signUp(name, identifier, password);
-
-      // Send verification OTP
-      await otpService.sendVerificationOtp(identifier, "email-verification");
-
-      // Navigate to OTP verification
+      await signUp({ name, email: identifier, password });
+      await sendOtp({ email: identifier, type: "email-verification" });
       router.push({
         pathname: "/verify-account",
         params: { email: identifier },
       });
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to register";
-      toast.error(errorMessage);
-    } finally {
-      setIsLoading(false);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     }
   };
 
@@ -94,9 +90,9 @@ export function RegisterScreen() {
       />
 
       <AuthButton
-        label={isLoading ? "Creating Account..." : "Create Account"}
+        label={isPending ? "Creating Account..." : "Create Account"}
         onPress={handleRegister}
-        disabled={isLoading}
+        disabled={isPending}
       />
     </AuthScreenShell>
   );

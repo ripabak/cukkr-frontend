@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import { useToast } from "@/src/lib/providers";
@@ -7,44 +7,8 @@ import { authTheme } from "../auth-theme";
 import { AuthButton } from "../components/AuthButton";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { OtpCodeInput } from "../components/OtpCodeInput";
-import { otpService } from "../services";
-
-function useCountdown(initialSeconds: number) {
-  const [secondsLeft, setSecondsLeft] = useState(initialSeconds);
-  const [isActive, setIsActive] = useState(true);
-
-  useEffect(() => {
-    if (!isActive || secondsLeft === 0) {
-      setIsActive(false);
-      return;
-    }
-
-    const interval = setInterval(() => {
-      setSecondsLeft((prev) => {
-        if (prev <= 1) {
-          setIsActive(false);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [isActive, secondsLeft]);
-
-  const reset = () => {
-    setSecondsLeft(initialSeconds);
-    setIsActive(true);
-  };
-
-  const format = () => {
-    const minutes = Math.floor(secondsLeft / 60);
-    const seconds = secondsLeft % 60;
-    return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-  };
-
-  return { secondsLeft, isActive, reset, format };
-}
+import { useCountdown, useSendVerificationOtp } from "../hooks";
+import { getErrorMessage } from "../utils/error-handler";
 
 export function VerifyOtpScreen() {
   const router = useRouter();
@@ -54,24 +18,20 @@ export function VerifyOtpScreen() {
     isPasswordReset?: string;
   }>();
   const [otp, setOtp] = useState("");
-  const [resending, setResending] = useState(false);
   const countdown = useCountdown(300);
+  const { mutateAsync: sendOtp, isPending: resending } = useSendVerificationOtp();
 
   const handleResend = async () => {
     if (!email) return;
-    setResending(true);
     try {
-      await otpService.sendVerificationOtp(
+      await sendOtp({
         email,
-        isPasswordReset === "true" ? "forget-password" : "email-verification"
-      );
+        type: isPasswordReset === "true" ? "forget-password" : "email-verification",
+      });
       countdown.reset();
       toast.success("OTP sent successfully");
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to send OTP";
-      toast.error(errorMessage);
-    } finally {
-      setResending(false);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     }
   };
 

@@ -56,9 +56,8 @@ src/                              # Business logic and reusable code
 
 ### Screens
 - **Entry point for user interaction.** Screens handle user input, display data, and orchestrate async operations.
-- **Never import external API clients directly** (e.g., `authClient`, `app.api`). Always use services.
 - **No business logic or data transformation.** Logic lives in services; screens call them and handle results.
-- **UI feedback via toast, never Alert.** All success, error, and info messages use `useToast()` from `@/src/lib/providers`.
+- **UI feedback via toast, never Alert.** All success, error, and info messages use `useToast()` from `@/src/lib/providers/toast`.
 - **Wrap async service calls in try-catch.** Convert errors to user-friendly messages via `getErrorMessage(error)` utility.
 - **Example**: Login screen imports `authService`, calls `authService.signIn()`, and displays result via `toast.success()` or `toast.error()`.
 
@@ -101,40 +100,6 @@ src/                              # Business logic and reusable code
 - **Screens use hooks for data queries.** Screens import hooks and call `const { data, isLoading } = useBarbershopCurrent()` instead of calling service directly.
 - **Error & loading states from hooks.** Hooks return `{ data, isLoading, error, isPending }` for UI feedback without manual state management.
 - **Example**: `useUpdateBarbershopSettings()` returns `{ mutate, isPending, error }`; screen calls `mutate(data)` and shows `isPending` in button.
-
-### AuthClient Operations (No TanStack Query)
-- **Direct service calls, no React Query wrapper.** authClient operations (login, logout, password change, verify OTP) are simple, one-off actions that don't need caching.
-- **Use `useState` for loading states.** Screens track `isLoading` via `useState`, not React Query. Example: `const [isLoading, setIsLoading] = useState(false)`.
-- **Service method direct calls.** Screens call `await authService.signIn(email, password)` directly with try-catch, no mutation hook.
-- **No cache invalidation needed.** These operations don't affect cached queries or require refetching. Session refresh is handled by `useGetSession()` query hook separately.
-- **When to use authClient direct:**
-  - Login, signup, logout
-  - Password changes, verification flows (OTP, email verify)
-  - Profile updates (name, email, image)
-- **When to use React Query (getSession):**
-  - Fetching current user session (use `useGetSession()` hook for caching)
-  - On session change, invalidate cache via hook's `onSuccess`
-- **Example flow:**
-  ```typescript
-  // ✅ CORRECT: Direct service call with useState
-  const [isLoading, setIsLoading] = useState(false);
-  const handleLogin = async () => {
-    setIsLoading(true);
-    try {
-      await authService.signIn(email, password);
-      toast.success("Logged in");
-    } catch (error) {
-      toast.error(getErrorMessage(error));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // ❌ WRONG: Wrapping authClient in useMutation
-  const { mutate, isPending } = useMutation({
-    mutationFn: (data) => authService.signIn(data.email, data.password),
-  });
-  ```
 
 ## Data Flow Architecture
 
@@ -182,34 +147,11 @@ Screen receives onSuccess/onError callback
 Screen shows toast feedback & updates UI
 ```
 
-### AuthClient Operation Flow (Direct Service Calls)
-```
-Screen Component
-    ↓
-User action (button press, form submit)
-    ↓
-Screen calls service directly (e.g., await authService.signIn(email, password))
-    ↓
-setIsLoading(true) via useState
-    ↓
-Service calls authClient (authClient.signIn.email({...}))
-    ↓
-API call to backend
-    ↓
-On success: Screen navigates or shows toast.success()
-On error: Screen shows toast.error(getErrorMessage(error))
-    ↓
-setIsLoading(false) in finally block
-    ↓
-UI updates immediately (no cache involved)
-```
-
 ### Key Points
 - **For data queries: Use hooks, not services.** Hooks handle caching & invalidation automatically.
 - **For authClient operations: Call services directly with try-catch.** No React Query wrapper needed; use `useState` for loading.
 - **Services remain lightweight.** They only wrap API clients; no business logic beyond API calls.
 - **Cache is smart and selective.** Only cache data that multiple screens share (queries). Skip caching for one-off operations (authClient).
-- **AuthClient operations use direct async/await:** No mutation hooks, no cache invalidation, just simple error handling in screens.
 
 ## Common Issues & Solutions
 
@@ -279,6 +221,7 @@ Every agent must read these docs before starting any work:
 | **Page descriptions**       | `docs/ui-ux-pages-descriptions.md`   | UI/UX intent for each page derived from design files                               |
 | **Component index**         | `docs/component-index.md`            | All components grouped by category for quick lookup                                |
 | **Toast examples**          | `docs-guides/TOAST_USAGE_EXAMPLES.md` | Real-world toast implementation examples and patterns                             |
+| **Protected Route**          | `docs-guides/PROTECTED_ROUTES.md` | Implementation how to protected route for auth    
 | **Auth & Organization**     | `docs-guides/AUTH_AND_ORGANIZATION.md` | Auth client setup, organization management, and implementation patterns             |
 | **Eden Treaty API Guide**   | `AGENTS.md` (above)                  | Type-safe API client setup, common endpoints, basic usage examples                 |
 | **TanStack Query Setup**    | `src/lib/TANSTACK_QUERY_SETUP.md`   | Data fetching patterns, hook usage, error handling, best practices for queries & mutations |
