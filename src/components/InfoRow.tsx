@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 interface Props {
   label: string;
@@ -15,7 +15,7 @@ export function InfoRow({ label, value, onPress, showChevron, isLast, style }: P
   const content = (
     <View style={[styles.container, !isLast && styles.borderBottom, style]}>
       <Text style={styles.label}>{label}</Text>
-      {value ? <Text style={styles.value}>{value}</Text> : null}
+      {value ? <Text style={styles.value} numberOfLines={1} ellipsizeMode="tail">{value}</Text> : null}
       {showChevron ? (
         <Ionicons name="chevron-forward" size={16} color="#666666" />
       ) : null}

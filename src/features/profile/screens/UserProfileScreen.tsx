@@ -5,21 +5,52 @@ import { LogoutRow } from "@/src/components/LogoutRow";
 import { ProfileSummaryCard } from "@/src/components/ProfileSummaryCard";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { useToast } from "@/src/lib/providers/toast";
+import { useSignOut } from "@/src/features/auth/hooks";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
-// --- MOCK DATA ---
-const MOCK_USER_NAME = "Pepe Julian";
-const MOCK_USER_BIO = "Fade Specialist";
-const MOCK_USER_EMAIL = "julianpepe@gmail.com";
-const MOCK_USER_PHONE = "+62838383833";
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useProfile } from "../hooks";
+import { getErrorMessage } from "../utils/error-handler";
 
 export function UserProfileScreen() {
   const router = useRouter();
+  const toast = useToast();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showContactChanged, setShowContactChanged] = useState(false);
+  const { data: profile, isLoading, error } = useProfile();
+  const { mutateAsync: signOut, isPending: signingOut } = useSignOut();
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      router.replace("/login");
+    } catch (err) {
+      toast.error(getErrorMessage(err));
+    } finally {
+      setShowLogoutConfirm(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <ScreenShell
+        backgroundColor="#F5F4E8"
+        contentStyle={{ justifyContent: "center", alignItems: "center" }}
+      >
+        <ActivityIndicator size="large" color="#1A1A1A" />
+      </ScreenShell>
+    );
+  }
+
+  if (error || !profile) {
+    return (
+      <ScreenShell backgroundColor="#F5F4E8">
+        <Text style={styles.errorText}>Failed to load profile</Text>
+      </ScreenShell>
+    );
+  }
 
   return (
     <ScreenShell
@@ -42,14 +73,14 @@ export function UserProfileScreen() {
       <ProfileSummaryCard style={styles.card}>
         <InfoRow
           label="Your Name"
-          value={MOCK_USER_NAME}
-          onPress={() => router.push("/edit-user-profile-fields" as any)}
+          value={profile.name}
+          onPress={() => router.push({ pathname: "/edit-user-profile-fields" as any, params: { mode: "name" } })}
         />
         <InfoRow
           label="Bio"
-          value={MOCK_USER_BIO}
+          value={profile.bio || "Add a bio"}
           isLast
-          onPress={() => router.push("/edit-user-profile-fields" as any)}
+          onPress={() => router.push({ pathname: "/edit-user-profile-fields" as any, params: { mode: "bio" } })}
         />
       </ProfileSummaryCard>
 
@@ -57,18 +88,16 @@ export function UserProfileScreen() {
       <ProfileSummaryCard style={styles.card}>
         <InfoRow
           label="Email"
-          value={MOCK_USER_EMAIL}
-          onPress={() => router.push("/verify-contact" as any)}
+          value={profile.email}
         />
         <InfoRow
           label="Phone Number"
-          value={MOCK_USER_PHONE}
-          onPress={() => router.push("/verify-contact" as any)}
+          value={profile.phone || "Add phone number"}
         />
         <InfoRow
           label="Change Password"
           showChevron
-          onPress={() => router.push("/edit-user-profile-fields" as any)}
+          onPress={() => router.push({ pathname: "/edit-user-profile-fields" as any, params: { mode: "password" } })}
           isLast
         />
       </ProfileSummaryCard>
@@ -79,9 +108,9 @@ export function UserProfileScreen() {
         visible={showLogoutConfirm}
         title="Confirm Log out?"
         description="You will be signed out of your account."
-        confirmLabel="Log Out"
+        confirmLabel={signingOut ? "Logging out..." : "Log Out"}
         cancelLabel="Cancel"
-        onConfirm={() => setShowLogoutConfirm(false)}
+        onConfirm={handleLogout}
         onCancel={() => setShowLogoutConfirm(false)}
       />
       <AlertModal
@@ -129,5 +158,10 @@ const styles = StyleSheet.create({
   },
   card: {
     marginTop: -4,
+  },
+  errorText: {
+    fontSize: 16,
+    color: "#EE6352",
+    textAlign: "center",
   },
 });
