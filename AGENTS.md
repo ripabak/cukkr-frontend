@@ -188,31 +188,66 @@ The app uses **Eden Treaty** (`@elysia/eden`) as a type-safe API client. All API
 - **Backend types**: `src/types/app.d.ts` (auto-generated from backend, includes all endpoints and types)
 - **Authentication**: Automatically includes auth cookies via `onRequest` hook in `eden-app.ts`
 
-### Basic Usage in Services
+### Usage in Services
+
+**The one rule for dynamic segments:** any `:param` in the path — whether single or nested — is always called as a function `({ param: value })`. Never use `[":id"]` with a `params` object.
+
+Read `src/types/app.d.ts` to find the correct chain: every key starting with `:` becomes a function call in the client.
+
 ```typescript
 import { app } from "@/src/lib/eden-app";
 
-// Call an API endpoint (example: GET /api/barbershop)
+// Static path — just chain and call
 const response = await app.api.barbershop.get();
 const { data } = response.data; // Fully typed response
 
-// Call with parameters (example: POST /api/services)
-const response = await app.api.services.post({
-  name: "Haircut",
-  price: 50000,
-  duration: 30,
-});
+// Static path with body
+const response = await app.api.services.post({ name: "Haircut", price: 50000, duration: 30 });
 
-// Call with path params (example: GET /api/services/:id)
-const response = await app.api.services[":id"].get({
-  params: { id: "service-123" },
-});
+// Static path with query params
+const response = await app.api.services.get({ query: { sort: "name_asc" } });
 
-// Call with query params (example: GET /api/services?sort=name_asc)
-const response = await app.api.services.get({
-  query: { sort: "name_asc" },
-});
+// Dynamic segment (:id) — always call as function({ param })
+const response = await app.api.services({ id: "service-123" }).get({});
+
+// Dynamic segment + static sub-path
+const response = await app.api.notifications({ id }).read.patch({});
+
+// Dynamic segment + nested sub-path
+const response = await app.api.notifications({ id }).actions.accept.post({});
+const response = await app.api.customers({ id }).bookings.get({ query: { type: "all", page: 1 } });
+
+// Static sub-path with hyphens — use bracket notation
+const response = await app.api.notifications["unread-count"].get({});
+const response = await app.api.notifications["read-all"].patch({});
+const response = await app.api.services({ id })["toggle-active"].patch({});
+
+// ❌ Never do this
+const response = await app.api.services[":id"].get({ params: { id } });
 ```
+
+**Endpoints and how to call examples**
+
+| Endpoint | Call |
+|---|---|
+| `GET /api/services/:id` | `app.api.services({ id }).get({})` |
+| `PATCH /api/services/:id` | `app.api.services({ id }).patch({ ... })` |
+| `DELETE /api/services/:id` | `app.api.services({ id }).delete({})` |
+| `PATCH /api/services/:id/toggle-active` | `app.api.services({ id })["toggle-active"].patch({})` |
+| `POST /api/services/:id/image` | `app.api.services({ id }).image.post({ file })` |
+| `PATCH /api/services/:id/set-default` | `app.api.services({ id })["set-default"].patch({})` |
+| `GET /api/bookings/:id` | `app.api.bookings({ id }).get({})` |
+| `PATCH /api/bookings/:id/status` | `app.api.bookings({ id }).status.patch({ status })` |
+| `POST /api/bookings/:id/accept` | `app.api.bookings({ id }).accept.post({})` |
+| `POST /api/bookings/:id/decline` | `app.api.bookings({ id }).decline.post({ reason })` |
+| `PATCH /api/bookings/:id/reassign` | `app.api.bookings({ id }).reassign.patch({ handledByMemberId })` |
+| `GET /api/customers/:id` | `app.api.customers({ id }).get({})` |
+| `GET /api/customers/:id/bookings` | `app.api.customers({ id }).bookings.get({ query: { ... } })` |
+| `PATCH /api/customers/:id/notes` | `app.api.customers({ id }).notes.patch({ notes })` |
+| `PATCH /api/notifications/:id/read` | `app.api.notifications({ id }).read.patch({})` |
+| `POST /api/notifications/:id/actions/accept` | `app.api.notifications({ id }).actions.accept.post({})` |
+| `POST /api/notifications/:id/actions/decline` | `app.api.notifications({ id }).actions.decline.post({ reason })` |
+| `DELETE /api/barbershop/:orgId/leave` | `app.api.barbershop({ orgId }).leave.delete({})` |
 
 ### Error Handling
 - All API calls may throw errors; wrap in try-catch in services
