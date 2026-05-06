@@ -8,6 +8,11 @@ type BookingApiStatus =
   | "completed"
   | "cancelled";
 
+
+type BookingApiActiveStatus =
+  | "waiting"
+  | "in_progress";
+
 export type CreateBookingPayload =
   | {
       customerName: string;
@@ -31,7 +36,7 @@ export type CreateBookingPayload =
     };
 
 export const bookingsService = {
-  async getActiveBookings(
+  async getBookings(
     date: string,
     options?: {
       status?: BookingApiStatus | "all";
@@ -40,7 +45,22 @@ export const bookingsService = {
     },
   ) {
     const { data: response, error } = await app.api.bookings.get({
-      query: { date, ...options },
+      query: { date, status: options?.status ?? "all", sort: options?.sort, barberId: options?.barberId },
+    });
+    if (error || !response) throw new Error("Failed to fetch bookings");
+    return response.data || [];
+  },
+
+  async getActiveBookings(
+    date: string,
+    options?: {
+      status?: BookingApiActiveStatus | "all";
+      sort?: "oldest_first" | "recently_added";
+      barberId?: string;
+    },
+  ) {
+    const { data: response, error } = await app.api.bookings.active.get({
+      query: { date, status: options?.status ?? "all", sort: options?.sort, barberId: options?.barberId },
     });
     if (error || !response) throw new Error("Failed to fetch bookings");
     return response.data || [];

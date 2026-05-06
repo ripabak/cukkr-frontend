@@ -1,22 +1,22 @@
-import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { BookingDetailCard } from "@/src/components/BookingDetailCard";
-import { StickyCta } from "@/src/components/StickyCta";
-import { OverflowMenu } from "@/src/components/OverflowMenu";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
+import { OverflowMenu } from "@/src/components/OverflowMenu";
+import { StickyCta } from "@/src/components/StickyCta";
 import { useBookingById, useUpdateBookingStatus } from "@/src/features/schedule/hooks";
 import {
-  mapApiStatusToDetailStatus,
   formatDateLabel,
-  formatScheduledTime,
   formatDuration,
   formatPrice,
+  formatScheduledTime,
+  mapApiStatusToDetailStatus,
 } from "@/src/features/schedule/utils/booking-formatters";
 import { useToast } from "@/src/lib/providers";
 import { getErrorMessage } from "@/src/lib/utils/error-handler";
+import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useState } from "react";
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type ModalType = "cancel" | "start" | "takeover" | null;
 

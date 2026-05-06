@@ -5,6 +5,7 @@ import { FormShell } from "@/src/components/FormShell";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { TimePickerModal } from "@/src/components/TimePickerModal";
+import { useOpenHours } from "@/src/features/barbershop/hooks";
 import { useNewBookingForm } from "@/src/features/schedule/context/NewBookingContext";
 import { useCreateBooking } from "@/src/features/schedule/hooks";
 import { useToast } from "@/src/lib/providers";
@@ -27,21 +28,56 @@ function buildISODateTime(date: Date, h: number, m: number, amPm: "AM" | "PM"): 
   return d.toISOString();
 }
 
+interface TimePoint {
+  hour24: number;
+  minute: number;
+}
+
+function parseTime24(str: string): TimePoint {
+  const [h, m] = str.split(":").map(Number);
+  return { hour24: h, minute: m };
+}
+
+function toInitial12h(hour24: number, minute: number): { hour: number; minute: number; amPm: "AM" | "PM" } {
+  if (hour24 === 0) return { hour: 12, minute, amPm: "AM" };
+  if (hour24 < 12) return { hour: hour24, minute, amPm: "AM" };
+  if (hour24 === 12) return { hour: 12, minute, amPm: "PM" };
+  return { hour: hour24 - 12, minute, amPm: "PM" };
+}
+
 export function NewAppointmentScreen() {
   const router = useRouter();
   const toast = useToast();
   const { formData, updateFormData, resetFormData } = useNewBookingForm();
   const { mutate: createBooking, isPending } = useCreateBooking();
+  const { data: openHoursData } = useOpenHours();
 
   const [bookingType, setBookingType] = useState<BookingType>("appointment");
   const [showCalendar, setShowCalendar] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [displayDateTime, setDisplayDateTime] = useState<string | undefined>();
+  const [minTime, setMinTime] = useState<TimePoint | undefined>();
+  const [maxTime, setMaxTime] = useState<TimePoint | undefined>();
+  const [initialPickerTime, setInitialPickerTime] = useState<{ hour: number; minute: number; amPm: "AM" | "PM" }>({ hour: 9, minute: 0, amPm: "AM" });
 
   function handleDateSelect(date: Date) {
     setSelectedDate(date);
     setShowCalendar(false);
+
+    const dayOfWeek = date.getDay();
+    const dayHours = openHoursData?.find((d) => d.dayOfWeek === dayOfWeek);
+
+    if (!dayHours || !dayHours.isOpen || !dayHours.openTime || !dayHours.closeTime) {
+      toast.error("Barbershop is closed on this day");
+      return;
+    }
+
+    const open = parseTime24(dayHours.openTime);
+    const close = parseTime24(dayHours.closeTime);
+    setMinTime(open);
+    setMaxTime(close);
+    setInitialPickerTime(toInitial12h(open.hour24, open.minute));
     setShowTimePicker(true);
   }
 
@@ -140,11 +176,17 @@ export function NewAppointmentScreen() {
       <CalendarModal
         visible={showCalendar}
         selectedDate={selectedDate}
+        openHours={openHoursData ?? []}
         onSelect={handleDateSelect}
         onClose={() => setShowCalendar(false)}
       />
       <TimePickerModal
         visible={showTimePicker}
+        initialHour={initialPickerTime.hour}
+        initialMinute={initialPickerTime.minute}
+        initialAmPm={initialPickerTime.amPm}
+        minTime={minTime}
+        maxTime={maxTime}
         onConfirm={handleTimeConfirm}
         onClose={() => setShowTimePicker(false)}
       />

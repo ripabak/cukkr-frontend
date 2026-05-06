@@ -148,7 +148,7 @@ Used across two or more features.
 
 | Component        | Purpose                                                |
 | ---------------- | ------------------------------------------------------ |
-| `StatusBadge`    | Colored status chip (waiting, in-progress, completed…) |
+| `StatusBadge`    | Colored status chip (waiting, in_progress, completed…) |
 | `StatusPill`     | Small inline status pill                               |
 | `WizardProgress` | Multi-step progress bar for setup wizards              |
 | `SegmentedTabs`  | Horizontal pill tab switcher                           |

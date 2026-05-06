@@ -1,9 +1,9 @@
 import { BookingCard } from "@/src/components/BookingCard";
 import { ChartCard } from "@/src/components/ChartCard";
-import { MessageThread, MessageItem } from "@/src/components/MessageThread";
+import { MessageItem, MessageThread } from "@/src/components/MessageThread";
 import { SegmentedTabs } from "@/src/components/SegmentedTabs";
 import { StatCard } from "@/src/components/StatCard";
-import { StatusFilterMenu, SCHEDULE_STATUS_OPTIONS } from "@/src/components/StatusFilterMenu";
+import { SCHEDULE_STATUS_OPTIONS, StatusFilterMenu } from "@/src/components/StatusFilterMenu";
 import {
   useCustomerBookings,
   useCustomerById,
@@ -160,7 +160,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
                       barberName={customer?.name ?? ""}
                       timeLabel={new Date(b.createdAt).toLocaleDateString("id-ID")}
                       duration={formatCurrency(b.totalAmount)}
-                      status={b.status as "waiting" | "in-progress" | "completed" | "canceled" | "requested"}
+                      status={b.status as "waiting" | "in_progress" | "completed" | "cancelled" | "requested"}
                     />
                   ))}
                 </View>

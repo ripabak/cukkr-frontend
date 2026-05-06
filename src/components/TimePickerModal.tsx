@@ -1,36 +1,85 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
-    Modal,
-    NativeScrollEvent,
-    NativeSyntheticEvent,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    ViewStyle,
+  Modal,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
 } from "react-native";
 
 const ITEM_HEIGHT = 44;
 const VISIBLE_COUNT = 3;
+
+interface TimePoint {
+  hour24: number;
+  minute: number;
+}
 
 interface Props {
   visible: boolean;
   initialHour?: number;
   initialMinute?: number;
   initialAmPm?: "AM" | "PM";
+  minTime?: TimePoint;
+  maxTime?: TimePoint;
+  minuteStep?: number;
   onConfirm: (hour: number, minute: number, amPm: "AM" | "PM") => void;
   onClose?: () => void;
   style?: ViewStyle;
 }
 
 const HOURS = Array.from({ length: 12 }, (_, i) => i + 1);
-const MINUTES = Array.from({ length: 60 }, (_, i) => i);
 const AM_PM: ("AM" | "PM")[] = ["AM", "PM"];
+
+function toHour24(h: number, amPm: "AM" | "PM"): number {
+  if (amPm === "AM") return h === 12 ? 0 : h;
+  return h === 12 ? 12 : h + 12;
+}
+
+function getValidHours(amPm: "AM" | "PM", minutes: number[], min?: TimePoint, max?: TimePoint): number[] {
+  if (!min || !max) return HOURS;
+  const minTotal = min.hour24 * 60 + min.minute;
+  const maxTotal = max.hour24 * 60 + max.minute;
+  return HOURS.filter((h) => {
+    const h24 = toHour24(h, amPm);
+    return minutes.some((m) => {
+      const total = h24 * 60 + m;
+      return total >= minTotal && total <= maxTotal;
+    });
+  });
+}
+
+function getValidMinutes(
+  hour: number,
+  amPm: "AM" | "PM",
+  allMinutes: number[],
+  min?: TimePoint,
+  max?: TimePoint,
+): number[] {
+  if (!min || !max) return allMinutes;
+  const h24 = toHour24(hour, amPm);
+  const minTotal = min.hour24 * 60 + min.minute;
+  const maxTotal = max.hour24 * 60 + max.minute;
+  return allMinutes.filter((m) => {
+    const total = h24 * 60 + m;
+    return total >= minTotal && total <= maxTotal;
+  });
+}
 
 function pad(n: number): string {
   return n < 10 ? `0${n}` : `${n}`;
+}
+
+function formatTimePoint(tp: TimePoint): string {
+  const amPm = tp.hour24 >= 12 ? "PM" : "AM";
+  const h = tp.hour24 === 0 ? 12 : tp.hour24 > 12 ? tp.hour24 - 12 : tp.hour24;
+  const m = tp.minute < 10 ? `0${tp.minute}` : String(tp.minute);
+  return `${h}:${m} ${amPm}`;
 }
 
 function ScrollPicker({
@@ -45,15 +94,20 @@ function ScrollPicker({
   renderItem: (item: number | string) => string;
 }) {
   const scrollRef = useRef<ScrollView>(null);
+  const scrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    setTimeout(() => {
+    if (scrollTimer.current) clearTimeout(scrollTimer.current);
+    scrollTimer.current = setTimeout(() => {
       scrollRef.current?.scrollTo({
         y: selectedIndex * ITEM_HEIGHT,
         animated: false,
       });
     }, 100);
-  }, [selectedIndex]);
+    return () => {
+      if (scrollTimer.current) clearTimeout(scrollTimer.current);
+    };
+  }, [selectedIndex, items.length]);
 
   const handleMomentumEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const index = Math.round(e.nativeEvent.contentOffset.y / ITEM_HEIGHT);
@@ -138,17 +192,76 @@ export function TimePickerModal({
   initialHour = 9,
   initialMinute = 0,
   initialAmPm = "AM",
+  minTime,
+  maxTime,
+  minuteStep = 15,
   onConfirm,
   onClose,
   style,
 }: Props) {
-  const [hourIndex, setHourIndex] = useState(
-    HOURS.indexOf(initialHour) >= 0 ? HOURS.indexOf(initialHour) : 0,
-  );
-  const [minuteIndex, setMinuteIndex] = useState(initialMinute);
-  const [amPmIndex, setAmPmIndex] = useState(initialAmPm === "PM" ? 1 : 0);
+  const MINUTES = minuteStep > 1
+    ? Array.from({ length: Math.ceil(60 / minuteStep) }, (_, i) => i * minuteStep)
+    : Array.from({ length: 60 }, (_, i) => i);
+
+  function computeInitialState() {
+    const amPmIdx = initialAmPm === "PM" ? 1 : 0;
+    const validHours = getValidHours(initialAmPm, MINUTES, minTime, maxTime);
+    const hourIdx = Math.max(0, validHours.indexOf(initialHour));
+    const hour = validHours[hourIdx] ?? validHours[0] ?? HOURS[0];
+    const validMins = getValidMinutes(hour, initialAmPm, MINUTES, minTime, maxTime);
+    const closestMin = validMins.length > 0
+      ? validMins.reduce((prev, curr) =>
+          Math.abs(curr - initialMinute) < Math.abs(prev - initialMinute) ? curr : prev)
+      : 0;
+    const minIdx = Math.max(0, validMins.indexOf(closestMin));
+    return { amPmIdx, hourIdx, minIdx };
+  }
+
+  const init = computeInitialState();
+  const [amPmIndex, setAmPmIndex] = useState(init.amPmIdx);
+  const [hourIndex, setHourIndex] = useState(init.hourIdx);
+  const [minuteIndex, setMinuteIndex] = useState(init.minIdx);
+
+  useLayoutEffect(() => {
+    if (visible) {
+      const next = computeInitialState();
+      setAmPmIndex(next.amPmIdx);
+      setHourIndex(next.hourIdx);
+      setMinuteIndex(next.minIdx);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible, minTime, maxTime]);
+
+  const currentAmPm = AM_PM[amPmIndex];
+  const validHours = getValidHours(currentAmPm, MINUTES, minTime, maxTime);
+  const currentHour = validHours[Math.min(hourIndex, validHours.length - 1)] ?? validHours[0];
+  const validMinutes = getValidMinutes(currentHour, currentAmPm, MINUTES, minTime, maxTime);
+
+  function handleAmPmChange(idx: number) {
+    const newAmPm = AM_PM[idx];
+    const newValidHours = getValidHours(newAmPm, MINUTES, minTime, maxTime);
+    const newHourIdx = Math.min(hourIndex, newValidHours.length - 1);
+    const newHour = newValidHours[newHourIdx] ?? newValidHours[0];
+    const newValidMins = getValidMinutes(newHour, newAmPm, MINUTES, minTime, maxTime);
+    const newMinIdx = Math.min(minuteIndex, newValidMins.length - 1);
+    setAmPmIndex(idx);
+    setHourIndex(newHourIdx);
+    setMinuteIndex(newMinIdx);
+  }
+
+  function handleHourChange(idx: number) {
+    const newHour = validHours[idx];
+    if (newHour !== undefined) {
+      const newValidMins = getValidMinutes(newHour, currentAmPm, MINUTES, minTime, maxTime);
+      setMinuteIndex(Math.min(minuteIndex, newValidMins.length - 1));
+    }
+    setHourIndex(idx);
+  }
 
   if (!visible) return null;
+
+  const safeHourIdx = Math.min(hourIndex, validHours.length - 1);
+  const safeMinIdx = Math.min(minuteIndex, validMinutes.length - 1);
 
   return (
     <Modal visible={visible} transparent animationType="fade">
@@ -158,39 +271,57 @@ export function TimePickerModal({
         onPress={onClose}
       >
         <TouchableOpacity activeOpacity={1} style={[styles.container, style]}>
+          {/* Header */}
+          <View style={styles.header}>
+            <Text style={styles.title}>Select Time</Text>
+            {minTime && maxTime && (
+              <View style={styles.rangeChip}>
+                <Text style={styles.rangeText}>
+                  {formatTimePoint(minTime)} – {formatTimePoint(maxTime)}
+                </Text>
+              </View>
+            )}
+          </View>
+
+          {/* Pickers */}
           <View style={styles.columns}>
             <ScrollPicker
-              items={HOURS}
-              selectedIndex={hourIndex}
-              onSelect={setHourIndex}
+              key={validHours.join(",")}
+              items={validHours}
+              selectedIndex={safeHourIdx}
+              onSelect={handleHourChange}
               renderItem={(h) => pad(h as number)}
             />
             <Text style={styles.separator}>:</Text>
             <ScrollPicker
-              items={MINUTES}
-              selectedIndex={minuteIndex}
+              key={`m-${currentHour}-${currentAmPm}`}
+              items={validMinutes}
+              selectedIndex={safeMinIdx}
               onSelect={setMinuteIndex}
               renderItem={(m) => pad(m as number)}
             />
             <ScrollPicker
               items={AM_PM}
               selectedIndex={amPmIndex}
-              onSelect={setAmPmIndex}
+              onSelect={handleAmPmChange}
               renderItem={(a) => a as string}
             />
           </View>
+
+          {/* Confirm Button */}
           <TouchableOpacity
             onPress={() =>
               onConfirm(
-                HOURS[hourIndex],
-                MINUTES[minuteIndex],
+                validHours[safeHourIdx],
+                validMinutes[safeMinIdx],
                 AM_PM[amPmIndex],
               )
             }
             activeOpacity={0.8}
             style={styles.confirmBtn}
           >
-            <Ionicons name="checkmark" size={20} color="#FFFFFF" />
+            <Ionicons name="checkmark" size={18} color="#FFFFFF" />
+            <Text style={styles.confirmText}>Confirm</Text>
           </TouchableOpacity>
         </TouchableOpacity>
       </TouchableOpacity>
@@ -201,26 +332,46 @@ export function TimePickerModal({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.2)",
+    backgroundColor: "rgba(0,0,0,0.35)",
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 24,
   },
   container: {
     backgroundColor: "#FFFFFF",
-    borderRadius: 20,
-    padding: 16,
+    borderRadius: 24,
+    padding: 20,
+    paddingBottom: 16,
+    width: "100%",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 10,
+    gap: 16,
+  },
+  header: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    justifyContent: "space-between",
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#1A1A1A",
+  },
+  rangeChip: {
+    backgroundColor: "#F5F4E8",
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  rangeText: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: "#7A7870",
   },
   columns: {
-    flex: 1,
     flexDirection: "row",
     alignItems: "center",
   },
@@ -231,11 +382,17 @@ const styles = StyleSheet.create({
     marginHorizontal: 2,
   },
   confirmBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
     backgroundColor: "#1A1A1A",
+    borderRadius: 14,
+    height: 48,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    gap: 8,
+  },
+  confirmText: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: "#FFFFFF",
   },
 });

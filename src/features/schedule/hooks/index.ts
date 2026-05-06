@@ -1,8 +1,7 @@
-export { useActiveBookings, useBookingById, BOOKINGS_QUERY_KEYS } from "./useBookingsQueries";
 export {
-  useCreateBooking,
-  useAcceptBooking,
-  useDeclineBooking,
-  useUpdateBookingStatus,
+  useAcceptBooking, useCreateBooking, useDeclineBooking,
+  useUpdateBookingStatus
 } from "./useBookingsMutations";
+export { BOOKINGS_QUERY_KEYS, useActiveBookings, useBookingById, useBookings } from "./useBookingsQueries";
 export { useScheduleBarbers, useScheduleServices } from "./useScheduleResourcesQueries";
+

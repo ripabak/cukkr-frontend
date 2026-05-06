@@ -4,7 +4,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 
 import { InfoRow } from './InfoRow';
 import { StatusBadge } from './StatusBadge';
 
-export type BookingDetailStatus = 'waiting' | 'in-progress' | 'completed' | 'canceled' | 'requested' | 'declined';
+export type BookingDetailStatus = 'waiting' | 'in_progress' | 'completed' | 'cancelled' | 'requested' | 'declined';
 
 interface ServiceLine {
   name: string;
@@ -34,18 +34,18 @@ interface Props {
 
 const STATUS_TO_BADGE: Record<BookingDetailStatus, string> = {
   waiting: 'waiting',
-  'in-progress': 'in-progress',
+  'in_progress': 'in_progress',
   completed: 'completed',
-  canceled: 'canceled',
+  cancelled: 'cancelled',
   requested: 'requested',
   declined: 'declined',
 };
 
 const STATUS_LABEL: Record<BookingDetailStatus, string> = {
   waiting: 'Waiting',
-  'in-progress': 'In Progress',
+  'in_progress': 'In Progress',
   completed: 'Completed',
-  canceled: 'Canceled',
+  cancelled: 'Cancelled',
   requested: 'Requested',
   declined: 'Declined',
 };

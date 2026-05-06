@@ -147,6 +147,10 @@ export function BarbershopSettingsScreen() {
               onPress={() => router.push("/customer-management")}
             />
             <OperationRow
+              label="Services"
+              onPress={() => router.push("/services-management")}
+            />
+            <OperationRow
               label="Open Hours"
               isLast
               onPress={() => router.push("/open-hours")}

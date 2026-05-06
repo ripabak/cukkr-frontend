@@ -13,18 +13,18 @@ const API_TO_BOOKING_STATUS: Record<string, BookingStatus> = {
   pending: "waiting",
   requested: "requested",
   waiting: "waiting",
-  in_progress: "in-progress",
+  "in_progress": "in_progress",
   completed: "completed",
-  cancelled: "canceled",
+  cancelled: "cancelled",
 };
 
 const API_TO_DETAIL_STATUS: Record<string, BookingDetailStatus> = {
   pending: "waiting",
   requested: "requested",
   waiting: "waiting",
-  in_progress: "in-progress",
+  "in_progress": "in_progress",
   completed: "completed",
-  cancelled: "canceled",
+  cancelled: "cancelled",
 };
 
 export function mapApiStatusToBookingStatus(status: ApiStatus | string): BookingStatus {

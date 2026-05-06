@@ -1,6 +1,6 @@
-import React from 'react';
-import { TouchableOpacity, View, Text, StyleSheet, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { BookingStatus } from './BookingCard';
 
 interface Props {
@@ -15,25 +15,25 @@ interface Props {
 
 const STATUS_COLOR: Record<BookingStatus, string> = {
   waiting: '#F0A11A',
-  'in-progress': '#0D78FF',
+  'in_progress': '#0D78FF',
   completed: '#4CC76B',
-  canceled: '#FF4A4A',
+  cancelled: '#FF4A4A',
   requested: '#1A1A1A',
 };
 
 const STATUS_ICON_BG: Record<BookingStatus, string> = {
   waiting: '#FFF3E0',
-  'in-progress': '#E3EFFF',
+  'in_progress': '#E3EFFF',
   completed: '#E8F8EE',
-  canceled: '#FFE8E8',
+  cancelled: '#FFE8E8',
   requested: '#F0F0E8',
 };
 
 const STATUS_ICON: Record<BookingStatus, React.ComponentProps<typeof Ionicons>['name']> = {
   waiting: 'people',
-  'in-progress': 'people',
+  'in_progress': 'people',
   completed: 'calendar-sharp',
-  canceled: 'people',
+  cancelled: 'people',
   requested: 'calendar',
 };
 

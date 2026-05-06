@@ -10,8 +10,8 @@ import {
 import { useActiveBookings } from "@/src/features/schedule/hooks";
 import {
   formatTimeLabel,
-  mapApiStatusToBookingStatus,
   getDetailRouteForStatus,
+  mapApiStatusToBookingStatus,
   toISODateString,
 } from "@/src/features/schedule/utils/booking-formatters";
 import { Ionicons } from "@expo/vector-icons";
@@ -47,12 +47,12 @@ export function ScheduleActiveBookingsScreen() {
   const [selectedKey, setSelectedKey] = useState(toISODateString(today));
   const [filterMenuVisible, setFilterMenuVisible] = useState(false);
   const [calendarVisible, setCalendarVisible] = useState(false);
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "waiting" | "in_progress">("all");
 
   const days = generateDayChips(today);
 
   const { data: bookings = [], isLoading } = useActiveBookings(selectedKey, {
-    status: statusFilter === "all" ? "all" : (statusFilter as any),
+    status: statusFilter === "all" ? "all" : (statusFilter),
   });
 
   const handleSelectDay = (key: string) => {
@@ -117,7 +117,7 @@ export function ScheduleActiveBookingsScreen() {
               visible
               options={SCHEDULE_STATUS_OPTIONS}
               selected={statusFilter}
-              onSelect={setStatusFilter}
+              onSelect={(value) => setStatusFilter(value as "all" | "waiting" | "in_progress")}
               onClose={() => setFilterMenuVisible(false)}
               style={styles.filterMenuPosition}
             />
@@ -171,6 +171,7 @@ export function ScheduleActiveBookingsScreen() {
       <CalendarModal
         visible={calendarVisible}
         selectedDate={selectedDate}
+        disablePast={false}
         onSelect={handleCalendarSelect}
         onClose={() => setCalendarVisible(false)}
       />

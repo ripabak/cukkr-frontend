@@ -1,4 +1,4 @@
-- Perlu adanya ENUM global untuk in-progress dan waiting
+- Perlu adanya ENUM global untuk in_progress dan waiting
 - middleware
 - bottom bar belum berfungsi
 - layout belum terpusat

@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+interface DayHourInfo {
+  dayOfWeek: number;
+  isOpen: boolean;
+}
 
 interface Props {
   visible: boolean;
   selectedDate?: Date;
+  openHours?: DayHourInfo[];
+  disablePast?: boolean;
   onSelect: (date: Date) => void;
   onClose: () => void;
 }
@@ -23,10 +30,20 @@ function getFirstDayOfMonth(year: number, month: number) {
   return new Date(year, month, 1).getDay();
 }
 
-export function CalendarModal({ visible, selectedDate, onSelect, onClose }: Props) {
+export function CalendarModal({ visible, selectedDate, openHours, disablePast = true, onSelect, onClose }: Props) {
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   const [viewYear, setViewYear] = useState(selectedDate?.getFullYear() ?? today.getFullYear());
   const [viewMonth, setViewMonth] = useState(selectedDate?.getMonth() ?? today.getMonth());
+
+  const closedDaySet = React.useMemo(() => {
+    const s = new Set<number>();
+    (openHours ?? []).forEach(d => { if (!d.isOpen) s.add(d.dayOfWeek); });
+    return s;
+  }, [openHours]);
+
+  const hasOpenHours = openHours !== undefined && openHours.length > 0;
 
   const daysInMonth = getDaysInMonth(viewYear, viewMonth);
   const firstDay = getFirstDayOfMonth(viewYear, viewMonth);
@@ -39,6 +56,24 @@ export function CalendarModal({ visible, selectedDate, onSelect, onClose }: Prop
   const rows: (number | null)[][] = [];
   for (let i = 0; i < cells.length; i += 7) {
     rows.push(cells.slice(i, i + 7));
+  }
+
+  function isDayPast(day: number): boolean {
+    if (!disablePast) return false;
+    return new Date(viewYear, viewMonth, day) < today;
+  }
+
+  function isDayClosed(day: number): boolean {
+    if (!hasOpenHours) return false;
+    return closedDaySet.has(new Date(viewYear, viewMonth, day).getDay());
+  }
+
+  function isToday(day: number): boolean {
+    return (
+      viewYear === today.getFullYear() &&
+      viewMonth === today.getMonth() &&
+      day === today.getDate()
+    );
   }
 
   const prevMonth = () => {
@@ -87,31 +122,67 @@ export function CalendarModal({ visible, selectedDate, onSelect, onClose }: Prop
 
           {/* Day labels */}
           <View style={styles.dayLabelRow}>
-            {DAY_LABELS.map((d) => (
-              <Text key={d} style={styles.dayLabel}>{d}</Text>
+            {DAY_LABELS.map((d, i) => (
+              <Text
+                key={d}
+                style={[
+                  styles.dayLabel,
+                  hasOpenHours && closedDaySet.has(i) && styles.dayLabelClosed,
+                ]}
+              >
+                {d}
+              </Text>
             ))}
           </View>
 
           {/* Calendar grid */}
           {rows.map((row, ri) => (
             <View key={ri} style={styles.week}>
-              {row.map((day, di) => (
-                <View key={di} style={styles.dayCell}>
-                  {day !== null ? (
+              {row.map((day, di) => {
+                if (day === null) return <View key={di} style={styles.dayCell} />;
+
+                const past = isDayPast(day);
+                const closed = isDayClosed(day);
+                const disabled = past || closed;
+                const selected = isSelected(day);
+                const todayMark = isToday(day);
+
+                return (
+                  <View key={di} style={styles.dayCell}>
                     <TouchableOpacity
-                      onPress={() => onSelect(new Date(viewYear, viewMonth, day))}
-                      activeOpacity={0.8}
-                      style={[styles.dayBtn, isSelected(day) && styles.dayBtnSelected]}
+                      onPress={disabled ? undefined : () => onSelect(new Date(viewYear, viewMonth, day))}
+                      activeOpacity={disabled ? 1 : 0.8}
+                      style={[
+                        styles.dayBtn,
+                        selected && styles.dayBtnSelected,
+                        todayMark && !selected && styles.dayBtnToday,
+                      ]}
                     >
-                      <Text style={[styles.dayText, isSelected(day) && styles.dayTextSelected]}>
+                      <Text
+                        style={[
+                          styles.dayText,
+                          selected && styles.dayTextSelected,
+                          past && styles.dayTextPast,
+                          closed && !past && styles.dayTextClosed,
+                        ]}
+                      >
                         {day}
                       </Text>
+                      {closed && !past && <View style={styles.closedDot} />}
                     </TouchableOpacity>
-                  ) : null}
-                </View>
-              ))}
+                  </View>
+                );
+              })}
             </View>
           ))}
+
+          {/* Legend */}
+          {hasOpenHours && closedDaySet.size > 0 && (
+            <View style={styles.legend}>
+              <View style={styles.legendDot} />
+              <Text style={styles.legendText}>Closed Day</Text>
+            </View>
+          )}
         </TouchableOpacity>
       </TouchableOpacity>
     </Modal>
@@ -160,6 +231,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#AAAAAA',
   },
+  dayLabelClosed: {
+    color: '#DDDBCD',
+  },
   week: {
     flexDirection: 'row',
     marginBottom: 4,
@@ -168,7 +242,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    height: 36,
+    height: 40,
   },
   dayBtn: {
     width: 34,
@@ -180,6 +254,10 @@ const styles = StyleSheet.create({
   dayBtnSelected: {
     backgroundColor: '#E63030',
   },
+  dayBtnToday: {
+    borderWidth: 1.5,
+    borderColor: '#E63030',
+  },
   dayText: {
     fontSize: 14,
     color: '#1A1A1A',
@@ -187,5 +265,38 @@ const styles = StyleSheet.create({
   dayTextSelected: {
     color: '#FFFFFF',
     fontWeight: '700',
+  },
+  dayTextPast: {
+    color: '#D5D3C8',
+  },
+  dayTextClosed: {
+    color: '#C8C5BA',
+  },
+  closedDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#D0CEC5',
+    position: 'absolute',
+    bottom: 2,
+  },
+  legend: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#F0EDE5',
+  },
+  legendDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#D0CEC5',
+  },
+  legendText: {
+    fontSize: 12,
+    color: '#9E9B90',
   },
 });

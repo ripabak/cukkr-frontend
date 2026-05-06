@@ -7,7 +7,7 @@ import {
   HISTORY_STATUS_OPTIONS,
   StatusFilterMenu,
 } from "@/src/components/StatusFilterMenu";
-import { useActiveBookings } from "@/src/features/schedule/hooks";
+import { useBookings } from "@/src/features/schedule/hooks";
 import {
   mapApiStatusToBookingStatus,
   toISODateString,
@@ -55,7 +55,7 @@ export function HistoryBookingsScreen() {
 
   const dateKey = toISODateString(selectedDate);
 
-  const { data: bookings = [], isLoading } = useActiveBookings(dateKey, {
+  const { data: bookings = [], isLoading } = useBookings(dateKey, {
     status: statusFilter === "all" ? "all" : (statusFilter as any),
     sort: sortValue as "oldest_first" | "recently_added",
   });
@@ -165,6 +165,7 @@ export function HistoryBookingsScreen() {
           setSelectedDate(date);
           setCalendarVisible(false);
         }}
+        disablePast={false}
         onClose={() => setCalendarVisible(false)}
       />
     </ScreenShell>

@@ -4,8 +4,8 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { ShortcutTile } from "@/src/components/ShortcutTile";
 import { WorkspacePill } from "@/src/components/WorkspacePill";
 import {
-  ActivityCard,
-  RecentActivity,
+    ActivityCard,
+    RecentActivity,
 } from "@/src/features/home/components/ActivityCard";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
@@ -29,7 +29,7 @@ const MOCK_RECENT_ACTIVITIES: RecentActivity[] = [
     id: "1",
     time: "12m ago",
     duration: "30 mins",
-    type: "in-progress",
+    type: "in_progress",
     name: "Ethan James",
   },
   {
@@ -51,7 +51,7 @@ const MOCK_RECENT_ACTIVITIES: RecentActivity[] = [
     time: "12m ago",
     duration: "30 mins",
     name: "Ethan James",
-    type: "in-progress",
+    type: "in_progress",
   },
 ];
 

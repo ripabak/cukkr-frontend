@@ -6,7 +6,7 @@ export type RecentActivity = {
   time: string;
   duration: string;
   name?: string;
-  type: "in-progress" | "waiting";
+  type: "in_progress" | "waiting";
 };
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
 }
 
 export function ActivityCard({ item, style }: Props) {
-  const accentColor = item.type === "in-progress" ? "#2196F3" : "#EBA109";
+  const accentColor = item.type === "in_progress" ? "#2196F3" : "#EBA109";
   return (
     <View style={[styles.container, style]}>
       <View style={[styles.circle, { backgroundColor: "#F2F2F7" }]}>

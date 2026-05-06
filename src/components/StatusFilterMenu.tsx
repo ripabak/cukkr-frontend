@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 interface StatusOption {
   label: string;
@@ -19,14 +19,14 @@ interface Props {
 export const SCHEDULE_STATUS_OPTIONS: StatusOption[] = [
   { label: 'All', value: 'all' },
   { label: 'Waiting', value: 'waiting', color: '#F0A11A' },
-  { label: 'In Progress', value: 'in-progress', color: '#0D78FF' },
+  { label: 'In Progress', value: 'in_progress', color: '#0D78FF' },
 ];
 
 export const HISTORY_STATUS_OPTIONS: StatusOption[] = [
   { label: 'All', value: 'all' },
   { label: 'Completed', value: 'completed', color: '#4CC76B' },
   { label: 'Waiting', value: 'waiting', color: '#F0A11A' },
-  { label: 'In Progress', value: 'in-progress', color: '#0D78FF' },
+  { label: 'In Progress', value: 'in_progress', color: '#0D78FF' },
   { label: 'Canceled', value: 'canceled', color: '#FF4A4A' },
 ];
 
