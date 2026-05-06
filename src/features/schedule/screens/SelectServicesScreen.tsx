@@ -1,31 +1,26 @@
-import React, { useState } from 'react';
-import { View, FlatList, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
-import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import { ScreenHeader } from '@/src/components/ScreenHeader';
-import { SearchInput } from '@/src/components/SearchInput';
-import { ServiceCard } from '@/src/components/ServiceCard';
-
-interface Service {
-  id: string;
-  name: string;
-  price: number;
-  discountPercent?: number;
-  isDefault?: boolean;
-}
-
-const MOCK_SERVICES: Service[] = [
-  { id: '1', name: 'Hair Cut', price: 40000, isDefault: true },
-  { id: '2', name: 'Hair Dyinh', price: 100000, discountPercent: 20 },
-];
+import React, { useState } from "react";
+import { View, FlatList, TouchableOpacity, StyleSheet, SafeAreaView, ActivityIndicator, Text } from "react-native";
+import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { ScreenHeader } from "@/src/components/ScreenHeader";
+import { SearchInput } from "@/src/components/SearchInput";
+import { ServiceCard } from "@/src/components/ServiceCard";
+import { useNewBookingForm, SelectedService } from "@/src/features/schedule/context/NewBookingContext";
+import { useScheduleServices } from "@/src/features/schedule/hooks";
 
 export function SelectServicesScreen() {
   const router = useRouter();
-  const [query, setQuery] = useState('');
-  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const { formData, setServices } = useNewBookingForm();
+  const [query, setQuery] = useState("");
 
-  const filtered = MOCK_SERVICES.filter((s) =>
-    s.name.toLowerCase().includes(query.toLowerCase())
+  const { data: services = [], isLoading } = useScheduleServices(query || undefined);
+
+  const [selected, setSelected] = useState<Set<string>>(
+    new Set(formData.serviceIds),
+  );
+
+  const filtered = services.filter((s) =>
+    s.name.toLowerCase().includes(query.toLowerCase()),
   );
 
   function toggleService(id: string) {
@@ -40,6 +35,19 @@ export function SelectServicesScreen() {
     });
   }
 
+  function handleConfirm() {
+    const selectedServices: SelectedService[] = services
+      .filter((s) => selected.has(s.id))
+      .map((s) => ({
+        id: s.id,
+        name: s.name,
+        price: s.price,
+        isDefault: s.isDefault,
+      }));
+    setServices(selectedServices);
+    router.back();
+  }
+
   return (
     <SafeAreaView style={styles.safe}>
       <ScreenHeader
@@ -47,7 +55,7 @@ export function SelectServicesScreen() {
         onBack={() => router.back()}
         rightAction={
           <TouchableOpacity
-            onPress={() => router.back()}
+            onPress={handleConfirm}
             activeOpacity={0.8}
             style={styles.confirmBtn}
           >
@@ -57,31 +65,40 @@ export function SelectServicesScreen() {
       />
       <View style={styles.content}>
         <SearchInput value={query} onChangeText={setQuery} placeholder="Search" />
-        <FlatList
-          data={filtered}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => toggleService(item.id)}
-              style={styles.serviceWrapper}
-            >
-              <ServiceCard
-                name={item.name}
-                price={item.price}
-                discountPercent={item.discountPercent}
-                isDefault={item.isDefault}
-              />
-              <View style={[styles.checkbox, selected.has(item.id) && styles.checkboxSelected]}>
-                {selected.has(item.id) ? (
-                  <Ionicons name="checkmark" size={14} color="#FFFFFF" />
-                ) : null}
-              </View>
-            </TouchableOpacity>
-          )}
-          ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-        />
+        {isLoading ? (
+          <ActivityIndicator size="small" color="#1A1A1A" style={styles.loader} />
+        ) : (
+          <FlatList
+            data={filtered}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.list}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => toggleService(item.id)}
+                style={styles.serviceWrapper}
+              >
+                <ServiceCard
+                  name={item.name}
+                  price={item.price}
+                  discountPercent={item.discount > 0 ? item.discount : undefined}
+                  isDefault={item.isDefault}
+                />
+                <View style={[styles.checkbox, selected.has(item.id) && styles.checkboxSelected]}>
+                  {selected.has(item.id) ? (
+                    <Ionicons name="checkmark" size={14} color="#FFFFFF" />
+                  ) : null}
+                </View>
+              </TouchableOpacity>
+            )}
+            ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+            ListEmptyComponent={
+              !isLoading ? (
+                <Text style={styles.emptyText}>No services found.</Text>
+              ) : null
+            }
+          />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -90,7 +107,7 @@ export function SelectServicesScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#F5F4E8',
+    backgroundColor: "#F5F4E8",
   },
   content: {
     flex: 1,
@@ -104,29 +121,38 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#1A1A1A',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#1A1A1A",
+    alignItems: "center",
+    justifyContent: "center",
   },
   serviceWrapper: {
-    position: 'relative',
+    position: "relative",
   },
   checkbox: {
-    position: 'absolute',
+    position: "absolute",
     right: 14,
-    top: '50%',
+    top: "50%",
     marginTop: -12,
     width: 24,
     height: 24,
     borderRadius: 6,
     borderWidth: 1.5,
-    borderColor: '#1A1A1A',
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderColor: "#1A1A1A",
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+    justifyContent: "center",
   },
   checkboxSelected: {
-    backgroundColor: '#1A1A1A',
-    borderColor: '#1A1A1A',
+    backgroundColor: "#1A1A1A",
+    borderColor: "#1A1A1A",
+  },
+  loader: {
+    marginTop: 20,
+  },
+  emptyText: {
+    textAlign: "center",
+    marginTop: 40,
+    fontSize: 14,
+    color: "#666666",
   },
 });

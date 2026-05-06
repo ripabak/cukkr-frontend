@@ -1,56 +1,65 @@
-import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
-import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import { ScreenHeader } from '@/src/components/ScreenHeader';
-import { SearchInput } from '@/src/components/SearchInput';
-
-interface Barber {
-  id: string;
-  name: string;
-}
-
-const MOCK_BARBERS: Barber[] = [
-  { id: '1', name: 'Pepe Julian' },
-  { id: '2', name: 'Pepe Julian' },
-];
+import React, { useState } from "react";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, SafeAreaView, ActivityIndicator } from "react-native";
+import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { ScreenHeader } from "@/src/components/ScreenHeader";
+import { SearchInput } from "@/src/components/SearchInput";
+import { useNewBookingForm } from "@/src/features/schedule/context/NewBookingContext";
+import { useScheduleBarbers } from "@/src/features/schedule/hooks";
 
 export function SelectBarberScreen() {
   const router = useRouter();
-  const [query, setQuery] = useState('');
+  const { setBarber } = useNewBookingForm();
+  const [query, setQuery] = useState("");
 
-  const filtered = MOCK_BARBERS.filter((b) =>
-    b.name.toLowerCase().includes(query.toLowerCase())
+  const { data: barbers = [], isLoading } = useScheduleBarbers(query || undefined);
+
+  const filtered = barbers.filter((b) =>
+    b.name.toLowerCase().includes(query.toLowerCase()),
   );
+
+  const handleSelect = (id: string, name: string) => {
+    setBarber(id, name);
+    router.back();
+  };
 
   return (
     <SafeAreaView style={styles.safe}>
       <ScreenHeader title="Select Barber" onBack={() => router.back()} />
       <View style={styles.content}>
-        <SearchInput
-          value={query}
-          onChangeText={setQuery}
-          placeholder="Search"
-        />
-        <FlatList
-          data={filtered}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.barberRow}
-              onPress={() => router.back()}
-            >
-              <View style={styles.avatar}>
-                <Ionicons name="person" size={22} color="#1A1A1A" />
-              </View>
-              <Text style={styles.barberName}>{item.name}</Text>
-              <Ionicons name="chevron-forward" size={18} color="#1A1A1A" />
-            </TouchableOpacity>
-          )}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-        />
+        <SearchInput value={query} onChangeText={setQuery} placeholder="Search" />
+        {isLoading ? (
+          <ActivityIndicator size="small" color="#1A1A1A" style={styles.loader} />
+        ) : (
+          <FlatList
+            data={filtered}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.list}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.barberRow}
+                onPress={() => handleSelect(item.id, item.name)}
+              >
+                <View style={styles.avatar}>
+                  {item.avatarUrl ? (
+                    <Ionicons name="person" size={22} color="#1A1A1A" />
+                  ) : (
+                    <Ionicons name="person" size={22} color="#1A1A1A" />
+                  )}
+                </View>
+                <Text style={styles.barberName}>{item.name}</Text>
+                <Ionicons name="chevron-forward" size={18} color="#1A1A1A" />
+              </TouchableOpacity>
+            )}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            ListEmptyComponent={
+              !isLoading ? (
+                <Text style={styles.emptyText}>No barbers found.</Text>
+              ) : null
+            }
+          />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -59,7 +68,7 @@ export function SelectBarberScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#F5F4E8',
+    backgroundColor: "#F5F4E8",
   },
   content: {
     flex: 1,
@@ -70,9 +79,9 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   barberRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#CFE57C',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#CFE57C",
     borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 14,
@@ -82,18 +91,27 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#B0ADA0',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
+    backgroundColor: "#B0ADA0",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
   },
   barberName: {
     flex: 1,
     fontSize: 15,
-    fontWeight: '600',
-    color: '#1A1A1A',
+    fontWeight: "600",
+    color: "#1A1A1A",
   },
   separator: {
     height: 0,
+  },
+  loader: {
+    marginTop: 20,
+  },
+  emptyText: {
+    textAlign: "center",
+    marginTop: 40,
+    fontSize: 14,
+    color: "#666666",
   },
 });

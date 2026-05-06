@@ -5,30 +5,39 @@ import { FormShell } from "@/src/components/FormShell";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { TimePickerModal } from "@/src/components/TimePickerModal";
+import { useNewBookingForm } from "@/src/features/schedule/context/NewBookingContext";
+import { useCreateBooking } from "@/src/features/schedule/hooks";
+import { useToast } from "@/src/lib/providers";
+import { getErrorMessage } from "@/src/lib/utils/error-handler";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 type BookingType = "appointment" | "walkin";
 
-const MOCK_SERVICES = [{ name: "Hair Cut", price: 40000, isDefault: true }];
-
 function formatTime(h: number, m: number, amPm: "AM" | "PM"): string {
   const mm = m < 10 ? `0${m}` : String(m);
   return `${h}:${mm} ${amPm}`;
 }
 
+function buildISODateTime(date: Date, h: number, m: number, amPm: "AM" | "PM"): string {
+  const hour24 = amPm === "AM" ? (h === 12 ? 0 : h) : h === 12 ? 12 : h + 12;
+  const d = new Date(date);
+  d.setHours(hour24, m, 0, 0);
+  return d.toISOString();
+}
+
 export function NewAppointmentScreen() {
   const router = useRouter();
+  const toast = useToast();
+  const { formData, updateFormData, resetFormData } = useNewBookingForm();
+  const { mutate: createBooking, isPending } = useCreateBooking();
+
   const [bookingType, setBookingType] = useState<BookingType>("appointment");
-  const [customerName, setCustomerName] = useState("");
-  const [contact, setContact] = useState("");
-  const [selectedDateTime, setSelectedDateTime] = useState<
-    string | undefined
-  >();
   const [showCalendar, setShowCalendar] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [displayDateTime, setDisplayDateTime] = useState<string | undefined>();
 
   function handleDateSelect(date: Date) {
     setSelectedDate(date);
@@ -39,22 +48,10 @@ export function NewAppointmentScreen() {
   function handleTimeConfirm(h: number, m: number, amPm: "AM" | "PM") {
     if (selectedDate) {
       const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-      const monthLabels = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
+      const monthLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       const label = `${dayLabels[selectedDate.getDay()]}, ${selectedDate.getDate()} ${monthLabels[selectedDate.getMonth()]} ${selectedDate.getFullYear()} ${formatTime(h, m, amPm)}`;
-      setSelectedDateTime(label);
+      setDisplayDateTime(label);
+      updateFormData({ scheduledAt: buildISODateTime(selectedDate, h, m, amPm) });
     }
     setShowTimePicker(false);
   }
@@ -66,6 +63,43 @@ export function NewAppointmentScreen() {
     }
   }
 
+  function handleSubmit() {
+    if (!formData.customerName.trim()) {
+      toast.error("Please enter customer name");
+      return;
+    }
+    if (!formData.scheduledAt) {
+      toast.error("Please select date and time");
+      return;
+    }
+    if (formData.serviceIds.length === 0) {
+      toast.error("Please select at least one service");
+      return;
+    }
+
+    createBooking(
+      {
+        type: "appointment",
+        customerName: formData.customerName,
+        serviceIds: formData.serviceIds,
+        scheduledAt: formData.scheduledAt,
+        barberId: formData.barberId ?? undefined,
+        customerPhone: formData.contact || null,
+        notes: formData.notes || null,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Appointment created");
+          resetFormData();
+          router.back();
+        },
+        onError: (error) => {
+          toast.error(getErrorMessage(error));
+        },
+      },
+    );
+  }
+
   return (
     <FormShell
       headerSlot={
@@ -73,31 +107,33 @@ export function NewAppointmentScreen() {
           title="New Appointment"
           onBack={() => router.back()}
           rightAction={
-            <BookingTypeToggle
-              value={bookingType}
-              onChange={handleBookingTypeChange}
-            />
+            <BookingTypeToggle value={bookingType} onChange={handleBookingTypeChange} />
           }
         />
       }
       footerSlot={
         <View style={styles.footer}>
-          <PrimaryButton label="New Appointment" onPress={() => {}} />
+          <PrimaryButton
+            label="New Appointment"
+            onPress={handleSubmit}
+            disabled={isPending}
+          />
         </View>
       }
       backgroundColor="#F5F4E8"
       contentStyle={{ paddingTop: 20, gap: 14 }}
     >
       <BookingForm
-        customerName={customerName}
-        onCustomerNameChange={setCustomerName}
-        contact={contact}
-        onContactChange={setContact}
+        customerName={formData.customerName}
+        onCustomerNameChange={(v) => updateFormData({ customerName: v })}
+        contact={formData.contact}
+        onContactChange={(v) => updateFormData({ contact: v })}
+        selectedBarber={formData.barberName ?? undefined}
         onBarberPress={() => router.push("/select-barber" as any)}
-        selectedDateTime={selectedDateTime}
+        selectedDateTime={displayDateTime}
         onDateTimePress={() => setShowCalendar(true)}
         showDateTimeSelector
-        services={MOCK_SERVICES}
+        services={formData.selectedServices}
         onServicePress={() => router.push("/select-services" as any)}
       />
 

@@ -1,85 +1,46 @@
-import { BookingStatus } from "@/src/components/BookingCard";
 import { CalendarModal } from "@/src/components/CalendarModal";
 import { DateSelectorPill } from "@/src/components/DateSelectorPill";
 import { HistoryBookingRow } from "@/src/components/HistoryBookingRow";
-import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SortMenu } from "@/src/components/SortMenu";
 import {
-    HISTORY_STATUS_OPTIONS,
-    StatusFilterMenu,
+  HISTORY_STATUS_OPTIONS,
+  StatusFilterMenu,
 } from "@/src/components/StatusFilterMenu";
+import { useActiveBookings } from "@/src/features/schedule/hooks";
+import {
+  mapApiStatusToBookingStatus,
+  toISODateString,
+} from "@/src/features/schedule/utils/booking-formatters";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
-interface HistoryBooking {
-  id: string;
-  customerName: string;
-  barberName: string;
-  dateTimeLabel: string;
-  duration: string;
-  status: BookingStatus;
-}
-
-const MOCK_HISTORY: HistoryBooking[] = [
-  {
-    id: "1",
-    customerName: "James Comberan",
-    barberName: "Pepe Julian",
-    dateTimeLabel: "11 May 2025 8:30",
-    duration: "30 mins",
-    status: "completed",
-  },
-  {
-    id: "2",
-    customerName: "Liam Walker",
-    barberName: "Pepe Julian",
-    dateTimeLabel: "11 May 2025 8:30",
-    duration: "30 mins",
-    status: "completed",
-  },
-  {
-    id: "3",
-    customerName: "Ethan James",
-    barberName: "Pepe Julian",
-    dateTimeLabel: "11 May 2025 8:30",
-    duration: "30 mins",
-    status: "waiting",
-  },
-  {
-    id: "4",
-    customerName: "Ethan James",
-    barberName: "Pepe Julian",
-    dateTimeLabel: "11 May 2025 8:30",
-    duration: "30 mins",
-    status: "in-progress",
-  },
-];
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const SORT_OPTIONS = [
-  { label: "Sort by Recently Added", value: "recent" },
-  { label: "Sort by Oldest First", value: "oldest" },
-  { label: "Sort by Name", value: "name" },
+  { label: "Sort by Recently Added", value: "recently_added" },
+  { label: "Sort by Oldest First", value: "oldest_first" },
 ];
 
 function formatDatePill(date: Date): string {
   const monthShort = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
   ];
   return `${date.getDate()} ${monthShort[date.getMonth()]} ${date.getFullYear()}`;
+}
+
+function formatDateTimeLabel(date: Date | string | null): string {
+  if (!date) return "—";
+  const d = typeof date === "string" ? new Date(date) : date;
+  const monthShort = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  ];
+  const h = d.getHours();
+  const m = d.getMinutes();
+  const mm = m < 10 ? `0${m}` : String(m);
+  return `${d.getDate()} ${monthShort[d.getMonth()]} ${d.getFullYear()} ${h}:${mm}`;
 }
 
 export function HistoryBookingsScreen() {
@@ -88,36 +49,47 @@ export function HistoryBookingsScreen() {
   const [selectedDate, setSelectedDate] = useState(today);
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [statusFilter, setStatusFilter] = useState("all");
-  const [sortValue, setSortValue] = useState("recent");
+  const [sortValue, setSortValue] = useState("recently_added");
   const [statusMenuVisible, setStatusMenuVisible] = useState(false);
   const [sortMenuVisible, setSortMenuVisible] = useState(false);
 
-  const filteredHistory = MOCK_HISTORY.filter((b) =>
-    statusFilter === "all" ? true : b.status === statusFilter,
-  );
+  const dateKey = toISODateString(selectedDate);
+
+  const { data: bookings = [], isLoading } = useActiveBookings(dateKey, {
+    status: statusFilter === "all" ? "all" : (statusFilter as any),
+    sort: sortValue as "oldest_first" | "recently_added",
+  });
+
+  const handleBookingPress = (id: string) => {
+    router.push(`/booking-detail-result?id=${id}` as any);
+  };
 
   return (
     <ScreenShell
       backgroundColor="#F5F4E8"
       headerSlot={
-        <ScreenHeader
-          onBack={() => router.back()}
-          rightAction={
-            <View style={styles.headerActions}>
-              <TouchableOpacity
-                onPress={() => setStatusMenuVisible(true)}
-                activeOpacity={0.8}
-                style={styles.iconBtn}
-              >
-                <Ionicons name="filter-outline" size={18} color="#1A1A1A" />
-              </TouchableOpacity>
-              <DateSelectorPill
-                label={formatDatePill(selectedDate)}
-                onPress={() => setCalendarVisible(true)}
-              />
-            </View>
-          }
-        />
+        <View style={styles.topBar}>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            activeOpacity={0.7}
+            style={styles.backBtn}
+          >
+            <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
+          </TouchableOpacity>
+          <View style={styles.topActions}>
+            <TouchableOpacity
+              onPress={() => setSortMenuVisible(true)}
+              activeOpacity={0.8}
+              style={styles.iconBtn}
+            >
+              <Ionicons name="swap-vertical-outline" size={18} color="#1A1A1A" />
+            </TouchableOpacity>
+            <DateSelectorPill
+              label={formatDatePill(selectedDate)}
+              onPress={() => setCalendarVisible(true)}
+            />
+          </View>
+        </View>
       }
       overlaySlot={
         <>
@@ -148,36 +120,44 @@ export function HistoryBookingsScreen() {
       }
     >
       <View style={styles.sectionHeader}>
-        <Text style={styles.title}>All Booking</Text>
+        <Text style={styles.title}>
+          All Booking{" "}
+          <Text style={styles.titleCount}>({bookings.length})</Text>
+        </Text>
         <TouchableOpacity
           onPress={() => setStatusMenuVisible(true)}
           activeOpacity={0.8}
           style={styles.filterPill}
         >
           <Text style={styles.filterLabel}>
-            {HISTORY_STATUS_OPTIONS.find((o) => o.value === statusFilter)
-              ?.label ?? "All"}
+            {HISTORY_STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ?? "All"}
           </Text>
           <Ionicons name="chevron-down" size={14} color="#1A1A1A" />
         </TouchableOpacity>
       </View>
 
-      <View style={styles.list}>
-        {filteredHistory.map((booking, i) => (
-          <HistoryBookingRow
-            key={booking.id}
-            customerName={booking.customerName}
-            barberName={booking.barberName}
-            dateTimeLabel={booking.dateTimeLabel}
-            duration={booking.duration}
-            status={booking.status}
-            onPress={() => router.push("/booking-detail-result" as any)}
-            style={
-              i < filteredHistory.length - 1 ? styles.rowMargin : undefined
-            }
-          />
-        ))}
-      </View>
+      {isLoading ? (
+        <ActivityIndicator size="small" color="#1A1A1A" style={styles.loader} />
+      ) : (
+        <View style={styles.list}>
+          {bookings.map((booking, i) => (
+            <HistoryBookingRow
+              key={booking.id}
+              customerName={booking.customerName}
+              barberName={booking.barber?.name ?? "—"}
+              dateTimeLabel={formatDateTimeLabel(booking.scheduledAt ?? booking.createdAt)}
+              duration="30 mins"
+              status={mapApiStatusToBookingStatus(booking.status)}
+              onPress={() => handleBookingPress(booking.id)}
+              style={i < bookings.length - 1 ? styles.rowMargin : undefined}
+            />
+          ))}
+          {bookings.length === 0 && !isLoading ? (
+            <Text style={styles.emptyText}>No bookings for this date.</Text>
+          ) : null}
+        </View>
+      )}
+
       <CalendarModal
         visible={calendarVisible}
         selectedDate={selectedDate}
@@ -192,32 +172,60 @@ export function HistoryBookingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  headerActions: {
+  topBar: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 12,
   },
-  iconBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+  backBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: "#FFFFFF",
-    borderWidth: 1,
-    borderColor: "#E0DDD0",
     alignItems: "center",
     justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  topActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  iconBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 2,
   },
   sectionHeader: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 16,
-    marginTop: 8,
+    marginTop: 4,
   },
   title: {
     fontSize: 26,
     fontWeight: "700",
     color: "#1A1A1A",
+  },
+  titleCount: {
+    fontWeight: "400",
+    color: "#666666",
   },
   filterPill: {
     flexDirection: "row",
@@ -242,6 +250,15 @@ const styles = StyleSheet.create({
   rowMargin: {
     marginBottom: 12,
   },
+  loader: {
+    marginTop: 40,
+  },
+  emptyText: {
+    textAlign: "center",
+    marginTop: 40,
+    fontSize: 14,
+    color: "#666666",
+  },
   menuOverlay: {
     position: "absolute",
     top: 0,
@@ -251,7 +268,7 @@ const styles = StyleSheet.create({
     zIndex: 50,
   },
   statusMenuPosition: {
-    top: 100,
+    top: 80,
     right: 20,
   },
 });
