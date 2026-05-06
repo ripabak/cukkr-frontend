@@ -1,12 +1,6 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { barbershopService } from '../services/barbershop.service';
-import { BARBERSHOP_QUERY_KEYS } from './useBarbershopQueries';
-
-export function useUploadBarbershopLogo() {
-  return useMutation({
-    mutationFn: (file: File) => barbershopService.uploadLogo(file),
-  });
-}
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { barbershopService } from "../services/barbershop.service";
+import { BARBERSHOP_QUERY_KEYS } from "./useBarbershopQueries";
 
 export function useUpdateBarbershopSettings() {
   const queryClient = useQueryClient();
@@ -21,7 +15,6 @@ export function useUpdateBarbershopSettings() {
     }) => barbershopService.updateSettings(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: BARBERSHOP_QUERY_KEYS.current() });
-      queryClient.invalidateQueries({ queryKey: BARBERSHOP_QUERY_KEYS.list() });
     },
   });
 }
@@ -32,7 +25,6 @@ export function useLeaveBarbershop() {
   return useMutation({
     mutationFn: (orgId: string) => barbershopService.leave(orgId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: BARBERSHOP_QUERY_KEYS.list() });
       queryClient.invalidateQueries({ queryKey: BARBERSHOP_QUERY_KEYS.current() });
     },
   });

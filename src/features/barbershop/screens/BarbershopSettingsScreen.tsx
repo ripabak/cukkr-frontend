@@ -1,21 +1,52 @@
+import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { DangerButton } from "@/src/components/DangerButton";
 import { InfoRow } from "@/src/components/InfoRow";
 import { OperationRow } from "@/src/components/OperationRow";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
+import {
+  useBarbershopCurrent,
+  useLeaveBarbershop,
+} from "@/src/features/barbershop/hooks";
+import { useToast } from "@/src/lib/providers";
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-
-// --- MOCK DATA ---
-const MOCK_BARBERSHOP_NAME = "Barbershop Name";
-const MOCK_BARBERSHOP_DESCRIPTION = "Barbershop Description";
-const MOCK_BARBERSHOP_ADDRESS = "Address";
-const MOCK_BOOK_URL = "https://cukkr.com/hendra-...";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export function BarbershopSettingsScreen() {
   const router = useRouter();
+  const toast = useToast();
+  const { data: barbershop, isLoading } = useBarbershopCurrent();
+  const { mutate: leave, isPending: isLeaving } = useLeaveBarbershop();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleDeleteConfirm = () => {
+    if (!barbershop?.id) return;
+    leave(barbershop.id, {
+      onSuccess: () => {
+        setShowDeleteModal(false);
+        toast.success("Barbershop deleted");
+        router.replace("/switch-barbershop");
+      },
+      onError: (error) => {
+        setShowDeleteModal(false);
+        toast.error(error.message || "Failed to delete barbershop");
+      },
+    });
+  };
+
+  const handleCameraBadge = () => {
+    Alert.alert("Logo Upload", "Logo upload will be available soon.");
+  };
 
   return (
     <ScreenShell contentStyle={styles.scrollContentPadding}>
@@ -24,65 +55,123 @@ export function BarbershopSettingsScreen() {
       <Text style={styles.subtitle}>Setup based on your barbershop needs</Text>
 
       <View style={styles.avatarWrapper}>
-        <View style={styles.avatarCircle}>
+        <TouchableOpacity onPress={handleCameraBadge} activeOpacity={0.8}>
+          {barbershop?.logoUrl ? (
+            <Image
+              source={{ uri: barbershop.logoUrl }}
+              style={styles.avatarCircle}
+              contentFit="cover"
+            />
+          ) : (
+            <View style={styles.avatarCircle} />
+          )}
           <View style={styles.cameraBadge}>
             <Ionicons name="camera" size={14} color="#FFFFFF" />
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
 
-      <Text style={styles.sectionLabel}>Information</Text>
-      <View style={styles.card}>
-        <InfoRow
-          label="Name"
-          value={MOCK_BARBERSHOP_NAME}
-          showChevron
-          onPress={() => router.push("/edit-barbershop-info")}
+      {isLoading ? (
+        <ActivityIndicator
+          size="large"
+          color="#C6FF4D"
+          style={styles.loader}
         />
-        <InfoRow
-          label="Description"
-          value={MOCK_BARBERSHOP_DESCRIPTION}
-          showChevron
-          onPress={() => router.push("/edit-barbershop-info")}
-        />
-        <InfoRow
-          label="Address"
-          value={MOCK_BARBERSHOP_ADDRESS}
-          showChevron
-          isLast
-          onPress={() => router.push("/edit-barbershop-info")}
-        />
-      </View>
+      ) : (
+        <>
+          <Text style={styles.sectionLabel}>Information</Text>
+          <View style={styles.card}>
+            <InfoRow
+              label="Name"
+              value={barbershop?.name ?? "—"}
+              showChevron
+              onPress={() =>
+                router.push({
+                  pathname: "/edit-barbershop-info",
+                  params: { mode: "name" },
+                })
+              }
+            />
+            <InfoRow
+              label="Description"
+              value={barbershop?.description ?? "—"}
+              showChevron
+              onPress={() =>
+                router.push({
+                  pathname: "/edit-barbershop-info",
+                  params: { mode: "description" },
+                })
+              }
+            />
+            <InfoRow
+              label="Address"
+              value={barbershop?.address ?? "—"}
+              showChevron
+              isLast
+              onPress={() =>
+                router.push({
+                  pathname: "/edit-barbershop-info",
+                  params: { mode: "address" },
+                })
+              }
+            />
+          </View>
 
-      <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
-        Booking Web
-      </Text>
-      <View style={styles.card}>
-        <InfoRow
-          label="Book Url"
-          value={MOCK_BOOK_URL}
-          showChevron
-          isLast
-          onPress={() => router.push("/edit-booking-url")}
-        />
-      </View>
+          <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+            Booking Web
+          </Text>
+          <View style={styles.card}>
+            <InfoRow
+              label="Book Url"
+              value={
+                barbershop?.slug
+                  ? `https://cukkr.com/${barbershop.slug}`
+                  : "—"
+              }
+              showChevron
+              isLast
+              onPress={() => router.push("/edit-booking-url")}
+            />
+          </View>
 
-      <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
-        Operations
-      </Text>
-      <View style={styles.card}>
-        <OperationRow label="Barbers" onPress={() => {}} />
-        <OperationRow label="Customers" onPress={() => {}} />
-        <OperationRow label="Open Hours" isLast onPress={() => {}} />
-      </View>
+          <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+            Operations
+          </Text>
+          <View style={styles.card}>
+            <OperationRow
+              label="Barbers"
+              onPress={() => router.push("/barbers-management")}
+            />
+            <OperationRow
+              label="Customers"
+              onPress={() => router.push("/customer-management")}
+            />
+            <OperationRow
+              label="Open Hours"
+              isLast
+              onPress={() => router.push("/open-hours")}
+            />
+          </View>
 
-      <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
-        Delete Barber
-      </Text>
-      <DangerButton
-        label="Delete This Barbershop"
-        onPress={() => {}}
-        style={styles.dangerBtn}
+          <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+            Delete Barbershop
+          </Text>
+          <DangerButton
+            label="Delete This Barbershop"
+            onPress={() => setShowDeleteModal(true)}
+            style={styles.dangerBtn}
+          />
+        </>
+      )}
+
+      <ConfirmationModal
+        visible={showDeleteModal}
+        title="Delete Barbershop"
+        description="Are you sure you want to delete this barbershop? This action cannot be undone."
+        confirmLabel={isLeaving ? "Deleting..." : "Delete"}
+        cancelLabel="Cancel"
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setShowDeleteModal(false)}
       />
     </ScreenShell>
   );
@@ -103,6 +192,7 @@ const styles = StyleSheet.create({
   },
   avatarWrapper: {
     alignItems: "center",
+    marginBottom: 24,
   },
   avatarCircle: {
     width: 80,
@@ -120,6 +210,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#1A1A1A",
     alignItems: "center",
     justifyContent: "center",
+  },
+  loader: {
+    marginTop: 40,
   },
   sectionLabel: {
     fontSize: 13,

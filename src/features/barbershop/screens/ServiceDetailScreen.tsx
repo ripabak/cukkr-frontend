@@ -1,48 +1,102 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import { ScreenHeader } from '@/src/components/ScreenHeader';
-import { InfoRow } from '@/src/components/InfoRow';
-import { ToggleRow } from '@/src/components/ToggleRow';
-import { OverflowMenu } from '@/src/components/OverflowMenu';
-import { StatusBadge } from '@/src/components/StatusBadge';
-import { ConfirmationModal } from '@/src/components/ConfirmationModal';
-import { OperationRow } from '@/src/components/OperationRow';
+import { ConfirmationModal } from "@/src/components/ConfirmationModal";
+import { InfoRow } from "@/src/components/InfoRow";
+import { OperationRow } from "@/src/components/OperationRow";
+import { OverflowMenu } from "@/src/components/OverflowMenu";
+import { StatusBadge } from "@/src/components/StatusBadge";
+import { ToggleRow } from "@/src/components/ToggleRow";
+import {
+  useDeleteService,
+  useServiceById,
+  useSetServiceDefault,
+  useToggleServiceActive,
+} from "@/src/features/barbershop/hooks";
+import { useToast } from "@/src/lib/providers";
+import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const MOCK_SERVICE = {
-  name: 'Classic Haircut',
-  description: 'A timeless haircut that suits every style and occasion.',
-  duration: '30 minutes',
-  price: 'Rp 50.000',
-  discount: '0%',
-  isActive: true,
-  isDefault: false,
-};
+function formatPrice(amount: number): string {
+  return `Rp ${amount.toLocaleString("id-ID")}`;
+}
 
 export function ServiceDetailScreen() {
   const router = useRouter();
+  const toast = useToast();
+  const { serviceId = "" } = useLocalSearchParams<{ serviceId?: string }>();
+
+  const { data: service, isLoading } = useServiceById(serviceId);
+  const { mutate: toggleActive } = useToggleServiceActive();
+  const { mutate: setDefault, isPending: isSettingDefault } = useSetServiceDefault();
+  const { mutate: deleteService, isPending: isDeleting } = useDeleteService();
+
   const [overflowVisible, setOverflowVisible] = useState(false);
-  const [isActive, setIsActive] = useState(MOCK_SERVICE.isActive);
-  const [isDefault, setIsDefault] = useState(MOCK_SERVICE.isDefault);
   const [showSetDefaultModal, setShowSetDefaultModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleToggleActive = () => {
+    toggleActive(serviceId, {
+      onError: (e) => toast.error(e.message || "Failed to toggle service"),
+    });
+  };
+
+  const handleSetDefault = () => {
+    setDefault(serviceId, {
+      onSuccess: () => {
+        toast.success("Default service updated");
+        setShowSetDefaultModal(false);
+      },
+      onError: (e) => {
+        toast.error(e.message || "Failed to set default");
+        setShowSetDefaultModal(false);
+      },
+    });
+  };
+
+  const handleDelete = () => {
+    deleteService(serviceId, {
+      onSuccess: () => {
+        toast.success("Service deleted");
+        router.back();
+      },
+      onError: (e) => {
+        toast.error(e.message || "Failed to delete service");
+        setShowDeleteModal(false);
+      },
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <ActivityIndicator size="large" color="#C6FF4D" style={styles.loader} />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.outer}>
-        <ScreenHeader
-          onBack={() => router.back()}
-          rightAction={
-            <TouchableOpacity
-              onPress={() => setOverflowVisible(true)}
-              activeOpacity={0.7}
-              style={styles.overflowBtn}
-            >
-              <Ionicons name="ellipsis-horizontal" size={18} color="#FFFFFF" />
-            </TouchableOpacity>
-          }
-        />
+        <View style={styles.headerRow}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+            <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setOverflowVisible(true)}
+            activeOpacity={0.7}
+            style={styles.overflowBtn}
+          >
+            <Ionicons name="ellipsis-horizontal" size={18} color="#FFFFFF" />
+          </TouchableOpacity>
+        </View>
 
         <ScrollView
           style={styles.scrollView}
@@ -59,28 +113,46 @@ export function ServiceDetailScreen() {
 
           <Text style={styles.sectionLabel}>General Information</Text>
           <View style={styles.card}>
-            <InfoRow label="Name" value={MOCK_SERVICE.name} />
-            <InfoRow label="Description" value={MOCK_SERVICE.description} isLast />
+            <InfoRow label="Name" value={service?.name ?? "—"} />
+            <InfoRow
+              label="Description"
+              value={service?.description ?? "—"}
+              isLast
+            />
           </View>
 
-          <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>Pricing & Duration</Text>
+          <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+            Pricing & Duration
+          </Text>
           <View style={styles.card}>
-            <InfoRow label="Duration" value={MOCK_SERVICE.duration} />
-            <InfoRow label="Price" value={MOCK_SERVICE.price} />
-            <InfoRow label="Discount" value={MOCK_SERVICE.discount} isLast />
+            <InfoRow
+              label="Duration"
+              value={service ? `${service.duration} minutes` : "—"}
+            />
+            <InfoRow
+              label="Price"
+              value={service ? formatPrice(service.price) : "—"}
+            />
+            <InfoRow
+              label="Discount"
+              value={service ? `${service.discount}%` : "—"}
+              isLast
+            />
           </View>
 
-          <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>Operational Details</Text>
+          <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+            Operational Details
+          </Text>
           <Text style={styles.operationalSubtitle}>
             Toggle activation and configure default service settings.
           </Text>
           <View style={styles.card}>
             <ToggleRow
               label="Active"
-              value={isActive}
-              onValueChange={setIsActive}
+              value={service?.isActive ?? false}
+              onValueChange={handleToggleActive}
             />
-            {isDefault ? (
+            {service?.isDefault ? (
               <View style={styles.defaultRow}>
                 <Text style={styles.defaultLabel}>Set As Default</Text>
                 <StatusBadge label="Default" variant="default" />
@@ -95,38 +167,55 @@ export function ServiceDetailScreen() {
           </View>
         </ScrollView>
 
-        {overflowVisible ? (
+        {overflowVisible && (
           <View style={styles.overflowOverlay}>
             <OverflowMenu
               visible
               items={[
                 {
-                  label: 'Edit Service',
-                  onPress: () => router.push('/add-or-edit-service'),
+                  label: "Edit Service",
+                  onPress: () => {
+                    setOverflowVisible(false);
+                    router.push({
+                      pathname: "/add-or-edit-service",
+                      params: { serviceId, isEdit: "true" },
+                    });
+                  },
                 },
                 {
-                  label: 'Delete this Service',
+                  label: "Delete this Service",
                   danger: true,
-                  onPress: () => {},
+                  onPress: () => {
+                    setOverflowVisible(false);
+                    setShowDeleteModal(true);
+                  },
                 },
               ]}
               onClose={() => setOverflowVisible(false)}
             />
           </View>
-        ) : null}
+        )}
 
         <ConfirmationModal
           visible={showSetDefaultModal}
           icon="checkmark-circle-outline"
           title="Set as Default Service"
-          description="This service will become the default service for your barbershop."
-          confirmLabel="Set Default"
+          description="This service will become the default for your barbershop."
+          confirmLabel={isSettingDefault ? "Setting..." : "Set Default"}
           cancelLabel="Cancel"
-          onConfirm={() => {
-            setIsDefault(true);
-            setShowSetDefaultModal(false);
-          }}
+          onConfirm={handleSetDefault}
           onCancel={() => setShowSetDefaultModal(false)}
+        />
+
+        <ConfirmationModal
+          visible={showDeleteModal}
+          icon="trash-outline"
+          title="Delete Service"
+          description={`Delete "${service?.name}"? This cannot be undone.`}
+          confirmLabel={isDeleting ? "Deleting..." : "Delete"}
+          cancelLabel="Cancel"
+          onConfirm={handleDelete}
+          onCancel={() => setShowDeleteModal(false)}
         />
       </View>
     </SafeAreaView>
@@ -136,10 +225,36 @@ export function ServiceDetailScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#EEEEE0',
+    backgroundColor: "#EEEEE0",
   },
   outer: {
     flex: 1,
+  },
+  loader: {
+    marginTop: 80,
+  },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+  },
+  backBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  overflowBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "#1A1A1A",
+    alignItems: "center",
+    justifyContent: "center",
   },
   scrollView: {
     flex: 1,
@@ -149,54 +264,45 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   imageWrapper: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   serviceImage: {
     width: 80,
     height: 80,
     borderRadius: 12,
-    backgroundColor: '#D9D9D9',
-    position: 'relative',
+    backgroundColor: "#D9D9D9",
   },
   cameraBadge: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     right: 0,
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#1A1A1A',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#1A1A1A",
+    alignItems: "center",
+    justifyContent: "center",
   },
   sectionLabel: {
     fontSize: 13,
-    color: '#666666',
+    color: "#666666",
     marginBottom: 8,
   },
   sectionLabelTop: {
     marginTop: 16,
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 16,
   },
   operationalSubtitle: {
     fontSize: 12,
-    color: '#B0ADA0',
+    color: "#B0ADA0",
     marginBottom: 8,
   },
-  overflowBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#1A1A1A',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   overflowOverlay: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -204,15 +310,15 @@ const styles = StyleSheet.create({
     zIndex: 50,
   },
   defaultRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
   defaultLabel: {
     flex: 1,
-    fontWeight: '700',
+    fontWeight: "700",
     fontSize: 14,
-    color: '#1A1A1A',
+    color: "#1A1A1A",
   },
 });

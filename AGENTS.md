@@ -52,6 +52,26 @@ src/                              # Business logic and reusable code
 - **src/features/**: Each feature has an isolated module structure with its own components, screens, services, and utils.
 - **src/components/**, **src/services/**, and **src/utils/**: Shared code that is reusable across the whole application.
 
+## Feature Module Isolation Rules
+
+Each feature module (`src/features/<feature>/`) is **self-contained**. Its screens, hooks, and services must only import from within the same feature or from shared paths (`src/components/`, `src/lib/`, `src/utils/`, `src/services/`).
+
+### Cross-feature imports are forbidden
+
+```
+// ❌ barbershop screen importing from workspace feature
+import { useBarbershopCurrent } from "@/src/features/workspace/hooks";
+
+// ✅ barbershop screen importing from its own feature
+import { useBarbershopCurrent } from "@/src/features/barbershop/hooks";
+```
+
+### Each feature owns only what it uses
+
+- Create services, hooks, and utils **only for the operations actually used** inside that feature's screens.
+- If a function is needed by two features, move it to `src/services/` or `src/utils/` (shared layer), not into one feature and imported by the other.
+- When adding a new screen to a feature, always create or implement that feature's own service and hooks, see other feature for reference and use as needed.
+
 ## Feature Architecture Guidelines
 
 ### Screens

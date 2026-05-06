@@ -1,17 +1,71 @@
 import { EditFieldHeader } from "@/src/components/EditFieldHeader";
 import { HelperCopy } from "@/src/components/HelperCopy";
 import { PrefixedInputField } from "@/src/components/PrefixedInputField";
+import {
+  useBarbershopCurrent,
+  useBarbershopSlugCheck,
+  useUpdateBarbershopSettings,
+} from "@/src/features/barbershop/hooks";
+import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useEffect, useMemo, useState } from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-// --- MOCK DATA ---
-const MOCK_BOOKING_SLUG = "hendra-barbershop";
 
 export function EditBookingUrlScreen() {
   const router = useRouter();
-  const [slug, setSlug] = useState(MOCK_BOOKING_SLUG);
+  const toast = useToast();
+
+  const { data: barbershop, isLoading: isFetching } = useBarbershopCurrent();
+  const { mutate: updateSettings, isPending: isSaving } =
+    useUpdateBarbershopSettings();
+
+  const [slug, setSlug] = useState("");
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    if (barbershop && !initialized) {
+      setSlug(barbershop.slug ?? "");
+      setInitialized(true);
+    }
+  }, [barbershop, initialized]);
+
+  const isChanged = initialized && slug !== (barbershop?.slug ?? "");
+  const hasSpaces = slug.includes(" ");
+
+  const { data: isAvailable, isLoading: isCheckingSlug } =
+    useBarbershopSlugCheck(isChanged && !hasSpaces ? slug : "");
+
+  const slugFeedback = useMemo(() => {
+    if (!isChanged) return null;
+    if (hasSpaces) return { text: "Spaces are not allowed.", color: "#FF3B30" };
+    if (isCheckingSlug) return { text: "Checking availability...", color: "#FF9500" };
+    if (isAvailable === true)
+      return { text: "Available ✓", color: "#34C759" };
+    if (isAvailable === false)
+      return { text: "Slug not available", color: "#FF3B30" };
+    return null;
+  }, [isChanged, hasSpaces, isCheckingSlug, isAvailable]);
+
+  const canSave =
+    !isSaving &&
+    !hasSpaces &&
+    slug.trim().length > 0 &&
+    (!isChanged || isAvailable === true);
+
+  const handleSave = () => {
+    if (!canSave) return;
+
+    updateSettings({ slug: slug.trim() }, {
+      onSuccess: () => {
+        toast.success("Booking URL updated");
+        router.back();
+      },
+      onError: (error) => {
+        toast.error(error.message || "Failed to update booking URL");
+      },
+    });
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -19,22 +73,37 @@ export function EditBookingUrlScreen() {
         <EditFieldHeader
           title="Book Url"
           onBack={() => router.back()}
-          onSave={() => router.back()}
+          onSave={canSave ? handleSave : undefined}
         />
         <View style={styles.content}>
-          <PrefixedInputField
-            prefix="https://cukkr.com/"
-            value={slug}
-            onChangeText={setSlug}
-          />
-          <HelperCopy
-            lines={[
-              "This is your public booking link that customers use to make appointments.",
-              "Use only letters, numbers, and hyphens.",
-            ]}
-            errorLine="Spaces are not allowed."
-            style={styles.helper}
-          />
+          {isFetching && !initialized ? (
+            <ActivityIndicator
+              size="small"
+              color="#C6FF4D"
+              style={styles.loader}
+            />
+          ) : (
+            <>
+              <PrefixedInputField
+                prefix="https://cukkr.com/"
+                value={slug}
+                onChangeText={setSlug}
+              />
+              {slugFeedback && (
+                <Text style={[styles.slugFeedback, { color: slugFeedback.color }]}>
+                  {slugFeedback.text}
+                </Text>
+              )}
+              <HelperCopy
+                lines={[
+                  "This is your public booking link that customers use to make appointments.",
+                  "Use only letters, numbers, and hyphens.",
+                ]}
+                errorLine={hasSpaces ? "Spaces are not allowed." : undefined}
+                style={styles.helper}
+              />
+            </>
+          )}
         </View>
       </View>
     </SafeAreaView>
@@ -53,6 +122,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 16,
+  },
+  loader: {
+    marginTop: 20,
+  },
+  slugFeedback: {
+    fontSize: 12,
+    marginTop: 6,
   },
   helper: {
     marginTop: 16,

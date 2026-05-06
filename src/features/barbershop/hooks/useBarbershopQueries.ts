@@ -3,15 +3,15 @@ import { barbershopService } from "../services/barbershop.service";
 
 export const BARBERSHOP_QUERY_KEYS = {
   all: ["barbershop"] as const,
-  list: () => [...BARBERSHOP_QUERY_KEYS.all, "list"] as const,
+  current: () => [...BARBERSHOP_QUERY_KEYS.all, "current"] as const,
   slugCheck: (slug: string) =>
     [...BARBERSHOP_QUERY_KEYS.all, "slug-check", slug] as const,
 };
 
-export function useBarbershopList(query?: string) {
+export function useBarbershopCurrent() {
   return useQuery({
-    queryKey: BARBERSHOP_QUERY_KEYS.list(),
-    queryFn: () => barbershopService.getList(query),
+    queryKey: BARBERSHOP_QUERY_KEYS.current(),
+    queryFn: () => barbershopService.getCurrent(),
   });
 }
 

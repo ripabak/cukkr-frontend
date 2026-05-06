@@ -1,20 +1,8 @@
 // Barbershop queries
-export { useBarbershopList, useBarbershopCurrent, useBarbershopSlugCheck } from './useBarbershopQueries';
+export { useBarbershopList, useBarbershopSlugCheck } from "./useBarbershopQueries";
 
-// Barbershop mutations
-export { useUploadBarbershopLogo, useUpdateBarbershopSettings, useLeaveBarbershop } from './useBarbershopMutations';
-
-// Barbers queries
-export { useBarbersList } from './useBarbersQueries';
-
-// Barbers mutations
-export {
-  useInviteBarber,
-  useCancelBarberInvitation,
-  useRemoveBarber,
-  useAcceptBarberInvitation,
-  useDeclineBarberInvitation,
-} from './useBarbersMutations';
+// Barbers mutations (invite only — used during workspace setup flow)
+export { useInviteBarber } from "./useBarbersMutations";
 
 // Organization mutations
-export { useCreateOrganization, useSetActiveOrganization } from './useOrganizationMutations';
+export { useCreateOrganization, useSetActiveOrganization } from "./useOrganizationMutations";

@@ -1,0 +1,73 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { servicesService } from "../services/services.service";
+import { SERVICES_QUERY_KEYS } from "./useServicesQueries";
+
+export function useCreateService() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: {
+      name: string;
+      price: number;
+      duration: number;
+      description?: string | null;
+      discount?: number;
+    }) => servicesService.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: SERVICES_QUERY_KEYS.all });
+    },
+  });
+}
+
+export function useUpdateService() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: {
+        name?: string;
+        price?: number;
+        duration?: number;
+        description?: string | null;
+        discount?: number;
+      };
+    }) => servicesService.update(id, data),
+    onSuccess: (_result, { id }) => {
+      queryClient.invalidateQueries({ queryKey: SERVICES_QUERY_KEYS.all });
+      queryClient.invalidateQueries({ queryKey: SERVICES_QUERY_KEYS.byId(id) });
+    },
+  });
+}
+
+export function useDeleteService() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => servicesService.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: SERVICES_QUERY_KEYS.all });
+    },
+  });
+}
+
+export function useToggleServiceActive() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => servicesService.toggleActive(id),
+    onSuccess: (_result, id) => {
+      queryClient.invalidateQueries({ queryKey: SERVICES_QUERY_KEYS.all });
+      queryClient.invalidateQueries({ queryKey: SERVICES_QUERY_KEYS.byId(id) });
+    },
+  });
+}
+
+export function useSetServiceDefault() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => servicesService.setDefault(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: SERVICES_QUERY_KEYS.all });
+    },
+  });
+}
