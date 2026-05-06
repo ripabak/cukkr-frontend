@@ -11,6 +11,7 @@ export function useCreateService() {
       duration: number;
       description?: string | null;
       discount?: number;
+      isActive?: boolean;
     }) => servicesService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: SERVICES_QUERY_KEYS.all });

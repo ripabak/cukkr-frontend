@@ -95,6 +95,7 @@ export function AddOrEditServiceScreen() {
           price: priceNum,
           duration: durationNum,
           discount: discountNum || undefined,
+          isActive,
         },
         {
           onSuccess: () => {
