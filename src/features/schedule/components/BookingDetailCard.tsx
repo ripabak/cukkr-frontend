@@ -1,8 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
-import { InfoRow } from './InfoRow';
-import { StatusBadge } from './StatusBadge';
+import { InfoRow } from '@/src/components/InfoRow';
+import { StatusBadge } from '@/src/components/StatusBadge';
 
 export type BookingDetailStatus = 'waiting' | 'in_progress' | 'completed' | 'cancelled' | 'requested' | 'declined';
 

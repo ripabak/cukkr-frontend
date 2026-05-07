@@ -1,7 +1,7 @@
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
-import { DangerButton } from "@/src/components/DangerButton";
+import { DangerButton } from "@/src/features/barbershop/components/DangerButton";
 import { InfoRow } from "@/src/components/InfoRow";
-import { OperationRow } from "@/src/components/OperationRow";
+import { OperationRow } from "@/src/features/barbershop/components/OperationRow";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import {

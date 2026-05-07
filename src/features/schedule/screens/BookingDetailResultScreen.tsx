@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Text } from "rea
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { BookingDetailCard } from "@/src/components/BookingDetailCard";
+import { BookingDetailCard } from "@/src/features/schedule/components/BookingDetailCard";
 import { useBookingById } from "@/src/features/schedule/hooks";
 import {
   mapApiStatusToDetailStatus,

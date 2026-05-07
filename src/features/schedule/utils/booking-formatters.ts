@@ -1,5 +1,5 @@
 import type { BookingStatus } from "@/src/components/BookingCard";
-import type { BookingDetailStatus } from "@/src/components/BookingDetailCard";
+import type { BookingDetailStatus } from "@/src/features/schedule/components/BookingDetailCard";
 
 type ApiStatus =
   | "pending"

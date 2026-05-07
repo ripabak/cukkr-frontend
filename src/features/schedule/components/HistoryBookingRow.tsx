@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
-import { BookingStatus } from './BookingCard';
+import { BookingStatus } from '@/src/components/BookingCard';
 
 interface Props {
   customerName: string;

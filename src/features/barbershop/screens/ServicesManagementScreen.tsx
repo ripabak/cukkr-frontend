@@ -1,4 +1,4 @@
-import { IconActionButton } from "@/src/components/IconActionButton";
+import { IconActionButton } from "@/src/features/barbershop/components/IconActionButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SearchInput } from "@/src/components/SearchInput";

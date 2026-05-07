@@ -1,7 +1,7 @@
-import { BookingDetailCard } from "@/src/components/BookingDetailCard";
+import { BookingDetailCard } from "@/src/features/schedule/components/BookingDetailCard";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { OverflowMenu } from "@/src/components/OverflowMenu";
-import { StickyCta } from "@/src/components/StickyCta";
+import { StickyCta } from "@/src/features/schedule/components/StickyCta";
 import { useBookingById, useUpdateBookingStatus } from "@/src/features/schedule/hooks";
 import {
   formatDateLabel,

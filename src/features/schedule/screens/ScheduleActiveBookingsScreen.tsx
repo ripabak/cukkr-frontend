@@ -1,7 +1,7 @@
 import { BookingCard } from "@/src/components/BookingCard";
-import { CalendarModal } from "@/src/components/CalendarModal";
-import { DateSelectorPill } from "@/src/components/DateSelectorPill";
-import { DayChip, DayChipRow } from "@/src/components/DayChipRow";
+import { CalendarModal } from "@/src/features/schedule/components/CalendarModal";
+import { DateSelectorPill } from "@/src/features/schedule/components/DateSelectorPill";
+import { DayChip, DayChipRow } from "@/src/features/schedule/components/DayChipRow";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import {
   SCHEDULE_STATUS_OPTIONS,

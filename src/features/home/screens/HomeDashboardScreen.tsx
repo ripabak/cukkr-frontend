@@ -1,7 +1,7 @@
-import { MetricCard } from "@/src/components/MetricCard";
+import { MetricCard } from "@/src/features/home/components/MetricCard";
 import { ScreenShell } from "@/src/components/ScreenShell";
-import { ShortcutTile } from "@/src/components/ShortcutTile";
-import { WorkspacePill } from "@/src/components/WorkspacePill";
+import { ShortcutTile } from "@/src/features/home/components/ShortcutTile";
+import { WorkspacePill } from "@/src/features/home/components/WorkspacePill";
 import {
   ActivityCard,
   RecentActivity,

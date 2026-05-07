@@ -3,7 +3,7 @@ import { View, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator, Text
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { NotificationCard, NotificationType } from '@/src/components/NotificationCard';
+import { NotificationCard, NotificationType } from '@/src/features/notifications/components/NotificationCard';
 import { useNotificationsList } from '../hooks/useNotificationsQueries';
 import { useAcceptNotification, useDeclineNotification, useMarkAllAsRead } from '../hooks/useNotificationsMutations';
 

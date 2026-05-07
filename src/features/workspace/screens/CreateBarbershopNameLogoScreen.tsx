@@ -2,7 +2,7 @@ import { ImageUploadBox } from "@/src/components/ImageUploadBox";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { TextInputField } from "@/src/components/TextInputField";
-import { WizardProgress } from "@/src/components/WizardProgress";
+import { WizardProgress } from "@/src/features/workspace/components/WizardProgress";
 import { useRouter } from "expo-router";
 import React, { useCallback, useState, useMemo } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";

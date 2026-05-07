@@ -3,10 +3,10 @@ import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Text } from "rea
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { BookingDetailCard } from "@/src/components/BookingDetailCard";
-import { StickyCta } from "@/src/components/StickyCta";
+import { BookingDetailCard } from "@/src/features/schedule/components/BookingDetailCard";
+import { StickyCta } from "@/src/features/schedule/components/StickyCta";
 import { OverflowMenu } from "@/src/components/OverflowMenu";
-import { SwipeConfirmationModal } from "@/src/components/SwipeConfirmationModal";
+import { SwipeConfirmationModal } from "@/src/features/schedule/components/SwipeConfirmationModal";
 import { useBookingById, useUpdateBookingStatus } from "@/src/features/schedule/hooks";
 import {
   mapApiStatusToDetailStatus,

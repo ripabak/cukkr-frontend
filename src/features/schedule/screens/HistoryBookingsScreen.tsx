@@ -1,6 +1,6 @@
-import { CalendarModal } from "@/src/components/CalendarModal";
-import { DateSelectorPill } from "@/src/components/DateSelectorPill";
-import { HistoryBookingRow } from "@/src/components/HistoryBookingRow";
+import { CalendarModal } from "@/src/features/schedule/components/CalendarModal";
+import { DateSelectorPill } from "@/src/features/schedule/components/DateSelectorPill";
+import { HistoryBookingRow } from "@/src/features/schedule/components/HistoryBookingRow";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SortMenu } from "@/src/components/SortMenu";
 import {

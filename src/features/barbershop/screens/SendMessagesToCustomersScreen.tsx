@@ -1,5 +1,5 @@
 import { HelperCopy } from "@/src/components/HelperCopy";
-import { MessageComposer } from "@/src/components/MessageComposer";
+import { MessageComposer } from "@/src/features/barbershop/components/MessageComposer";
 import { useToast } from "@/src/lib/providers";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";

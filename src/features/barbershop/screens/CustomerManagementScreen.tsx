@@ -1,8 +1,8 @@
-import { CustomerCard } from "@/src/components/CustomerCard";
-import { FloatingActionButton } from "@/src/components/FloatingActionButton";
+import { CustomerCard } from "@/src/features/barbershop/components/CustomerCard";
+import { FloatingActionButton } from "@/src/features/barbershop/components/FloatingActionButton";
 import { SearchInput } from "@/src/components/SearchInput";
-import { SelectionFooter } from "@/src/components/SelectionFooter";
-import { SelectionToolbar } from "@/src/components/SelectionToolbar";
+import { SelectionFooter } from "@/src/features/barbershop/components/SelectionFooter";
+import { SelectionToolbar } from "@/src/features/barbershop/components/SelectionToolbar";
 import { SortMenu } from "@/src/components/SortMenu";
 import { useCustomersList } from "@/src/features/barbershop/hooks";
 import { formatCurrency } from "@/src/features/barbershop/utils/form-validators";

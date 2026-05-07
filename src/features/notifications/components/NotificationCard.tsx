@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { StatusBadge } from './StatusBadge';
+import { StatusBadge } from '@/src/components/StatusBadge';
 import { InlineDecisionButtons } from './InlineDecisionButtons';
 
 export type NotificationType = 'appointment-request' | 'walk-in' | 'invitation' | 'general';

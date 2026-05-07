@@ -4,8 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { OverflowMenu } from "@/src/components/OverflowMenu";
-import { BookingDetailCard, BookingDetailStatus } from "@/src/components/BookingDetailCard";
-import { DualActionFooter } from "@/src/components/DualActionFooter";
+import { BookingDetailCard, BookingDetailStatus } from "@/src/features/schedule/components/BookingDetailCard";
+import { DualActionFooter } from "@/src/features/schedule/components/DualActionFooter";
 import {
   useBookingById,
   useAcceptBooking,

@@ -1,6 +1,6 @@
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
-import { ServiceForm } from "@/src/components/ServiceForm";
+import { ServiceForm } from "@/src/features/barbershop/components/ServiceForm";
 import {
   useCreateService,
   useServiceById,

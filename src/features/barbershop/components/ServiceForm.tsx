@@ -4,7 +4,7 @@ import { ImageUploadBox } from '@/src/components/ImageUploadBox';
 import { TextInputField } from '@/src/components/TextInputField';
 import { MultilineInputField } from '@/src/components/MultilineInputField';
 import { PrefixedInputField } from '@/src/components/PrefixedInputField';
-import { ToggleRow } from '@/src/components/ToggleRow';
+import { ToggleRow } from '@/src/features/barbershop/components/ToggleRow';
 
 interface Props {
   name: string;

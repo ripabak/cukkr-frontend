@@ -1,4 +1,4 @@
-import { DayHoursRow } from "@/src/components/DayHoursRow";
+import { DayHoursRow } from "@/src/features/barbershop/components/DayHoursRow";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { useOpenHours, useUpdateOpenHours } from "@/src/features/barbershop/hooks";

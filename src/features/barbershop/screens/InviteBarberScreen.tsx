@@ -1,5 +1,5 @@
 import { HelperCopy } from "@/src/components/HelperCopy";
-import { IconActionButton } from "@/src/components/IconActionButton";
+import { IconActionButton } from "@/src/features/barbershop/components/IconActionButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { TextInputField } from "@/src/components/TextInputField";
 import { useInviteBarber } from "@/src/features/barbershop/hooks";

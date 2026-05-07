@@ -1,8 +1,8 @@
 import { BookingCard } from "@/src/components/BookingCard";
-import { ChartCard } from "@/src/components/ChartCard";
-import { MessageItem, MessageThread } from "@/src/components/MessageThread";
-import { SegmentedTabs } from "@/src/components/SegmentedTabs";
-import { StatCard } from "@/src/components/StatCard";
+import { ChartCard } from "@/src/features/barbershop/components/ChartCard";
+import { MessageItem, MessageThread } from "@/src/features/barbershop/components/MessageThread";
+import { SegmentedTabs } from "@/src/features/barbershop/components/SegmentedTabs";
+import { StatCard } from "@/src/features/barbershop/components/StatCard";
 import { SCHEDULE_STATUS_OPTIONS, StatusFilterMenu } from "@/src/components/StatusFilterMenu";
 import {
   useCustomerBookings,

@@ -1,5 +1,5 @@
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
-import { MemberCard } from "@/src/components/MemberCard";
+import { MemberCard } from "@/src/features/barbershop/components/MemberCard";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";

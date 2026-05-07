@@ -1,8 +1,8 @@
-import { AlertModal } from "@/src/components/AlertModal";
+import { AlertModal } from "@/src/features/profile/components/AlertModal";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { InfoRow } from "@/src/components/InfoRow";
-import { LogoutRow } from "@/src/components/LogoutRow";
-import { ProfileSummaryCard } from "@/src/components/ProfileSummaryCard";
+import { LogoutRow } from "@/src/features/profile/components/LogoutRow";
+import { ProfileSummaryCard } from "@/src/features/profile/components/ProfileSummaryCard";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useToast } from "@/src/lib/providers/toast";

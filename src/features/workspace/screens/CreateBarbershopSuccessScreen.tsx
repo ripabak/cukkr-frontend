@@ -1,4 +1,4 @@
-import { GradientButton } from "@/src/components/GradientButton";
+import { GradientButton } from "@/src/features/workspace/components/GradientButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
 import { useRouter } from "expo-router";

@@ -2,7 +2,7 @@ import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SecondaryButton } from "@/src/components/SecondaryButton";
 import { TextInputField } from "@/src/components/TextInputField";
-import { WizardProgress } from "@/src/components/WizardProgress";
+import { WizardProgress } from "@/src/features/workspace/components/WizardProgress";
 import { useInviteBarber } from "../hooks";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
 import { validateEmail, validatePhoneNumber } from "../utils/form-validators";

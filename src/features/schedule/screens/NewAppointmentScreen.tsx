@@ -1,7 +1,7 @@
-import { BookingForm } from "@/src/components/BookingForm";
-import { BookingTypeToggle } from "@/src/components/BookingTypeToggle";
-import { CalendarModal } from "@/src/components/CalendarModal";
-import { FormShell } from "@/src/components/FormShell";
+import { BookingForm } from "@/src/features/schedule/components/BookingForm";
+import { BookingTypeToggle } from "@/src/features/schedule/components/BookingTypeToggle";
+import { CalendarModal } from "@/src/features/schedule/components/CalendarModal";
+import { FormShell } from "@/src/features/schedule/components/FormShell";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { TimePickerModal } from "@/src/components/TimePickerModal";

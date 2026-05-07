@@ -3,7 +3,7 @@ import { PrefixedInputField } from "@/src/components/PrefixedInputField";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { TextInputField } from "@/src/components/TextInputField";
-import { WizardProgress } from "@/src/components/WizardProgress";
+import { WizardProgress } from "@/src/features/workspace/components/WizardProgress";
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";

@@ -1,9 +1,9 @@
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { InfoRow } from "@/src/components/InfoRow";
-import { OperationRow } from "@/src/components/OperationRow";
+import { OperationRow } from "@/src/features/barbershop/components/OperationRow";
 import { OverflowMenu } from "@/src/components/OverflowMenu";
 import { StatusBadge } from "@/src/components/StatusBadge";
-import { ToggleRow } from "@/src/components/ToggleRow";
+import { ToggleRow } from "@/src/features/barbershop/components/ToggleRow";
 import {
   useDeleteService,
   useServiceById,
