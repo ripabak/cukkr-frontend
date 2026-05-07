@@ -48,6 +48,13 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
     (b) => statusFilter === "all" || b.status === statusFilter,
   );
 
+  const getBookingRoute = (status: string) => {
+    if (status === "waiting") return "/booking-detail-waiting";
+    if (status === "in_progress") return "/booking-detail-in-progress";
+    if (status === "completed" || status === "cancelled") return "/booking-detail-result";
+    return "/booking-detail-request";
+  };
+
   if (isLoadingCustomer) {
     return (
       <SafeAreaView style={styles.safe} edges={["top"]}>
@@ -161,6 +168,12 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
                       timeLabel={new Date(b.createdAt).toLocaleDateString("id-ID")}
                       duration={formatCurrency(b.totalAmount)}
                       status={b.status as "waiting" | "in_progress" | "completed" | "cancelled" | "requested"}
+                      onPress={() =>
+                        router.push({
+                          pathname: getBookingRoute(b.status) as any,
+                          params: { id: b.id },
+                        })
+                      }
                     />
                   ))}
                 </View>

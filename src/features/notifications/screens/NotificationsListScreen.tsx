@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { NotificationCard, NotificationType } from '@/src/features/notifications/components/NotificationCard';
 import { useNotificationsList } from '../hooks/useNotificationsQueries';
 import { useAcceptNotification, useDeclineNotification, useMarkAllAsRead } from '../hooks/useNotificationsMutations';
+import { ConfirmationModal } from '@/src/components/ConfirmationModal';
 
 const API_TYPE_MAP: Record<string, NotificationType> = {
   appointment_requested: 'appointment-request',
@@ -24,6 +25,8 @@ function formatRelativeTime(date: Date): string {
   return `${Math.floor(diffHr / 24)}d ago`;
 }
 
+type NotifItem = NonNullable<ReturnType<typeof useNotificationsList>['data']>['data'][number];
+
 export function NotificationsListScreen() {
   const router = useRouter();
   const { data, isLoading, isError } = useNotificationsList();
@@ -31,7 +34,25 @@ export function NotificationsListScreen() {
   const declineMutation = useDeclineNotification();
   const markAllRead = useMarkAllAsRead();
 
+  const [invitationModal, setInvitationModal] = useState<NotifItem | null>(null);
+
   const notifications = data?.data ?? [];
+
+  const handleBookingPress = (notif: NotifItem) => {
+    if (!notif.referenceId) return;
+    const route = notif.type === 'walk_in_arrival' ? '/booking-detail-waiting' : '/booking-detail-request';
+    router.push({ pathname: route as any, params: { id: notif.referenceId } });
+  };
+
+  const handleAcceptInvitation = () => {
+    if (!invitationModal) return;
+    acceptMutation.mutate(invitationModal.id, { onSuccess: () => setInvitationModal(null) });
+  };
+
+  const handleDeclineInvitation = () => {
+    if (!invitationModal) return;
+    declineMutation.mutate({ id: invitationModal.id }, { onSuccess: () => setInvitationModal(null) });
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -77,12 +98,14 @@ export function NotificationsListScreen() {
                 name={notif.body}
                 timestamp={formatRelativeTime(notif.createdAt)}
                 status={notif.actionType !== null ? 'pending' : 'accepted'}
-                showActions={notif.actionType !== null}
+                showActions={notif.actionType === 'accept_decline_appointment'}
                 onAccept={() => acceptMutation.mutate(notif.id)}
                 onDecline={() => declineMutation.mutate({ id: notif.id })}
                 onPress={
                   notif.referenceType === 'booking'
-                    ? () => router.push('/booking-detail-request' as any)
+                    ? () => handleBookingPress(notif)
+                    : notif.referenceType === 'invitation'
+                    ? () => setInvitationModal(notif)
                     : undefined
                 }
                 style={i < notifications.length - 1 ? styles.cardMargin : undefined}
@@ -91,6 +114,17 @@ export function NotificationsListScreen() {
           </ScrollView>
         )}
       </View>
+
+      <ConfirmationModal
+        visible={invitationModal !== null}
+        icon="person-add"
+        title={invitationModal?.title ?? ''}
+        description={invitationModal?.body}
+        cancelLabel="Accept"
+        confirmLabel="Decline"
+        onCancel={handleAcceptInvitation}
+        onConfirm={handleDeclineInvitation}
+      />
     </SafeAreaView>
   );
 }
