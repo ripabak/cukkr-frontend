@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
 
-type Tab = "home" | "stats" | "schedule" | "profile";
+type Tab = "home" | "stats" | "schedule" | "barbershop";
 
 interface Props {
   activeTab: Tab;
@@ -17,7 +17,7 @@ const TABS: {
   { key: "home", icon: "home" },
   { key: "stats", icon: "bar-chart" },
   { key: "schedule", icon: "calendar" },
-  { key: "profile", icon: "person" },
+  { key: "barbershop", icon: "storefront" },
 ];
 
 export function BottomTabBar({ activeTab, onTabPress, style }: Props) {

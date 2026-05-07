@@ -14,21 +14,29 @@ export function SwitchBarbershopScreen() {
   const { data: barbershops = [], isLoading } = useBarbershopList();
   const { mutate: setActive } = useSetActiveOrganization();
 
+  const navigateAfterSelect = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace("/home-dashboard" as any);
+    }
+  };
+
   const handleSelectBarbershop = (barbershopId: string) => {
     setActive(barbershopId, {
-      onSuccess: () => {
-        router.back();
-      },
+      onSuccess: navigateAfterSelect,
       onError: (error) => {
         toast.error("Failed to switch barbershop: " + error.message);
       },
     });
   };
 
+  const canGoBack = router.canGoBack();
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <ScreenHeader onBack={() => router.back()} />
+        {canGoBack && <ScreenHeader onBack={() => router.back()} />}
         <Text style={styles.title}>Switch Barbershop</Text>
         <Text style={styles.subtitle}>
           {"Choose barbershop you're working on"}

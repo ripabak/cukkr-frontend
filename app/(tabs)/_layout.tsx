@@ -1,15 +1,16 @@
 import { BottomTabBar } from "@/src/components/BottomTabBar";
+import { WorkspaceRoute } from "@/src/components/WorkspaceRoute";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Tabs } from "expo-router";
 import { View } from "react-native";
 
-type Tab = "home" | "stats" | "schedule" | "profile";
+type Tab = "home" | "stats" | "schedule" | "barbershop";
 
 const ROUTE_TO_TAB: Record<string, Tab> = {
   home: "home",
   stats: "stats",
   schedule: "schedule",
-  profile: "profile",
+  barbershop: "barbershop",
 };
 
 function CustomTabBar({ state, navigation }: BottomTabBarProps) {
@@ -28,14 +29,16 @@ function CustomTabBar({ state, navigation }: BottomTabBarProps) {
 
 export default function TabsLayout() {
   return (
-    <Tabs
-      tabBar={(props) => <CustomTabBar {...props} />}
-      screenOptions={{ headerShown: false }}
-    >
-      <Tabs.Screen name="home" />
-      <Tabs.Screen name="stats" />
-      <Tabs.Screen name="schedule" />
-      <Tabs.Screen name="profile" />
-    </Tabs>
+    <WorkspaceRoute>
+      <Tabs
+        tabBar={(props) => <CustomTabBar {...props} />}
+        screenOptions={{ headerShown: false }}
+      >
+        <Tabs.Screen name="home" />
+        <Tabs.Screen name="stats" />
+        <Tabs.Screen name="schedule" />
+        <Tabs.Screen name="barbershop" />
+      </Tabs>
+    </WorkspaceRoute>
   );
 }
