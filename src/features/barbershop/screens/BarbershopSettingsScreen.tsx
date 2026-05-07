@@ -1,9 +1,9 @@
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
-import { DangerButton } from "@/src/features/barbershop/components/DangerButton";
 import { InfoRow } from "@/src/components/InfoRow";
-import { OperationRow } from "@/src/features/barbershop/components/OperationRow";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { DangerButton } from "@/src/features/barbershop/components/DangerButton";
+import { OperationRow } from "@/src/features/barbershop/components/OperationRow";
 import {
   useBarbershopCurrent,
   useLeaveBarbershop,
@@ -85,8 +85,8 @@ export function BarbershopSettingsScreen() {
           <View style={styles.card}>
             <InfoRow
               label="Name"
-              value={barbershop?.name ?? "—"}
-              showChevron
+              value={barbershop?.name}
+              placeholder="Name"
               onPress={() =>
                 router.push({
                   pathname: "/edit-barbershop-info",
@@ -96,8 +96,8 @@ export function BarbershopSettingsScreen() {
             />
             <InfoRow
               label="Description"
-              value={barbershop?.description ?? "—"}
-              showChevron
+              value={barbershop?.description!}
+              placeholder="Description"
               onPress={() =>
                 router.push({
                   pathname: "/edit-barbershop-info",
@@ -107,8 +107,8 @@ export function BarbershopSettingsScreen() {
             />
             <InfoRow
               label="Address"
-              value={barbershop?.address ?? "—"}
-              showChevron
+              value={barbershop?.address!}
+              placeholder="Address"
               isLast
               onPress={() =>
                 router.push({

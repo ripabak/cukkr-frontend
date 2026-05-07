@@ -1,6 +1,7 @@
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { SelectionRow } from "@/src/features/workspace/components/SelectionRow";
+import { authClient } from "@/src/lib/auth-client";
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -13,6 +14,7 @@ export function SwitchBarbershopScreen() {
   const toast = useToast();
   const { data: barbershops = [], isLoading } = useBarbershopList();
   const { mutate: setActive } = useSetActiveOrganization();
+  const { data: activeOrg } = authClient.useActiveOrganization();
 
   const navigateAfterSelect = () => {
     if (router.canGoBack()) {
@@ -31,17 +33,14 @@ export function SwitchBarbershopScreen() {
     });
   };
 
-  const canGoBack = router.canGoBack();
-
   return (
     <SafeAreaView style={styles.safeArea}>
+      <ScreenHeader onBack={() => router.back()} />
       <View style={styles.container}>
-        {canGoBack && <ScreenHeader onBack={() => router.back()} />}
         <Text style={styles.title}>Switch Barbershop</Text>
         <Text style={styles.subtitle}>
           {"Choose barbershop you're working on"}
         </Text>
-        <View style={styles.spacer} />
 
         {isLoading ? (
           <View style={styles.centerContainer}>
@@ -54,6 +53,7 @@ export function SwitchBarbershopScreen() {
               label={shop.name}
               onPress={() => handleSelectBarbershop(shop.id)}
               isLast={index === barbershops.length - 1}
+              isActive={activeOrg?.id === shop.id}
             />
           ))
         ) : (
@@ -82,18 +82,16 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "700",
     color: "#1A1A1A",
-    marginTop: 24,
-  },
-  subtitle: {
-    fontSize: 15,
-    color: "#666666",
     marginTop: 8,
   },
-  spacer: {
-    marginTop: 32,
+  subtitle: {
+    fontSize: 14,
+    color: "#666666",
+    marginTop: 4,
+    marginBottom: 20,
   },
   centerContainer: {
     justifyContent: "center",

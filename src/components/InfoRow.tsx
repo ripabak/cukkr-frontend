@@ -5,17 +5,25 @@ import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-nativ
 interface Props {
   label: string;
   value?: string;
+  placeholder?: string;
   onPress?: () => void;
   showChevron?: boolean;
   isLast?: boolean;
   style?: ViewStyle;
 }
 
-export function InfoRow({ label, value, onPress, showChevron, isLast, style }: Props) {
+export function InfoRow({ label, value, placeholder, onPress, showChevron, isLast, style }: Props) {
+  const displayValue = value || null;
+  const displayPlaceholder = !value && placeholder ? placeholder : null;
+
   const content = (
     <View style={[styles.container, !isLast && styles.borderBottom, style]}>
       <Text style={styles.label}>{label}</Text>
-      {value ? <Text style={styles.value} numberOfLines={1} ellipsizeMode="tail">{value}</Text> : null}
+      {displayValue ? (
+        <Text style={styles.value} numberOfLines={1} ellipsizeMode="tail">{displayValue}</Text>
+      ) : displayPlaceholder ? (
+        <Text style={styles.placeholder} numberOfLines={1}>{displayPlaceholder}</Text>
+      ) : null}
       {showChevron ? (
         <Ionicons name="chevron-forward" size={16} color="#666666" />
       ) : null}
@@ -52,6 +60,12 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 14,
     color: '#666666',
+    flex: 1,
+    textAlign: 'right',
+  },
+  placeholder: {
+    fontSize: 14,
+    color: '#BBBBBB',
     flex: 1,
     textAlign: 'right',
   },

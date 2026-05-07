@@ -6,18 +6,23 @@ interface Props {
   label: string;
   onPress?: () => void;
   isLast?: boolean;
+  isActive?: boolean;
   style?: ViewStyle;
 }
 
-export function SelectionRow({ label, onPress, isLast, style }: Props) {
+export function SelectionRow({ label, onPress, isLast, isActive, style }: Props) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      activeOpacity={0.7}
+      activeOpacity={isActive ? 1 : 0.7}
       style={[styles.container, !isLast && styles.borderBottom, style]}
     >
-      <Text style={styles.label}>{label}</Text>
-      <Ionicons name="chevron-forward" size={18} color="#1A1A1A" />
+      <Text style={[styles.label, isActive && styles.labelDisabled]}>{label}</Text>
+      <Ionicons
+        name="chevron-forward"
+        size={18}
+        color={isActive ? '#AAAAAA' : '#1A1A1A'}
+      />
     </TouchableOpacity>
   );
 }
@@ -32,12 +37,16 @@ const styles = StyleSheet.create({
   },
   borderBottom: {
     borderBottomWidth: 1,
-    borderBottomColor: '#C6FF4D',
+    borderBottomColor: 'rgba(0,0,0,0.08)',
   },
   label: {
     flex: 1,
     fontSize: 15,
     fontWeight: '600',
     color: '#1A1A1A',
+  },
+  labelDisabled: {
+    color: '#AAAAAA',
+    fontWeight: '400',
   },
 });
