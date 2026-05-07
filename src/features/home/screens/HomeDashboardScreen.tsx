@@ -89,13 +89,17 @@ export function HomeDashboardScreen() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.greetingRow}>
+      <TouchableOpacity
+        style={styles.greetingRow}
+        activeOpacity={0.7}
+        onPress={() => router.push("/user-profile" as any)}
+      >
         <View style={styles.avatar} />
         <View style={styles.greetingText}>
           <Text style={styles.greetingSmall}>{getGreeting()}</Text>
           <Text style={styles.greetingName}>{user?.name ?? "..."}</Text>
         </View>
-      </View>
+      </TouchableOpacity>
 
       <View style={styles.pinCard}>
         <Text style={styles.pinLabel}>Walk-In PIN</Text>

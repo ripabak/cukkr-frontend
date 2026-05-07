@@ -1,12 +1,12 @@
-import { AlertModal } from "@/src/features/profile/components/AlertModal";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { InfoRow } from "@/src/components/InfoRow";
-import { LogoutRow } from "@/src/features/profile/components/LogoutRow";
-import { ProfileSummaryCard } from "@/src/features/profile/components/ProfileSummaryCard";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
-import { useToast } from "@/src/lib/providers/toast";
 import { useSignOut } from "@/src/features/auth/hooks";
+import { AlertModal } from "@/src/features/profile/components/AlertModal";
+import { LogoutRow } from "@/src/features/profile/components/LogoutRow";
+import { ProfileSummaryCard } from "@/src/features/profile/components/ProfileSummaryCard";
+import { useToast } from "@/src/lib/providers/toast";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
