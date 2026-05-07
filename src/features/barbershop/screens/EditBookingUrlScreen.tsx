@@ -21,35 +21,46 @@ export function EditBookingUrlScreen() {
     useUpdateBarbershopSettings();
 
   const [slug, setSlug] = useState("");
+  const [debouncedSlug, setDebouncedSlug] = useState("");
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
     if (barbershop && !initialized) {
       setSlug(barbershop.slug ?? "");
+      setDebouncedSlug(barbershop.slug ?? "");
       setInitialized(true);
     }
   }, [barbershop, initialized]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSlug(slug), 500);
+    return () => clearTimeout(timer);
+  }, [slug]);
+
   const isChanged = initialized && slug !== (barbershop?.slug ?? "");
+  const isDebouncedChanged = initialized && debouncedSlug !== (barbershop?.slug ?? "");
   const hasSpaces = slug.includes(" ");
+  const isTyping = slug !== debouncedSlug;
 
   const { data: isAvailable, isLoading: isCheckingSlug } =
-    useBarbershopSlugCheck(isChanged && !hasSpaces ? slug : "");
+    useBarbershopSlugCheck(isDebouncedChanged && !hasSpaces ? debouncedSlug : "");
 
   const slugFeedback = useMemo(() => {
     if (!isChanged) return null;
     if (hasSpaces) return { text: "Spaces are not allowed.", color: "#FF3B30" };
+    if (isTyping) return { text: "Checking availability...", color: "#FF9500" };
     if (isCheckingSlug) return { text: "Checking availability...", color: "#FF9500" };
     if (isAvailable === true)
       return { text: "Available ✓", color: "#34C759" };
     if (isAvailable === false)
       return { text: "Slug not available", color: "#FF3B30" };
     return null;
-  }, [isChanged, hasSpaces, isCheckingSlug, isAvailable]);
+  }, [isChanged, hasSpaces, isTyping, isCheckingSlug, isAvailable]);
 
   const canSave =
     !isSaving &&
     !hasSpaces &&
+    !isTyping &&
     slug.trim().length > 0 &&
     (!isChanged || isAvailable === true);
 
