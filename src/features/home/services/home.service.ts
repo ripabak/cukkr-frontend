@@ -1,3 +1,4 @@
+import { authClient } from "@/src/lib/auth-client";
 import { app } from "@/src/lib/eden-app";
 
 export const homeService = {
@@ -18,9 +19,9 @@ export const homeService = {
   },
 
   async getCurrentBarbershop() {
-    const { data: response, error } = await app.api.barbershop.get({});
+    const { data: response, error } = authClient.useActiveOrganization();
     if (error || !response) throw new Error("Failed to fetch barbershop");
-    return response.data;
+    return response;
   },
 
   async generateWalkInPin() {
