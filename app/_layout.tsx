@@ -10,7 +10,9 @@ export default function RootLayout() {
       <ToastProvider>
         <MobileFrame>
           <View style={{ flex: 1 }}>
-            <Stack screenOptions={{ headerShown: false }} />
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="(workspace)" options={{ animation: "none" }} />
+            </Stack>
             <DevNavFloat />
           </View>
           <ToastContainer />

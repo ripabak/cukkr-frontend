@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   generateBtn: {
-    backgroundColor: "#C6FF4D",
+    backgroundColor: "#CFE57C",
     borderRadius: 10,
     paddingVertical: 12,
     alignItems: "center",
@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: 10,
-    backgroundColor: "#C6FF4D",
+    backgroundColor: "#CFE57C",
     borderRadius: 999,
     paddingHorizontal: 12,
     paddingVertical: 6,

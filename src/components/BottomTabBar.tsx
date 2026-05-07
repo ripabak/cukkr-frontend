@@ -73,6 +73,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   activeCircle: {
-    backgroundColor: "#C6FF4D",
+    backgroundColor: "#CFE57C",
   },
 });

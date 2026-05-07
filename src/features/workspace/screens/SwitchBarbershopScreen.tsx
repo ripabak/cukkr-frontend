@@ -4,10 +4,19 @@ import { SelectionRow } from "@/src/features/workspace/components/SelectionRow";
 import { authClient } from "@/src/lib/auth-client";
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
-import React from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import React, { useRef } from "react";
+import { ActivityIndicator, Dimensions, StyleSheet, Text, View } from "react-native";
+import Animated, {
+  runOnJS,
+  SlideInUp,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useBarbershopList, useSetActiveOrganization } from "../hooks";
+
+const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 export function SwitchBarbershopScreen() {
   const router = useRouter();
@@ -15,12 +24,26 @@ export function SwitchBarbershopScreen() {
   const { data: barbershops = [], isLoading } = useBarbershopList();
   const { mutate: setActive } = useSetActiveOrganization();
   const { data: activeOrg } = authClient.useActiveOrganization();
+  const translateY = useSharedValue(0);
+  const isAnimating = useRef(false);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: translateY.value }],
+  }));
+
+  const slideOutUp = (callback: () => void) => {
+    if (isAnimating.current) return;
+    isAnimating.current = true;
+    translateY.value = withTiming(-SCREEN_HEIGHT, { duration: 350 }, () => {
+      runOnJS(callback)();
+    });
+  };
 
   const navigateAfterSelect = () => {
     if (router.canGoBack()) {
-      router.back();
+      slideOutUp(() => router.back());
     } else {
-      router.replace("/home" as any);
+      slideOutUp(() => router.replace("/home" as any));
     }
   };
 
@@ -34,48 +57,56 @@ export function SwitchBarbershopScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScreenHeader onBack={() => router.back()} />
-      <View style={styles.container}>
-        <Text style={styles.title}>Switch Barbershop</Text>
-        <Text style={styles.subtitle}>
-          {"Choose barbershop you're working on"}
-        </Text>
+    <Animated.View
+      entering={SlideInUp.duration(400)}
+      style={[styles.animatedWrapper, animatedStyle]}
+    >
+      <SafeAreaView style={styles.safeArea}>
+        <ScreenHeader onBack={() => slideOutUp(() => router.back())} />
+        <View style={styles.container}>
+          <Text style={styles.title}>Switch Barbershop</Text>
+          <Text style={styles.subtitle}>
+            {"Choose barbershop you're working on"}
+          </Text>
 
-        {isLoading ? (
-          <View style={styles.centerContainer}>
-            <ActivityIndicator size="large" color="#C6FF4D" />
-          </View>
-        ) : barbershops.length > 0 ? (
-          barbershops.map((shop, index) => (
-            <SelectionRow
-              key={shop.id}
-              label={shop.name}
-              onPress={() => handleSelectBarbershop(shop.id)}
-              isLast={index === barbershops.length - 1}
-              isActive={activeOrg?.id === shop.id}
-            />
-          ))
-        ) : (
-          <View style={styles.centerContainer}>
-            <Text style={styles.emptyText}>No barbershops found</Text>
-          </View>
-        )}
+          {isLoading ? (
+            <View style={styles.centerContainer}>
+              <ActivityIndicator size="large" color="#C6FF4D" />
+            </View>
+          ) : barbershops.length > 0 ? (
+            barbershops.map((shop, index) => (
+              <SelectionRow
+                key={shop.id}
+                label={shop.name}
+                onPress={() => handleSelectBarbershop(shop.id)}
+                isLast={index === barbershops.length - 1}
+                isActive={activeOrg?.id === shop.id}
+              />
+            ))
+          ) : (
+            <View style={styles.centerContainer}>
+              <Text style={styles.emptyText}>No barbershops found</Text>
+            </View>
+          )}
 
-        <View style={styles.flex} />
-        <PrimaryButton
-          label="Create New Barbershop"
-          onPress={() => router.push("/create-barbershop-name-logo")}
-        />
-      </View>
-    </SafeAreaView>
+          <View style={styles.flex} />
+          <PrimaryButton
+            label="Create New Barbershop"
+            onPress={() => router.push("/create-barbershop-name-logo")}
+          />
+        </View>
+      </SafeAreaView>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
+  animatedWrapper: {
     flex: 1,
     backgroundColor: "#EEEEE0",
+  },
+  safeArea: {
+    flex: 1,
   },
   container: {
     flex: 1,

@@ -8,7 +8,9 @@ export default function WorkspaceLayout() {
         screenOptions={{
           headerShown: false,
         }}
-      />
+      >
+        <Stack.Screen name="switch-barbershop" options={{ animation: "none" }} />
+      </Stack>
     </CreateBarbershopProvider>
   );
 }
