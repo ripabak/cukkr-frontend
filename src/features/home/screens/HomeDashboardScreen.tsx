@@ -1,121 +1,163 @@
-import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { MetricCard } from "@/src/components/MetricCard";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { ShortcutTile } from "@/src/components/ShortcutTile";
 import { WorkspacePill } from "@/src/components/WorkspacePill";
 import {
-    ActivityCard,
-    RecentActivity,
+  ActivityCard,
+  RecentActivity,
 } from "@/src/features/home/components/ActivityCard";
+import {
+  useBookingSummary,
+  useCurrentBarbershop,
+  useGenerateWalkInPin,
+  useHomeActiveBookings,
+} from "@/src/features/home/hooks";
+import { useAuthUser } from "@/src/hooks/useAuthUser";
+import { toISODateString } from "@/src/features/schedule/utils/booking-formatters";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-// --- MOCK DATA ---
-const MOCK_WORKSPACE_NAME = "Hendra Barbershop";
-const MOCK_USER_NAME = "James Comberan";
-const MOCK_PIN = "345678";
-const MOCK_BOOKING_URL = "cukrr.com/hendra-barbershop";
-const MOCK_METRICS = {
-  todaySchedule: "5",
-  walkIn: "2",
-  appointment: "2",
-  inProgress: "2",
-  waiting: "3",
-};
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good Morning,";
+  if (hour < 18) return "Good Afternoon,";
+  return "Good Evening,";
+}
 
-const MOCK_RECENT_ACTIVITIES: RecentActivity[] = [
-  {
-    id: "1",
-    time: "12m ago",
-    duration: "30 mins",
-    type: "in_progress",
-    name: "Ethan James",
-  },
-  {
-    id: "2",
-    time: "12m ago",
-    duration: "30 mins",
-    name: "Ethan James",
-    type: "waiting",
-  },
-  {
-    id: "3",
-    time: "12m ago",
-    duration: "30 mins",
-    name: "Ethan James",
-    type: "waiting",
-  },
-  {
-    id: "4",
-    time: "12m ago",
-    duration: "30 mins",
-    name: "Ethan James",
-    type: "in_progress",
-  },
-];
+function formatTime(date: Date | string): string {
+  const d = typeof date === "string" ? new Date(date) : date;
+  const h = d.getHours().toString().padStart(2, "0");
+  const m = d.getMinutes().toString().padStart(2, "0");
+  return `${h}:${m}`;
+}
 
 export function HomeDashboardScreen() {
-  const [showPinModal, setShowPinModal] = useState(false);
+  const router = useRouter();
+  const today = toISODateString(new Date());
+
+  const { user } = useAuthUser();
+  const { data: barbershop } = useCurrentBarbershop();
+  const { data: summary } = useBookingSummary(today);
+  const { data: activeBookings = [] } = useHomeActiveBookings(today);
+  const { mutate: generatePin, isPending: isGenerating } = useGenerateWalkInPin();
+
+  const [generatedPin, setGeneratedPin] = useState<string | null>(null);
+
+  const handleGeneratePin = () => {
+    generatePin(undefined, {
+      onSuccess: (data) => {
+        setGeneratedPin(data.pin);
+      },
+    });
+  };
+
+  const upcomingActivities: RecentActivity[] = activeBookings
+    .slice(0, 5)
+    .map((booking) => ({
+      id: booking.id,
+      time: formatTime(booking.scheduledAt ?? booking.createdAt),
+      duration: booking.serviceNames.slice(0, 2).join(", ") || "-",
+      name: booking.customerName,
+      type:
+        booking.status === "in_progress" ? "in_progress" : "waiting",
+    }));
+
+  const bookingUrl = barbershop?.slug
+    ? `cukkr.com/${barbershop.slug}`
+    : null;
 
   return (
     <ScreenShell contentStyle={styles.scrollContentPadding}>
       <View style={styles.topRow}>
-        <WorkspacePill name={MOCK_WORKSPACE_NAME} />
-        <View style={styles.notifCircle}>
+        <WorkspacePill
+          name={barbershop?.name ?? "Loading..."}
+          onPress={() => router.push("/switch-barbershop" as any)}
+        />
+        <TouchableOpacity
+          style={styles.notifCircle}
+          onPress={() => router.push("/notifications-list" as any)}
+        >
           <Ionicons name="notifications-outline" size={20} color="#1A1A1A" />
-        </View>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.greetingRow}>
         <View style={styles.avatar} />
         <View style={styles.greetingText}>
-          <Text style={styles.greetingSmall}>Good Morning,</Text>
-          <Text style={styles.greetingName}>{MOCK_USER_NAME}</Text>
+          <Text style={styles.greetingSmall}>{getGreeting()}</Text>
+          <Text style={styles.greetingName}>{user?.name ?? "..."}</Text>
         </View>
       </View>
 
       <View style={styles.pinCard}>
-        <View style={styles.pinTopRow}>
-          <Text style={styles.pinLabel}>Walk-In PIN</Text>
-          <Ionicons name="server-outline" size={16} color="#666666" />
-        </View>
-        <View style={styles.pinValueRow}>
-          <Text style={styles.pinValue}>{MOCK_PIN}</Text>
+        <Text style={styles.pinLabel}>Walk-In PIN</Text>
+        {generatedPin ? (
+          <>
+            <View style={styles.pinValueRow}>
+              <Text style={styles.pinValue}>{generatedPin}</Text>
+              <TouchableOpacity
+                onPress={handleGeneratePin}
+                disabled={isGenerating}
+                style={styles.regenerateBtn}
+              >
+                {isGenerating ? (
+                  <ActivityIndicator size="small" color="#666666" />
+                ) : (
+                  <Text style={styles.regenerateBtnText}>Regenerate</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+            {bookingUrl && (
+              <View style={styles.linkPill}>
+                <Text style={styles.linkText}>{bookingUrl}</Text>
+                <Ionicons
+                  name="copy-outline"
+                  size={14}
+                  color="#1A1A1A"
+                  style={styles.copyIcon}
+                />
+              </View>
+            )}
+          </>
+        ) : (
           <TouchableOpacity
-            onPress={() => setShowPinModal(true)}
-            style={styles.refreshBtn}
+            onPress={handleGeneratePin}
+            disabled={isGenerating}
+            style={styles.generateBtn}
           >
-            <Ionicons name="refresh-outline" size={20} color="#666666" />
+            {isGenerating ? (
+              <ActivityIndicator size="small" color="#1A1A1A" />
+            ) : (
+              <Text style={styles.generateBtnText}>Generate Walk-In PIN</Text>
+            )}
           </TouchableOpacity>
-        </View>
-        <View style={styles.linkPill}>
-          <Text style={styles.linkText}>{MOCK_BOOKING_URL}</Text>
-          <Ionicons
-            name="copy-outline"
-            size={14}
-            color="#1A1A1A"
-            style={styles.copyIcon}
-          />
-        </View>
+        )}
       </View>
 
       <View style={styles.metricsSection}>
         <View style={styles.metricsRow}>
           <MetricCard
             label="Today's Schedule"
-            value={MOCK_METRICS.todaySchedule}
+            value={String(summary?.total ?? 0)}
             style={styles.metricFlex}
           />
           <MetricCard
             label="Walk-In"
-            value={MOCK_METRICS.walkIn}
+            value={String(summary?.walkIn ?? 0)}
             icon={<Ionicons name="people" size={18} color="#1A1A1A" />}
             style={styles.metricFlex}
           />
           <MetricCard
             label="Appoint."
-            value={MOCK_METRICS.appointment}
+            value={String(summary?.appointment ?? 0)}
             icon={<Ionicons name="calendar" size={18} color="#1A1A1A" />}
             style={styles.metricFlex}
           />
@@ -123,13 +165,13 @@ export function HomeDashboardScreen() {
         <View style={[styles.metricsRow, styles.metricsRowTop]}>
           <MetricCard
             label="In Progress"
-            value={MOCK_METRICS.inProgress}
+            value={String(summary?.inProgress ?? 0)}
             accentColor="#2196F3"
             style={styles.metricFlex}
           />
           <MetricCard
             label="Waiting"
-            value={MOCK_METRICS.waiting}
+            value={String(summary?.waiting ?? 0)}
             accentColor="#FF9800"
             style={styles.metricFlex}
           />
@@ -140,35 +182,36 @@ export function HomeDashboardScreen() {
         <ShortcutTile
           label="Barbers"
           icon={<Ionicons name="people" size={24} color="#1A1A1A" />}
+          onPress={() => router.push("/barbers-management" as any)}
         />
         <ShortcutTile
           label="Customers"
           icon={<Ionicons name="person" size={24} color="#1A1A1A" />}
+          onPress={() => router.push("/customer-management" as any)}
         />
         <ShortcutTile
           label="Services"
           icon={<Ionicons name="cut" size={24} color="#1A1A1A" />}
+          onPress={() => router.push("/services-management" as any)}
         />
       </View>
 
       <View style={styles.upcomingRow}>
         <Text style={styles.recentLabel}>Upcoming</Text>
-        {/* buat jadi button */}
-        <Text style={styles.seeMore}>See more</Text>
+        <TouchableOpacity
+          onPress={() => router.push("/schedule-active-bookings" as any)}
+        >
+          <Text style={styles.seeMore}>See more</Text>
+        </TouchableOpacity>
       </View>
-      {MOCK_RECENT_ACTIVITIES.map((item) => (
-        <ActivityCard key={item.id} item={item} />
-      ))}
-      <ConfirmationModal
-        visible={showPinModal}
-        title="Reset Walk-In PIN?"
-        description="Reset your walk-in PIN to continue creating walk-in bookings securely."
-        icon="refresh-outline"
-        cancelLabel="No, Not Yet"
-        confirmLabel="Yes"
-        onCancel={() => setShowPinModal(false)}
-        onConfirm={() => setShowPinModal(false)}
-      />
+
+      {upcomingActivities.length > 0 ? (
+        upcomingActivities.map((item) => (
+          <ActivityCard key={item.id} item={item} />
+        ))
+      ) : (
+        <Text style={styles.emptyText}>No active bookings today</Text>
+      )}
     </ScreenShell>
   );
 }
@@ -220,28 +263,46 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
   },
-  pinTopRow: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
   pinLabel: {
     fontSize: 12,
     color: "#666666",
-    flex: 1,
+    marginBottom: 8,
   },
   pinValueRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 4,
   },
   pinValue: {
     fontSize: 32,
     fontWeight: "700",
     color: "#1A1A1A",
     flex: 1,
+    letterSpacing: 4,
   },
-  refreshBtn: {
-    marginLeft: 8,
+  regenerateBtn: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#E0DDD0",
+    minWidth: 90,
+    alignItems: "center",
+  },
+  regenerateBtnText: {
+    fontSize: 12,
+    color: "#666666",
+    fontWeight: "500",
+  },
+  generateBtn: {
+    backgroundColor: "#C6FF4D",
+    borderRadius: 10,
+    paddingVertical: 12,
+    alignItems: "center",
+  },
+  generateBtnText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#1A1A1A",
   },
   linkPill: {
     flexDirection: "row",
@@ -298,5 +359,12 @@ const styles = StyleSheet.create({
   seeMore: {
     fontSize: 13,
     color: "#1A1A1A",
+  },
+  emptyText: {
+    fontSize: 13,
+    color: "#999999",
+    textAlign: "center",
+    marginTop: 16,
+    paddingHorizontal: 16,
   },
 });
