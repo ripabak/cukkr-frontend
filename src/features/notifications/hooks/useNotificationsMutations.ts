@@ -28,6 +28,9 @@ export function useAcceptNotification() {
     mutationFn: (id: string) => notificationsService.accept(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_QUERY_KEYS.all });
+      // Accepting a team invitation changes workspace membership — refresh barbershop and home
+      queryClient.invalidateQueries({ queryKey: ["barbershop"] });
+      queryClient.invalidateQueries({ queryKey: ["home"] });
     },
   });
 }

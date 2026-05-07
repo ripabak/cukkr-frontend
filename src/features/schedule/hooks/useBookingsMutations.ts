@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { bookingsService, CreateBookingPayload } from "../services/bookings.service";
 import { BOOKINGS_QUERY_KEYS } from "./useBookingsQueries";
+import { HOME_QUERY_KEYS } from "../../home/hooks/useHomeDashboardQueries";
 
 export function useCreateBooking() {
   const queryClient = useQueryClient();
@@ -8,6 +9,7 @@ export function useCreateBooking() {
     mutationFn: (payload: CreateBookingPayload) => bookingsService.create(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: BOOKINGS_QUERY_KEYS.all });
+      queryClient.invalidateQueries({ queryKey: HOME_QUERY_KEYS.all });
     },
   });
 }
@@ -19,6 +21,7 @@ export function useAcceptBooking() {
     onSuccess: (_result, id) => {
       queryClient.invalidateQueries({ queryKey: BOOKINGS_QUERY_KEYS.all });
       queryClient.invalidateQueries({ queryKey: BOOKINGS_QUERY_KEYS.byId(id) });
+      queryClient.invalidateQueries({ queryKey: HOME_QUERY_KEYS.all });
     },
   });
 }
@@ -31,6 +34,7 @@ export function useDeclineBooking() {
     onSuccess: (_result, { id }) => {
       queryClient.invalidateQueries({ queryKey: BOOKINGS_QUERY_KEYS.all });
       queryClient.invalidateQueries({ queryKey: BOOKINGS_QUERY_KEYS.byId(id) });
+      queryClient.invalidateQueries({ queryKey: HOME_QUERY_KEYS.all });
     },
   });
 }
@@ -50,6 +54,7 @@ export function useUpdateBookingStatus() {
     onSuccess: (_result, { id }) => {
       queryClient.invalidateQueries({ queryKey: BOOKINGS_QUERY_KEYS.all });
       queryClient.invalidateQueries({ queryKey: BOOKINGS_QUERY_KEYS.byId(id) });
+      queryClient.invalidateQueries({ queryKey: HOME_QUERY_KEYS.all });
     },
   });
 }
