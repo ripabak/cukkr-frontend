@@ -42,7 +42,7 @@ export default function DevNav() {
         {/* Home / Dashboard */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Home</Text>
-          <Link href="/home-dashboard" asChild>
+          <Link href="/home" asChild>
             <TouchableOpacity style={styles.button}>
               <Text style={styles.buttonText}>Home Dashboard</Text>
             </TouchableOpacity>

@@ -18,7 +18,7 @@ export function SwitchBarbershopScreen() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace("/home-dashboard" as any);
+      router.replace("/home" as any);
     }
   };
 
