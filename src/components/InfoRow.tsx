@@ -60,13 +60,15 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 14,
     color: '#666666',
-    flex: 1,
+    maxWidth: '50%',
+    marginLeft: 'auto',
     textAlign: 'right',
   },
   placeholder: {
     fontSize: 14,
     color: '#BBBBBB',
-    flex: 1,
+    maxWidth: '50%',
+    marginLeft: 'auto',
     textAlign: 'right',
   },
 });

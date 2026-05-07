@@ -39,15 +39,15 @@ export function EditBookingUrlScreen() {
 
   const isChanged = initialized && slug !== (barbershop?.slug ?? "");
   const isDebouncedChanged = initialized && debouncedSlug !== (barbershop?.slug ?? "");
-  const hasSpaces = slug.includes(" ");
+  const isValidSlug = /^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$/.test(slug);
   const isTyping = slug !== debouncedSlug;
 
   const { data: isAvailable, isLoading: isCheckingSlug } =
-    useBarbershopSlugCheck(isDebouncedChanged && !hasSpaces ? debouncedSlug : "");
+    useBarbershopSlugCheck(isDebouncedChanged && isValidSlug ? debouncedSlug : "");
 
   const slugFeedback = useMemo(() => {
     if (!isChanged) return null;
-    if (hasSpaces) return { text: "Spaces are not allowed.", color: "#FF3B30" };
+    if (!isValidSlug) return { text: "Only letters, numbers, and hyphens between words.", color: "#FF3B30" };
     if (isTyping) return { text: "Checking availability...", color: "#FF9500" };
     if (isCheckingSlug) return { text: "Checking availability...", color: "#FF9500" };
     if (isAvailable === true)
@@ -55,11 +55,11 @@ export function EditBookingUrlScreen() {
     if (isAvailable === false)
       return { text: "Slug not available", color: "#FF3B30" };
     return null;
-  }, [isChanged, hasSpaces, isTyping, isCheckingSlug, isAvailable]);
+  }, [isChanged, isValidSlug, isTyping, isCheckingSlug, isAvailable]);
 
   const canSave =
     !isSaving &&
-    !hasSpaces &&
+    isValidSlug &&
     !isTyping &&
     slug.trim().length > 0 &&
     (!isChanged || isAvailable === true);
@@ -110,7 +110,7 @@ export function EditBookingUrlScreen() {
                   "This is your public booking link that customers use to make appointments.",
                   "Use only letters, numbers, and hyphens.",
                 ]}
-                errorLine={hasSpaces ? "Spaces are not allowed." : undefined}
+                errorLine={isChanged && !isValidSlug ? "Only letters, numbers, and hyphens between words." : undefined}
                 style={styles.helper}
               />
             </>

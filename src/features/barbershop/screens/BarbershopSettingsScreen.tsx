@@ -130,7 +130,6 @@ export function BarbershopSettingsScreen() {
                   ? `https://cukkr.com/${barbershop.slug}`
                   : "—"
               }
-              showChevron
               isLast
               onPress={() => router.push("/edit-booking-url")}
             />
