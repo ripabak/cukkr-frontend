@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
+import { authClient } from "@/src/lib/auth-client";
 import { homeService } from "../services/home.service";
 
 export const HOME_QUERY_KEYS = {
   all: ["home"] as const,
   summary: (date: string) => [...HOME_QUERY_KEYS.all, "summary", date] as const,
   activeBookings: (date: string) => [...HOME_QUERY_KEYS.all, "active-bookings", date] as const,
-  barbershop: () => [...HOME_QUERY_KEYS.all, "barbershop"] as const,
 };
 
 export function useBookingSummary(date: string) {
@@ -24,9 +24,8 @@ export function useHomeActiveBookings(date: string) {
   });
 }
 
+// Uses authClient directly — active org is managed by better-auth session state,
+// not React Query, so it updates automatically when setActive is called.
 export function useCurrentBarbershop() {
-  return useQuery({
-    queryKey: HOME_QUERY_KEYS.barbershop(),
-    queryFn: () => homeService.getCurrentBarbershop(),
-  });
+  return authClient.useActiveOrganization();
 }

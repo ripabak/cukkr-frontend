@@ -1,4 +1,3 @@
-import { authClient } from "@/src/lib/auth-client";
 import { app } from "@/src/lib/eden-app";
 
 export const homeService = {
@@ -16,12 +15,6 @@ export const homeService = {
     });
     if (error || !response) throw new Error("Failed to fetch active bookings");
     return response.data || [];
-  },
-
-  async getCurrentBarbershop() {
-    const { data: response, error } = authClient.useActiveOrganization();
-    if (error || !response) throw new Error("Failed to fetch barbershop");
-    return response;
   },
 
   async generateWalkInPin() {
