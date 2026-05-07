@@ -1,5 +1,6 @@
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { InfoRow } from "@/src/components/InfoRow";
+import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { OperationRow } from "@/src/features/barbershop/components/OperationRow";
 import { OverflowMenu } from "@/src/components/OverflowMenu";
 import { StatusBadge } from "@/src/components/StatusBadge";
@@ -85,18 +86,18 @@ export function ServiceDetailScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.outer}>
-        <View style={styles.headerRow}>
-          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-            <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setOverflowVisible(true)}
-            activeOpacity={0.7}
-            style={styles.overflowBtn}
-          >
-            <Ionicons name="ellipsis-horizontal" size={18} color="#FFFFFF" />
-          </TouchableOpacity>
-        </View>
+        <ScreenHeader
+          onBack={() => router.back()}
+          rightAction={
+            <TouchableOpacity
+              onPress={() => setOverflowVisible(true)}
+              activeOpacity={0.7}
+              style={styles.overflowBtn}
+            >
+              <Ionicons name="ellipsis-horizontal" size={18} color="#FFFFFF" />
+            </TouchableOpacity>
+          }
+        />
 
         <ScrollView
           style={styles.scrollView}
@@ -232,21 +233,6 @@ const styles = StyleSheet.create({
   },
   loader: {
     marginTop: 80,
-  },
-  headerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
-  backBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: "#FFFFFF",
-    alignItems: "center",
-    justifyContent: "center",
   },
   overflowBtn: {
     width: 36,

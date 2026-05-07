@@ -1,8 +1,8 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Text } from "react-native";
+import { View, StyleSheet, ActivityIndicator, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { BookingDetailCard } from "@/src/features/schedule/components/BookingDetailCard";
 import { useBookingById } from "@/src/features/schedule/hooks";
 import {
@@ -66,11 +66,7 @@ export function BookingDetailResultScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.outer}>
-        <View style={styles.navBar}>
-          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
-          </TouchableOpacity>
-        </View>
+        <ScreenHeader onBack={() => router.back()} />
 
         <BookingDetailCard
           customerName={booking.customer.name}
@@ -106,19 +102,5 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 14,
     color: "#666666",
-  },
-  navBar: {
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 4,
-  },
-  backBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#F0F0E8",
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "flex-start",
   },
 });

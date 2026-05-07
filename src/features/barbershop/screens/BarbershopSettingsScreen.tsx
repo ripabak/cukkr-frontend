@@ -49,8 +49,10 @@ export function BarbershopSettingsScreen() {
   };
 
   return (
-    <ScreenShell contentStyle={styles.scrollContentPadding}>
-      <ScreenHeader onBack={() => router.back()} />
+    <ScreenShell
+      headerSlot={<ScreenHeader onBack={() => router.back()} />}
+      contentStyle={styles.scrollContentPadding}
+    >
       <Text style={styles.title}>Barbershop Settings</Text>
       <Text style={styles.subtitle}>Setup based on your barbershop needs</Text>
 

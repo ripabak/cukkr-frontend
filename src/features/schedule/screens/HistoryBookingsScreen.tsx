@@ -1,12 +1,12 @@
-import { CalendarModal } from "@/src/features/schedule/components/CalendarModal";
-import { DateSelectorPill } from "@/src/features/schedule/components/DateSelectorPill";
-import { HistoryBookingRow } from "@/src/features/schedule/components/HistoryBookingRow";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SortMenu } from "@/src/components/SortMenu";
 import {
   HISTORY_STATUS_OPTIONS,
   StatusFilterMenu,
 } from "@/src/components/StatusFilterMenu";
+import { CalendarModal } from "@/src/features/schedule/components/CalendarModal";
+import { DateSelectorPill } from "@/src/features/schedule/components/DateSelectorPill";
+import { HistoryBookingRow } from "@/src/features/schedule/components/HistoryBookingRow";
 import { useBookings } from "@/src/features/schedule/hooks";
 import {
   mapApiStatusToBookingStatus,
@@ -82,7 +82,7 @@ export function HistoryBookingsScreen() {
               activeOpacity={0.8}
               style={styles.iconBtn}
             >
-              <Ionicons name="swap-vertical-outline" size={18} color="#1A1A1A" />
+              <Ionicons name="filter" size={18} color="#1A1A1A" />
             </TouchableOpacity>
             <DateSelectorPill
               label={formatDatePill(selectedDate)}

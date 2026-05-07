@@ -3,10 +3,11 @@ import { View, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator, Text
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { ScreenHeader } from '@/src/components/ScreenHeader';
+import { ConfirmationModal } from '@/src/components/ConfirmationModal';
 import { NotificationCard, NotificationType } from '@/src/features/notifications/components/NotificationCard';
 import { useNotificationsList } from '../hooks/useNotificationsQueries';
 import { useAcceptNotification, useDeclineNotification, useMarkAllAsRead } from '../hooks/useNotificationsMutations';
-import { ConfirmationModal } from '@/src/components/ConfirmationModal';
 
 const API_TYPE_MAP: Record<string, NotificationType> = {
   appointment_requested: 'appointment-request',
@@ -57,18 +58,18 @@ export function NotificationsListScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.outer}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={styles.moreBtn}
-            onPress={() => markAllRead.mutate()}
-          >
-            <Ionicons name="checkmark-done" size={20} color="#FFFFFF" />
-          </TouchableOpacity>
-        </View>
+        <ScreenHeader
+          onBack={() => router.back()}
+          rightAction={
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.moreBtn}
+              onPress={() => markAllRead.mutate()}
+            >
+              <Ionicons name="checkmark-done" size={20} color="#FFFFFF" />
+            </TouchableOpacity>
+          }
+        />
 
         {isLoading ? (
           <View style={styles.centered}>
@@ -137,26 +138,10 @@ const styles = StyleSheet.create({
   outer: {
     flex: 1,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 12,
-    paddingBottom: 8,
-  },
-  backBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F0F0E8',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   moreBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: '#1A1A1A',
     alignItems: 'center',
     justifyContent: 'center',

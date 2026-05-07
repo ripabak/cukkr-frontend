@@ -1,6 +1,7 @@
 import { BookingDetailCard } from "@/src/features/schedule/components/BookingDetailCard";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { OverflowMenu } from "@/src/components/OverflowMenu";
+import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { StickyCta } from "@/src/features/schedule/components/StickyCta";
 import { useBookingById, useUpdateBookingStatus } from "@/src/features/schedule/hooks";
 import {
@@ -16,6 +17,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type ModalType = "cancel" | "start" | "takeover" | null;
@@ -110,18 +112,18 @@ export function BookingDetailWaitingScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.outer}>
-        <View style={styles.navBar}>
-          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setOverflowVisible(true)}
-            activeOpacity={0.7}
-            style={styles.overflowBtn}
-          >
-            <Ionicons name="ellipsis-horizontal" size={20} color="#FFFFFF" />
-          </TouchableOpacity>
-        </View>
+        <ScreenHeader
+          onBack={() => router.back()}
+          rightAction={
+            <TouchableOpacity
+              onPress={() => setOverflowVisible(true)}
+              activeOpacity={0.7}
+              style={styles.overflowBtn}
+            >
+              <Ionicons name="ellipsis-horizontal" size={20} color="#FFFFFF" />
+            </TouchableOpacity>
+          }
+        />
 
         <BookingDetailCard
           customerName={booking.customer.name}
@@ -215,26 +217,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666666",
   },
-  navBar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 4,
-  },
-  backBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#F0F0E8",
-    alignItems: "center",
-    justifyContent: "center",
-  },
   overflowBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: "#1A1A1A",
     alignItems: "center",
     justifyContent: "center",

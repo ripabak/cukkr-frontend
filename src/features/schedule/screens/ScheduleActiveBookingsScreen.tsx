@@ -1,12 +1,12 @@
 import { BookingCard } from "@/src/components/BookingCard";
-import { CalendarModal } from "@/src/features/schedule/components/CalendarModal";
-import { DateSelectorPill } from "@/src/features/schedule/components/DateSelectorPill";
-import { DayChip, DayChipRow } from "@/src/features/schedule/components/DayChipRow";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import {
   SCHEDULE_STATUS_OPTIONS,
   StatusFilterMenu,
 } from "@/src/components/StatusFilterMenu";
+import { CalendarModal } from "@/src/features/schedule/components/CalendarModal";
+import { DateSelectorPill } from "@/src/features/schedule/components/DateSelectorPill";
+import { DayChip, DayChipRow } from "@/src/features/schedule/components/DayChipRow";
 import { useActiveBookings } from "@/src/features/schedule/hooks";
 import {
   formatTimeLabel,
@@ -89,7 +89,7 @@ export function ScheduleActiveBookingsScreen() {
                 activeOpacity={0.8}
                 style={styles.iconBtn}
               >
-                <Ionicons name="calendar" size={20} color="#1A1A1A" />
+                <Ionicons name="clipboard-outline" size={20} color="#1A1A1A" />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => router.push("/new-appointment" as any)}

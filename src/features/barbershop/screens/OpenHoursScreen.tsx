@@ -89,12 +89,12 @@ export function OpenHoursScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <ScreenHeader onBack={() => router.back()} />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <ScreenHeader onBack={() => router.back()} />
         <Text style={styles.title}>Open Hours</Text>
         <Text style={styles.subtitle}>
           Set your barbershop operating hours for each day

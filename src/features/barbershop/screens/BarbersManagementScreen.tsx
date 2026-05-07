@@ -1,8 +1,8 @@
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
-import { MemberCard } from "@/src/features/barbershop/components/MemberCard";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { MemberCard } from "@/src/features/barbershop/components/MemberCard";
 import {
   useBarbersList,
   useCancelBarberInvitation,
@@ -20,7 +20,7 @@ interface BarberTarget {
   userId: string | null;
 }
 
-export function BarbershopManagementScreen() {
+export function BarbersManagementScreen() {
   const router = useRouter();
   const toast = useToast();
   const { data: barbers = [], isLoading, refetch } = useBarbersList();
@@ -62,8 +62,7 @@ export function BarbershopManagementScreen() {
   };
 
   return (
-    <ScreenShell>
-      <ScreenHeader onBack={() => router.back()} />
+    <ScreenShell headerSlot={<ScreenHeader onBack={() => router.back()} />}>
       <Text style={styles.title}>Barbers Management</Text>
       <Text style={styles.subtitle}>Manage your barbershop team members</Text>
 

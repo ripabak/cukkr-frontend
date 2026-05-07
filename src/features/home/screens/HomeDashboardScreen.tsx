@@ -1,19 +1,19 @@
-import { MetricCard } from "@/src/features/home/components/MetricCard";
 import { ScreenShell } from "@/src/components/ScreenShell";
-import { ShortcutTile } from "@/src/features/home/components/ShortcutTile";
-import { WorkspacePill } from "@/src/features/home/components/WorkspacePill";
 import {
   ActivityCard,
   RecentActivity,
 } from "@/src/features/home/components/ActivityCard";
+import { MetricCard } from "@/src/features/home/components/MetricCard";
+import { ShortcutTile } from "@/src/features/home/components/ShortcutTile";
+import { WorkspacePill } from "@/src/features/home/components/WorkspacePill";
 import {
   useBookingSummary,
   useCurrentBarbershop,
   useGenerateWalkInPin,
   useHomeActiveBookings,
 } from "@/src/features/home/hooks";
-import { useAuthUser } from "@/src/hooks/useAuthUser";
 import { toISODateString } from "@/src/features/schedule/utils/booking-formatters";
+import { useAuthUser } from "@/src/hooks/useAuthUser";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -199,7 +199,7 @@ export function HomeDashboardScreen() {
       <View style={styles.upcomingRow}>
         <Text style={styles.recentLabel}>Upcoming</Text>
         <TouchableOpacity
-          onPress={() => router.push("/schedule-active-bookings" as any)}
+          onPress={() => router.push("/schedule" as any)}
         >
           <Text style={styles.seeMore}>See more</Text>
         </TouchableOpacity>

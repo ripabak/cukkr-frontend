@@ -1,3 +1,3 @@
-import { BarbershopManagementScreen } from '@/src/features/barbershop/screens/BarbershopManagementScreen';
+import { BarbersManagementScreen } from '@/src/features/barbershop/screens/BarbersManagementScreen';
 
-export default BarbershopManagementScreen;
+export default BarbersManagementScreen;

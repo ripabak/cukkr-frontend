@@ -1,9 +1,11 @@
 import { BookingCard } from "@/src/components/BookingCard";
+import { ScreenHeader } from "@/src/components/ScreenHeader";
+import { SCHEDULE_STATUS_OPTIONS, StatusFilterMenu } from "@/src/components/StatusFilterMenu";
 import { ChartCard } from "@/src/features/barbershop/components/ChartCard";
+import { IconActionButton } from "@/src/features/barbershop/components/IconActionButton";
 import { MessageItem, MessageThread } from "@/src/features/barbershop/components/MessageThread";
 import { SegmentedTabs } from "@/src/features/barbershop/components/SegmentedTabs";
 import { StatCard } from "@/src/features/barbershop/components/StatCard";
-import { SCHEDULE_STATUS_OPTIONS, StatusFilterMenu } from "@/src/components/StatusFilterMenu";
 import {
   useCustomerBookings,
   useCustomerById,
@@ -66,23 +68,22 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
   return (
     <SafeAreaView style={styles.safe} edges={["top"]}>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-            <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Customer Details</Text>
-          <TouchableOpacity
-            style={styles.sendBtn}
-            onPress={() =>
-              router.push({
-                pathname: "/send-messages-to-customers",
-                params: { recipientName: customer?.name, count: "1" },
-              })
-            }
-          >
-            <Ionicons name="send" size={18} color="#FFFFFF" />
-          </TouchableOpacity>
-        </View>
+        <ScreenHeader
+          title="Customer Details"
+          onBack={() => router.back()}
+          rightAction={
+            <IconActionButton
+              iconName="send"
+              size={36}
+              onPress={() =>
+                router.push({
+                  pathname: "/send-messages-to-customers",
+                  params: { recipientName: customer?.name, count: "1" },
+                })
+              }
+            />
+          }
+        />
 
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -208,36 +209,6 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: "#F5F4E8" },
   container: { flex: 1, backgroundColor: "#F5F4E8" },
   loader: { marginTop: 80 },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    gap: 12,
-  },
-  backBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: "#FFFFFF",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  headerTitle: {
-    flex: 1,
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#1A1A1A",
-    textAlign: "center",
-  },
-  sendBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: "#1A1A1A",
-    alignItems: "center",
-    justifyContent: "center",
-  },
   content: { paddingHorizontal: 20, paddingBottom: 40 },
   customerName: {
     fontSize: 30,
