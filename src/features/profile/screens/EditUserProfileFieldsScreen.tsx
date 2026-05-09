@@ -2,14 +2,14 @@ import { EditFieldHeader } from '@/src/components/EditFieldHeader';
 import { HelperCopy } from '@/src/components/HelperCopy';
 import { MultilineInputField } from '@/src/components/MultilineInputField';
 import { TextInputField } from '@/src/components/TextInputField';
-import { useToast } from '@/src/lib/providers/toast';
 import { useChangePassword } from '@/src/features/auth/hooks';
+import { useToast } from '@/src/lib/providers/toast';
 import { Ionicons } from '@expo/vector-icons';
 import { useGlobalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useProfile, useUpdateProfile, useChangePhone } from '../hooks';
+import { useChangePhone, useProfile, useUpdateProfile } from '../hooks';
 import { getErrorMessage } from '../utils/error-handler';
 import { profileValidators } from '../utils/form-validators';
 
@@ -77,7 +77,7 @@ export function EditUserProfileFieldsScreen() {
     try {
       await changePhone(phone.trim());
       router.push({
-        pathname: '/verify-contact' as any,
+        pathname: '/verify-contact',
         params: { contact: phone.trim(), type: 'phone' },
       });
     } catch (error) {

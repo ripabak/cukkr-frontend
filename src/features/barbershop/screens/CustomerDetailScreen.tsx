@@ -171,7 +171,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
                       status={b.status as "waiting" | "in_progress" | "completed" | "cancelled" | "requested"}
                       onPress={() =>
                         router.push({
-                          pathname: getBookingRoute(b.status) as any,
+                          pathname: getBookingRoute(b.status),
                           params: { id: b.id },
                         })
                       }

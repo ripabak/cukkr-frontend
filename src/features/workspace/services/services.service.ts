@@ -17,7 +17,7 @@ export const servicesService = {
   },
 
   async uploadImage(serviceId: string, file: File) {
-    const { data: response, error } = await (app.api.services as any)[serviceId].image.post({ file });
+    const { data: response, error } = await (app.api.services({ id: serviceId }).image.post({ file }));
 
     if (error || !response) {
       throw new Error("Failed to upload service image");
@@ -39,7 +39,7 @@ export const servicesService = {
   },
 
   async getById(id: string) {
-    const { data: response, error } = await (app.api.services as any)[id].get();
+    const { data: response, error } = await app.api.services({ id }).get();
 
     if (error || !response) {
       throw new Error("Failed to fetch service");
@@ -58,7 +58,7 @@ export const servicesService = {
       isDefault?: boolean;
     }
   ) {
-    const { data: response, error } = await (app.api.services as any)[id].patch(data);
+    const { data: response, error } = await app.api.services({ id }).patch(data);
 
     if (error || !response) {
       throw new Error("Failed to update service");
@@ -67,7 +67,7 @@ export const servicesService = {
   },
 
   async delete(id: string) {
-    const { data: response, error } = await (app.api.services as any)[id].delete();
+    const { data: response, error } = await app.api.services({ id }).delete();
 
     if (error || !response) {
       throw new Error("Failed to delete service");
@@ -76,7 +76,7 @@ export const servicesService = {
   },
 
   async toggleActive(id: string) {
-    const { data: response, error } = await (app.api.services as any)[id]["toggle-active"].patch({});
+    const { data: response, error } = await app.api.services({ id })["toggle-active"].patch({});
 
     if (error || !response) {
       throw new Error("Failed to toggle service status");
@@ -85,7 +85,7 @@ export const servicesService = {
   },
 
   async setDefault(id: string) {
-    const { data: response, error } = await (app.api.services as any)[id]["set-default"].patch({});
+    const { data: response, error } = await app.api.services({ id })["set-default"].patch({});
 
     if (error || !response) {
       throw new Error("Failed to set default service");

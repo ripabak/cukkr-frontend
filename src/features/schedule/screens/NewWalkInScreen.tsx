@@ -1,8 +1,8 @@
+import { PrimaryButton } from "@/src/components/PrimaryButton";
+import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { BookingForm } from "@/src/features/schedule/components/BookingForm";
 import { BookingTypeToggle } from "@/src/features/schedule/components/BookingTypeToggle";
 import { FormShell } from "@/src/features/schedule/components/FormShell";
-import { PrimaryButton } from "@/src/components/PrimaryButton";
-import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { useNewBookingForm } from "@/src/features/schedule/context/NewBookingContext";
 import { useCreateBooking } from "@/src/features/schedule/hooks";
 import { useToast } from "@/src/lib/providers";
@@ -24,7 +24,7 @@ export function NewWalkInScreen() {
   function handleBookingTypeChange(type: BookingType) {
     setBookingType(type);
     if (type === "appointment") {
-      router.replace("/new-appointment" as any);
+      router.replace("/new-appointment");
     }
   }
 
@@ -89,10 +89,10 @@ export function NewWalkInScreen() {
         contact={formData.contact}
         onContactChange={(v) => updateFormData({ contact: v })}
         selectedBarber={formData.barberName ?? undefined}
-        onBarberPress={() => router.push("/select-barber" as any)}
+        onBarberPress={() => router.push("/select-barber")}
         showDateTimeSelector={false}
         services={formData.selectedServices}
-        onServicePress={() => router.push("/select-services" as any)}
+        onServicePress={() => router.push("/select-services")}
       />
     </FormShell>
   );

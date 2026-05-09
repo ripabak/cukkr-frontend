@@ -79,11 +79,11 @@ export function HomeDashboardScreen() {
       <View style={styles.topRow}>
         <WorkspacePill
           name={barbershop?.name ?? "Loading..."}
-          onPress={() => router.push("/switch-barbershop" as any)}
+          onPress={() => router.push("/switch-barbershop")}
         />
         <TouchableOpacity
           style={styles.notifCircle}
-          onPress={() => router.push("/notifications-list" as any)}
+          onPress={() => router.push("/notifications-list")}
         >
           <Ionicons name="notifications-outline" size={20} color="#1A1A1A" />
         </TouchableOpacity>
@@ -92,7 +92,7 @@ export function HomeDashboardScreen() {
       <TouchableOpacity
         style={styles.greetingRow}
         activeOpacity={0.7}
-        onPress={() => router.push("/user-profile" as any)}
+        onPress={() => router.push("/user-profile")}
       >
         <View style={styles.avatar} />
         <View style={styles.greetingText}>
@@ -186,24 +186,24 @@ export function HomeDashboardScreen() {
         <ShortcutTile
           label="Barbers"
           icon={<Ionicons name="people" size={24} color="#1A1A1A" />}
-          onPress={() => router.push("/barbers-management" as any)}
+          onPress={() => router.push("/barbers-management")}
         />
         <ShortcutTile
           label="Customers"
           icon={<Ionicons name="person" size={24} color="#1A1A1A" />}
-          onPress={() => router.push("/customer-management" as any)}
+          onPress={() => router.push("/customer-management")}
         />
         <ShortcutTile
           label="Services"
           icon={<Ionicons name="cut" size={24} color="#1A1A1A" />}
-          onPress={() => router.push("/services-management" as any)}
+          onPress={() => router.push("/services-management")}
         />
       </View>
 
       <View style={styles.upcomingRow}>
         <Text style={styles.recentLabel}>Upcoming</Text>
         <TouchableOpacity
-          onPress={() => router.push("/schedule" as any)}
+          onPress={() => router.push("/schedule")}
         >
           <Text style={styles.seeMore}>See more</Text>
         </TouchableOpacity>

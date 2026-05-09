@@ -1,23 +1,23 @@
-import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { OverflowMenu } from "@/src/components/OverflowMenu";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { BookingDetailCard } from "@/src/features/schedule/components/BookingDetailCard";
 import { StickyCta } from "@/src/features/schedule/components/StickyCta";
-import { OverflowMenu } from "@/src/components/OverflowMenu";
 import { SwipeConfirmationModal } from "@/src/features/schedule/components/SwipeConfirmationModal";
 import { useBookingById, useUpdateBookingStatus } from "@/src/features/schedule/hooks";
 import {
-  mapApiStatusToDetailStatus,
   formatDateLabel,
-  formatScheduledTime,
   formatDuration,
   formatPrice,
+  formatScheduledTime,
+  mapApiStatusToDetailStatus,
 } from "@/src/features/schedule/utils/booking-formatters";
 import { useToast } from "@/src/lib/providers";
 import { getErrorMessage } from "@/src/lib/utils/error-handler";
+import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useState } from "react";
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export function BookingDetailInProgressScreen() {
   const router = useRouter();
@@ -36,7 +36,7 @@ export function BookingDetailInProgressScreen() {
     updateStatus({ id, status: "completed" }, {
       onSuccess: () => {
         toast.success("Booking completed");
-        router.push(`/booking-detail-result?id=${id}` as any);
+        router.push(`/booking-detail-result?id=${id}`);
       },
       onError: (error) => {
         toast.error(getErrorMessage(error));
@@ -50,7 +50,7 @@ export function BookingDetailInProgressScreen() {
     updateStatus({ id, status: "waiting" }, {
       onSuccess: () => {
         toast.success("Booking set back to waiting");
-        router.push(`/booking-detail-waiting?id=${id}` as any);
+        router.push(`/booking-detail-waiting?id=${id}`);
       },
       onError: (error) => {
         toast.error(getErrorMessage(error));

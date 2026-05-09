@@ -1,7 +1,7 @@
-import { BookingDetailCard } from "@/src/features/schedule/components/BookingDetailCard";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { OverflowMenu } from "@/src/components/OverflowMenu";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
+import { BookingDetailCard } from "@/src/features/schedule/components/BookingDetailCard";
 import { StickyCta } from "@/src/features/schedule/components/StickyCta";
 import { useBookingById, useUpdateBookingStatus } from "@/src/features/schedule/hooks";
 import {
@@ -41,7 +41,7 @@ export function BookingDetailWaitingScreen() {
     updateStatus({ id, status: "in_progress" }, {
       onSuccess: () => {
         toast.success("Booking started");
-        router.push(`/booking-detail-in-progress?id=${id}` as any);
+        router.push(`/booking-detail-in-progress?id=${id}`);
       },
       onError: (error) => {
         toast.error(getErrorMessage(error));

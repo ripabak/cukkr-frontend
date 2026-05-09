@@ -74,13 +74,13 @@ export function UserProfileScreen() {
         <InfoRow
           label="Your Name"
           value={profile.name}
-          onPress={() => router.push({ pathname: "/edit-user-profile-fields" as any, params: { mode: "name" } })}
+          onPress={() => router.push({ pathname: "/edit-user-profile-fields", params: { mode: "name" } })}
         />
         <InfoRow
           label="Bio"
           value={profile.bio || "Add a bio"}
           isLast
-          onPress={() => router.push({ pathname: "/edit-user-profile-fields" as any, params: { mode: "bio" } })}
+          onPress={() => router.push({ pathname: "/edit-user-profile-fields", params: { mode: "bio" } })}
         />
       </ProfileSummaryCard>
 
@@ -97,7 +97,7 @@ export function UserProfileScreen() {
         <InfoRow
           label="Change Password"
           showChevron
-          onPress={() => router.push({ pathname: "/edit-user-profile-fields" as any, params: { mode: "password" } })}
+          onPress={() => router.push({ pathname: "/edit-user-profile-fields", params: { mode: "password" } })}
           isLast
         />
       </ProfileSummaryCard>

@@ -35,7 +35,7 @@ export function mapApiStatusToDetailStatus(status: ApiStatus | string): BookingD
   return (API_TO_DETAIL_STATUS[status] as BookingDetailStatus) ?? "waiting";
 }
 
-export function getDetailRouteForStatus(status: string): string {
+export function getDetailRouteForStatus(status: string): "/booking-detail-request" | "/booking-detail-in-progress" | "/booking-detail-result" | "/booking-detail-waiting" {
   if (status === "requested") return "/booking-detail-request";
   if (status === "in_progress") return "/booking-detail-in-progress";
   if (status === "completed" || status === "cancelled") return "/booking-detail-result";

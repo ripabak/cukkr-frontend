@@ -24,7 +24,7 @@ export function useAuthGuard() {
         setIsLoading(false);
         // Only redirect if we're in a protected route
         if (!segments[0]?.includes("auth")) {
-          router.replace("/(auth)/login" as any);
+          router.replace("/(auth)/login");
         }
       }
     } catch (error) {
@@ -32,7 +32,7 @@ export function useAuthGuard() {
       setIsAuthenticated(false);
       setIsLoading(false);
       if (!segments[0]?.includes("auth")) {
-        router.replace("/(auth)/login" as any);
+        router.replace("/(auth)/login");
       }
     }
   };

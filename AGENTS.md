@@ -297,4 +297,4 @@ Update `docs/track_pages_and_components.md` whenever a page, component, or infra
 
 
 ## Constraints
-- don't use `any` as much as possible, use them with proper TypeScript types, use any when the options are just any or unknown, if you can make proper typescript types, make it.
+- don't use `any` or `as any` as much as possible, use them with proper TypeScript types, use any when the options are just any or unknown, if you can make proper typescript types, make it.

@@ -69,7 +69,10 @@ export function ScheduleActiveBookingsScreen() {
 
   const handleBookingPress = (bookingId: string, status: string) => {
     const route = getDetailRouteForStatus(status);
-    router.push(`${route}?id=${bookingId}` as any);
+    router.push({
+      pathname: route,
+      params: { id: bookingId },
+    });
   };
 
   return (
@@ -85,14 +88,14 @@ export function ScheduleActiveBookingsScreen() {
             />
             <View style={styles.topActions}>
               <TouchableOpacity
-                onPress={() => router.push("/history-bookings" as any)}
+                onPress={() => router.push("/history-bookings")}
                 activeOpacity={0.8}
                 style={styles.iconBtn}
               >
                 <Ionicons name="clipboard-outline" size={20} color="#1A1A1A" />
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => router.push("/new-appointment" as any)}
+                onPress={() => router.push("/new-appointment")}
                 activeOpacity={0.8}
                 style={[styles.iconBtn, styles.iconBtnDark]}
               >

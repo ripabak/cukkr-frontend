@@ -10,13 +10,13 @@ export const customersService = {
   },
 
   async getById(id: string) {
-    const { data: response, error } = await (app.api.customers as any)[id].get();
+    const { data: response, error } = await app.api.customers({ id }).get();
     if (error || !response) throw new Error("Failed to fetch customer");
     return response.data;
   },
 
   async getBookings(id: string) {
-    const { data: response, error } = await (app.api.customers as any)[id].bookings.get();
+    const { data: response, error } = await app.api.customers({ id }).bookings.get();
     if (error || !response) throw new Error("Failed to fetch customer bookings");
     return response.data || [];
   },

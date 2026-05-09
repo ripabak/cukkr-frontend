@@ -113,7 +113,7 @@ export function ToastContainer() {
 
 const styles = StyleSheet.create({
   root: {
-    position: Platform.OS === "web" ? ("fixed" as any) : "absolute",
+    position: Platform.OS === "web" ? ("fixed") : "absolute",
     top: 0,
     left: 0,
     right: 0,

@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { View, ScrollView, TouchableOpacity, StyleSheet, Text } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import { ScreenHeader } from '@/src/components/ScreenHeader';
 import { ConfirmationModal } from '@/src/components/ConfirmationModal';
+import { ScreenHeader } from '@/src/components/ScreenHeader';
 import { NotificationCard, NotificationType } from '@/src/features/notifications/components/NotificationCard';
-import { useNotificationsList } from '../hooks/useNotificationsQueries';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAcceptNotification, useDeclineNotification, useMarkAllAsRead } from '../hooks/useNotificationsMutations';
+import { useNotificationsList } from '../hooks/useNotificationsQueries';
 
 const API_TYPE_MAP: Record<string, NotificationType> = {
   appointment_requested: 'appointment-request',
@@ -42,7 +42,7 @@ export function NotificationsListScreen() {
   const handleBookingPress = (notif: NotifItem) => {
     if (!notif.referenceId) return;
     const route = notif.type === 'walk_in_arrival' ? '/booking-detail-waiting' : '/booking-detail-request';
-    router.push({ pathname: route as any, params: { id: notif.referenceId } });
+    router.push({ pathname: route, params: { id: notif.referenceId } });
   };
 
   const handleAcceptInvitation = () => {

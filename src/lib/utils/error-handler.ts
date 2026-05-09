@@ -11,9 +11,9 @@ export function getErrorMessage(error: unknown): string {
     typeof error === "object" &&
     error !== null &&
     "message" in error &&
-    typeof (error as any).message === "string"
+    typeof (error).message === "string"
   ) {
-    return (error as any).message;
+    return (error).message;
   }
 
   return "Something went wrong. Please try again.";
