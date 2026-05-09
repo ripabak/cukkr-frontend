@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     minHeight: 100,
   },
   input: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#1A1A1A',
     padding: 0,
     textAlignVertical: 'top',

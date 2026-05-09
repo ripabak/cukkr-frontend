@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     minHeight: 120,
   },
   input: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#1A1A1A',
     lineHeight: 22,
     flex: 1,
