@@ -7,6 +7,7 @@ import { View } from "react-native";
 
 import { useClientOnlyValue } from '@/src/components/useClientOnlyValue';
 import { useColorScheme } from '@/src/components/useColorScheme';
+import { WorkspaceRoute } from "@/src/components/WorkspaceRoute";
 
 type Tab = "home" | "stats" | "schedule" | "barbershop";
 
@@ -52,18 +53,20 @@ export default function TabLayout() {
 
   return (
     <ProtectedRoute>
-      <Tabs
-        tabBar={(props) => <CustomTabBar {...props} />}
-        screenOptions={{
-          // Disable the static render of the header on web
-          // to prevent a hydration error in React Navigation v6.
-          headerShown: useClientOnlyValue(false, false),
-        }}>
-        <Tabs.Screen name="home" />
-        <Tabs.Screen name="stats" />
-        <Tabs.Screen name="schedule" />
-        <Tabs.Screen name="barbershop" />
-      </Tabs>
+      <WorkspaceRoute>
+        <Tabs
+          tabBar={(props) => <CustomTabBar {...props} />}
+          screenOptions={{
+            // Disable the static render of the header on web
+            // to prevent a hydration error in React Navigation v6.
+            headerShown: useClientOnlyValue(false, false),
+          }}>
+          <Tabs.Screen name="home" />
+          <Tabs.Screen name="stats" />
+          <Tabs.Screen name="schedule" />
+          <Tabs.Screen name="barbershop" />
+        </Tabs>
+      </WorkspaceRoute>
     </ProtectedRoute>
   );
 }
