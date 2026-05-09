@@ -9,6 +9,13 @@ export const BARBERS_QUERY_KEYS = {
 export function useBarbersList(search?: string) {
   return useQuery({
     queryKey: BARBERS_QUERY_KEYS.list(search),
-    queryFn: () => barbersService.getList(search),
+    queryFn: () => barbersService.getListMember(search),
+  });
+}
+
+export function useBarbersInvitations() {
+  return useQuery({
+    queryKey: [...BARBERS_QUERY_KEYS.all, "invitations"] as const,
+    queryFn: () => barbersService.getListInvitation(),
   });
 }

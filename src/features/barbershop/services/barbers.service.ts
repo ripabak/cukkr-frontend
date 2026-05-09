@@ -1,13 +1,18 @@
 import { authClient } from "@/src/lib/auth-client";
-import { app } from "@/src/lib/eden-app";
 
 export const barbersService = {
-  async getList(search?: string) {
-    const { data: response, error } = await app.api.barbers.get({
-      query: { search },
+  async getListMember(search?: string) {
+    const { data: response, error } = await authClient.organization.listMembers({
+      query: { filterValue: search },
     });
     if (error || !response) throw new Error("Failed to fetch barbers");
-    return response.data || [];
+    return response.members ?? [];
+  },
+
+  async getListInvitation() {
+    const { data: response, error } = await authClient.organization.listInvitations();
+    if (error || !response) throw new Error("Failed to fetch invitations");
+    return response || [];
   },
 
   async inviteSingle(email: string) {

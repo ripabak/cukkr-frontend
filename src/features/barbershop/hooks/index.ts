@@ -3,7 +3,7 @@ export { useBarbershopCurrent, useBarbershopSlugCheck } from "./useBarbershopQue
 export { useUpdateBarbershopSettings, useLeaveBarbershop } from "./useBarbershopMutations";
 
 // Barbers
-export { useBarbersList } from "./useBarbersQueries";
+export { useBarbersList, useBarbersInvitations } from "./useBarbersQueries";
 export { useInviteBarber, useRemoveBarber, useCancelBarberInvitation } from "./useBarbersMutations";
 
 // Services

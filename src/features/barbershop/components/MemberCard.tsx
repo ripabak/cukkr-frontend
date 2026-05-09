@@ -7,23 +7,36 @@ type StatusVariant = 'active' | 'pending' | 'default';
 
 interface Props {
   name: string;
+  nameSmall?: boolean;
+  role?: string;
+  isYou?: boolean;
   status: string;
   statusVariant?: StatusVariant;
   onRemove?: () => void;
   style?: ViewStyle;
 }
 
-export function MemberCard({ name, status, statusVariant = 'active', onRemove, style }: Props) {
+export function MemberCard({ name, nameSmall, role, isYou, status, statusVariant = 'active', onRemove, style }: Props) {
   return (
     <View style={[styles.card, style]}>
       <View style={styles.avatar} />
-      <Text style={styles.name} numberOfLines={1}>{name}</Text>
-      <StatusBadge label={status} variant={statusVariant} style={styles.badge} />
-      {onRemove ? (
-        <TouchableOpacity onPress={onRemove} activeOpacity={0.7} style={styles.removeBtn}>
-          <Ionicons name="close" size={14} color="#FFFFFF" />
-        </TouchableOpacity>
-      ) : null}
+      <View style={styles.info}>
+        <View style={styles.nameRow}>
+          <Text style={[styles.name, nameSmall && styles.nameSmall]} numberOfLines={1}>
+            {name}
+          </Text>
+          {isYou ? <Text style={styles.you}>(You)</Text> : null}
+        </View>
+        {role ? <Text style={styles.role}>{role}</Text> : null}
+      </View>
+      <View style={styles.actions}>
+        <StatusBadge label={status} variant={statusVariant} />
+        {onRemove ? (
+          <TouchableOpacity onPress={onRemove} activeOpacity={0.7} style={styles.removeBtn}>
+            <Ionicons name="close" size={14} color="#FFFFFF" />
+          </TouchableOpacity>
+        ) : null}
+      </View>
     </View>
   );
 }
@@ -43,14 +56,42 @@ const styles = StyleSheet.create({
     height: 56,
     borderRadius: 28,
     backgroundColor: '#B0ADA0',
+    flexShrink: 0,
+  },
+  info: {
+    flex: 1,
+    minWidth: 0,
+  },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   name: {
-    flex: 1,
     fontSize: 15,
     fontWeight: '700',
     color: '#1A1A1A',
+    flexShrink: 1,
   },
-  badge: {
+  nameSmall: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  you: {
+    fontSize: 12,
+    color: '#666666',
+    fontWeight: '400',
+  },
+  role: {
+    fontSize: 12,
+    color: '#666666',
+    marginTop: 2,
+    textTransform: 'capitalize',
+  },
+  actions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
     flexShrink: 0,
   },
   removeBtn: {
@@ -60,6 +101,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#1A1A1A',
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 4,
   },
 });

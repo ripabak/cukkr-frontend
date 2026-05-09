@@ -4,41 +4,47 @@ import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { MemberCard } from "@/src/features/barbershop/components/MemberCard";
 import {
+  useBarbersInvitations,
   useBarbersList,
   useCancelBarberInvitation,
   useRemoveBarber,
 } from "@/src/features/barbershop/hooks";
+import { useAuthUser } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-interface BarberTarget {
+interface RemoveTarget {
   id: string;
   name: string;
-  status: "active" | "pending";
-  userId: string | null;
+  type: "member" | "invitation";
+  memberIdOrEmail?: string;
 }
 
 export function BarbersManagementScreen() {
   const router = useRouter();
   const toast = useToast();
-  const { data: barbers = [], isLoading, refetch } = useBarbersList();
+  const { user: currentUser } = useAuthUser();
+
+  const { data: members = [], isLoading: loadingMembers } = useBarbersList();
+  const { data: invitations = [], isLoading: loadingInvitations } = useBarbersInvitations();
   const { mutate: removeBarber, isPending: isRemoving } = useRemoveBarber();
   const { mutate: cancelInvite, isPending: isCanceling } = useCancelBarberInvitation();
-  const [removeTarget, setRemoveTarget] = useState<BarberTarget | null>(null);
+
+  const [removeTarget, setRemoveTarget] = useState<RemoveTarget | null>(null);
 
   const isPending = isRemoving || isCanceling;
+  const pendingInvitations = invitations.filter((inv) => inv.status === "pending");
 
   const handleConfirmRemove = () => {
     if (!removeTarget) return;
 
-    if (removeTarget.status === "pending") {
+    if (removeTarget.type === "invitation") {
       cancelInvite(removeTarget.id, {
         onSuccess: () => {
           toast.success("Invitation cancelled");
           setRemoveTarget(null);
-          refetch();
         },
         onError: (e) => {
           toast.error(e.message || "Failed to cancel invitation");
@@ -46,12 +52,10 @@ export function BarbersManagementScreen() {
         },
       });
     } else {
-      const memberIdOrEmail = removeTarget.userId ?? removeTarget.id;
-      removeBarber(memberIdOrEmail, {
+      removeBarber(removeTarget.memberIdOrEmail ?? removeTarget.id, {
         onSuccess: () => {
           toast.success(`${removeTarget.name} removed`);
           setRemoveTarget(null);
-          refetch();
         },
         onError: (e) => {
           toast.error(e.message || "Failed to remove barber");
@@ -61,52 +65,86 @@ export function BarbersManagementScreen() {
     }
   };
 
+  const isLoading = loadingMembers || loadingInvitations;
+
   return (
     <ScreenShell headerSlot={<ScreenHeader onBack={() => router.back()} />}>
       <Text style={styles.title}>Barbers Management</Text>
-      <Text style={styles.subtitle}>Manage your barbershop team members</Text>
+      <Text style={styles.subtitle}>Manage your barbershop team members</Text> 
 
-      {!isLoading && barbers.length === 0 ? (
-        <Text style={styles.empty}>No barbers yet. Invite one below.</Text>
-      ) : null}
-      {barbers.length > 0 ? (
-        <View style={styles.list}>
-          {barbers.map((barber, index) => (
-            <MemberCard
-              key={barber.id}
-              name={barber.name}
-              status={barber.status === "pending" ? "Pending" : "Active"}
-              statusVariant={barber.status === "pending" ? "pending" : "active"}
-              onRemove={() =>
-                setRemoveTarget({
-                  id: barber.id,
-                  name: barber.name,
-                  status: barber.status,
-                  userId: barber.userId,
-                })
-              }
-              style={index < barbers.length - 1 ? styles.cardMargin : undefined}
-            />
-          ))}
-        </View>
+      {!isLoading && pendingInvitations.length > 0 ? (
+        <>
+          <Text style={styles.sectionLabel}>Pending Invitations</Text>
+          <View style={styles.list}>
+            {pendingInvitations.map((inv, index) => (
+              <MemberCard
+                key={inv.id}
+                name={inv.email}
+                nameSmall
+                role={inv.role}
+                status="Pending"
+                statusVariant="pending"
+                onRemove={() =>
+                  setRemoveTarget({ id: inv.id, name: inv.email, type: "invitation" })
+                }
+                style={index < pendingInvitations.length - 1 ? styles.cardMargin : undefined}
+              />
+            ))}
+          </View>
+        </>
       ) : null}
 
-      <Text style={styles.sectionLabel}>Invite Barber</Text>
+      {!isLoading && members.length > 0 ? (
+        <>
+          <Text style={styles.sectionLabel}>Team</Text>
+          <View style={styles.list}>
+            {members.map((member, index) => {
+              const isYou = member.userId === currentUser?.id;
+              const isOwner = member.role === "owner";
+              return (
+                <MemberCard
+                  key={member.id}
+                  name={member.user.name}
+                  role={member.role}
+                  isYou={isYou}
+                  status="Active"
+                  statusVariant="active"
+                  onRemove={isOwner ? undefined : () =>
+                    setRemoveTarget({
+                      id: member.id,
+                      name: member.user.name,
+                      type: "member",
+                      memberIdOrEmail: member.userId ?? member.user.email,
+                    })
+                  }
+                  style={index < members.length - 1 ? styles.cardMargin : undefined}
+                />
+              );
+            })}
+          </View>
+        </>
+      ) : null}
+
+      {!isLoading && members.length === 0 && pendingInvitations.length === 0 ? (
+        <Text style={styles.empty}>No barbers yet. Invite one above.</Text>
+      ) : null}
+
       <PrimaryButton
         label="Invite Barber"
         onPress={() => router.push("/invite-barber")}
+        style={styles.inviteBtn}
       />
 
       <ConfirmationModal
         visible={!!removeTarget}
         icon="person-remove-outline"
-        title={removeTarget?.status === "pending" ? "Cancel Invitation" : "Remove Barber"}
+        title={removeTarget?.type === "invitation" ? "Cancel Invitation" : "Remove Barber"}
         description={
-          removeTarget?.status === "pending"
+          removeTarget?.type === "invitation"
             ? `Cancel the invitation for ${removeTarget?.name}?`
             : `Are you sure you want to remove ${removeTarget?.name} from your barbershop?`
         }
-        confirmLabel={isPending ? "Processing..." : removeTarget?.status === "pending" ? "Cancel Invite" : "Remove"}
+        confirmLabel={isPending ? "Processing..." : removeTarget?.type === "invitation" ? "Cancel Invite" : "Remove"}
         cancelLabel="Back"
         onConfirm={handleConfirmRemove}
         onCancel={() => setRemoveTarget(null)}
@@ -128,11 +166,13 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 20,
   },
-  empty: {
-    fontSize: 14,
+  inviteBtn: {
+    marginBottom: 24,
+  },
+  sectionLabel: {
+    fontSize: 13,
     color: "#666666",
-    textAlign: "center",
-    marginTop: 40,
+    marginBottom: 8,
   },
   list: {
     marginBottom: 24,
@@ -140,9 +180,10 @@ const styles = StyleSheet.create({
   cardMargin: {
     marginBottom: 12,
   },
-  sectionLabel: {
-    fontSize: 13,
+  empty: {
+    fontSize: 14,
     color: "#666666",
-    marginBottom: 8,
+    textAlign: "center",
+    marginTop: 40,
   },
 });
