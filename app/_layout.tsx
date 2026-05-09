@@ -1,3 +1,4 @@
+import { FrameProvider } from "@/src/components/FrameContext";
 import { MobileFrame } from "@/src/components/MobileFrame";
 import { QueryProvider, ToastProvider } from "@/src/lib/providers";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -52,16 +53,18 @@ function RootLayoutNav() {
 
   return (
     <QueryProvider>
-      <ToastProvider>
-        <MobileFrame>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-          </Stack>
-        </ThemeProvider>
-        </MobileFrame>
-      </ToastProvider>
+      <FrameProvider>
+        <ToastProvider>
+          <MobileFrame>
+            <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+              </Stack>
+            </ThemeProvider>
+          </MobileFrame>
+        </ToastProvider>
+      </FrameProvider>
     </QueryProvider>
   );
 }

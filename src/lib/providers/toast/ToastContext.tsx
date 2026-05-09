@@ -1,4 +1,5 @@
 import React, { createContext, useState, useCallback, useRef } from "react";
+import { ToastContainer } from "./ToastContainer";
 
 export interface Toast {
   id: string;
@@ -58,6 +59,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastContext.Provider value={{ toasts, showToast, hideToast, clearAll }}>
       {children}
+      <ToastContainer />
     </ToastContext.Provider>
   );
 }
