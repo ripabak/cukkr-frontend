@@ -43,7 +43,7 @@ export function SwitchBarbershopScreen() {
     if (router.canGoBack()) {
       slideOutUp(() => router.back());
     } else {
-      slideOutUp(() => router.replace("/home" as any));
+      slideOutUp(() => router.replace("/"));
     }
   };
 
@@ -62,7 +62,7 @@ export function SwitchBarbershopScreen() {
       style={[styles.animatedWrapper, animatedStyle]}
     >
       <SafeAreaView style={styles.safeArea}>
-        <ScreenHeader onBack={() => slideOutUp(() => router.back())} />
+        <ScreenHeader onBack={() => slideOutUp(() => router.canGoBack() ? router.back() : router.replace("/"))} />
         <View style={styles.container}>
           <Text style={styles.title}>Switch Barbershop</Text>
           <Text style={styles.subtitle}>

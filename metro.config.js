@@ -6,7 +6,7 @@ config.resolver.unstable_enablePackageExports = true;
 
 
 config.resolver.resolveRequest = (context, moduleName, platform) => {
-   
+
     if (moduleName === 'zustand' || moduleName.startsWith('zustand/')) {
         //? Resolve to its CommonJS entry (fallback to main/index.js)
         return {

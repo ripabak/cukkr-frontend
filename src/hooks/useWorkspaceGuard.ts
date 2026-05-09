@@ -8,7 +8,7 @@ export function useWorkspaceGuard() {
 
   useEffect(() => {
     if (!isPending && !org) {
-      router.replace("/switch-barbershop" as any);
+      router.replace("/switch-barbershop");
     }
   }, [isPending, org]);
 

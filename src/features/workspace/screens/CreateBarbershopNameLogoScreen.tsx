@@ -71,16 +71,16 @@ export function CreateBarbershopNameLogoScreen() {
         onChangeText={handleNameChange}
       />
 
-      {name && (
+      {name ? (
         <View style={styles.slugInfo}>
           <Text style={styles.slugLabel}>URL: {slug}</Text>
-          {slugMessage && (
+          {slugMessage ? (
             <Text style={[styles.slugMessage, { color: messageColor }]}>
               {slugMessage}
             </Text>
-          )}
+          ) : null}
         </View>
-      )}
+      ) : null}
 
       <Text style={styles.logoLabel}>Logo</Text>
       <ImageUploadBox

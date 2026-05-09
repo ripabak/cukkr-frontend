@@ -1,5 +1,6 @@
 // lib/api.ts
 import axios from "axios";
+import { Platform } from "react-native";
 import { authClient } from "./auth-client";
 
 const api = axios.create({
@@ -7,10 +8,14 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
-    const cookies = authClient.getCookie();
-
-    if (cookies) {
-        config.headers.Cookie = cookies;
+    if (Platform.OS === "web") {
+        config.withCredentials = true;
+    } else {
+        const cookies = authClient.getCookie();
+        if (cookies) {
+            config.headers.Cookie = cookies;
+        }
+        config.withCredentials = false;
     }
 
     return config;
