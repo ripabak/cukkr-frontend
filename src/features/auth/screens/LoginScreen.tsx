@@ -23,7 +23,7 @@ export function LoginScreen() {
 
     try {
       await signIn({ email: identifier, password });
-      router.replace("/(tabs)/home");
+      router.replace("/switch-barbershop");
     } catch (error) {
       toast.error(getErrorMessage(error));
     }

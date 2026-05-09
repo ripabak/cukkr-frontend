@@ -3,6 +3,7 @@ import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { SelectionRow } from "@/src/features/workspace/components/SelectionRow";
 import { authClient } from "@/src/lib/auth-client";
+import { queryClient } from "@/src/lib/providers/query-client";
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useRef } from "react";
@@ -50,7 +51,10 @@ export function SwitchBarbershopScreen() {
 
   const handleSelectBarbershop = (barbershopId: string) => {
     setActive(barbershopId, {
-      onSuccess: navigateAfterSelect,
+      onSuccess: () => {
+        queryClient.clear();
+        navigateAfterSelect();
+      },
       onError: (error) => {
         toast.error("Failed to switch barbershop: " + error.message);
       },
