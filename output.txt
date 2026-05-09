@@ -1,0 +1,2019 @@
+env: load .env
+env: export EXPO_PUBLIC_ENV_API_URL EXPO_PUBLIC_ENV_AUTH_URL EXPO_PUBLIC_ENV_CODE
+Starting Metro Bundler
+
+Static rendering is enabled. Learn more: https://docs.expo.dev/router/web/static-rendering/
+Web node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+λ node_modules/expo/node_modules/@expo/cli/node_modules/@expo/router-server/node/render.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+λ Bundled 846ms node_modules/expo/node_modules/@expo/cli/node_modules/@expo/router-server/node/render.js (1752 modules)
+Web Bundled 1346ms node_modules/expo-router/entry.js (1732 modules)
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+λ  WARN  [Layout children]: No route named "modal" exists in nested children: [
+  '+not-found',
+  'index',
+  '(auth)/create-password',
+  '(auth)/forgot-password',
+  '(auth)/login',
+  '(auth)/register',
+  '(auth)/verify-account',
+  '(auth)/verify-otp',
+  '(barbershop)',
+  '(onboarding)/onboarding-customer-happy',
+  '(onboarding)/onboarding-easy-booking',
+  '(onboarding)/onboarding-run-barbershop',
+  '(onboarding)/onboarding-splash',
+  '(profile)',
+  '(schedule)',
+  '(tabs)',
+  '(workspace)'
+] 
+
+› web bundles (3):
+_expo/static/js/web/entry-4fffe911fdefb3ab1e42f063df7d1a30.js (3.4MB)
+_expo/static/js/web/Network-64a65f383454cec64726f7e8e795d4ab.js (2.6KB)
+_expo/static/js/web/WebBrowser-378766a59f882ada16d12b8fae08be5a.js (8.3KB)
+
+› Static routes (101):
+/home (25KB)
+/ (index) (22KB)
+/login (26KB)
+/stats (25KB)
+/profile (25KB)
+/_sitemap (21KB)
+/register (27KB)
+/schedule (25KB)
+/+not-found (22KB)
+/verify-otp (26KB)
+/open-hours (24KB)
+/barbershop (25KB)
+/new-walk-in (26KB)
+/(tabs)/home (25KB)
+/(auth)/login (26KB)
+/user-profile (25KB)
+/(tabs)/stats (25KB)
+/invite-barber (24KB)
+/select-barber (26KB)
+/verify-account (26KB)
+/service-detail (24KB)
+/verify-contact (25KB)
+/(tabs)/profile (25KB)
+/create-password (26KB)
+/forgot-password (25KB)
+/(auth)/register (27KB)
+/new-appointment (26KB)
+/select-services (26KB)
+/(tabs)/schedule (25KB)
+/edit-booking-url (24KB)
+/history-bookings (26KB)
+/(auth)/verify-otp (26KB)
+/onboarding-splash (26KB)
+/(tabs)/barbershop (25KB)
+/switch-barbershop (28KB)
+/barbers-management (24KB)
+/notifications-list (26KB)
+/add-or-edit-service (24KB)
+/barbershop-settings (24KB)
+/customer-management (24KB)
+/services-management (24KB)
+/edit-barbershop-info (24KB)
+/(auth)/verify-account (26KB)
+/customer-detail-books (24KB)
+/booking-detail-result (26KB)
+/(auth)/create-password (26KB)
+/(auth)/forgot-password (25KB)
+/(profile)/user-profile (25KB)
+/booking-detail-request (26KB)
+/booking-detail-waiting (26KB)
+/(schedule)/new-walk-in (26KB)
+/customer-detail-general (24KB)
+/(barbershop)/open-hours (24KB)
+/onboarding-easy-booking (29KB)
+/customer-detail-messages (24KB)
+/edit-user-profile-fields (25KB)
+/(profile)/verify-contact (25KB)
+/schedule-active-bookings (26KB)
+/(schedule)/select-barber (26KB)
+/onboarding-customer-happy (27KB)
+/onboarding-run-barbershop (28KB)
+/create-barbershop-success (27KB)
+/(barbershop)/invite-barber (24KB)
+/send-messages-to-customers (24KB)
+/booking-detail-in-progress (26KB)
+/(schedule)/new-appointment (26KB)
+/(schedule)/select-services (26KB)
+/(barbershop)/service-detail (24KB)
+/(schedule)/history-bookings (26KB)
+/create-barbershop-name-logo (28KB)
+/(barbershop)/edit-booking-url (24KB)
+/(schedule)/notifications-list (26KB)
+/(workspace)/switch-barbershop (28KB)
+/(onboarding)/onboarding-splash (26KB)
+/(barbershop)/barbers-management (24KB)
+/create-barbershop-first-service (29KB)
+/(barbershop)/add-or-edit-service (24KB)
+/(barbershop)/barbershop-settings (24KB)
+/(barbershop)/customer-management (24KB)
+/(barbershop)/services-management (24KB)
+/(schedule)/booking-detail-result (26KB)
+/(barbershop)/edit-barbershop-info (24KB)
+/(schedule)/booking-detail-request (26KB)
+/(schedule)/booking-detail-waiting (26KB)
+/(barbershop)/customer-detail-books (24KB)
+/(profile)/edit-user-profile-fields (25KB)
+/(schedule)/schedule-active-bookings (26KB)
+/(barbershop)/customer-detail-general (24KB)
+/(onboarding)/onboarding-easy-booking (29KB)
+/(barbershop)/customer-detail-messages (24KB)
+/(schedule)/booking-detail-in-progress (26KB)
+/create-barbershop-invite-barber-empty (28KB)
+/(workspace)/create-barbershop-success (27KB)
+/(onboarding)/onboarding-customer-happy (27KB)
+/(onboarding)/onboarding-run-barbershop (28KB)
+/create-barbershop-invite-barber-filled (28KB)
+/(barbershop)/send-messages-to-customers (24KB)
+/(workspace)/create-barbershop-name-logo (28KB)
+/(workspace)/create-barbershop-first-service (29KB)
+/(workspace)/create-barbershop-invite-barber-empty (28KB)
+/(workspace)/create-barbershop-invite-barber-filled (28KB)
+
+Exported: dist

@@ -14,8 +14,8 @@ RUN npm ci --legacy-peer-deps
 # Copy source code
 COPY . .
 
-# Build static web output
-RUN npx expo export --platform web
+# Build static web output using script that exits cleanly when done
+RUN chmod +x build_web.sh && sh build_web.sh
 
 # Expose port used by expo serve
 EXPOSE 8080
