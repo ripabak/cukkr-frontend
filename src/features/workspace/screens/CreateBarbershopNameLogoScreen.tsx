@@ -3,6 +3,7 @@ import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { TextInputField } from "@/src/components/TextInputField";
 import { WizardProgress } from "@/src/features/workspace/components/WizardProgress";
+import { useDebounce } from "@/src/hooks";
 import { useRouter } from "expo-router";
 import React, { useCallback, useState, useMemo } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
@@ -20,7 +21,9 @@ export function CreateBarbershopNameLogoScreen() {
 
   const validation = validateBarbershopName(name);
   const slug = useMemo(() => generateSlug(name), [name]);
-  const { data: isAvailable, isLoading: isCheckingSlug, error } = useBarbershopSlugCheck(slug);
+  const debouncedSlug = useDebounce(slug);
+  const isTyping = slug !== debouncedSlug;
+  const { data: isAvailable, isLoading: isCheckingSlug, error } = useBarbershopSlugCheck(debouncedSlug);
 
   const handleNameChange = useCallback((text: string) => {
     setName(text);
@@ -41,11 +44,11 @@ export function CreateBarbershopNameLogoScreen() {
     router.push("/create-barbershop-first-service");
   };
 
-  const isValid = validation.isValid && isAvailable === true;
+  const isValid = validation.isValid && !isTyping && isAvailable === true;
 
   let slugMessage = "";
   let messageColor = "#FF9500";
-  if (isCheckingSlug) {
+  if (isTyping || isCheckingSlug) {
     slugMessage = "Checking availability...";
   } else if (error) {
     slugMessage = "Error checking availability";
@@ -96,7 +99,7 @@ export function CreateBarbershopNameLogoScreen() {
         label="Next"
         style={styles.button}
         onPress={handleCreate}
-        disabled={!isValid || isCheckingSlug}
+        disabled={!isValid || isTyping || isCheckingSlug}
       />
     </ScreenShell>
   );

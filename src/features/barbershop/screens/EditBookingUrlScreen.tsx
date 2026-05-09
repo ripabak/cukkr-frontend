@@ -6,6 +6,7 @@ import {
   useBarbershopSlugCheck,
   useUpdateBarbershopSettings,
 } from "@/src/features/barbershop/hooks";
+import { useDebounce } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
@@ -21,21 +22,16 @@ export function EditBookingUrlScreen() {
     useUpdateBarbershopSettings();
 
   const [slug, setSlug] = useState("");
-  const [debouncedSlug, setDebouncedSlug] = useState("");
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
     if (barbershop && !initialized) {
       setSlug(barbershop.slug ?? "");
-      setDebouncedSlug(barbershop.slug ?? "");
       setInitialized(true);
     }
   }, [barbershop, initialized]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedSlug(slug), 500);
-    return () => clearTimeout(timer);
-  }, [slug]);
+  const debouncedSlug = useDebounce(slug);
 
   const isChanged = initialized && slug !== (barbershop?.slug ?? "");
   const isDebouncedChanged = initialized && debouncedSlug !== (barbershop?.slug ?? "");
