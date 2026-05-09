@@ -23,7 +23,7 @@ export function LoginScreen() {
 
     try {
       await signIn({ email: identifier, password });
-      router.replace("/");
+      router.replace("/(tabs)/home");
     } catch (error) {
       toast.error(getErrorMessage(error));
     }

@@ -10,7 +10,7 @@ export default function Index() {
   useEffect(() => {
     if (!hasHydrated) return;
     router.replace(hasSeenOnboarding ? "/(tabs)/home" : "/onboarding-splash");
-  }, [hasHydrated]);
+  }, [hasHydrated, hasSeenOnboarding]);
 
   return null;
 }
