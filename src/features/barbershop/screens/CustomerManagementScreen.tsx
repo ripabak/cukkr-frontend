@@ -9,7 +9,6 @@ import { formatCurrency } from "@/src/features/barbershop/utils/form-validators"
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
@@ -95,13 +94,12 @@ export function CustomerManagementScreen() {
             <SearchInput value={search} onChangeText={setSearch} placeholder="Search" />
           </View>
 
-          {isLoading ? (
-            <ActivityIndicator size="large" color="#1A1A1A" style={styles.loader} />
-          ) : customers.length === 0 ? (
+          {!isLoading && customers.length === 0 ? (
             <Text style={styles.empty}>
               {search ? "No customers match your search." : "No customers yet."}
             </Text>
-          ) : (
+          ) : null}
+          {customers.length > 0 ? (
             <View style={styles.list}>
               {customers.map((customer) => (
                 <CustomerCard
@@ -115,7 +113,7 @@ export function CustomerManagementScreen() {
                 />
               ))}
             </View>
-          )}
+          ) : null}
 
           {selectionMode && <View style={{ height: 80 }} />}
         </ScrollView>
@@ -161,7 +159,6 @@ const styles = StyleSheet.create({
   subtitle: { fontSize: 14, color: "#444444", marginTop: 8 },
   hint: { fontSize: 14, color: "#444444", marginTop: 4 },
   searchWrapper: { marginTop: 24, marginBottom: 16 },
-  loader: { marginTop: 40 },
   empty: { fontSize: 14, color: "#666666", textAlign: "center", marginTop: 40 },
   list: { gap: 10 },
   sortMenu: { top: 52, right: 20, left: 20 },

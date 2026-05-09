@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, FlatList, TouchableOpacity, StyleSheet, SafeAreaView, ActivityIndicator, Text } from "react-native";
+import { View, FlatList, TouchableOpacity, StyleSheet, SafeAreaView, Text } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -65,40 +65,36 @@ export function SelectServicesScreen() {
       />
       <View style={styles.content}>
         <SearchInput value={query} onChangeText={setQuery} placeholder="Search" />
-        {isLoading ? (
-          <ActivityIndicator size="small" color="#1A1A1A" style={styles.loader} />
-        ) : (
-          <FlatList
-            data={filtered}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.list}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => toggleService(item.id)}
-                style={styles.serviceWrapper}
-              >
-                <ServiceCard
-                  name={item.name}
-                  price={item.price}
-                  discountPercent={item.discount > 0 ? item.discount : undefined}
-                  isDefault={item.isDefault}
-                />
-                <View style={[styles.checkbox, selected.has(item.id) && styles.checkboxSelected]}>
-                  {selected.has(item.id) ? (
-                    <Ionicons name="checkmark" size={14} color="#FFFFFF" />
-                  ) : null}
-                </View>
-              </TouchableOpacity>
-            )}
-            ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-            ListEmptyComponent={
-              !isLoading ? (
-                <Text style={styles.emptyText}>No services found.</Text>
-              ) : null
-            }
-          />
-        )}
+        <FlatList
+          data={filtered}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.list}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => toggleService(item.id)}
+              style={styles.serviceWrapper}
+            >
+              <ServiceCard
+                name={item.name}
+                price={item.price}
+                discountPercent={item.discount > 0 ? item.discount : undefined}
+                isDefault={item.isDefault}
+              />
+              <View style={[styles.checkbox, selected.has(item.id) && styles.checkboxSelected]}>
+                {selected.has(item.id) ? (
+                  <Ionicons name="checkmark" size={14} color="#FFFFFF" />
+                ) : null}
+              </View>
+            </TouchableOpacity>
+          )}
+          ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+          ListEmptyComponent={
+            !isLoading ? (
+              <Text style={styles.emptyText}>No services found.</Text>
+            ) : null
+          }
+        />
       </View>
     </SafeAreaView>
   );
@@ -145,9 +141,6 @@ const styles = StyleSheet.create({
   checkboxSelected: {
     backgroundColor: "#1A1A1A",
     borderColor: "#1A1A1A",
-  },
-  loader: {
-    marginTop: 20,
   },
   emptyText: {
     textAlign: "center",

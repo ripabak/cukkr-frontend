@@ -19,68 +19,75 @@ export function BookingDetailResultScreen() {
 
   const { data: booking, isLoading } = useBookingById(id ?? "");
 
-  if (isLoading || !booking) {
-    return (
-      <SafeAreaView style={styles.safeArea}>
+  const renderContent = () => {
+    if (isLoading) {
+      return (
         <View style={styles.centered}>
-          {isLoading ? (
-            <ActivityIndicator size="large" color="#1A1A1A" />
-          ) : (
-            <Text style={styles.errorText}>Booking not found.</Text>
-          )}
+          <ActivityIndicator size="large" color="#1A1A1A" />
         </View>
-      </SafeAreaView>
+      );
+    }
+
+    if (!booking) {
+      return (
+        <View style={styles.centered}>
+          <Text style={styles.errorText}>Booking not found.</Text>
+        </View>
+      );
+    }
+
+    const totalDuration = booking.services.reduce((acc, s) => acc + s.duration, 0);
+    const timeRef = booking.scheduledAt ?? booking.createdAt;
+    const scheduledLabel = booking.scheduledAt
+      ? `Scheduled at ${formatScheduledTime(booking.scheduledAt)}`
+      : `Arrived at ${formatScheduledTime(booking.createdAt)}`;
+
+    const infoRows = [
+      { label: "Book No", value: `#${booking.referenceNumber}` },
+      ...(booking.requestedBarber
+        ? [{ label: "Requested", value: `⚙ ${booking.requestedBarber.name}` }]
+        : []),
+      ...(booking.handledByBarber
+        ? [{ label: "Handled By", value: `⚙ ${booking.handledByBarber.name}` }]
+        : []),
+    ];
+
+    const services = booking.services.map((s) => ({
+      name: `${s.serviceName} (${s.duration}m)`,
+      price: formatPrice(s.price),
+    }));
+
+    const totalOriginal = booking.services.reduce((acc, s) => acc + s.originalPrice, 0);
+    const totalAmount = booking.services.reduce((acc, s) => acc + s.price, 0);
+    const discount = totalOriginal - totalAmount;
+
+    const paymentSummary = [
+      { label: `Services (${booking.services.length})`, value: formatPrice(totalOriginal) },
+      ...(discount > 0 ? [{ label: "Discount", value: `-${formatPrice(discount)}` }] : []),
+    ];
+
+    return (
+      <BookingDetailCard
+        customerName={booking.customer.name}
+        dateLabel={formatDateLabel(timeRef)}
+        metaIcon="calendar"
+        metaLine1={scheduledLabel}
+        metaLine2={`Duration ${formatDuration(totalDuration)}`}
+        status={mapApiStatusToDetailStatus(booking.status)}
+        infoRows={infoRows}
+        services={services}
+        notes={booking.notes ?? undefined}
+        paymentSummary={paymentSummary}
+        onWhatsApp={() => {}}
+      />
     );
-  }
-
-  const totalDuration = booking.services.reduce((acc, s) => acc + s.duration, 0);
-  const timeRef = booking.scheduledAt ?? booking.createdAt;
-  const scheduledLabel = booking.scheduledAt
-    ? `Scheduled at ${formatScheduledTime(booking.scheduledAt)}`
-    : `Arrived at ${formatScheduledTime(booking.createdAt)}`;
-
-  const infoRows = [
-    { label: "Book No", value: `#${booking.referenceNumber}` },
-    ...(booking.requestedBarber
-      ? [{ label: "Requested", value: `⚙ ${booking.requestedBarber.name}` }]
-      : []),
-    ...(booking.handledByBarber
-      ? [{ label: "Handled By", value: `⚙ ${booking.handledByBarber.name}` }]
-      : []),
-  ];
-
-  const services = booking.services.map((s) => ({
-    name: `${s.serviceName} (${s.duration}m)`,
-    price: formatPrice(s.price),
-  }));
-
-  const totalOriginal = booking.services.reduce((acc, s) => acc + s.originalPrice, 0);
-  const totalAmount = booking.services.reduce((acc, s) => acc + s.price, 0);
-  const discount = totalOriginal - totalAmount;
-
-  const paymentSummary = [
-    { label: `Services (${booking.services.length})`, value: formatPrice(totalOriginal) },
-    ...(discount > 0 ? [{ label: "Discount", value: `-${formatPrice(discount)}` }] : []),
-  ];
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.outer}>
         <ScreenHeader onBack={() => router.back()} />
-
-        <BookingDetailCard
-          customerName={booking.customer.name}
-          dateLabel={formatDateLabel(timeRef)}
-          metaIcon="calendar"
-          metaLine1={scheduledLabel}
-          metaLine2={`Duration ${formatDuration(totalDuration)}`}
-          status={mapApiStatusToDetailStatus(booking.status)}
-          infoRows={infoRows}
-          services={services}
-          notes={booking.notes ?? undefined}
-          paymentSummary={paymentSummary}
-          onWhatsApp={() => {}}
-        />
+        {renderContent()}
       </View>
     </SafeAreaView>
   );

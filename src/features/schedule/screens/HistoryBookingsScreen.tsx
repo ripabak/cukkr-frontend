@@ -15,7 +15,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const SORT_OPTIONS = [
   { label: "Sort by Recently Added", value: "recently_added" },
@@ -136,27 +136,23 @@ export function HistoryBookingsScreen() {
         </TouchableOpacity>
       </View>
 
-      {isLoading ? (
-        <ActivityIndicator size="small" color="#1A1A1A" style={styles.loader} />
-      ) : (
-        <View style={styles.list}>
-          {bookings.map((booking, i) => (
-            <HistoryBookingRow
-              key={booking.id}
-              customerName={booking.customerName}
-              barberName={booking.barber?.name ?? "—"}
-              dateTimeLabel={formatDateTimeLabel(booking.scheduledAt ?? booking.createdAt)}
-              duration="30 mins"
-              status={mapApiStatusToBookingStatus(booking.status)}
-              onPress={() => handleBookingPress(booking.id)}
-              style={i < bookings.length - 1 ? styles.rowMargin : undefined}
-            />
-          ))}
-          {bookings.length === 0 && !isLoading ? (
-            <Text style={styles.emptyText}>No bookings for this date.</Text>
-          ) : null}
-        </View>
-      )}
+      <View style={styles.list}>
+        {bookings.map((booking, i) => (
+          <HistoryBookingRow
+            key={booking.id}
+            customerName={booking.customerName}
+            barberName={booking.barber?.name ?? "—"}
+            dateTimeLabel={formatDateTimeLabel(booking.scheduledAt ?? booking.createdAt)}
+            duration="30 mins"
+            status={mapApiStatusToBookingStatus(booking.status)}
+            onPress={() => handleBookingPress(booking.id)}
+            style={i < bookings.length - 1 ? styles.rowMargin : undefined}
+          />
+        ))}
+        {!isLoading && bookings.length === 0 ? (
+          <Text style={styles.emptyText}>No bookings for this date.</Text>
+        ) : null}
+      </View>
 
       <CalendarModal
         visible={calendarVisible}
@@ -250,9 +246,6 @@ const styles = StyleSheet.create({
   list: {},
   rowMargin: {
     marginBottom: 12,
-  },
-  loader: {
-    marginTop: 40,
   },
   emptyText: {
     textAlign: "center",

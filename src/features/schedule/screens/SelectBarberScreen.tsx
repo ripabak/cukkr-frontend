@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, SafeAreaView, ActivityIndicator } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -28,38 +28,30 @@ export function SelectBarberScreen() {
       <ScreenHeader title="Select Barber" onBack={() => router.back()} />
       <View style={styles.content}>
         <SearchInput value={query} onChangeText={setQuery} placeholder="Search" />
-        {isLoading ? (
-          <ActivityIndicator size="small" color="#1A1A1A" style={styles.loader} />
-        ) : (
-          <FlatList
-            data={filtered}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.list}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles.barberRow}
-                onPress={() => handleSelect(item.id, item.name)}
-              >
-                <View style={styles.avatar}>
-                  {item.avatarUrl ? (
-                    <Ionicons name="person" size={22} color="#1A1A1A" />
-                  ) : (
-                    <Ionicons name="person" size={22} color="#1A1A1A" />
-                  )}
-                </View>
-                <Text style={styles.barberName}>{item.name}</Text>
-                <Ionicons name="chevron-forward" size={18} color="#1A1A1A" />
-              </TouchableOpacity>
-            )}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
-            ListEmptyComponent={
-              !isLoading ? (
-                <Text style={styles.emptyText}>No barbers found.</Text>
-              ) : null
-            }
-          />
-        )}
+        <FlatList
+          data={filtered}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.list}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.barberRow}
+              onPress={() => handleSelect(item.id, item.name)}
+            >
+              <View style={styles.avatar}>
+                <Ionicons name="person" size={22} color="#1A1A1A" />
+              </View>
+              <Text style={styles.barberName}>{item.name}</Text>
+              <Ionicons name="chevron-forward" size={18} color="#1A1A1A" />
+            </TouchableOpacity>
+          )}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          ListEmptyComponent={
+            !isLoading ? (
+              <Text style={styles.emptyText}>No barbers found.</Text>
+            ) : null
+          }
+        />
       </View>
     </SafeAreaView>
   );
@@ -104,9 +96,6 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 0,
-  },
-  loader: {
-    marginTop: 20,
   },
   emptyText: {
     textAlign: "center",

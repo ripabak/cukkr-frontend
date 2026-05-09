@@ -10,7 +10,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -88,13 +87,12 @@ export function ServicesManagementScreen() {
 
       <SearchInput value={search} onChangeText={setSearch} style={styles.search} />
 
-      {isLoading ? (
-        <ActivityIndicator size="large" color="#C6FF4D" style={styles.loader} />
-      ) : services.length === 0 ? (
+      {!isLoading && services.length === 0 ? (
         <Text style={styles.empty}>
           {search ? "No services match your search." : "No services yet. Add one."}
         </Text>
-      ) : (
+      ) : null}
+      {services.length > 0 ? (
         <View style={styles.list}>
           {services.map((service, index) => (
             <TouchableOpacity
@@ -119,7 +117,7 @@ export function ServicesManagementScreen() {
             </TouchableOpacity>
           ))}
         </View>
-      )}
+      ) : null}
     </ScreenShell>
   );
 }
@@ -139,9 +137,6 @@ const styles = StyleSheet.create({
   },
   search: {
     marginBottom: 16,
-  },
-  loader: {
-    marginTop: 40,
   },
   empty: {
     fontSize: 14,

@@ -14,7 +14,6 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
   Alert,
   StyleSheet,
   Text,
@@ -57,7 +56,7 @@ export function BarbershopSettingsScreen() {
       <Text style={styles.subtitle}>Setup based on your barbershop needs</Text>
 
       <View style={styles.avatarWrapper}>
-        <TouchableOpacity onPress={handleCameraBadge} activeOpacity={0.8}>
+        <TouchableOpacity onPress={isLoading ? undefined : handleCameraBadge} activeOpacity={0.8}>
           {barbershop?.logoUrl ? (
             <Image
               source={{ uri: barbershop.logoUrl }}
@@ -73,101 +72,92 @@ export function BarbershopSettingsScreen() {
         </TouchableOpacity>
       </View>
 
-      {isLoading ? (
-        <ActivityIndicator
-          size="large"
-          color="#C6FF4D"
-          style={styles.loader}
+      <Text style={styles.sectionLabel}>Information</Text>
+      <View style={styles.card}>
+        <InfoRow
+          label="Name"
+          value={barbershop?.name}
+          placeholder="Name"
+          onPress={isLoading ? undefined : () =>
+            router.push({
+              pathname: "/edit-barbershop-info",
+              params: { mode: "name" },
+            })
+          }
         />
-      ) : (
-        <>
-          <Text style={styles.sectionLabel}>Information</Text>
-          <View style={styles.card}>
-            <InfoRow
-              label="Name"
-              value={barbershop?.name}
-              placeholder="Name"
-              onPress={() =>
-                router.push({
-                  pathname: "/edit-barbershop-info",
-                  params: { mode: "name" },
-                })
-              }
-            />
-            <InfoRow
-              label="Description"
-              value={barbershop?.description!}
-              placeholder="Description"
-              onPress={() =>
-                router.push({
-                  pathname: "/edit-barbershop-info",
-                  params: { mode: "description" },
-                })
-              }
-            />
-            <InfoRow
-              label="Address"
-              value={barbershop?.address!}
-              placeholder="Address"
-              isLast
-              onPress={() =>
-                router.push({
-                  pathname: "/edit-barbershop-info",
-                  params: { mode: "address" },
-                })
-              }
-            />
-          </View>
+        <InfoRow
+          label="Description"
+          value={barbershop?.description!}
+          placeholder="Description"
+          onPress={isLoading ? undefined : () =>
+            router.push({
+              pathname: "/edit-barbershop-info",
+              params: { mode: "description" },
+            })
+          }
+        />
+        <InfoRow
+          label="Address"
+          value={barbershop?.address!}
+          placeholder="Address"
+          isLast
+          onPress={isLoading ? undefined : () =>
+            router.push({
+              pathname: "/edit-barbershop-info",
+              params: { mode: "address" },
+            })
+          }
+        />
+      </View>
 
-          <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
-            Booking Web
-          </Text>
-          <View style={styles.card}>
-            <InfoRow
-              label="Book Url"
-              value={
-                barbershop?.slug
-                  ? `https://cukkr.com/${barbershop.slug}`
-                  : "—"
-              }
-              isLast
-              onPress={() => router.push("/edit-booking-url")}
-            />
-          </View>
+      <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+        Booking Web
+      </Text>
+      <View style={styles.card}>
+        <InfoRow
+          label="Book Url"
+          value={
+            barbershop?.slug
+              ? `https://cukkr.com/${barbershop.slug}`
+              : undefined
+          }
+          placeholder="—"
+          isLast
+          onPress={isLoading ? undefined : () => router.push("/edit-booking-url")}
+        />
+      </View>
 
-          <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
-            Operations
-          </Text>
-          <View style={styles.card}>
-            <OperationRow
-              label="Barbers"
-              onPress={() => router.push("/barbers-management")}
-            />
-            <OperationRow
-              label="Customers"
-              onPress={() => router.push("/customer-management")}
-            />
-            <OperationRow
-              label="Services"
-              onPress={() => router.push("/services-management")}
-            />
-            <OperationRow
-              label="Open Hours"
-              isLast
-              onPress={() => router.push("/open-hours")}
-            />
-          </View>
+      <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+        Operations
+      </Text>
+      <View style={styles.card}>
+        <OperationRow
+          label="Barbers"
+          onPress={isLoading ? undefined : () => router.push("/barbers-management")}
+        />
+        <OperationRow
+          label="Customers"
+          onPress={isLoading ? undefined : () => router.push("/customer-management")}
+        />
+        <OperationRow
+          label="Services"
+          onPress={isLoading ? undefined : () => router.push("/services-management")}
+        />
+        <OperationRow
+          label="Open Hours"
+          isLast
+          onPress={isLoading ? undefined : () => router.push("/open-hours")}
+        />
+      </View>
 
-          <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
-            Delete Barbershop
-          </Text>
-          <DangerButton
-            label="Delete This Barbershop"
-            onPress={() => setShowDeleteModal(true)}
-            style={styles.dangerBtn}
-          />
-        </>
-      )}
+      <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+        Delete Barbershop
+      </Text>
+      <DangerButton
+        label="Delete This Barbershop"
+        onPress={isLoading ? undefined : () => setShowDeleteModal(true)}
+        style={styles.dangerBtn}
+      />
 
       <ConfirmationModal
         visible={showDeleteModal}
@@ -215,9 +205,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#1A1A1A",
     alignItems: "center",
     justifyContent: "center",
-  },
-  loader: {
-    marginTop: 40,
   },
   sectionLabel: {
     fontSize: 13,

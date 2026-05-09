@@ -14,7 +14,6 @@ import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
@@ -100,25 +99,21 @@ export function OpenHoursScreen() {
           Set your barbershop operating hours for each day
         </Text>
 
-        {isLoading ? (
-          <ActivityIndicator size="large" color="#C6FF4D" style={styles.loader} />
-        ) : (
-          <View style={styles.card}>
-            {days.map((day, index) => (
-              <DayHoursRow
-                key={day.dayOfWeek}
-                day={day.label}
-                enabled={day.enabled}
-                onEnabledChange={(v) => updateDay(day.dayOfWeek, { enabled: v })}
-                openTime={day.open}
-                closeTime={day.close}
-                onOpenTimeChange={(t) => updateDay(day.dayOfWeek, { open: t })}
-                onCloseTimeChange={(t) => updateDay(day.dayOfWeek, { close: t })}
-                isLast={index === days.length - 1}
-              />
-            ))}
-          </View>
-        )}
+        <View style={styles.card}>
+          {days.map((day, index) => (
+            <DayHoursRow
+              key={day.dayOfWeek}
+              day={day.label}
+              enabled={day.enabled}
+              onEnabledChange={(v) => updateDay(day.dayOfWeek, { enabled: v })}
+              openTime={day.open}
+              closeTime={day.close}
+              onOpenTimeChange={(t) => updateDay(day.dayOfWeek, { open: t })}
+              onCloseTimeChange={(t) => updateDay(day.dayOfWeek, { close: t })}
+              isLast={index === days.length - 1}
+            />
+          ))}
+        </View>
 
         <PrimaryButton
           label={isSaving ? "Saving..." : "Save Hours"}
@@ -154,10 +149,6 @@ const styles = StyleSheet.create({
     color: "#666666",
     marginTop: 4,
     marginBottom: 20,
-  },
-  loader: {
-    marginTop: 40,
-    marginBottom: 24,
   },
   card: {
     backgroundColor: "#D9E8A0",

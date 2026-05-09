@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator, Text } from 'react-native';
+import { View, ScrollView, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -71,21 +71,19 @@ export function NotificationsListScreen() {
           }
         />
 
-        {isLoading ? (
-          <View style={styles.centered}>
-            <ActivityIndicator size="large" color="#1A1A1A" />
-          </View>
-        ) : isError ? (
+        {!isLoading && isError ? (
           <View style={styles.centered}>
             <Text style={styles.errorText}>Failed to load notifications</Text>
           </View>
-        ) : notifications.length === 0 ? (
+        ) : null}
+        {!isLoading && !isError && notifications.length === 0 ? (
           <View style={styles.centered}>
             <Ionicons name="notifications-off-outline" size={48} color="#C0BFA8" />
             <Text style={styles.emptyTitle}>No Notifications</Text>
             <Text style={styles.emptySubtitle}>You're all caught up!</Text>
           </View>
-        ) : (
+        ) : null}
+        {!isLoading && !isError && notifications.length > 0 ? (
           <ScrollView
             style={styles.scrollView}
             contentContainerStyle={styles.scrollContent}
@@ -113,7 +111,7 @@ export function NotificationsListScreen() {
               />
             ))}
           </ScrollView>
-        )}
+        ) : null}
       </View>
 
       <ConfirmationModal

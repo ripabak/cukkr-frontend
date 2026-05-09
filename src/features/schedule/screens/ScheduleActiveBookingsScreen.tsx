@@ -17,7 +17,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 function generateDayChips(baseDate: Date): DayChip[] {
   const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -142,31 +142,27 @@ export function ScheduleActiveBookingsScreen() {
         </TouchableOpacity>
       </View>
 
-      {isLoading ? (
-        <ActivityIndicator size="small" color="#1A1A1A" style={styles.loader} />
-      ) : (
-        <View style={styles.list}>
-          {bookings.map((booking, i) => {
-            const totalDuration = booking.serviceNames.length > 0 ? 30 : 0;
-            const timeRef = booking.scheduledAt ?? booking.createdAt;
-            return (
-              <BookingCard
-                key={booking.id}
-                customerName={booking.customerName}
-                barberName={booking.barber?.name ?? "—"}
-                timeLabel={formatTimeLabel(timeRef)}
-                duration={`${totalDuration} mins`}
-                status={mapApiStatusToBookingStatus(booking.status)}
-                onPress={() => handleBookingPress(booking.id, booking.status)}
-                style={i < bookings.length - 1 ? styles.cardMargin : undefined}
-              />
-            );
-          })}
-          {bookings.length === 0 && !isLoading ? (
-            <Text style={styles.emptyText}>No bookings for this date.</Text>
-          ) : null}
-        </View>
-      )}
+      <View style={styles.list}>
+        {bookings.map((booking, i) => {
+          const totalDuration = booking.serviceNames.length > 0 ? 30 : 0;
+          const timeRef = booking.scheduledAt ?? booking.createdAt;
+          return (
+            <BookingCard
+              key={booking.id}
+              customerName={booking.customerName}
+              barberName={booking.barber?.name ?? "—"}
+              timeLabel={formatTimeLabel(timeRef)}
+              duration={`${totalDuration} mins`}
+              status={mapApiStatusToBookingStatus(booking.status)}
+              onPress={() => handleBookingPress(booking.id, booking.status)}
+              style={i < bookings.length - 1 ? styles.cardMargin : undefined}
+            />
+          );
+        })}
+        {!isLoading && bookings.length === 0 ? (
+          <Text style={styles.emptyText}>No bookings for this date.</Text>
+        ) : null}
+      </View>
 
       <CalendarModal
         visible={calendarVisible}
@@ -252,9 +248,6 @@ const styles = StyleSheet.create({
   },
   cardMargin: {
     marginBottom: 12,
-  },
-  loader: {
-    marginTop: 40,
   },
   emptyText: {
     textAlign: "center",

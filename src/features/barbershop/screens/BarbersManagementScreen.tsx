@@ -11,7 +11,7 @@ import {
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 interface BarberTarget {
   id: string;
@@ -66,11 +66,10 @@ export function BarbersManagementScreen() {
       <Text style={styles.title}>Barbers Management</Text>
       <Text style={styles.subtitle}>Manage your barbershop team members</Text>
 
-      {isLoading ? (
-        <ActivityIndicator size="large" color="#C6FF4D" style={styles.loader} />
-      ) : barbers.length === 0 ? (
+      {!isLoading && barbers.length === 0 ? (
         <Text style={styles.empty}>No barbers yet. Invite one below.</Text>
-      ) : (
+      ) : null}
+      {barbers.length > 0 ? (
         <View style={styles.list}>
           {barbers.map((barber, index) => (
             <MemberCard
@@ -90,7 +89,7 @@ export function BarbersManagementScreen() {
             />
           ))}
         </View>
-      )}
+      ) : null}
 
       <Text style={styles.sectionLabel}>Invite Barber</Text>
       <PrimaryButton
@@ -128,9 +127,6 @@ const styles = StyleSheet.create({
     color: "#666666",
     marginTop: 4,
     marginBottom: 20,
-  },
-  loader: {
-    marginTop: 40,
   },
   empty: {
     fontSize: 14,

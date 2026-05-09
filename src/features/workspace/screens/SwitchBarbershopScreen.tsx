@@ -5,7 +5,7 @@ import { authClient } from "@/src/lib/auth-client";
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useRef } from "react";
-import { ActivityIndicator, Dimensions, StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import Animated, {
   runOnJS,
   SlideInUp,
@@ -69,25 +69,20 @@ export function SwitchBarbershopScreen() {
             {"Choose barbershop you're working on"}
           </Text>
 
-          {isLoading ? (
-            <View style={styles.centerContainer}>
-              <ActivityIndicator size="large" color="#C6FF4D" />
-            </View>
-          ) : barbershops.length > 0 ? (
-            barbershops.map((shop, index) => (
-              <SelectionRow
-                key={shop.id}
-                label={shop.name}
-                onPress={() => handleSelectBarbershop(shop.id)}
-                isLast={index === barbershops.length - 1}
-                isActive={activeOrg?.id === shop.id}
-              />
-            ))
-          ) : (
+          {barbershops.map((shop, index) => (
+            <SelectionRow
+              key={shop.id}
+              label={shop.name}
+              onPress={() => handleSelectBarbershop(shop.id)}
+              isLast={index === barbershops.length - 1}
+              isActive={activeOrg?.id === shop.id}
+            />
+          ))}
+          {!isLoading && barbershops.length === 0 ? (
             <View style={styles.centerContainer}>
               <Text style={styles.emptyText}>No barbershops found</Text>
             </View>
-          )}
+          ) : null}
 
           <View style={styles.flex} />
           <PrimaryButton
