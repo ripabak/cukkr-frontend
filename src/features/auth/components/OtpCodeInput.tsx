@@ -1,13 +1,10 @@
 import { useEffect, useRef } from "react";
 import {
     Pressable,
-    StyleSheet,
     Text,
     TextInput,
     View,
 } from "react-native";
-
-import { authTheme } from "../auth-theme";
 
 type OtpCodeInputProps = {
   value: string;
@@ -37,25 +34,30 @@ export function OtpCodeInput({
   }, [autoFocus]);
 
   return (
-    <Pressable onPress={() => inputRef.current?.focus()} style={styles.wrapper}>
+    <Pressable onPress={() => inputRef.current?.focus()} className="items-center">
       <TextInput
         autoFocus={autoFocus}
         keyboardType="number-pad"
         maxLength={length}
         onChangeText={(nextValue) => onChange(nextValue.replace(/\D/g, ""))}
         ref={inputRef}
-        style={styles.hiddenInput}
+        style={{ position: 'absolute', opacity: 0, width: 1, height: 1 }}
         value={value}
       />
 
-      <View style={styles.row}>
+      <View className="flex-row justify-between w-full gap-[12px]">
         {Array.from({ length }).map((_, index) => {
           const digit = value[index] ?? "";
           const isActive = index === value.length && value.length < length;
 
           return (
-            <View key={index} style={[styles.cell, isActive && styles.activeCell]}>
-              <Text style={styles.cellText}>{digit}</Text>
+            <View
+              key={index}
+              className={`flex-1 aspect-square max-w-[64px] rounded-lg border bg-[#FBFAF5] justify-center items-center ${
+                isActive ? 'border-[#A7D92C]' : 'border-[#BCC4B6]'
+              }`}
+            >
+              <Text className="text-[#2F3A2F] text-[24px] font-bold">{digit}</Text>
             </View>
           );
         })}
@@ -63,40 +65,3 @@ export function OtpCodeInput({
     </Pressable>
   );
 }
-
-const styles = StyleSheet.create({
-  wrapper: {
-    alignItems: "center",
-  },
-  hiddenInput: {
-    position: "absolute",
-    opacity: 0,
-    width: 1,
-    height: 1,
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    gap: authTheme.spacing.sm,
-  },
-  cell: {
-    flex: 1,
-    aspectRatio: 1,
-    maxWidth: 64,
-    borderRadius: authTheme.radius.input,
-    borderWidth: 1,
-    borderColor: authTheme.colors.border,
-    backgroundColor: authTheme.colors.inputBackground,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  activeCell: {
-    borderColor: authTheme.colors.mutedAccent,
-  },
-  cellText: {
-    color: authTheme.colors.textPrimary,
-    fontSize: 24,
-    fontWeight: "700",
-  },
-});

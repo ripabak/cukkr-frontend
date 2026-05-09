@@ -2,7 +2,7 @@ import { GradientButton } from "@/src/components/GradientButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useRouter } from "expo-router";
 import React from "react";
-import { StyleSheet, Text } from "react-native";
+import { Text } from "react-native";
 
 // --- MOCK DATA ---
 const MOCK_BARBERSHOP_NAME = "Hendra Barbershop";
@@ -19,34 +19,16 @@ export function CreateBarbershopSuccessScreen() {
         padding: 32,
       }}
     >
-      <Text style={styles.title}>Congratulation 🎉</Text>
-      <Text style={styles.subtitle}>
+      <Text className="text-[26px] font-bold text-dark text-center">Congratulation 🎉</Text>
+      <Text className="text-[14px] text-gray text-center mt-md">
         {`Your barbershop, "${MOCK_BARBERSHOP_NAME}," has been created.`}
       </Text>
       <GradientButton
         label="Open My Barbershop"
         icon="login"
-        style={styles.button}
+        style={{ marginTop: 48 }}
         onPress={() => router.replace("/home-dashboard")}
       />
     </ScreenShell>
   );
 }
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 26,
-    fontWeight: "700",
-    color: "#1A1A1A",
-    textAlign: "center",
-  },
-  subtitle: {
-    fontSize: 14,
-    color: "#666666",
-    textAlign: "center",
-    marginTop: 12,
-  },
-  button: {
-    marginTop: 48,
-  },
-});

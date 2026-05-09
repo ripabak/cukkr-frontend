@@ -1,9 +1,7 @@
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
-
+import { Alert, Pressable, Text, View } from "react-native";
 import { authClient } from "@/src/lib/auth-client";
-import { authTheme } from "../auth-theme";
 import { AuthButton } from "../components/AuthButton";
 import { AuthFooterPrompt } from "../components/AuthFooterPrompt";
 import { AuthScreenShell } from "../components/AuthScreenShell";
@@ -58,10 +56,10 @@ export function LoginScreen() {
         value={password}
       />
 
-      <View style={styles.forgotPasswordRow}>
+      <View className="items-end -mt-[4px]">
         <Link href="/forgot-password" asChild>
           <Pressable>
-            <Text style={styles.forgotPasswordLink}>Forgot Password</Text>
+            <Text className="text-[#A7D92C] text-[13px] font-semibold">Forgot Password</Text>
           </Pressable>
         </Link>
       </View>
@@ -74,15 +72,3 @@ export function LoginScreen() {
     </AuthScreenShell>
   );
 }
-
-const styles = StyleSheet.create({
-  forgotPasswordRow: {
-    alignItems: "flex-end",
-    marginTop: -4,
-  },
-  forgotPasswordLink: {
-    color: authTheme.colors.mutedAccent,
-    fontSize: 13,
-    fontWeight: "600",
-  },
-});

@@ -1,10 +1,8 @@
-import AppTheme from "@/src/app-theme";
 import React from "react";
 import {
     KeyboardAvoidingView,
     Platform,
     ScrollView,
-    StyleSheet,
     ViewStyle,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -32,24 +30,24 @@ export function FormShell({
   headerSlot,
   footerSlot,
   overlaySlot,
-  backgroundColor = AppTheme.colors.bg,
+  backgroundColor = '#EEEEE0',
   contentStyle,
   style,
   edges,
 }: Props) {
   return (
     <SafeAreaView
-      style={[styles.safeArea, { backgroundColor }, style]}
+      style={[{ flex: 1, backgroundColor }, style]}
       edges={edges}
     >
       {headerSlot}
       <KeyboardAvoidingView
-        style={styles.keyboardView}
+        className="flex-1"
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <ScrollView
-          style={styles.scroll}
-          contentContainerStyle={[styles.scrollContent, contentStyle]}
+          className="flex-1"
+          contentContainerStyle={[{ paddingHorizontal: 20, paddingBottom: 40 }, contentStyle]}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
@@ -61,19 +59,3 @@ export function FormShell({
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-  keyboardView: {
-    flex: 1,
-  },
-  scroll: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: AppTheme.spacing.xl,
-    paddingBottom: 40,
-  },
-});

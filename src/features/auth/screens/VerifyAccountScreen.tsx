@@ -1,9 +1,7 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
-
+import { Alert, Text, View } from "react-native";
 import { authClient } from "@/src/lib/auth-client";
-import { authTheme } from "../auth-theme";
 import { AuthButton } from "../components/AuthButton";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { OtpCodeInput } from "../components/OtpCodeInput";
@@ -94,8 +92,8 @@ export function VerifyAccountScreen() {
     >
       <OtpCodeInput onChange={setOtp} value={otp} length={4} />
 
-      <View style={styles.metaBlock}>
-        <Text style={styles.timer}>{countdown.format()}</Text>
+      <View className="items-center">
+        <Text className="text-[#2F3A2F] text-[28px] tracking-[1px]">{countdown.format()}</Text>
       </View>
 
       <AuthButton
@@ -112,15 +110,3 @@ export function VerifyAccountScreen() {
     </AuthScreenShell>
   );
 }
-
-const styles = StyleSheet.create({
-  metaBlock: {
-    alignItems: "center",
-  },
-  timer: {
-    color: authTheme.colors.textPrimary,
-    fontSize: 28,
-    fontWeight: "400",
-    letterSpacing: 1,
-  },
-});

@@ -1,3 +1,4 @@
+import "../global.css";
 import { DevNavFloat } from "@/src/components/DevNavFloat";
 import { MobileFrame } from "@/src/components/MobileFrame";
 import { Stack } from "expo-router";

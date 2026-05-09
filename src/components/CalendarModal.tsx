@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Modal, View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
@@ -70,40 +70,40 @@ export function CalendarModal({ visible, selectedDate, onSelect, onClose }: Prop
 
   return (
     <Modal visible={visible} transparent animationType="fade">
-      <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={onClose}>
-        <TouchableOpacity activeOpacity={1} style={styles.card}>
+      <TouchableOpacity className="flex-1 bg-black/20 justify-center items-center px-xxl" activeOpacity={1} onPress={onClose}>
+        <TouchableOpacity activeOpacity={1} className="bg-card rounded-[20px] p-xl w-full">
           {/* Month navigation */}
-          <View style={styles.monthRow}>
-            <TouchableOpacity onPress={prevMonth} activeOpacity={0.7} style={styles.navBtn}>
+          <View className="flex-row items-center justify-between mb-lg">
+            <TouchableOpacity onPress={prevMonth} activeOpacity={0.7} className="w-8 h-8 items-center justify-center">
               <Ionicons name="chevron-back" size={18} color="#1A1A1A" />
             </TouchableOpacity>
-            <Text style={styles.monthTitle}>
+            <Text className="text-[16px] font-semibold text-dark">
               {MONTH_NAMES[viewMonth]} {viewYear}
             </Text>
-            <TouchableOpacity onPress={nextMonth} activeOpacity={0.7} style={styles.navBtn}>
+            <TouchableOpacity onPress={nextMonth} activeOpacity={0.7} className="w-8 h-8 items-center justify-center">
               <Ionicons name="chevron-forward" size={18} color="#1A1A1A" />
             </TouchableOpacity>
           </View>
 
           {/* Day labels */}
-          <View style={styles.dayLabelRow}>
+          <View className="flex-row mb-sm">
             {DAY_LABELS.map((d) => (
-              <Text key={d} style={styles.dayLabel}>{d}</Text>
+              <Text key={d} className="flex-1 text-center text-[11px] font-semibold text-[#AAAAAA]">{d}</Text>
             ))}
           </View>
 
           {/* Calendar grid */}
           {rows.map((row, ri) => (
-            <View key={ri} style={styles.week}>
+            <View key={ri} className="flex-row mb-[4px]">
               {row.map((day, di) => (
-                <View key={di} style={styles.dayCell}>
+                <View key={di} className="flex-1 items-center justify-center h-9">
                   {day !== null ? (
                     <TouchableOpacity
                       onPress={() => onSelect(new Date(viewYear, viewMonth, day))}
                       activeOpacity={0.8}
-                      style={[styles.dayBtn, isSelected(day) && styles.dayBtnSelected]}
+                      className={`w-[34px] h-[34px] rounded-full items-center justify-center${isSelected(day) ? ' bg-[#E63030]' : ''}`}
                     >
-                      <Text style={[styles.dayText, isSelected(day) && styles.dayTextSelected]}>
+                      <Text className={`text-body${isSelected(day) ? ' text-white font-bold' : ' text-dark'}`}>
                         {day}
                       </Text>
                     </TouchableOpacity>
@@ -118,74 +118,4 @@ export function CalendarModal({ visible, selectedDate, onSelect, onClose }: Prop
   );
 }
 
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-  },
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 20,
-    width: '100%',
-  },
-  monthRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
-  navBtn: {
-    width: 32,
-    height: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  monthTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1A1A1A',
-  },
-  dayLabelRow: {
-    flexDirection: 'row',
-    marginBottom: 8,
-  },
-  dayLabel: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 11,
-    fontWeight: '600',
-    color: '#AAAAAA',
-  },
-  week: {
-    flexDirection: 'row',
-    marginBottom: 4,
-  },
-  dayCell: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 36,
-  },
-  dayBtn: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dayBtnSelected: {
-    backgroundColor: '#E63030',
-  },
-  dayText: {
-    fontSize: 14,
-    color: '#1A1A1A',
-  },
-  dayTextSelected: {
-    color: '#FFFFFF',
-    fontWeight: '700',
-  },
-});
+

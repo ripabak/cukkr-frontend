@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, ViewStyle, KeyboardTypeOptions } from 'react-native';
+import { View, Text, TextInput, ViewStyle, KeyboardTypeOptions } from 'react-native';
 
 interface Props {
   label?: string;
@@ -10,6 +10,7 @@ interface Props {
   secureTextEntry?: boolean;
   style?: ViewStyle;
   inputStyle?: import('react-native').TextStyle;
+  className?: string;
 }
 
 export function TextInputField({
@@ -21,11 +22,12 @@ export function TextInputField({
   secureTextEntry,
   style,
   inputStyle,
+  className,
 }: Props) {
   return (
-    <View style={style}>
-      {label ? <Text style={styles.label}>{label}</Text> : null}
-      <View style={styles.inputContainer}>
+    <View style={style} className={className}>
+      {label ? <Text className="text-[13px] text-gray mb-[6px]">{label}</Text> : null}
+      <View className="bg-card rounded-full px-lg py-[14px] border border-border">
         <TextInput
           value={value}
           onChangeText={onChangeText}
@@ -33,30 +35,10 @@ export function TextInputField({
           placeholderTextColor="#B0ADA0"
           keyboardType={keyboardType}
           secureTextEntry={secureTextEntry}
-          style={[styles.input, inputStyle]}
+          className="text-body text-dark"
+          style={[{ padding: 0 }, inputStyle]}
         />
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  label: {
-    fontSize: 13,
-    color: '#666666',
-    marginBottom: 6,
-  },
-  inputContainer: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 999,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderWidth: 1,
-    borderColor: '#E0DDD0',
-  },
-  input: {
-    fontSize: 14,
-    color: '#1A1A1A',
-    padding: 0,
-  },
-});

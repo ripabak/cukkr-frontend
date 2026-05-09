@@ -1,7 +1,5 @@
 import type { PropsWithChildren, ReactNode } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
-
-import { authTheme } from "../auth-theme";
+import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from "react-native";
 
 type AuthScreenShellProps = PropsWithChildren<{
   title: string;
@@ -16,76 +14,29 @@ export function AuthScreenShell({
   title,
 }: AuthScreenShellProps) {
   return (
-    <View style={styles.page}>
+    <View className="flex-1 bg-[#63B476]">
       <KeyboardAvoidingView
         behavior={Platform.select({ ios: "padding", default: undefined })}
-        style={styles.keyboardAvoidingView}
+        className="flex-1"
       >
         <ScrollView
           bounces={false}
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingHorizontal: 16, paddingVertical: 20 }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.card}>
-            <View style={styles.header}>
-              <Text style={styles.title}>{title}</Text>
-              <Text style={styles.description}>{description}</Text>
+          <View className="w-full max-w-[420px] self-center bg-[#F4F2E7] rounded-[32px] px-[32px] py-[40px]">
+            <View className="gap-[12px] mb-[32px]">
+              <Text className="text-[#2F3A2F] text-[34px] font-extrabold text-center">{title}</Text>
+              <Text className="text-[#6E766C] text-[14px] leading-5 text-center">{description}</Text>
             </View>
 
-            <View style={styles.content}>{children}</View>
+            <View className="gap-[16px]">{children}</View>
 
-            {footer ? <View style={styles.footer}>{footer}</View> : null}
+            {footer ? <View className="mt-[24px]">{footer}</View> : null}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  page: {
-    flex: 1,
-    backgroundColor: authTheme.colors.pageBackground,
-  },
-  keyboardAvoidingView: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: "center",
-    paddingHorizontal: authTheme.spacing.lg,
-    paddingVertical: authTheme.spacing.xl,
-  },
-  card: {
-    width: "100%",
-    maxWidth: 420,
-    alignSelf: "center",
-    backgroundColor: authTheme.colors.cardBackground,
-    borderRadius: authTheme.radius.card,
-    paddingHorizontal: authTheme.spacing.xl,
-    paddingVertical: 40,
-  },
-  header: {
-    gap: authTheme.spacing.sm,
-    marginBottom: authTheme.spacing.xl,
-  },
-  title: {
-    color: authTheme.colors.textPrimary,
-    fontSize: 34,
-    fontWeight: "800",
-    textAlign: "center",
-  },
-  description: {
-    color: authTheme.colors.textSecondary,
-    fontSize: 14,
-    lineHeight: 20,
-    textAlign: "center",
-  },
-  content: {
-    gap: authTheme.spacing.md,
-  },
-  footer: {
-    marginTop: authTheme.spacing.lg,
-  },
-});

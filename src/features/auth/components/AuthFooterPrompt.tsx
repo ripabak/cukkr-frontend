@@ -1,7 +1,5 @@
 import { Link } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
-
-import { authTheme } from "../auth-theme";
+import { Text, View } from "react-native";
 
 type AuthFooterPromptProps = {
   prompt: string;
@@ -15,29 +13,11 @@ export function AuthFooterPrompt({
   prompt,
 }: AuthFooterPromptProps) {
   return (
-    <View style={styles.row}>
-      <Text style={styles.prompt}>{prompt}</Text>
-      <Link href={href} style={styles.link}>
+    <View className="flex-row justify-center items-center gap-[8px]">
+      <Text className="text-[#6E766C] text-[14px]">{prompt}</Text>
+      <Link href={href} className="text-[#A7D92C] text-[14px] font-bold">
         {actionLabel}
       </Link>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: authTheme.spacing.xs,
-  },
-  prompt: {
-    color: authTheme.colors.textSecondary,
-    fontSize: 14,
-  },
-  link: {
-    color: authTheme.colors.mutedAccent,
-    fontSize: 14,
-    fontWeight: "700",
-  },
-});

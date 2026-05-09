@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, FlatList, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import { View, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { ScreenHeader } from '@/src/components/ScreenHeader';
@@ -41,7 +41,7 @@ export function SelectServicesScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F4E8' }}>
       <ScreenHeader
         title="Select Services"
         onBack={() => router.back()}
@@ -49,23 +49,23 @@ export function SelectServicesScreen() {
           <TouchableOpacity
             onPress={() => router.back()}
             activeOpacity={0.8}
-            style={styles.confirmBtn}
+            className="w-9 h-9 rounded-full bg-dark items-center justify-center"
           >
             <Ionicons name="checkmark" size={20} color="#FFFFFF" />
           </TouchableOpacity>
         }
       />
-      <View style={styles.content}>
+      <View className="flex-1 p-xl gap-lg">
         <SearchInput value={query} onChangeText={setQuery} placeholder="Search" />
         <FlatList
           data={filtered}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
+          contentContainerStyle={{ paddingBottom: 20 }}
           renderItem={({ item }) => (
             <TouchableOpacity
               activeOpacity={0.7}
               onPress={() => toggleService(item.id)}
-              style={styles.serviceWrapper}
+              className="relative"
             >
               <ServiceCard
                 name={item.name}
@@ -73,7 +73,17 @@ export function SelectServicesScreen() {
                 discountPercent={item.discountPercent}
                 isDefault={item.isDefault}
               />
-              <View style={[styles.checkbox, selected.has(item.id) && styles.checkboxSelected]}>
+              <View
+                className="absolute right-[14px] w-6 h-6 items-center justify-center"
+                style={{
+                  top: '50%',
+                  marginTop: -12,
+                  borderRadius: 6,
+                  borderWidth: 1.5,
+                  borderColor: '#1A1A1A',
+                  backgroundColor: selected.has(item.id) ? '#1A1A1A' : '#FFFFFF',
+                }}
+              >
                 {selected.has(item.id) ? (
                   <Ionicons name="checkmark" size={14} color="#FFFFFF" />
                 ) : null}
@@ -86,47 +96,3 @@ export function SelectServicesScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: '#F5F4E8',
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-    gap: 16,
-  },
-  list: {
-    paddingBottom: 20,
-  },
-  confirmBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#1A1A1A',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  serviceWrapper: {
-    position: 'relative',
-  },
-  checkbox: {
-    position: 'absolute',
-    right: 14,
-    top: '50%',
-    marginTop: -12,
-    width: 24,
-    height: 24,
-    borderRadius: 6,
-    borderWidth: 1.5,
-    borderColor: '#1A1A1A',
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  checkboxSelected: {
-    backgroundColor: '#1A1A1A',
-    borderColor: '#1A1A1A',
-  },
-});

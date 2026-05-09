@@ -1,6 +1,4 @@
-import { Pressable, StyleSheet, Text } from "react-native";
-
-import { authTheme } from "../auth-theme";
+import { Pressable, Text } from "react-native";
 
 type AuthButtonProps = {
   label: string;
@@ -15,59 +13,20 @@ export function AuthButton({
   variant = "primary",
   disabled,
 }: AuthButtonProps) {
+  const isPrimary = variant === "primary";
+
   return (
     <Pressable
       onPress={onPress}
       disabled={disabled}
-      style={({ pressed }) => [
-        styles.button,
-        variant === "secondary" ? styles.secondaryButton : styles.primaryButton,
-        pressed && styles.pressed,
-        disabled && styles.disabled,
-      ]}
+      style={({ pressed }) => ({ opacity: pressed ? 0.86 : disabled ? 0.5 : 1 })}
+      className={`min-h-[56px] rounded-full justify-center items-center px-[24px] ${
+        isPrimary ? 'bg-[#C4EB35]' : 'bg-[#F4F2E7] border border-[#A7D92C]'
+      }`}
     >
-      <Text
-        style={[
-          styles.label,
-          variant === "secondary" ? styles.secondaryLabel : styles.primaryLabel,
-        ]}
-      >
+      <Text className={`text-[16px] font-extrabold ${isPrimary ? 'text-[#1F2A18]' : 'text-[#A7D92C]'}`}>
         {label}
       </Text>
     </Pressable>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    minHeight: 56,
-    borderRadius: authTheme.radius.pill,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: authTheme.spacing.lg,
-  },
-  primaryButton: {
-    backgroundColor: authTheme.colors.accent,
-  },
-  secondaryButton: {
-    backgroundColor: authTheme.colors.cardBackground,
-    borderWidth: 1,
-    borderColor: authTheme.colors.mutedAccent,
-  },
-  pressed: {
-    opacity: 0.86,
-  },
-  disabled: {
-    opacity: 0.5,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "800",
-  },
-  primaryLabel: {
-    color: authTheme.colors.accentText,
-  },
-  secondaryLabel: {
-    color: authTheme.colors.mutedAccent,
-  },
-});

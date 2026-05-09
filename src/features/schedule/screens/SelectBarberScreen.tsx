@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { ScreenHeader } from '@/src/components/ScreenHeader';
@@ -24,9 +24,9 @@ export function SelectBarberScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F4E8' }}>
       <ScreenHeader title="Select Barber" onBack={() => router.back()} />
-      <View style={styles.content}>
+      <View className="flex-1 p-xl gap-lg">
         <SearchInput
           value={query}
           onChangeText={setQuery}
@@ -35,65 +35,23 @@ export function SelectBarberScreen() {
         <FlatList
           data={filtered}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
+          contentContainerStyle={{ gap: 10 }}
           renderItem={({ item }) => (
             <TouchableOpacity
               activeOpacity={0.7}
-              style={styles.barberRow}
+              className="flex-row items-center bg-[#CFE57C] rounded-lg px-lg py-[14px] gap-md"
               onPress={() => router.back()}
             >
-              <View style={styles.avatar}>
+              <View className="w-11 h-11 rounded-full bg-light-gray items-center justify-center overflow-hidden">
                 <Ionicons name="person" size={22} color="#1A1A1A" />
               </View>
-              <Text style={styles.barberName}>{item.name}</Text>
+              <Text className="flex-1 text-[15px] font-semibold text-dark">{item.name}</Text>
               <Ionicons name="chevron-forward" size={18} color="#1A1A1A" />
             </TouchableOpacity>
           )}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          ItemSeparatorComponent={() => null}
         />
       </View>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: '#F5F4E8',
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-    gap: 16,
-  },
-  list: {
-    gap: 10,
-  },
-  barberRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#CFE57C',
-    borderRadius: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    gap: 12,
-  },
-  avatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#B0ADA0',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  barberName: {
-    flex: 1,
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#1A1A1A',
-  },
-  separator: {
-    height: 0,
-  },
-});

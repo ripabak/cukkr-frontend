@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -76,21 +76,21 @@ export function NotificationsListScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.outer}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F4E8' }}>
+      <View className="flex-1">
         {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={styles.backBtn}>
+        <View className="flex-row justify-between items-center px-xl pt-md pb-sm">
+          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} className="w-10 h-10 rounded-full bg-[#F0F0E8] items-center justify-center">
             <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.7} style={styles.moreBtn}>
+          <TouchableOpacity activeOpacity={0.7} className="w-10 h-10 rounded-full bg-dark items-center justify-center">
             <Ionicons name="ellipsis-horizontal" size={20} color="#1A1A1A" />
           </TouchableOpacity>
         </View>
 
         <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
+          className="flex-1"
+          contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40, paddingTop: 8 }}
           showsVerticalScrollIndicator={false}
         >
           {notifications.map((notif, i) => (
@@ -110,7 +110,7 @@ export function NotificationsListScreen() {
                   ? () => router.push('/booking-detail-request' as any)
                   : undefined
               }
-              style={i < notifications.length - 1 ? styles.cardMargin : undefined}
+              style={i < notifications.length - 1 ? { marginBottom: 12 } : undefined}
             />
           ))}
         </ScrollView>
@@ -118,48 +118,3 @@ export function NotificationsListScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#F5F4E8',
-  },
-  outer: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 12,
-    paddingBottom: 8,
-  },
-  backBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F0F0E8',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  moreBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#1A1A1A',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-    paddingTop: 8,
-  },
-  cardMargin: {
-    marginBottom: 12,
-  },
-});

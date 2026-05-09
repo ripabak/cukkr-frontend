@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Modal, View, Text, TouchableOpacity } from 'react-native';
 
 interface Props {
   visible: boolean;
@@ -12,13 +12,13 @@ interface Props {
 export function AlertModal({ visible, title, description, actionLabel, onAction }: Props) {
   return (
     <Modal visible={visible} transparent animationType="fade">
-      <View style={styles.overlay}>
-        <View style={styles.card}>
-          <Text style={styles.title}>{title}</Text>
-          {description ? <Text style={styles.description}>{description}</Text> : null}
+      <View className="flex-1 bg-black/40 justify-center items-center">
+        <View className="bg-card rounded-[24px] p-[28px] w-[85%]">
+          <Text className="text-[20px] font-bold text-center text-dark">{title}</Text>
+          {description ? <Text className="text-body text-gray text-center mt-sm">{description}</Text> : null}
           {actionLabel ? (
-            <TouchableOpacity onPress={onAction} activeOpacity={0.8} style={styles.btn}>
-              <Text style={styles.btnLabel}>{actionLabel}</Text>
+            <TouchableOpacity onPress={onAction} activeOpacity={0.8} className="mt-xxl h-[52px] rounded-full bg-dark items-center justify-center w-full">
+              <Text className="text-white text-[16px] font-semibold">{actionLabel}</Text>
             </TouchableOpacity>
           ) : null}
         </View>
@@ -27,43 +27,4 @@ export function AlertModal({ visible, title, description, actionLabel, onAction 
   );
 }
 
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 24,
-    padding: 28,
-    width: '85%',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '700',
-    textAlign: 'center',
-    color: '#1A1A1A',
-  },
-  description: {
-    fontSize: 14,
-    color: '#666666',
-    textAlign: 'center',
-    marginTop: 8,
-  },
-  btn: {
-    marginTop: 24,
-    height: 52,
-    borderRadius: 999,
-    backgroundColor: '#1A1A1A',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  btnLabel: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
+

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 
 interface Props {
   count: number;
@@ -7,25 +7,10 @@ interface Props {
 
 export function SelectionFooter({ count }: Props) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Select Customers ({count})</Text>
+    <View className="absolute bottom-0 left-0 right-0 px-xl py-[18px] pb-[32px]">
+      <Text className="text-[15px] font-semibold text-dark">Select Customers ({count})</Text>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 20,
-    paddingVertical: 18,
-    paddingBottom: 32,
-  },
-  label: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#1A1A1A',
-  },
-});
+

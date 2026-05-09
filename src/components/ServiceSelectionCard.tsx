@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, TouchableOpacity, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface ServiceItem {
@@ -20,31 +20,31 @@ function formatPrice(amount: number): string {
 
 export function ServiceSelectionCard({ services, onSelectPress, style }: Props) {
   return (
-    <View style={[styles.wrapper, style]}>
-      <Text style={styles.sectionLabel}>Service</Text>
+    <View className="border border-border rounded-xl p-[14px] gap-[10px]" style={style}>
+      <Text className="text-[12px] text-[#888888] mb-[2px]">Service</Text>
       {services.length === 0 ? (
-        <TouchableOpacity onPress={onSelectPress} activeOpacity={0.7} style={styles.emptyRow}>
+        <TouchableOpacity onPress={onSelectPress} activeOpacity={0.7} className="flex-row items-center gap-sm py-[6px]">
           <Ionicons name="add-circle-outline" size={18} color="#B0ADA0" />
-          <Text style={styles.emptyText}>Select a service</Text>
+          <Text className="text-body text-light-gray">Select a service</Text>
         </TouchableOpacity>
       ) : (
         <>
           {services.map((svc, idx) => (
-            <View key={idx} style={styles.serviceRow}>
-              <View style={styles.imagePlaceholder} />
-              <View style={styles.serviceInfo}>
-                <Text style={styles.serviceName}>{svc.name}</Text>
-                <Text style={styles.servicePrice}>{formatPrice(svc.price)}</Text>
+            <View key={idx} className="flex-row items-center bg-[#CFE57C] rounded-md p-[10px] gap-md">
+              <View className="w-12 h-12 rounded-md bg-light-gray" />
+              <View className="flex-1 gap-[2px]">
+                <Text className="text-[15px] font-bold text-dark">{svc.name}</Text>
+                <Text className="text-body font-semibold text-dark">{formatPrice(svc.price)}</Text>
               </View>
               {svc.isDefault ? (
-                <View style={styles.defaultBadge}>
-                  <Text style={styles.defaultText}>Default</Text>
+                <View className="border border-dark rounded-full px-[10px] py-[4px]">
+                  <Text className="text-[12px] font-semibold text-dark">Default</Text>
                 </View>
               ) : null}
             </View>
           ))}
-          <TouchableOpacity onPress={onSelectPress} activeOpacity={0.7} style={styles.changeRow}>
-            <Text style={styles.changeText}>Change service</Text>
+          <TouchableOpacity onPress={onSelectPress} activeOpacity={0.7} className="self-end">
+            <Text className="text-[13px] text-gray underline">Change service</Text>
           </TouchableOpacity>
         </>
       )}
@@ -52,75 +52,4 @@ export function ServiceSelectionCard({ services, onSelectPress, style }: Props) 
   );
 }
 
-const styles = StyleSheet.create({
-  wrapper: {
-    borderWidth: 1,
-    borderColor: '#E0DDD0',
-    borderRadius: 16,
-    padding: 14,
-    gap: 10,
-  },
-  sectionLabel: {
-    fontSize: 12,
-    color: '#888',
-    marginBottom: 2,
-  },
-  emptyRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    paddingVertical: 6,
-  },
-  emptyText: {
-    fontSize: 14,
-    color: '#B0ADA0',
-  },
-  serviceRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#CFE57C',
-    borderRadius: 12,
-    padding: 10,
-    gap: 12,
-  },
-  imagePlaceholder: {
-    width: 48,
-    height: 48,
-    borderRadius: 8,
-    backgroundColor: '#B0ADA0',
-  },
-  serviceInfo: {
-    flex: 1,
-    gap: 2,
-  },
-  serviceName: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#1A1A1A',
-  },
-  servicePrice: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1A1A1A',
-  },
-  defaultBadge: {
-    borderWidth: 1,
-    borderColor: '#1A1A1A',
-    borderRadius: 999,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-  },
-  defaultText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#1A1A1A',
-  },
-  changeRow: {
-    alignSelf: 'flex-end',
-  },
-  changeText: {
-    fontSize: 13,
-    color: '#666',
-    textDecorationLine: 'underline',
-  },
-});
+

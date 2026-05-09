@@ -7,7 +7,7 @@ import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { TimePickerModal } from "@/src/components/TimePickerModal";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 
 type BookingType = "appointment" | "walkin";
 
@@ -81,7 +81,7 @@ export function NewAppointmentScreen() {
         />
       }
       footerSlot={
-        <View style={styles.footer}>
+        <View className="px-xl pb-xxl pt-md">
           <PrimaryButton label="New Appointment" onPress={() => {}} />
         </View>
       }
@@ -115,11 +115,3 @@ export function NewAppointmentScreen() {
     </FormShell>
   );
 }
-
-const styles = StyleSheet.create({
-  footer: {
-    paddingHorizontal: 20,
-    paddingBottom: 24,
-    paddingTop: 12,
-  },
-});

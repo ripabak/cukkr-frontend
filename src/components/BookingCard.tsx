@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, View, Text, StyleSheet, ViewStyle } from 'react-native';
+import { TouchableOpacity, View, Text, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 export type BookingStatus = 'waiting' | 'in-progress' | 'completed' | 'canceled' | 'requested';
@@ -46,74 +46,23 @@ export function BookingCard({
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.85}
-      style={[styles.card, style]}
+      className="flex-row items-center bg-card rounded-xl p-[14px] gap-md shadow-sm"
+      style={style}
     >
-      <View style={[styles.iconCircle, { backgroundColor: iconBg }]}>
+      <View className="w-11 h-11 rounded-full items-center justify-center" style={{ backgroundColor: iconBg }}>
         <Ionicons name="people" size={22} color={color} />
       </View>
-      <View style={styles.info}>
-        <Text style={styles.timeLabel}>{timeLabel}</Text>
-        <View style={styles.barberRow}>
+      <View className="flex-1 gap-[4px]">
+        <Text className="text-[13px] font-semibold text-dark">{timeLabel}</Text>
+        <View className="flex-row items-center">
           <Ionicons name="cut" size={12} color="#888888" />
-          <Text style={styles.barberName}> {barberName}</Text>
+          <Text className="text-[12px] text-[#888888]"> {barberName}</Text>
         </View>
       </View>
-      <View style={styles.right}>
-        <Text style={[styles.customerName, { color }]}>{customerName}</Text>
-        <Text style={styles.duration}>{duration}</Text>
+      <View className="items-end gap-[2px]">
+        <Text className="text-[13px] font-semibold" style={{ color }}>{customerName}</Text>
+        <Text className="text-[12px] text-[#888888]">{duration}</Text>
       </View>
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 14,
-    gap: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 1,
-  },
-  iconCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  info: {
-    flex: 1,
-    gap: 4,
-  },
-  timeLabel: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#1A1A1A',
-  },
-  barberRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  barberName: {
-    fontSize: 12,
-    color: '#888888',
-  },
-  right: {
-    alignItems: 'flex-end',
-    gap: 2,
-  },
-  customerName: {
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  duration: {
-    fontSize: 12,
-    color: '#888888',
-  },
-});

@@ -1,42 +1,25 @@
 import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 
 interface Props {
   totalSteps: number;
   currentStep: number;
   style?: ViewStyle;
+  className?: string;
 }
 
-export function WizardProgress({ totalSteps, currentStep, style }: Props) {
+export function WizardProgress({ totalSteps, currentStep, style, className }: Props) {
   return (
-    <View style={[styles.container, style]}>
+    <View
+      className={`flex-row gap-sm${className ? ` ${className}` : ''}`}
+      style={style}
+    >
       {Array.from({ length: totalSteps }, (_, i) => (
         <View
           key={i}
-          style={[
-            styles.step,
-            i <= currentStep - 1 ? styles.active : styles.upcoming,
-          ]}
+          className={`flex-1 h-[6px] rounded-full ${i <= currentStep - 1 ? 'bg-dark' : 'bg-[#D0D0C8]'}`}
         />
       ))}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  step: {
-    flex: 1,
-    height: 6,
-    borderRadius: 999,
-  },
-  active: {
-    backgroundColor: '#1A1A1A',
-  },
-  upcoming: {
-    backgroundColor: '#D0D0C8',
-  },
-});

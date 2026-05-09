@@ -1,23 +1,16 @@
 import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 
 interface Props {
   children: React.ReactNode;
   style?: ViewStyle;
+  className?: string;
 }
 
-export function ProfileSummaryCard({ children, style }: Props) {
+export function ProfileSummaryCard({ children, style, className }: Props) {
   return (
-    <View style={[styles.card, style]}>
+    <View className={`bg-[#D4E88F] rounded-xl overflow-hidden ${className ?? ''}`} style={style}>
       {children}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: '#D4E88F',
-    borderRadius: 16,
-    overflow: 'hidden',
-  },
-});

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { OtpCodeInput } from '@/src/features/auth/components/OtpCodeInput';
 import { PrimaryButton } from '@/src/components/PrimaryButton';
@@ -15,30 +15,30 @@ export function VerifyContactScreen() {
   const isOld = step === 'old';
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <View style={styles.content}>
-        <Text style={styles.title}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F4E8' }}>
+      <View className="flex-1 px-xxxl justify-center items-center gap-xl">
+        <Text className="text-[26px] font-bold text-dark text-center">
           {isOld ? 'Verify Old Contact' : 'Verify New Contact'}
         </Text>
-        <Text style={styles.subtitle}>
+        <Text className="text-sm text-gray text-center -mb-md">
           {isOld
             ? 'OTP sent to your old email/phone number*'
             : 'OTP sent to your new email/phone number*'}
         </Text>
-        <Text style={styles.contact}>julianpepe@gmail.com</Text>
+        <Text className="text-sm font-semibold text-dark text-center">julianpepe@gmail.com</Text>
 
-        <View style={styles.otpWrapper}>
+        <View className="w-full">
           <OtpCodeInput value={otp} onChange={setOtp} autoFocus={false} />
         </View>
 
-        <Text style={styles.timer}>05:00</Text>
+        <Text className="text-[28px] text-dark tracking-widest">05:00</Text>
 
-        <View style={styles.buttons}>
-          <SecondaryButton label="Send Again" onPress={() => {}} style={styles.sendAgainBtn} />
+        <View className="w-full gap-md mt-sm">
+          <SecondaryButton label="Send Again" onPress={() => {}} style={{ borderColor: '#C6ED3C' }} />
           <PrimaryButton
             label={isOld ? 'Continue' : 'Verify'}
             onPress={() => router.back()}
-            style={styles.primaryBtn}
+            style={{ backgroundColor: '#C6ED3C' }}
           />
         </View>
       </View>
@@ -46,54 +46,3 @@ export function VerifyContactScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: '#F5F4E8',
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 20,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: '700',
-    color: '#1A1A1A',
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 14,
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: -12,
-  },
-  contact: {
-    fontSize: 14,
-    color: '#1A1A1A',
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  otpWrapper: {
-    width: '100%',
-  },
-  timer: {
-    fontSize: 28,
-    fontWeight: '400',
-    color: '#1A1A1A',
-    letterSpacing: 1,
-  },
-  buttons: {
-    width: '100%',
-    gap: 12,
-    marginTop: 8,
-  },
-  sendAgainBtn: {
-    borderColor: '#C6ED3C',
-  },
-  primaryBtn: {
-    backgroundColor: '#C6ED3C',
-  },
-});

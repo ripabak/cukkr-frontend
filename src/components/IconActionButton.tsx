@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
+import { TouchableOpacity, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
@@ -7,24 +7,18 @@ interface Props {
   onPress?: () => void;
   size?: number;
   style?: ViewStyle;
+  className?: string;
 }
 
-export function IconActionButton({ iconName, onPress, size = 48, style }: Props) {
+export function IconActionButton({ iconName, onPress, size = 48, style, className }: Props) {
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.8}
-      style={[styles.button, { width: size, height: size, borderRadius: size / 2 }, style]}
+      className={`bg-dark items-center justify-center${className ? ` ${className}` : ''}`}
+      style={[{ width: size, height: size, borderRadius: size / 2 }, style]}
     >
       <Ionicons name={iconName} size={size * 0.42} color="#FFFFFF" />
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: '#1A1A1A',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

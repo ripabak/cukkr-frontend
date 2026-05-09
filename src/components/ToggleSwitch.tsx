@@ -1,48 +1,25 @@
 import React from 'react';
-import { TouchableOpacity, View, StyleSheet, ViewStyle } from 'react-native';
+import { TouchableOpacity, View, ViewStyle } from 'react-native';
 
 interface Props {
   value: boolean;
   onValueChange: (v: boolean) => void;
   style?: ViewStyle;
+  className?: string;
 }
 
-export function ToggleSwitch({ value, onValueChange, style }: Props) {
+export function ToggleSwitch({ value, onValueChange, style, className }: Props) {
   return (
     <TouchableOpacity
       onPress={() => onValueChange(!value)}
       activeOpacity={0.8}
-      style={[styles.track, value ? styles.trackOn : styles.trackOff, style]}
+      className={`w-11 h-6 rounded-full justify-center px-[2px]${className ? ` ${className}` : ''}`}
+      style={[{ backgroundColor: value ? '#C6FF4D' : '#D0CEC0' }, style]}
     >
-      <View style={[styles.thumb, value ? styles.thumbOn : styles.thumbOff]} />
+      <View
+        className="w-5 h-5 rounded-full bg-white"
+        style={{ alignSelf: value ? 'flex-end' : 'flex-start' }}
+      />
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  track: {
-    width: 44,
-    height: 24,
-    borderRadius: 12,
-    justifyContent: 'center',
-    paddingHorizontal: 2,
-  },
-  trackOn: {
-    backgroundColor: '#C6FF4D',
-  },
-  trackOff: {
-    backgroundColor: '#D0CEC0',
-  },
-  thumb: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: '#FFFFFF',
-  },
-  thumbOn: {
-    alignSelf: 'flex-end',
-  },
-  thumbOff: {
-    alignSelf: 'flex-start',
-  },
-});

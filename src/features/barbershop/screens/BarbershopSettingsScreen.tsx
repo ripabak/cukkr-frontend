@@ -6,7 +6,7 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 // --- MOCK DATA ---
 const MOCK_BARBERSHOP_NAME = "Barbershop Name";
@@ -18,21 +18,21 @@ export function BarbershopSettingsScreen() {
   const router = useRouter();
 
   return (
-    <ScreenShell contentStyle={styles.scrollContentPadding}>
+    <ScreenShell contentStyle={{ paddingBottom: 100 }}>
       <ScreenHeader onBack={() => router.back()} />
-      <Text style={styles.title}>Barbershop Settings</Text>
-      <Text style={styles.subtitle}>Setup based on your barbershop needs</Text>
+      <Text className="text-[28px] font-bold text-dark mt-sm">Barbershop Settings</Text>
+      <Text className="text-[14px] text-gray mt-[4px] mb-xl">Setup based on your barbershop needs</Text>
 
-      <View style={styles.avatarWrapper}>
-        <View style={styles.avatarCircle}>
-          <View style={styles.cameraBadge}>
+      <View className="items-center">
+        <View className="w-20 h-20 rounded-full bg-[#D9D9D9]">
+          <View className="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-dark items-center justify-center">
             <Ionicons name="camera" size={14} color="#FFFFFF" />
           </View>
         </View>
       </View>
 
-      <Text style={styles.sectionLabel}>Information</Text>
-      <View style={styles.card}>
+      <Text className="text-[13px] text-gray mb-sm">Information</Text>
+      <View className="bg-card rounded-lg">
         <InfoRow
           label="Name"
           value={MOCK_BARBERSHOP_NAME}
@@ -54,10 +54,10 @@ export function BarbershopSettingsScreen() {
         />
       </View>
 
-      <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+      <Text className="text-[13px] text-gray mb-sm mt-lg">
         Booking Web
       </Text>
-      <View style={styles.card}>
+      <View className="bg-card rounded-lg">
         <InfoRow
           label="Book Url"
           value={MOCK_BOOK_URL}
@@ -67,76 +67,23 @@ export function BarbershopSettingsScreen() {
         />
       </View>
 
-      <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+      <Text className="text-[13px] text-gray mb-sm mt-lg">
         Operations
       </Text>
-      <View style={styles.card}>
+      <View className="bg-card rounded-lg">
         <OperationRow label="Barbers" onPress={() => {}} />
         <OperationRow label="Customers" onPress={() => {}} />
         <OperationRow label="Open Hours" isLast onPress={() => {}} />
       </View>
 
-      <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+      <Text className="text-[13px] text-gray mb-sm mt-lg">
         Delete Barber
       </Text>
       <DangerButton
         label="Delete This Barbershop"
         onPress={() => {}}
-        style={styles.dangerBtn}
+        style={{ marginTop: 8 }}
       />
     </ScreenShell>
   );
 }
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#1A1A1A",
-    marginTop: 8,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: "#666666",
-    marginTop: 4,
-    marginBottom: 20,
-  },
-  avatarWrapper: {
-    alignItems: "center",
-  },
-  avatarCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "#D9D9D9",
-  },
-  cameraBadge: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: "#1A1A1A",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  sectionLabel: {
-    fontSize: 13,
-    color: "#666666",
-    marginBottom: 8,
-  },
-  sectionLabelTop: {
-    marginTop: 16,
-  },
-  card: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
-  },
-  dangerBtn: {
-    marginTop: 8,
-  },
-  scrollContentPadding: {
-    paddingBottom: 100,
-  },
-});

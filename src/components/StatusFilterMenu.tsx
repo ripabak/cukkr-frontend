@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, TouchableOpacity, ViewStyle } from 'react-native';
 
 interface StatusOption {
   label: string;
@@ -35,8 +35,8 @@ export function StatusFilterMenu({ visible, options, selected, onSelect, onClose
 
   return (
     <>
-      <TouchableOpacity style={styles.backdrop} onPress={onClose} activeOpacity={1} />
-      <View style={[styles.menu, style]}>
+      <TouchableOpacity className="absolute inset-0" onPress={onClose} activeOpacity={1} />
+      <View className="absolute top-14 right-xl bg-card rounded-md min-w-[160px] z-[100]" style={[{ shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.12, shadowRadius: 12, elevation: 8 }, style]}>
         {options.map((opt, index) => (
           <TouchableOpacity
             key={opt.value}
@@ -45,14 +45,11 @@ export function StatusFilterMenu({ visible, options, selected, onSelect, onClose
               onClose?.();
             }}
             activeOpacity={0.7}
-            style={[styles.item, index < options.length - 1 && styles.itemBorder]}
+            className={`px-lg py-[14px]${index < options.length - 1 ? ' border-b border-border' : ''}`}
           >
             <Text
-              style={[
-                styles.itemText,
-                opt.color ? { color: opt.color } : undefined,
-                selected === opt.value && styles.itemTextBold,
-              ]}
+              className={`text-body font-medium${selected === opt.value ? ' font-bold' : ''}`}
+              style={opt.color ? { color: opt.color } : { color: '#1A1A1A' }}
             >
               {opt.label}
             </Text>
@@ -63,42 +60,4 @@ export function StatusFilterMenu({ visible, options, selected, onSelect, onClose
   );
 }
 
-const styles = StyleSheet.create({
-  backdrop: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  menu: {
-    position: 'absolute',
-    top: 56,
-    right: 20,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-    elevation: 8,
-    minWidth: 160,
-    zIndex: 100,
-  },
-  item: {
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  itemBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0DDD0',
-  },
-  itemText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#1A1A1A',
-  },
-  itemTextBold: {
-    fontWeight: '700',
-  },
-});
+

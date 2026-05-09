@@ -8,7 +8,7 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 // --- MOCK DATA ---
 const MOCK_USER_NAME = "Pepe Julian";
@@ -29,17 +29,17 @@ export function UserProfileScreen() {
       backgroundColor="#F5F4E8"
       contentStyle={{ paddingTop: 20, gap: 12 }}
     >
-      <View style={styles.avatarWrapper}>
-        <View style={styles.avatar}>
+      <View className="self-center mb-sm relative">
+        <View className="w-20 h-20 rounded-md bg-[#D0CCC0] items-center justify-center">
           <Ionicons name="person" size={40} color="#666" />
         </View>
-        <TouchableOpacity style={styles.editAvatarBtn} activeOpacity={0.8}>
+        <TouchableOpacity className="absolute -bottom-[6px] -right-[6px] w-[26px] h-[26px] rounded-full bg-card border border-border items-center justify-center" activeOpacity={0.8}>
           <Ionicons name="camera-outline" size={14} color="#1A1A1A" />
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.sectionLabel}>General Information</Text>
-      <ProfileSummaryCard style={styles.card}>
+      <Text className="text-[13px] text-[#888888] mt-xs">General Information</Text>
+      <ProfileSummaryCard className="-mt-1">
         <InfoRow
           label="Your Name"
           value={MOCK_USER_NAME}
@@ -53,8 +53,8 @@ export function UserProfileScreen() {
         />
       </ProfileSummaryCard>
 
-      <Text style={styles.sectionLabel}>Account</Text>
-      <ProfileSummaryCard style={styles.card}>
+      <Text className="text-[13px] text-[#888888] mt-xs">Account</Text>
+      <ProfileSummaryCard className="-mt-1">
         <InfoRow
           label="Email"
           value={MOCK_USER_EMAIL}
@@ -73,7 +73,7 @@ export function UserProfileScreen() {
         />
       </ProfileSummaryCard>
 
-      <Text style={styles.sectionLabel}>Logout</Text>
+      <Text className="text-[13px] text-[#888888] mt-xs">Logout</Text>
       <LogoutRow onPress={() => setShowLogoutConfirm(true)} />
       <ConfirmationModal
         visible={showLogoutConfirm}
@@ -95,39 +95,4 @@ export function UserProfileScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  avatarWrapper: {
-    alignSelf: "center",
-    marginBottom: 8,
-    position: "relative",
-  },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 12,
-    backgroundColor: "#D0CCC0",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  editAvatarBtn: {
-    position: "absolute",
-    bottom: -6,
-    right: -6,
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    backgroundColor: "#FFFFFF",
-    borderWidth: 1,
-    borderColor: "#E0DDD0",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  sectionLabel: {
-    fontSize: 13,
-    color: "#888",
-    marginTop: 4,
-  },
-  card: {
-    marginTop: -4,
-  },
-});
+

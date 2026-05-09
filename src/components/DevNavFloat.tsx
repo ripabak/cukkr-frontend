@@ -5,7 +5,6 @@ import {
   Dimensions,
   Modal,
   PanResponder,
-  StyleSheet,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -87,11 +86,11 @@ export function DevNavFloat() {
     <>
       {/* Draggable dev pill */}
       <Animated.View
-        style={[styles.fab, { left: pan.x, top: pan.y }]}
+        style={{ position: 'absolute', width: BTN_W, height: BTN_H, borderRadius: BTN_H / 2, backgroundColor: '#C6FF4D', borderWidth: 1.5, borderColor: '#1A1A1A', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.18, shadowRadius: 4, elevation: 6, zIndex: 999, left: pan.x, top: pan.y }}
         {...panResponder.panHandlers}
       >
-        <Text style={styles.fabBug}></Text>
-        <Text style={styles.fabLabel}>DEV</Text>
+        <Text className="text-[13px]">🐛</Text>
+        <Text className="text-[11px] font-extrabold text-dark tracking-[0.6px]">DEV</Text>
       </Animated.View>
 
       {/* Dev menu modal */}
@@ -102,30 +101,30 @@ export function DevNavFloat() {
         onRequestClose={() => setVisible(false)}
       >
         <TouchableWithoutFeedback onPress={() => setVisible(false)}>
-          <View style={styles.overlay}>
+          <View className="flex-1 bg-black/40 justify-end pb-[48px] px-xl">
             <TouchableWithoutFeedback>
-              <View style={styles.card}>
-                <View style={styles.cardHeader}>
-                  <Text style={styles.cardBug}></Text>
-                  <Text style={styles.cardTitle}>Developer Menu</Text>
+              <View className="bg-card rounded-xl pt-lg pb-sm px-lg">
+                <View className="flex-row items-center gap-[6px] mb-md px-[4px]">
+                  <Text className="text-[16px]">🐛</Text>
+                  <Text className="text-[13px] font-bold text-dark uppercase tracking-[0.8px]">Developer Menu</Text>
                 </View>
                 <TouchableOpacity
-                  style={styles.menuItem}
+                  className="flex-row items-center gap-[10px] py-[14px] px-[4px] border-t border-[#E5E5E5]"
                   activeOpacity={0.7}
                   onPress={() => {
                     setVisible(false);
                     router.push("/dev-nav");
                   }}
                 >
-                  <Text style={styles.menuItemEmoji}></Text>
-                  <Text style={styles.menuItemText}>Manage Halaman</Text>
+                  <Text className="text-[16px]">📋</Text>
+                  <Text className="text-[16px] font-semibold text-dark">Manage Halaman</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[styles.menuItem, styles.cancelItem]}
+                  className="flex-row items-center gap-[10px] py-[14px] px-[4px] border-t border-[#E5E5E5] justify-center mt-[4px]"
                   activeOpacity={0.7}
                   onPress={() => setVisible(false)}
                 >
-                  <Text style={styles.cancelText}>Tutup</Text>
+                  <Text className="text-[16px] text-[#888888]">Tutup</Text>
                 </TouchableOpacity>
               </View>
             </TouchableWithoutFeedback>
@@ -136,89 +135,4 @@ export function DevNavFloat() {
   );
 }
 
-const styles = StyleSheet.create({
-  fab: {
-    position: "absolute",
-    width: BTN_W,
-    height: BTN_H,
-    borderRadius: BTN_H / 2,
-    backgroundColor: "#C6FF4D",
-    borderWidth: 1.5,
-    borderColor: "#1A1A1A",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 4,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.18,
-    shadowRadius: 4,
-    elevation: 6,
-    zIndex: 999,
-  },
-  fabBug: {
-    fontSize: 13,
-  },
-  fabLabel: {
-    fontSize: 11,
-    fontWeight: "800",
-    color: "#1A1A1A",
-    letterSpacing: 0.6,
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.4)",
-    justifyContent: "flex-end",
-    paddingBottom: 48,
-    paddingHorizontal: 20,
-  },
-  card: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
-    paddingTop: 16,
-    paddingBottom: 8,
-    paddingHorizontal: 16,
-  },
-  cardHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    marginBottom: 12,
-    paddingHorizontal: 4,
-  },
-  cardBug: {
-    fontSize: 16,
-  },
-  cardTitle: {
-    fontSize: 13,
-    fontWeight: "700",
-    color: "#1A1A1A",
-    textTransform: "uppercase",
-    letterSpacing: 0.8,
-  },
-  menuItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    paddingVertical: 14,
-    paddingHorizontal: 4,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: "#E5E5E5",
-  },
-  menuItemEmoji: {
-    fontSize: 16,
-  },
-  menuItemText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#1A1A1A",
-  },
-  cancelItem: {
-    marginTop: 4,
-    justifyContent: "center",
-  },
-  cancelText: {
-    fontSize: 16,
-    color: "#888",
-  },
-});
+

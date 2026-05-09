@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Modal, View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
@@ -27,32 +27,32 @@ export function ConfirmationModal({
 
   return (
     <Modal visible={visible} transparent animationType="fade">
-      <View style={styles.overlay}>
-        <View style={styles.card}>
+      <View className="flex-1 bg-black/40 justify-center items-center">
+        <View className="bg-card rounded-[24px] p-[28px] w-[85%]">
           {icon ? (
-            <View style={styles.iconWrapper}>
+            <View className="items-center mb-lg">
               <Ionicons name={icon as React.ComponentProps<typeof Ionicons>['name']} size={32} color="#1A1A1A" />
             </View>
           ) : null}
-          <Text style={styles.title}>{title}</Text>
-          {description ? <Text style={styles.description}>{description}</Text> : null}
-          <View style={[styles.buttons, hasBoth && styles.buttonsRow]}>
+          <Text className="text-[20px] font-bold text-center text-dark">{title}</Text>
+          {description ? <Text className="text-body text-gray text-center mt-sm">{description}</Text> : null}
+          <View className={`mt-xxl gap-md${hasBoth ? ' flex-row' : ''}`}>
             {cancelLabel ? (
               <TouchableOpacity
                 onPress={onCancel}
                 activeOpacity={0.8}
-                style={[styles.btn, styles.btnDark, hasBoth && styles.btnFlex]}
+                className={`h-[52px] rounded-full items-center justify-center bg-dark${hasBoth ? ' flex-1' : ''}`}
               >
-                <Text style={styles.btnDarkLabel}>{cancelLabel}</Text>
+                <Text className="text-white text-[16px] font-semibold">{cancelLabel}</Text>
               </TouchableOpacity>
             ) : null}
             {confirmLabel ? (
               <TouchableOpacity
                 onPress={onConfirm}
                 activeOpacity={0.8}
-                style={[styles.btn, styles.btnOutline, hasBoth && styles.btnFlex]}
+                className={`h-[52px] rounded-full items-center justify-center border-[1.5px] border-dark${hasBoth ? ' flex-1' : ''}`}
               >
-                <Text style={styles.btnOutlineLabel}>{confirmLabel}</Text>
+                <Text className="text-dark text-[16px] font-semibold">{confirmLabel}</Text>
               </TouchableOpacity>
             ) : null}
           </View>
@@ -62,66 +62,4 @@ export function ConfirmationModal({
   );
 }
 
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 24,
-    padding: 28,
-    width: '85%',
-  },
-  iconWrapper: {
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '700',
-    textAlign: 'center',
-    color: '#1A1A1A',
-  },
-  description: {
-    fontSize: 14,
-    color: '#666666',
-    textAlign: 'center',
-    marginTop: 8,
-  },
-  buttons: {
-    marginTop: 24,
-    gap: 12,
-  },
-  buttonsRow: {
-    flexDirection: 'row',
-  },
-  btn: {
-    height: 52,
-    borderRadius: 999,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  btnFlex: {
-    flex: 1,
-  },
-  btnDark: {
-    backgroundColor: '#1A1A1A',
-  },
-  btnDarkLabel: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  btnOutline: {
-    borderWidth: 1.5,
-    borderColor: '#1A1A1A',
-  },
-  btnOutlineLabel: {
-    color: '#1A1A1A',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
+

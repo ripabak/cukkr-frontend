@@ -1,6 +1,5 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { OnboardingTheme } from "../onboarding-theme";
+import { View } from "react-native";
 
 interface OnboardingIndicatorProps {
   current: number;
@@ -11,43 +10,21 @@ interface OnboardingIndicatorProps {
 export const OnboardingIndicator: React.FC<OnboardingIndicatorProps> = ({
   current,
   total,
-  color = OnboardingTheme.colors.dark,
+  color = '#1A1A1A',
 }) => {
   return (
-    <View style={styles.container}>
+    <View className="flex-row justify-center items-center gap-[8px] mt-[20px]">
       {Array.from({ length: total }).map((_, index) => (
         <View
           key={index}
-          style={[
-            styles.dot,
-            { backgroundColor: color },
-            index === current && styles.dotActive,
-          ]}
+          className={`h-[6px] rounded-full ${
+            index === current ? 'w-[22px] opacity-100' : 'w-[6px] opacity-30'
+          }`}
+          style={{ backgroundColor: color }}
         />
       ))}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: OnboardingTheme.spacing.xs,
-    marginTop: OnboardingTheme.spacing.lg,
-  },
-  dot: {
-    width: 6,
-    height: 6,
-    borderRadius: OnboardingTheme.borderRadius.full,
-    opacity: 0.3,
-  },
-  dotActive: {
-    width: 22,
-    borderRadius: OnboardingTheme.borderRadius.full,
-    opacity: 1,
-  },
-});
 
 export default OnboardingIndicator;

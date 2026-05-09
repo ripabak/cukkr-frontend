@@ -1,34 +1,22 @@
 import React from 'react';
-import { View, Text, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, ViewStyle } from 'react-native';
 
 interface Props {
   lines: string[];
   style?: ViewStyle;
+  className?: string;
   errorLine?: string;
 }
 
-export function HelperCopy({ lines, style, errorLine }: Props) {
+export function HelperCopy({ lines, style, className, errorLine }: Props) {
   return (
-    <View style={style}>
+    <View style={style} className={className}>
       {lines.map((line, index) => (
-        <Text key={index} style={styles.line}>
+        <Text key={index} className="text-[13px] text-gray leading-5">
           {line}
         </Text>
       ))}
-      {errorLine ? <Text style={styles.errorLine}>{errorLine}</Text> : null}
+      {errorLine ? <Text className="text-[13px] text-danger leading-5">{errorLine}</Text> : null}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  line: {
-    fontSize: 13,
-    color: '#666666',
-    lineHeight: 20,
-  },
-  errorLine: {
-    fontSize: 13,
-    color: '#E53E3E',
-    lineHeight: 20,
-  },
-});

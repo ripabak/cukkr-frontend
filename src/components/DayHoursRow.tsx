@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, TouchableOpacity, ViewStyle } from 'react-native';
 import { ToggleSwitch } from '@/src/components/ToggleSwitch';
 import { TimePickerModal } from '@/src/components/TimePickerModal';
 
@@ -42,29 +42,29 @@ export function DayHoursRow({
   const [showClosePicker, setShowClosePicker] = useState(false);
 
   return (
-    <View style={[styles.wrapper, !isLast && styles.borderBottom, style]}>
-      <View style={styles.row}>
+    <View className={`px-lg py-md${!isLast ? ' border-b border-border' : ''}`} style={style}>
+      <View className="flex-row items-center gap-md">
         <ToggleSwitch value={enabled} onValueChange={onEnabledChange} />
-        <Text style={[styles.day, !enabled && styles.dayDisabled]}>{day}</Text>
-        <View style={styles.times}>
+        <Text className={`text-body font-semibold w-9${!enabled ? ' text-light-gray' : ' text-dark'}`}>{day}</Text>
+        <View className="flex-1 flex-row items-center justify-end gap-[6px]">
           <TouchableOpacity
             onPress={() => setShowOpenPicker(true)}
             activeOpacity={0.7}
-            style={[styles.timePill, !enabled && styles.timePillDisabled]}
+            className={`bg-card rounded-full px-[10px] py-[6px] border border-border${!enabled ? ' opacity-40' : ''}`}
             disabled={!enabled}
           >
-            <Text style={[styles.timeText, !enabled && styles.timeTextDisabled]}>
+            <Text className={`text-[12px] font-medium${!enabled ? ' text-light-gray' : ' text-dark'}`}>
               {formatTime(openTime)}
             </Text>
           </TouchableOpacity>
-          <Text style={styles.dash}>–</Text>
+          <Text className="text-body text-gray">–</Text>
           <TouchableOpacity
             onPress={() => setShowClosePicker(true)}
             activeOpacity={0.7}
-            style={[styles.timePill, !enabled && styles.timePillDisabled]}
+            className={`bg-card rounded-full px-[10px] py-[6px] border border-border${!enabled ? ' opacity-40' : ''}`}
             disabled={!enabled}
           >
-            <Text style={[styles.timeText, !enabled && styles.timeTextDisabled]}>
+            <Text className={`text-[12px] font-medium${!enabled ? ' text-light-gray' : ' text-dark'}`}>
               {formatTime(closeTime)}
             </Text>
           </TouchableOpacity>
@@ -72,7 +72,7 @@ export function DayHoursRow({
       </View>
 
       {showOpenPicker ? (
-        <View style={styles.pickerWrapper}>
+        <View className="mt-sm">
           <TimePickerModal
             visible
             initialHour={openTime.hour}
@@ -88,7 +88,7 @@ export function DayHoursRow({
       ) : null}
 
       {showClosePicker ? (
-        <View style={styles.pickerWrapper}>
+        <View className="mt-sm">
           <TimePickerModal
             visible
             initialHour={closeTime.hour}
@@ -106,60 +106,4 @@ export function DayHoursRow({
   );
 }
 
-const styles = StyleSheet.create({
-  wrapper: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  borderBottom: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0DDD0',
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  day: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1A1A1A',
-    width: 36,
-  },
-  dayDisabled: {
-    color: '#B0ADA0',
-  },
-  times: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    gap: 6,
-  },
-  timePill: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 999,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderWidth: 1,
-    borderColor: '#E0DDD0',
-  },
-  timePillDisabled: {
-    opacity: 0.4,
-  },
-  timeText: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: '#1A1A1A',
-  },
-  timeTextDisabled: {
-    color: '#B0ADA0',
-  },
-  dash: {
-    fontSize: 14,
-    color: '#666666',
-  },
-  pickerWrapper: {
-    marginTop: 8,
-  },
-});
+

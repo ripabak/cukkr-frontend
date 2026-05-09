@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, TextInput, ViewStyle } from 'react-native';
 
 interface Props {
   label?: string;
@@ -8,6 +8,7 @@ interface Props {
   placeholder?: string;
   numberOfLines?: number;
   style?: ViewStyle;
+  className?: string;
 }
 
 export function MultilineInputField({
@@ -17,11 +18,12 @@ export function MultilineInputField({
   placeholder,
   numberOfLines,
   style,
+  className,
 }: Props) {
   return (
-    <View style={style}>
-      {label ? <Text style={styles.label}>{label}</Text> : null}
-      <View style={styles.inputContainer}>
+    <View style={style} className={className}>
+      {label ? <Text className="text-[13px] text-gray mb-[6px]">{label}</Text> : null}
+      <View className="bg-card rounded-lg px-lg py-[14px] border border-border min-h-[100px]">
         <TextInput
           value={value}
           onChangeText={onChangeText}
@@ -30,32 +32,10 @@ export function MultilineInputField({
           multiline
           numberOfLines={numberOfLines}
           textAlignVertical="top"
-          style={styles.input}
+          className="text-body text-dark"
+          style={{ padding: 0, textAlignVertical: 'top' }}
         />
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  label: {
-    fontSize: 13,
-    color: '#666666',
-    marginBottom: 6,
-  },
-  inputContainer: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderWidth: 1,
-    borderColor: '#E0DDD0',
-    minHeight: 100,
-  },
-  input: {
-    fontSize: 14,
-    color: '#1A1A1A',
-    padding: 0,
-    textAlignVertical: 'top',
-  },
-});

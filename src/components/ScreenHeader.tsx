@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, TouchableOpacity, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
@@ -11,54 +11,22 @@ interface Props {
 
 export function ScreenHeader({ title, onBack, rightAction, style }: Props) {
   return (
-    <View style={[styles.container, style]}>
+    <View className="flex-row items-center px-xl py-md" style={style}>
       {onBack ? (
-        <TouchableOpacity onPress={onBack} style={styles.iconButton} activeOpacity={0.7}>
+        <TouchableOpacity onPress={onBack} className="w-9 h-9 rounded-full border border-border items-center justify-center" activeOpacity={0.7}>
           <Ionicons name="chevron-back" size={18} color="#1A1A1A" />
         </TouchableOpacity>
       ) : (
-        <View style={styles.iconButton} />
+        <View className="w-9 h-9 rounded-full border border-border items-center justify-center" />
       )}
-      {title ? <Text style={styles.title}>{title}</Text> : <View style={styles.titleSpacer} />}
+      {title ? <Text className="flex-1 text-center text-[17px] font-bold text-dark">{title}</Text> : <View className="flex-1" />}
       {rightAction ? (
-        <View style={styles.rightSlot}>{rightAction}</View>
+        <View className="w-9 h-9 items-center justify-center">{rightAction}</View>
       ) : (
-        <View style={styles.iconButton} />
+        <View className="w-9 h-9 rounded-full border border-border items-center justify-center" />
       )}
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
-  iconButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: '#E0DDD0',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 17,
-    fontWeight: '700',
-    color: '#1A1A1A',
-  },
-  titleSpacer: {
-    flex: 1,
-  },
-  rightSlot: {
-    width: 36,
-    height: 36,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+

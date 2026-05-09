@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { EditFieldHeader } from '@/src/components/EditFieldHeader';
@@ -22,24 +22,24 @@ export function EditUserProfileFieldsScreen() {
 
   if (mode === 'password') {
     return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.passwordContent}>
-          <Text style={styles.passwordTitle}>Change Password</Text>
-          <Text style={styles.passwordSubtitle}>Enter your current and new password</Text>
-          <View style={styles.passwordFields}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F4E8' }}>
+        <View className="flex-1 p-xxl justify-center gap-xxxl">
+          <Text className="text-2xl font-bold text-dark text-center">Change Password</Text>
+          <Text className="text-sm text-gray text-center -mt-xxl">Enter your current and new password</Text>
+          <View className="gap-md">
             <View>
-              <Text style={styles.fieldLabel}>Current Password</Text>
-              <View style={styles.passwordInputRow}>
+              <Text className="text-[13px] text-gray mb-[6px]">Current Password</Text>
+              <View className="relative">
                 <TextInputField
                   value={currentPassword}
                   onChangeText={setCurrentPassword}
                   placeholder="Current Password"
                   secureTextEntry={!showCurrentPw}
-                  style={styles.passwordInput}
+                  style={{ flex: 1 }}
                 />
                 <TouchableOpacity
                   onPress={() => setShowCurrentPw((v) => !v)}
-                  style={styles.eyeBtn}
+                  className="absolute right-lg top-0 bottom-0 justify-center"
                 >
                   <Ionicons
                     name={showCurrentPw ? 'eye-off-outline' : 'eye-outline'}
@@ -50,18 +50,18 @@ export function EditUserProfileFieldsScreen() {
               </View>
             </View>
             <View>
-              <Text style={styles.fieldLabel}>New Password</Text>
-              <View style={styles.passwordInputRow}>
+              <Text className="text-[13px] text-gray mb-[6px]">New Password</Text>
+              <View className="relative">
                 <TextInputField
                   value={newPassword}
                   onChangeText={setNewPassword}
                   placeholder="New Password"
                   secureTextEntry={!showNewPw}
-                  style={styles.passwordInput}
+                  style={{ flex: 1 }}
                 />
                 <TouchableOpacity
                   onPress={() => setShowNewPw((v) => !v)}
-                  style={styles.eyeBtn}
+                  className="absolute right-lg top-0 bottom-0 justify-center"
                 >
                   <Ionicons
                     name={showNewPw ? 'eye-off-outline' : 'eye-outline'}
@@ -71,14 +71,14 @@ export function EditUserProfileFieldsScreen() {
                 </TouchableOpacity>
               </View>
             </View>
-            <TouchableOpacity style={styles.forgotRow} onPress={() => router.push('/forgot-password')}>
-              <Text style={styles.forgotText}>Forgot Password</Text>
+            <TouchableOpacity className="self-end" onPress={() => router.push('/forgot-password')}>
+              <Text className="text-[13px] text-[#C6ED3C] font-semibold">Forgot Password</Text>
             </TouchableOpacity>
           </View>
           <PrimaryButton
             label="Change Password"
             onPress={() => {}}
-            style={styles.passwordBtn}
+            style={{ backgroundColor: '#C6ED3C' }}
           />
         </View>
       </SafeAreaView>
@@ -86,13 +86,13 @@ export function EditUserProfileFieldsScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F4E8' }}>
       <EditFieldHeader
         title={mode === 'bio' ? 'Bio' : 'Your Name'}
         onBack={() => router.back()}
         onSave={() => router.back()}
       />
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerStyle={{ padding: 20, gap: 16 }} keyboardShouldPersistTaps="handled">
         {mode === 'bio' ? (
           <MultilineInputField
             value={bio}
@@ -117,64 +117,3 @@ export function EditUserProfileFieldsScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: '#F5F4E8',
-  },
-  content: {
-    padding: 20,
-    gap: 16,
-  },
-  passwordContent: {
-    flex: 1,
-    padding: 24,
-    justifyContent: 'center',
-    gap: 32,
-  },
-  passwordTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#1A1A1A',
-    textAlign: 'center',
-  },
-  passwordSubtitle: {
-    fontSize: 14,
-    color: '#666',
-    textAlign: 'center',
-    marginTop: -24,
-  },
-  passwordFields: {
-    gap: 12,
-  },
-  fieldLabel: {
-    fontSize: 13,
-    color: '#666',
-    marginBottom: 6,
-  },
-  passwordInputRow: {
-    position: 'relative',
-  },
-  passwordInput: {
-    flex: 1,
-  },
-  eyeBtn: {
-    position: 'absolute',
-    right: 16,
-    top: 0,
-    bottom: 0,
-    justifyContent: 'center',
-  },
-  forgotRow: {
-    alignSelf: 'flex-end',
-  },
-  forgotText: {
-    fontSize: 13,
-    color: '#C6ED3C',
-    fontWeight: '600',
-  },
-  passwordBtn: {
-    backgroundColor: '#C6ED3C',
-  },
-});

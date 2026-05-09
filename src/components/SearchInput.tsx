@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, ViewStyle } from 'react-native';
+import { View, TextInput, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
@@ -7,38 +7,24 @@ interface Props {
   onChangeText: (t: string) => void;
   placeholder?: string;
   style?: ViewStyle;
+  className?: string;
 }
 
-export function SearchInput({ value, onChangeText, placeholder = 'Search', style }: Props) {
+export function SearchInput({ value, onChangeText, placeholder = 'Search', style, className }: Props) {
   return (
-    <View style={[styles.container, style]}>
+    <View
+      className={`flex-row items-center bg-card rounded-full px-lg py-md border border-border${className ? ` ${className}` : ''}`}
+      style={style}
+    >
       <TextInput
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
         placeholderTextColor="#B0ADA0"
-        style={styles.input}
+        className="text-body text-dark"
+        style={{ flex: 1, padding: 0 }}
       />
       <Ionicons name="search" size={18} color="#B0ADA0" />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 999,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: '#E0DDD0',
-  },
-  input: {
-    flex: 1,
-    fontSize: 14,
-    color: '#1A1A1A',
-    padding: 0,
-  },
-});

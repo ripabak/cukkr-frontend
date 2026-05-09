@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform, StyleSheet, View } from "react-native";
+import { Platform, View } from "react-native";
 
 const MOBILE_WIDTH = 390;
 
@@ -9,28 +9,12 @@ interface Props {
 
 export function MobileFrame({ children }: Props) {
   if (Platform.OS !== "web") {
-    return <View style={styles.native}>{children}</View>;
+    return <View className="flex-1">{children}</View>;
   }
 
   return (
-    <View style={styles.webOuter}>
-      <View style={styles.webInner}>{children}</View>
+    <View className="flex-1 bg-dark items-center">
+      <View className="flex-1 overflow-hidden" style={{ width: MOBILE_WIDTH }}>{children}</View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  native: {
-    flex: 1,
-  },
-  webOuter: {
-    flex: 1,
-    backgroundColor: "#1A1A1A",
-    alignItems: "center",
-  },
-  webInner: {
-    width: MOBILE_WIDTH,
-    flex: 1,
-    overflow: "hidden",
-  },
-});

@@ -1,6 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, ViewStyle } from "react-native";
-import { OnboardingTheme } from "../onboarding-theme";
+import { Text, View, ViewStyle } from "react-native";
 
 interface BrandSplashProps {
   style?: ViewStyle;
@@ -8,25 +7,10 @@ interface BrandSplashProps {
 
 export const BrandSplash: React.FC<BrandSplashProps> = ({ style }) => {
   return (
-    <View style={[styles.container, style]}>
-      <Text style={styles.wordmark}>Cukkr</Text>
+    <View className="flex-1 bg-[#F5F4E8] justify-center items-center" style={style}>
+      <Text className="text-[32px] font-bold text-black tracking-[0.5px]">Cukkr</Text>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F5F4E8",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  wordmark: {
-    fontSize: 32,
-    fontWeight: "700",
-    color: OnboardingTheme.colors.textDark,
-    letterSpacing: 0.5,
-  },
-});
 
 export default BrandSplash;

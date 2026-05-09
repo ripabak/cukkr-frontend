@@ -7,7 +7,7 @@ import { SortMenu } from "@/src/components/SortMenu";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 interface Service {
   id: string;
@@ -68,11 +68,11 @@ export function ServicesManagementScreen() {
         <ScreenHeader
           onBack={() => router.back()}
           rightAction={
-            <View style={styles.headerActions}>
+            <View className="flex-row items-center gap-sm">
               <TouchableOpacity
                 onPress={() => setSortMenuVisible(true)}
                 activeOpacity={0.7}
-                style={styles.headerIcon}
+                className="w-9 h-9 rounded-[18px] border border-border items-center justify-center bg-card"
               >
                 <Ionicons name="filter-outline" size={18} color="#1A1A1A" />
               </TouchableOpacity>
@@ -87,7 +87,7 @@ export function ServicesManagementScreen() {
       }
       overlaySlot={
         sortMenuVisible ? (
-          <View style={styles.menuOverlay}>
+          <View className="absolute inset-0 z-50">
             <SortMenu
               visible
               selected={selectedSort}
@@ -99,16 +99,16 @@ export function ServicesManagementScreen() {
         ) : null
       }
     >
-      <Text style={styles.title}>Services Management</Text>
-      <Text style={styles.subtitle}>Manage your barbershop services</Text>
+      <Text className="text-[28px] font-bold text-dark mt-sm">Services Management</Text>
+      <Text className="text-[14px] text-gray mt-[4px] mb-lg">Manage your barbershop services</Text>
 
       <SearchInput
         value={search}
         onChangeText={setSearch}
-        style={styles.search}
+        style={{ marginBottom: 16 }}
       />
 
-      <View style={styles.list}>
+      <View>
         {filteredServices.map((service, index) => (
           <ServiceCard
             key={service.id}
@@ -120,7 +120,7 @@ export function ServicesManagementScreen() {
             onToggleActive={(v) => handleToggleActive(service.id, v)}
             style={
               index < filteredServices.length - 1
-                ? styles.cardMargin
+                ? { marginBottom: 12 }
                 : undefined
             }
           />
@@ -129,48 +129,3 @@ export function ServicesManagementScreen() {
     </ScreenShell>
   );
 }
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#1A1A1A",
-    marginTop: 8,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: "#666666",
-    marginTop: 4,
-    marginBottom: 16,
-  },
-  search: {
-    marginBottom: 16,
-  },
-  list: {},
-  cardMargin: {
-    marginBottom: 12,
-  },
-  headerActions: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  headerIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: "#E0DDD0",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#FFFFFF",
-  },
-  menuOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 50,
-  },
-});

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
+import { Text, TouchableOpacity, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
@@ -15,12 +15,13 @@ export function SelectorInput({ placeholder, value, iconName, onPress, style }: 
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.7}
-      style={[styles.container, style]}
+      className="bg-card rounded-full px-lg py-[14px] border border-border flex-row items-center gap-[10px]"
+      style={style}
     >
       {iconName ? (
-        <Ionicons name={iconName} size={18} color="#B0ADA0" style={styles.icon} />
+        <Ionicons name={iconName} size={18} color="#B0ADA0" />
       ) : null}
-      <Text style={[styles.text, value ? styles.textFilled : styles.textPlaceholder]} numberOfLines={1}>
+      <Text className={`flex-1 text-body${value ? ' text-dark' : ' text-light-gray'}`} numberOfLines={1}>
         {value || placeholder}
       </Text>
       <Ionicons name="chevron-forward" size={16} color="#B0ADA0" />
@@ -28,27 +29,4 @@ export function SelectorInput({ placeholder, value, iconName, onPress, style }: 
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 999,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderWidth: 1,
-    borderColor: '#E0DDD0',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  icon: {},
-  text: {
-    flex: 1,
-    fontSize: 14,
-  },
-  textPlaceholder: {
-    color: '#B0ADA0',
-  },
-  textFilled: {
-    color: '#1A1A1A',
-  },
-});
+

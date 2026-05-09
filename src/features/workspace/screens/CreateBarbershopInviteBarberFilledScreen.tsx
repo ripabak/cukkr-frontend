@@ -6,7 +6,7 @@ import { TextInputField } from "@/src/components/TextInputField";
 import { WizardProgress } from "@/src/components/WizardProgress";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 // --- MOCK DATA ---
 const MOCK_INVITED_BARBERS = [
@@ -20,16 +20,16 @@ export function CreateBarbershopInviteBarberFilledScreen() {
 
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
-      <WizardProgress totalSteps={3} currentStep={1} style={styles.wizard} />
-      <Text style={styles.title}>Invite Barber</Text>
-      <Text style={styles.subtitle}>Inviting barber to your barbershop</Text>
-      <Text style={styles.barbersLabel}>{"Barbershop's barbers"}</Text>
+      <WizardProgress totalSteps={3} currentStep={1} style={{ marginBottom: 32 }} />
+      <Text className="text-[28px] font-bold text-dark">Invite Barber</Text>
+      <Text className="text-[14px] text-gray mt-sm mb-xxl">Inviting barber to your barbershop</Text>
+      <Text className="text-[15px] font-semibold text-dark mb-md">{"Barbershop's barbers"}</Text>
       {MOCK_INVITED_BARBERS.map((barber, index) => (
         <InviteRow
           key={barber.id}
           email={barber.email}
           onRemove={() => {}}
-          style={index > 0 ? styles.inviteRowTop : undefined}
+          style={index > 0 ? { marginTop: 8 } : undefined}
         />
       ))}
       <TextInputField
@@ -37,10 +37,10 @@ export function CreateBarbershopInviteBarberFilledScreen() {
         placeholder="email / phone number *"
         value={barber}
         onChangeText={setBarber}
-        style={styles.inputTop}
+        style={{ marginTop: 16 }}
       />
-      <SecondaryButton label="Invite" style={styles.inviteBtn} />
-      <View style={styles.flex} />
+      <SecondaryButton label="Invite" style={{ marginTop: 12, alignSelf: 'center', paddingHorizontal: 32 }} />
+      <View className="flex-1" />
       <PrimaryButton
         label="Next"
         onPress={() => router.push("/create-barbershop-first-service")}
@@ -48,41 +48,3 @@ export function CreateBarbershopInviteBarberFilledScreen() {
     </ScreenShell>
   );
 }
-
-const styles = StyleSheet.create({
-  wizard: {
-    marginBottom: 32,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#1A1A1A",
-  },
-  subtitle: {
-    fontSize: 14,
-    color: "#666666",
-    marginTop: 8,
-    marginBottom: 24,
-  },
-  barbersLabel: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#1A1A1A",
-    marginBottom: 12,
-  },
-  inviteRowTop: {
-    marginTop: 8,
-  },
-  inputTop: {
-    marginTop: 16,
-  },
-  inviteBtn: {
-    marginTop: 12,
-    alignSelf: "center",
-    width: "auto",
-    paddingHorizontal: 32,
-  },
-  flex: {
-    flex: 1,
-  },
-});

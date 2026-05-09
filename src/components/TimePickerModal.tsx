@@ -5,7 +5,6 @@ import {
     NativeScrollEvent,
     NativeSyntheticEvent,
     ScrollView,
-    StyleSheet,
     Text,
     TouchableOpacity,
     View,
@@ -62,7 +61,7 @@ function ScrollPicker({
   };
 
   return (
-    <View style={pickerStyles.col}>
+    <View className="flex-1 items-center relative">
       <ScrollView
         ref={scrollRef}
         showsVerticalScrollIndicator={false}
@@ -82,56 +81,25 @@ function ScrollPicker({
               });
               onSelect(index);
             }}
-            style={pickerStyles.item}
+            className="items-center justify-center"
+            style={{ height: ITEM_HEIGHT }}
           >
             <Text
-              style={[
-                pickerStyles.itemText,
-                index === selectedIndex && pickerStyles.itemTextSelected,
-              ]}
+              className={`font-normal${index === selectedIndex ? ' text-[22px] text-dark font-bold' : ' text-[18px] text-light-gray'}`}
             >
               {renderItem(item)}
             </Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <View style={pickerStyles.selectionBar} pointerEvents="none" />
+      <View
+        style={{ position: 'absolute', top: ITEM_HEIGHT, left: 0, right: 0, height: ITEM_HEIGHT, borderTopWidth: 1, borderBottomWidth: 1, borderColor: '#E0DDD0' }}
+        pointerEvents="none"
+      />
     </View>
   );
 }
 
-const pickerStyles = StyleSheet.create({
-  col: {
-    flex: 1,
-    alignItems: "center",
-    position: "relative",
-  },
-  item: {
-    height: ITEM_HEIGHT,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  itemText: {
-    fontSize: 18,
-    color: "#B0ADA0",
-    fontWeight: "400",
-  },
-  itemTextSelected: {
-    fontSize: 22,
-    color: "#1A1A1A",
-    fontWeight: "700",
-  },
-  selectionBar: {
-    position: "absolute",
-    top: ITEM_HEIGHT,
-    left: 0,
-    right: 0,
-    height: ITEM_HEIGHT,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: "#E0DDD0",
-  },
-});
 
 export function TimePickerModal({
   visible,
@@ -153,19 +121,19 @@ export function TimePickerModal({
   return (
     <Modal visible={visible} transparent animationType="fade">
       <TouchableOpacity
-        style={styles.overlay}
+        className="flex-1 bg-black/20 justify-center items-center px-xxl"
         activeOpacity={1}
         onPress={onClose}
       >
-        <TouchableOpacity activeOpacity={1} style={[styles.container, style]}>
-          <View style={styles.columns}>
+        <TouchableOpacity activeOpacity={1} className="bg-card rounded-[20px] p-lg flex-row items-center gap-sm" style={[{ shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.12, shadowRadius: 12, elevation: 8 }, style]}>
+          <View className="flex-1 flex-row items-center">
             <ScrollPicker
               items={HOURS}
               selectedIndex={hourIndex}
               onSelect={setHourIndex}
               renderItem={(h) => pad(h as number)}
             />
-            <Text style={styles.separator}>:</Text>
+            <Text className="text-[22px] font-bold text-dark mx-[2px]">:</Text>
             <ScrollPicker
               items={MINUTES}
               selectedIndex={minuteIndex}
@@ -188,7 +156,7 @@ export function TimePickerModal({
               )
             }
             activeOpacity={0.8}
-            style={styles.confirmBtn}
+            className="w-11 h-11 rounded-full bg-dark items-center justify-center"
           >
             <Ionicons name="checkmark" size={20} color="#FFFFFF" />
           </TouchableOpacity>
@@ -198,44 +166,4 @@ export function TimePickerModal({
   );
 }
 
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.2)",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 24,
-  },
-  container: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 20,
-    padding: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-    elevation: 8,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  columns: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  separator: {
-    fontSize: 22,
-    fontWeight: "700",
-    color: "#1A1A1A",
-    marginHorizontal: 2,
-  },
-  confirmBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: "#1A1A1A",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+

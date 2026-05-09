@@ -8,15 +8,15 @@ Migrasikan seluruh styling di project cukkr-frontend dari `StyleSheet.create` + 
 
 | Phase | Name                                      | Type    | Scope summary                                              | Status  |
 | ----- | ----------------------------------------- | ------- | ---------------------------------------------------------- | ------- |
-| 1     | Infrastructure Setup                      | infra   | Install NativeWind, buat config files, wiring              | pending |
-| 2     | Tailwind Config + Conventions             | infra   | Map AppTheme ke tailwind.config.js, update docs            | pending |
-| 3     | Shared Components — Atoms                 | slicing | Buttons, inputs, badges, pills, simple rows (~20 files)    | pending |
+| 1     | Infrastructure Setup                      | infra   | Install NativeWind, buat config files, wiring              | ✓ done — 2026-05-03 |
+| 2     | Tailwind Config + Conventions             | infra   | Map AppTheme ke tailwind.config.js, update docs            | ✓ done — 2026-05-03 |
+| 3     | Shared Components — Atoms                 | slicing | Buttons, inputs, badges, pills, simple rows (~20 files)    | ✓ done — 2026-05-03 |
 | 4     | Shared Components — Cards & Forms         | slicing | Cards, form components, booking-related (~20 files)        | pending |
 | 5     | Shared Components — Modals & Menus        | slicing | Modals, menus, complex interactive components (~25 files)  | pending |
 | 6     | Feature: Auth & Onboarding                | slicing | Auth components + screens, onboarding components + screens | pending |
 | 7     | Feature: Home, Workspace, Barbershop      | slicing | Home, workspace, barbershop screens                        | pending |
 | 8     | Feature: Profile, Schedule, Notifications | slicing | Profile, schedule, notifications screens                   | pending |
-| 9     | Final Validation                          | infra   | TypeScript check, lint, update tracking docs               | pending |
+| 9     | Final Validation                          | infra   | TypeScript check, lint, update tracking docs               | ✓ done — 2026-05-09 |
 
 > Execute with `/eksekusi-plan-by-phase docs/plans/nativewind-migration.md`
 > To run a specific phase: `/eksekusi-plan-by-phase docs/plans/nativewind-migration.md phase:2`
@@ -611,7 +611,7 @@ Untuk setiap file di phase ini:
 
 ---
 
-## Phase 4 — Shared Components: Cards & Form Components
+## Phase 4 — Shared Components: Cards & Form Components ✓ done — 2026-05-03
 
 ### Goal
 
@@ -692,8 +692,8 @@ Untuk setiap file di atas, terapkan **migration pattern** dari Phase 3:
 
 ### Verification
 
-- [ ] Semua 21 komponen tercompile
-- [ ] `npx tsc --noEmit` clean
+- [x] Semua 21 komponen tercompile
+- [x] `npx tsc --noEmit` clean
 - [ ] Visual check di DevNav: home, barbershop settings, schedule pages
 
 ### Tracking update
@@ -703,7 +703,7 @@ Untuk setiap file di atas, terapkan **migration pattern** dari Phase 3:
 
 ---
 
-## Phase 5 — Shared Components: Modals, Menus & Complex Widgets
+## Phase 5 — Shared Components: Modals, Menus & Complex Widgets ✓ done — 2026-05-06
 
 ### Goal
 
@@ -803,7 +803,7 @@ Terapkan migration pattern untuk semua file lain di daftar. Prinsip yang sama: s
 
 ---
 
-## Phase 6 — Feature: Auth & Onboarding
+## Phase 6 — Feature: Auth & Onboarding ✓ done — 2026-05-06
 
 ### Goal
 
@@ -885,7 +885,7 @@ Screens menggunakan `SafeAreaView` + `ScrollView` wrapper. Migration:
 
 ---
 
-## Phase 7 — Feature: Home, Workspace & Barbershop
+## Phase 7 — Feature: Home, Workspace & Barbershop ✓ done — 2026-05-07
 
 ### Goal
 
@@ -955,7 +955,7 @@ Terapkan migration pattern ke semua 11 barbershop screens. Perhatian:
 
 ---
 
-## Phase 8 — Feature: Profile, Schedule & Notifications
+## Phase 8 — Feature: Profile, Schedule & Notifications ✓ done — 2026-05-07
 
 ### Goal
 
@@ -1011,7 +1011,7 @@ Terapkan migration pattern ke `NotificationsListScreen`. Menggunakan `Notificati
 
 ---
 
-## Phase 9 — Final Validation & Docs Update
+## Phase 9 — Final Validation & Docs Update ✓ done — 2026-05-09
 
 ### Goal
 

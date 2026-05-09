@@ -94,7 +94,9 @@ AppTheme.typography.label; // { fontSize: 13, fontWeight: '500' }
 | `onboarding`   | `src/features/onboarding/onboarding-theme.ts` | Only inside onboarding screens                        |
 | other features | none yet → use `AppTheme`                     | Until a feature's visual language clearly diverges    |
 
-**Rule:** Never hard-code colors or spacing that exist in `AppTheme`. Reference the token instead.
+**Rule:** Never hard-code colors or spacing that exist in `AppTheme`. Use Tailwind class aliases instead (see Section 3 — NativeWind Class Alias Reference).
+
+> `AppTheme` is now used **only** in `tailwind.config.js`. Do not import it directly in components.
 
 ---
 
@@ -118,33 +120,84 @@ Routes in `app/` use `export default`. Everything in `src/` uses **named exports
 interface Props {
   label: string;
   onPress?: () => void;
-  style?: ViewStyle; // always optional, always last
+  className?: string; // always optional, always last
 }
 ```
 
 - Use `interface`, not `type alias`, for component props.
-- Always accept an optional `style?: ViewStyle | TextStyle` to allow overrides from the parent.
+- Prefer `className?: string` over `style?: ViewStyle` for style overrides from the parent.
+- Keep `style?: ViewStyle` only when truly dynamic/computed values need to be passed in.
 
-### StyleSheet
+### NativeWind (className)
 
-```tsx
-// ✅ Always use StyleSheet.create — never inline style objects in JSX
-const styles = StyleSheet.create({
-  container: { ... },
-});
-
-// ❌ Avoid
-<View style={{ flex: 1, backgroundColor: '#fff' }}>
-```
-
-Exception: dynamic values that depend on props (e.g. `{ backgroundColor: color }`) may be inline.
-
-### Compose styles with arrays
+Project uses **NativeWind v4**. Use `className` instead of `StyleSheet.create`.
 
 ```tsx
-<View style={[styles.container, style]} />
-<View style={[styles.iconCircle, isActive && styles.activeCircle]} />
+// ✅ Always use className — never StyleSheet.create
+<View className="flex-1 bg-card px-lg rounded-lg" />
+
+// ✅ Conditional classes
+<View className={`flex-1 ${isActive ? 'bg-accent' : 'bg-card'}`} />
+
+// ✅ Dynamic values (cannot be expressed as a class) — use inline style
+<View style={{ backgroundColor: dynamicColor }} />
+
+// ❌ Never use StyleSheet.create
+const styles = StyleSheet.create({ container: { ... } }); // ❌
 ```
+
+### Dynamic Style Exceptions
+
+Keep `style={{ ... }}` (inline) only for truly dynamic values:
+
+- `style={{ backgroundColor: colorFromProps }}` — color comes from prop/state
+- `style={{ width: widthFromCalculation }}` — computed at runtime
+- `style={{ textAlignVertical: 'top' }}` — no Tailwind equivalent in RN
+- `SafeAreaView` — does not support `className` from `react-native`; use `style={{ flex: 1, backgroundColor: '#EEEEE0' }}`
+- Pressable pressed state: `style={({ pressed }) => pressed ? { opacity: 0.86 } : {}}`
+
+### SafeAreaView Exception
+
+`SafeAreaView` from `react-native` does **not** support `className`:
+
+```tsx
+// ✅ correct
+<SafeAreaView style={{ flex: 1, backgroundColor: '#EEEEE0' }}>
+
+// ❌ does not work
+<SafeAreaView className="flex-1 bg-bg">
+```
+
+Alternative: import `SafeAreaView` from `react-native-safe-area-context` for NativeWind support.
+
+### Class Alias Reference
+
+| AppTheme token                | Tailwind class examples               |
+| ----------------------------- | ------------------------------------- |
+| `AppTheme.colors.bg`          | `bg-bg`                               |
+| `AppTheme.colors.card`        | `bg-card`                             |
+| `AppTheme.colors.dark`        | `bg-dark`, `text-dark`                |
+| `AppTheme.colors.gray`        | `text-gray`                           |
+| `AppTheme.colors.lightGray`   | `text-light-gray`                     |
+| `AppTheme.colors.accent`      | `bg-accent`                           |
+| `AppTheme.colors.border`      | `border-border`                       |
+| `AppTheme.colors.danger`      | `text-danger`                         |
+| `AppTheme.colors.dangerBg`    | `bg-danger-bg`                        |
+| `AppTheme.colors.infoRowBg`   | `bg-info-row-bg`                      |
+| `AppTheme.spacing.xs`         | `p-xs`, `px-xs`, `py-xs`, `m-xs`     |
+| `AppTheme.spacing.sm`         | `p-sm`, `px-sm`, etc.                 |
+| `AppTheme.spacing.md`         | `p-md`, `px-md`, etc.                 |
+| `AppTheme.spacing.lg`         | `p-lg`, `px-lg`, etc.                 |
+| `AppTheme.spacing.xl`         | `p-xl`, `px-xl`, etc.                 |
+| `AppTheme.spacing.xxl`        | `p-xxl`, `px-xxl`, etc.               |
+| `AppTheme.spacing.xxxl`       | `p-xxxl`, `px-xxxl`, etc.             |
+| `AppTheme.borderRadius.sm`    | `rounded-sm`                          |
+| `AppTheme.borderRadius.md`    | `rounded-md`                          |
+| `AppTheme.borderRadius.lg`    | `rounded-lg`                          |
+| `AppTheme.borderRadius.xl`    | `rounded-xl`                          |
+| `AppTheme.borderRadius.full`  | `rounded-full`                        |
+| `AppTheme.typography.heading` | `text-heading`                        |
+| `AppTheme.typography.body`    | `text-body`                           |
 
 ---
 
@@ -153,7 +206,7 @@ Exception: dynamic values that depend on props (e.g. `{ backgroundColor: color }
 ### Wrapper order (outermost → innermost)
 
 ```tsx
-<SafeAreaView style={{ flex: 1, backgroundColor: AppTheme.colors.bg }}>
+<SafeAreaView style={{ flex: 1, backgroundColor: '#EEEEE0' }}>
   <KeyboardAvoidingView // only when the screen has inputs
     behavior={Platform.OS === "ios" ? "padding" : "height"}
     style={{ flex: 1 }}
@@ -197,7 +250,7 @@ Use for any screen that is primarily scrollable and has **no TextInput** fields.
   headerSlot={<ScreenHeader onBack={() => router.back()} />}  // sticky above scroll
   footerSlot={<BottomTabBar activeTab="home" />}              // sticky below scroll
   overlaySlot={sortVisible ? <SortMenu ... /> : null}         // absolute overlays (NOT RN Modal)
-  backgroundColor="#F5F4E8"                                    // optional, default: AppTheme.colors.bg
+  backgroundColor="#F5F4E8"                                    // optional, default: '#EEEEE0'
   contentStyle={{ paddingBottom: 24 }}                        // optional scrollContent override
 >
   {/* scrollable content */}

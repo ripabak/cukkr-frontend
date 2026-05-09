@@ -10,7 +10,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 interface Booking {
   id: string;
@@ -112,34 +112,34 @@ export function ScheduleActiveBookingsScreen() {
   return (
     <ScreenShell
       backgroundColor="#F5F4E8"
-      contentStyle={styles.scrollContentPadding}
+      contentStyle={{ paddingBottom: 100 }}
       headerSlot={
         <>
           {/* Top bar */}
-          <View style={styles.topBar}>
+          <View className="flex-row items-center justify-between px-xl pt-md pb-sm">
             <DateSelectorPill
               label={formatDatePill(selectedDate)}
               onPress={() => setCalendarVisible(true)}
             />
-            <View style={styles.topActions}>
+            <View className="flex-row gap-[10px]">
               <TouchableOpacity
                 onPress={() => setCalendarVisible(true)}
                 activeOpacity={0.8}
-                style={styles.iconBtn}
+                className="w-11 h-11 rounded-full bg-card items-center justify-center"
               >
                 <Ionicons name="calendar" size={20} color="#1A1A1A" />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => router.push("/schedule-new-appointment" as any)}
                 activeOpacity={0.8}
-                style={[styles.iconBtn, styles.iconBtnDark]}
+                className="w-11 h-11 rounded-full bg-dark items-center justify-center"
               >
                 <Ionicons name="add" size={22} color="#FFFFFF" />
               </TouchableOpacity>
             </View>
           </View>
           {/* Day chips */}
-          <View style={styles.dayChipsWrapper}>
+          <View className="px-xl pb-sm">
             <DayChipRow
               days={days}
               selectedKey={selectedKey}
@@ -151,30 +151,30 @@ export function ScheduleActiveBookingsScreen() {
       }
       overlaySlot={
         filterMenuVisible ? (
-          <View style={styles.menuOverlay}>
+          <View className="absolute inset-0 z-50">
             <StatusFilterMenu
               visible
               options={SCHEDULE_STATUS_OPTIONS}
               selected={statusFilter}
               onSelect={setStatusFilter}
               onClose={() => setFilterMenuVisible(false)}
-              style={styles.filterMenuPosition}
+              style={{ top: 180, right: 20 }}
             />
           </View>
         ) : null
       }
     >
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>
+      <View className="flex-row items-center justify-between mb-[14px] mt-sm">
+        <Text className="text-[22px] font-bold text-dark">
           Active Booking{" "}
-          <Text style={styles.sectionCount}>({filteredBookings.length})</Text>
+          <Text className="font-normal text-gray">({filteredBookings.length})</Text>
         </Text>
         <TouchableOpacity
           onPress={() => setFilterMenuVisible(true)}
           activeOpacity={0.8}
-          style={styles.filterPill}
+          className="flex-row items-center bg-card rounded-full px-[14px] py-sm gap-xs"
         >
-          <Text style={styles.filterLabel}>
+          <Text className="text-sm font-medium text-dark">
             {SCHEDULE_STATUS_OPTIONS.find((o) => o.value === statusFilter)
               ?.label ?? "All"}
           </Text>
@@ -182,7 +182,7 @@ export function ScheduleActiveBookingsScreen() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.list}>
+      <View>
         {filteredBookings.map((booking, i) => (
           <BookingCard
             key={booking.id}
@@ -193,7 +193,7 @@ export function ScheduleActiveBookingsScreen() {
             status={booking.status}
             onPress={() => router.push(`/booking-detail-waiting` as any)}
             style={
-              i < filteredBookings.length - 1 ? styles.cardMargin : undefined
+              i < filteredBookings.length - 1 ? { marginBottom: 12 } : undefined
             }
           />
         ))}
@@ -207,97 +207,3 @@ export function ScheduleActiveBookingsScreen() {
     </ScreenShell>
   );
 }
-
-const styles = StyleSheet.create({
-  topBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingTop: 12,
-    paddingBottom: 8,
-  },
-  topActions: {
-    flexDirection: "row",
-    gap: 10,
-  },
-  iconBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: "#FFFFFF",
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  iconBtnDark: {
-    backgroundColor: "#1A1A1A",
-  },
-  dayChipsWrapper: {
-    paddingHorizontal: 20,
-    paddingBottom: 8,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  sectionHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 14,
-    marginTop: 8,
-  },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: "700",
-    color: "#1A1A1A",
-  },
-  sectionCount: {
-    fontWeight: "400",
-    color: "#666666",
-  },
-  filterPill: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 999,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    gap: 4,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 1,
-  },
-  filterLabel: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#1A1A1A",
-  },
-  list: {
-    gap: 0,
-  },
-  cardMargin: {
-    marginBottom: 12,
-  },
-  scrollContentPadding: {
-    paddingBottom: 100,
-  },
-  menuOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 50,
-  },
-  filterMenuPosition: {
-    top: 180,
-    right: 20,
-  },
-});

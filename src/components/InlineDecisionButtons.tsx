@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { View, TouchableOpacity, Text, ViewStyle } from 'react-native';
 
 interface Props {
   declineLabel?: string;
@@ -17,54 +17,23 @@ export function InlineDecisionButtons({
   style,
 }: Props) {
   return (
-    <View style={[styles.row, style]}>
+    <View className="flex-row gap-[10px] mt-[10px]" style={style}>
       <TouchableOpacity
         onPress={onDecline}
         activeOpacity={0.8}
-        style={[styles.btn, styles.declineBtn]}
+        className="px-xl py-[10px] rounded-full items-center justify-center border-[1.5px] border-[#FF4A4A]"
       >
-        <Text style={styles.declineLabel}>{declineLabel}</Text>
+        <Text className="text-body font-semibold text-[#FF4A4A]">{declineLabel}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={onAccept}
         activeOpacity={0.8}
-        style={[styles.btn, styles.acceptBtn]}
+        className="px-xl py-[10px] rounded-full items-center justify-center border-[1.5px] border-[#55C46B]"
       >
-        <Text style={styles.acceptLabel}>{acceptLabel}</Text>
+        <Text className="text-body font-semibold text-[#55C46B]">{acceptLabel}</Text>
       </TouchableOpacity>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    gap: 10,
-    marginTop: 10,
-  },
-  btn: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 999,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  declineBtn: {
-    borderWidth: 1.5,
-    borderColor: '#FF4A4A',
-  },
-  acceptBtn: {
-    borderWidth: 1.5,
-    borderColor: '#55C46B',
-  },
-  declineLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#FF4A4A',
-  },
-  acceptLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#55C46B',
-  },
-});
+

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, TouchableOpacity, ViewStyle } from 'react-native';
 
 interface MenuItem {
   label: string;
@@ -19,8 +19,8 @@ export function OverflowMenu({ visible, items, onClose, style }: Props) {
 
   return (
     <>
-      <TouchableOpacity style={styles.backdrop} onPress={onClose} activeOpacity={1} />
-      <View style={[styles.menu, style]}>
+      <TouchableOpacity className="absolute inset-0" onPress={onClose} activeOpacity={1} />
+      <View className="absolute top-14 right-xl bg-card rounded-md min-w-[180px] z-[100]" style={[{ shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.12, shadowRadius: 12, elevation: 8 }, style]}>
         {items.map((item, index) => (
           <TouchableOpacity
             key={index}
@@ -29,9 +29,9 @@ export function OverflowMenu({ visible, items, onClose, style }: Props) {
               onClose?.();
             }}
             activeOpacity={0.7}
-            style={[styles.item, index < items.length - 1 && styles.itemBorder]}
+            className={`px-lg py-[14px]${index < items.length - 1 ? ' border-b border-border' : ''}`}
           >
-            <Text style={[styles.itemText, item.danger && styles.itemTextDanger]}>
+            <Text className={`text-body font-medium${item.danger ? ' text-[#E53E3E]' : ' text-dark'}`}>
               {item.label}
             </Text>
           </TouchableOpacity>
@@ -41,42 +41,4 @@ export function OverflowMenu({ visible, items, onClose, style }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  backdrop: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  menu: {
-    position: 'absolute',
-    top: 56,
-    right: 20,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-    elevation: 8,
-    minWidth: 180,
-    zIndex: 100,
-  },
-  item: {
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  itemBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0DDD0',
-  },
-  itemText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#1A1A1A',
-  },
-  itemTextDanger: {
-    color: '#E53E3E',
-  },
-});
+

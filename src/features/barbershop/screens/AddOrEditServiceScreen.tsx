@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ScreenHeader } from '@/src/components/ScreenHeader';
@@ -21,16 +21,16 @@ export function AddOrEditServiceScreen({ isEdit = false }: Props) {
   const [imageUri] = useState<string | undefined>(undefined);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.outer}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#EEEEE0' }}>
+      <View className="flex-1">
         <ScreenHeader
           title={isEdit ? 'Edit Service' : 'New Service'}
           onBack={() => router.back()}
         />
 
         <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
+          className="flex-1"
+          contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40, paddingTop: 8 }}
           showsVerticalScrollIndicator={false}
         >
           <ServiceForm
@@ -54,7 +54,7 @@ export function AddOrEditServiceScreen({ isEdit = false }: Props) {
           <PrimaryButton
             label={isEdit ? 'Save Service' : 'New Service'}
             onPress={() => router.back()}
-            style={styles.submitBtn}
+            style={{ marginTop: 8 }}
           />
         </ScrollView>
       </View>
@@ -62,23 +62,3 @@ export function AddOrEditServiceScreen({ isEdit = false }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#EEEEE0',
-  },
-  outer: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-    paddingTop: 8,
-  },
-  submitBtn: {
-    marginTop: 8,
-  },
-});

@@ -1,11 +1,10 @@
 import { useRouter } from "expo-router";
 import React from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Text, View } from "react-native";
 import { OnboardingButton } from "../components/OnboardingButton";
 import { OnboardingCard } from "../components/OnboardingCard";
 import { OnboardingContainer } from "../components/OnboardingContainer";
 import { OnboardingIndicator } from "../components/OnboardingIndicator";
-import { OnboardingTheme } from "../onboarding-theme";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
@@ -13,33 +12,30 @@ export function OnboardingRunBarbershopScreen() {
   const router = useRouter();
 
   return (
-    <OnboardingContainer style={styles.container}>
-      <View style={styles.content}>
-        <OnboardingCard style={styles.card}>
-          <View style={styles.illustration}>
+    <OnboardingContainer style={{ backgroundColor: '#F5F4E8', justifyContent: 'flex-start', alignItems: 'flex-start' }}>
+      <View className="flex-1 w-full px-[20px] pb-[24px]">
+        <OnboardingCard style={{ height: SCREEN_HEIGHT * 0.42, minHeight: 0, width: '100%', maxWidth: undefined, overflow: 'hidden' }}>
+          <View className="flex-1 bg-accent rounded-lg m-[8px] p-[16px] flex-row items-end gap-[16px]">
             {/* Barber with tablet illustration placeholder */}
-            <View style={styles.bgBlock} />
-            <View style={styles.figureArea}>
-              <View style={styles.figure} />
-              <View style={styles.tablet}>
+            <View className="absolute inset-0 bg-accent rounded-lg" />
+            <View className="flex-1 items-center justify-end gap-[8px]">
+              <View className="w-[60px] h-[120px] bg-dark rounded-lg" />
+              <View className="w-[80px] bg-white rounded-[8px] p-[6px] gap-[4px]">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <View
                     key={i}
-                    style={[
-                      styles.tabletRow,
-                      i % 2 === 0 && styles.tabletRowAccent,
-                    ]}
+                    className={`h-[6px] rounded-[3px] ${i % 2 === 0 ? 'bg-dark' : 'bg-[#E0E0E0]'}`}
                   />
                 ))}
               </View>
             </View>
-            <View style={styles.checkmarks}>
+            <View className="gap-[12px] justify-center mb-[16px]">
               {[true, false, true].map((checked, i) => (
-                <View key={i} style={styles.checkRow}>
+                <View key={i} className="flex-row items-center gap-[8px]">
                   <View
-                    style={[styles.checkIcon, checked && styles.checkIconActive]}
+                    className={`w-[16px] h-[16px] rounded-full border-2 border-dark ${checked ? 'bg-dark' : 'bg-transparent'}`}
                   />
-                  <View style={styles.checkBar} />
+                  <View className="w-[48px] h-[6px] rounded-[3px] bg-dark opacity-70" />
                 </View>
               ))}
             </View>
@@ -48,143 +44,25 @@ export function OnboardingRunBarbershopScreen() {
 
         <OnboardingIndicator current={1} total={3} />
 
-        <View style={styles.textContent}>
-          <Text style={styles.heading}>
+        <View className="mt-[24px] items-center">
+          <Text className="text-[26px] font-bold text-black text-center mb-[12px]">
             Run Your Barbershop{"\n"}with Full Control
           </Text>
-          <Text style={styles.body}>
+          <Text className="text-[14px] text-gray text-center leading-[22px]">
             Manage bookings, walk-ins, barbers, and services{"\n"}
             in one system.{"\n"}
             Everything is structured, nothing gets missed.
           </Text>
         </View>
 
-        <View style={styles.spacer} />
+        <View className="flex-1" />
 
         <OnboardingButton
           label="Next"
           onPress={() => router.push("/onboarding-customer-happy")}
-          style={styles.button}
+          style={{ marginTop: 0 }}
         />
       </View>
     </OnboardingContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#F5F4E8",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-  },
-  content: {
-    flex: 1,
-    width: "100%",
-    paddingHorizontal: OnboardingTheme.spacing.lg,
-    paddingBottom: OnboardingTheme.spacing.xl,
-  },
-  card: {
-    height: SCREEN_HEIGHT * 0.42,
-    minHeight: 0,
-    width: "100%",
-    maxWidth: undefined,
-    overflow: "hidden",
-  },
-  illustration: {
-    flex: 1,
-    backgroundColor: OnboardingTheme.colors.primary,
-    borderRadius: OnboardingTheme.borderRadius.lg,
-    margin: OnboardingTheme.spacing.xs,
-    padding: OnboardingTheme.spacing.md,
-    flexDirection: "row",
-    alignItems: "flex-end",
-    gap: OnboardingTheme.spacing.md,
-  },
-  bgBlock: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: OnboardingTheme.colors.primary,
-    borderRadius: OnboardingTheme.borderRadius.lg,
-  },
-  figureArea: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-end",
-    gap: OnboardingTheme.spacing.xs,
-  },
-  figure: {
-    width: 60,
-    height: 120,
-    backgroundColor: OnboardingTheme.colors.dark,
-    borderRadius: OnboardingTheme.borderRadius.lg,
-  },
-  tablet: {
-    width: 80,
-    backgroundColor: OnboardingTheme.colors.white,
-    borderRadius: OnboardingTheme.borderRadius.md,
-    padding: 6,
-    gap: 4,
-  },
-  tabletRow: {
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: "#E0E0E0",
-  },
-  tabletRowAccent: {
-    backgroundColor: OnboardingTheme.colors.dark,
-  },
-  checkmarks: {
-    gap: OnboardingTheme.spacing.sm,
-    justifyContent: "center",
-    marginBottom: OnboardingTheme.spacing.md,
-  },
-  checkRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  checkIcon: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: OnboardingTheme.colors.dark,
-    backgroundColor: "transparent",
-  },
-  checkIconActive: {
-    backgroundColor: OnboardingTheme.colors.dark,
-  },
-  checkBar: {
-    width: 48,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: OnboardingTheme.colors.dark,
-    opacity: 0.7,
-  },
-  textContent: {
-    marginTop: OnboardingTheme.spacing.xl,
-    alignItems: "center",
-  },
-  heading: {
-    fontSize: 26,
-    fontWeight: "700",
-    color: OnboardingTheme.colors.textDark,
-    textAlign: "center",
-    marginBottom: OnboardingTheme.spacing.sm,
-  },
-  body: {
-    fontSize: 14,
-    color: OnboardingTheme.colors.textGray,
-    textAlign: "center",
-    lineHeight: 22,
-  },
-  spacer: {
-    flex: 1,
-  },
-  button: {
-    marginTop: 0,
-  },
-});

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ScreenHeader } from '@/src/components/ScreenHeader';
@@ -12,8 +12,8 @@ export function InviteBarberScreen() {
   const [contact, setContact] = useState('');
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#EEEEE0' }}>
+      <View className="flex-1">
         <ScreenHeader
           title="Invite Barber"
           onBack={() => router.back()}
@@ -26,7 +26,7 @@ export function InviteBarberScreen() {
           }
         />
 
-        <View style={styles.content}>
+        <View className="px-[20px] pt-sm">
           <TextInputField
             label="Email or Phone"
             placeholder="Enter email or phone number"
@@ -46,16 +46,3 @@ export function InviteBarberScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#EEEEE0',
-  },
-  container: {
-    flex: 1,
-  },
-  content: {
-    paddingHorizontal: 20,
-    paddingTop: 8,
-  },
-});

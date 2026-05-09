@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { View, TouchableOpacity, Text, ViewStyle } from 'react-native';
 
 interface Props {
   declineLabel?: string;
@@ -17,61 +17,23 @@ export function DualActionFooter({
   style,
 }: Props) {
   return (
-    <View style={[styles.footer, style]}>
+    <View className="absolute bottom-0 left-0 right-0 flex-row gap-md px-xl pb-[36px] pt-lg bg-[#F5F4E8]" style={style}>
       <TouchableOpacity
         onPress={onDecline}
         activeOpacity={0.8}
-        style={[styles.btn, styles.declineBtn]}
+        className="flex-1 h-[52px] rounded-full items-center justify-center border-[1.5px] border-[#FF4A4A]"
       >
-        <Text style={styles.declineLabel}>{declineLabel}</Text>
+        <Text className="text-[16px] font-semibold text-[#FF4A4A]">{declineLabel}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={onAccept}
         activeOpacity={0.8}
-        style={[styles.btn, styles.acceptBtn]}
+        className="flex-1 h-[52px] rounded-full items-center justify-center border-[1.5px] border-[#55C46B]"
       >
-        <Text style={styles.acceptLabel}>{acceptLabel}</Text>
+        <Text className="text-[16px] font-semibold text-[#55C46B]">{acceptLabel}</Text>
       </TouchableOpacity>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  footer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    gap: 12,
-    paddingHorizontal: 20,
-    paddingBottom: 36,
-    paddingTop: 16,
-    backgroundColor: '#F5F4E8',
-  },
-  btn: {
-    flex: 1,
-    height: 52,
-    borderRadius: 999,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  declineBtn: {
-    borderWidth: 1.5,
-    borderColor: '#FF4A4A',
-  },
-  acceptBtn: {
-    borderWidth: 1.5,
-    borderColor: '#55C46B',
-  },
-  declineLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#FF4A4A',
-  },
-  acceptLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#55C46B',
-  },
-});
+

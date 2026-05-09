@@ -6,7 +6,7 @@ import { SelectionToolbar } from "@/src/components/SelectionToolbar";
 import { SortMenu } from "@/src/components/SortMenu";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Customer {
@@ -72,10 +72,10 @@ export function CustomerManagementScreen() {
 
   return (
     <SafeAreaView
-      style={[styles.safe, { backgroundColor: bgColor }]}
+      style={{ flex: 1, backgroundColor: bgColor }}
       edges={["top"]}
     >
-      <View style={[styles.container, { backgroundColor: bgColor }]}>
+      <View style={{ flex: 1, backgroundColor: bgColor }}>
         <SelectionToolbar
           selectionMode={selectionMode}
           onToggleSelect={() => {
@@ -90,20 +90,20 @@ export function CustomerManagementScreen() {
 
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.content}
+          contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
           keyboardShouldPersistTaps="handled"
         >
-          <Text style={styles.title}>Customer{"\n"}Management</Text>
-          <Text style={styles.subtitle}>
+          <Text className="text-[34px] font-extrabold text-dark leading-[40px] mt-sm">Customer{"\n"}Management</Text>
+          <Text className="text-[14px] text-[#444444] mt-sm">
             Manage all your customers in one place.
           </Text>
           {!selectionMode && (
-            <Text style={styles.hint}>
+            <Text className="text-[14px] text-[#444444] mt-[4px]">
               Only Customer with valid contact information will be here.
             </Text>
           )}
 
-          <View style={styles.searchWrapper}>
+          <View className="mt-xxl mb-lg">
             <SearchInput
               value={search}
               onChangeText={setSearch}
@@ -111,7 +111,7 @@ export function CustomerManagementScreen() {
             />
           </View>
 
-          <View style={styles.list}>
+          <View className="gap-[10px]">
             {filtered.map((customer) => (
               <CustomerCard
                 key={customer.id}
@@ -141,51 +141,10 @@ export function CustomerManagementScreen() {
           selected={sortValue}
           onSelect={(v) => setSortValue(v)}
           onClose={() => setSortVisible(false)}
-          style={styles.sortMenu}
+          style={{ top: 52, right: 20, left: 20 }}
         />
       </View>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-  },
-  content: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-  },
-  title: {
-    fontSize: 34,
-    fontWeight: "800",
-    color: "#1A1A1A",
-    lineHeight: 40,
-    marginTop: 8,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: "#444444",
-    marginTop: 8,
-  },
-  hint: {
-    fontSize: 14,
-    color: "#444444",
-    marginTop: 4,
-  },
-  searchWrapper: {
-    marginTop: 24,
-    marginBottom: 16,
-  },
-  list: {
-    gap: 10,
-  },
-  sortMenu: {
-    top: 52,
-    right: 20,
-    left: 20,
-  },
-});

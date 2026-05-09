@@ -1,6 +1,5 @@
 import React from "react";
-import { StyleSheet, View, ViewStyle } from "react-native";
-import { OnboardingTheme } from "../onboarding-theme";
+import { View, ViewStyle } from "react-native";
 
 interface OnboardingCardProps {
   children: React.ReactNode;
@@ -11,20 +10,14 @@ export const OnboardingCard: React.FC<OnboardingCardProps> = ({
   children,
   style,
 }) => {
-  return <View style={[styles.card, style]}>{children}</View>;
+  return (
+    <View
+      className="bg-white rounded-xl p-xl w-[90%] max-w-[380px] min-h-[500px] justify-between items-center"
+      style={style}
+    >
+      {children}
+    </View>
+  );
 };
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: OnboardingTheme.colors.white,
-    borderRadius: OnboardingTheme.borderRadius.xl,
-    padding: OnboardingTheme.spacing.lg,
-    width: "90%",
-    maxWidth: 380,
-    minHeight: 500,
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-});
 
 export default OnboardingCard;

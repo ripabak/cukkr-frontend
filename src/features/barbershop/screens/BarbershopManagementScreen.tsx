@@ -5,7 +5,7 @@ import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 interface Barber {
   id: string;
@@ -38,10 +38,10 @@ export function BarbershopManagementScreen() {
   return (
     <ScreenShell>
       <ScreenHeader onBack={() => router.back()} />
-      <Text style={styles.title}>Barbers Management</Text>
-      <Text style={styles.subtitle}>Manage your barbershop team members</Text>
+      <Text className="text-[28px] font-bold text-dark mt-sm">Barbers Management</Text>
+      <Text className="text-[14px] text-gray mt-[4px] mb-xl">Manage your barbershop team members</Text>
 
-      <View style={styles.list}>
+      <View className="mb-xxl">
         {barbers.map((barber, index) => (
           <MemberCard
             key={barber.id}
@@ -49,12 +49,12 @@ export function BarbershopManagementScreen() {
             status={barber.status}
             statusVariant={barber.status === "Pending" ? "pending" : "active"}
             onRemove={() => handleRemove(barber)}
-            style={index < barbers.length - 1 ? styles.cardMargin : undefined}
+            style={index < barbers.length - 1 ? { marginBottom: 12 } : undefined}
           />
         ))}
       </View>
 
-      <Text style={styles.sectionLabel}>Invite Barber</Text>
+      <Text className="text-[13px] text-gray mb-sm">Invite Barber</Text>
       <PrimaryButton
         label="Invite Barber"
         onPress={() => router.push("/invite-barber")}
@@ -72,29 +72,3 @@ export function BarbershopManagementScreen() {
     </ScreenShell>
   );
 }
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#1A1A1A",
-    marginTop: 8,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: "#666666",
-    marginTop: 4,
-    marginBottom: 20,
-  },
-  list: {
-    marginBottom: 24,
-  },
-  cardMargin: {
-    marginBottom: 12,
-  },
-  sectionLabel: {
-    fontSize: 13,
-    color: "#666666",
-    marginBottom: 8,
-  },
-});

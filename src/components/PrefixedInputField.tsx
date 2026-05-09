@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, TextInput, ViewStyle } from 'react-native';
 
 interface Props {
   prefix: string;
@@ -7,42 +7,24 @@ interface Props {
   onChangeText: (t: string) => void;
   placeholder?: string;
   style?: ViewStyle;
+  className?: string;
 }
 
-export function PrefixedInputField({ prefix, value, onChangeText, placeholder, style }: Props) {
+export function PrefixedInputField({ prefix, value, onChangeText, placeholder, style, className }: Props) {
   return (
-    <View style={[styles.container, style]}>
-      <Text style={styles.prefix}>{prefix}</Text>
+    <View
+      className={`flex-row items-center bg-card rounded-full border border-border px-lg py-[14px]${className ? ` ${className}` : ''}`}
+      style={style}
+    >
+      <Text className="text-body text-dark">{prefix}</Text>
       <TextInput
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
         placeholderTextColor="#B0ADA0"
-        style={styles.input}
+        className="text-body text-dark"
+        style={{ flex: 1, padding: 0 }}
       />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: '#E0DDD0',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  prefix: {
-    fontSize: 14,
-    color: '#1A1A1A',
-  },
-  input: {
-    flex: 1,
-    fontSize: 14,
-    color: '#1A1A1A',
-    padding: 0,
-  },
-});

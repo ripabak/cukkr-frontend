@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -27,19 +27,19 @@ export function SendMessagesToCustomersScreen({
   const bgColor = selectionMode ? '#C6ED3C' : '#F5F4E8';
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: bgColor }]} edges={['top']}>
-      <View style={[styles.container, { backgroundColor: bgColor }]}>
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: bgColor }} edges={['top']}>
+      <View style={{ flex: 1, backgroundColor: bgColor }}>
+        <View className="flex-row items-center px-[20px] py-md gap-md">
+          <TouchableOpacity className="w-9 h-9 rounded-full bg-card items-center justify-center" onPress={() => router.back()}>
             <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>{title}</Text>
-          <TouchableOpacity style={styles.sendBtn} onPress={() => {}}>
+          <Text className="flex-1 text-[16px] font-bold text-dark text-center">{title}</Text>
+          <TouchableOpacity className="w-9 h-9 rounded-full bg-[#888888] items-center justify-center" onPress={() => {}}>
             <Ionicons name="send" size={18} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
 
-        <View style={styles.content}>
+        <View className="px-[20px] pt-sm gap-lg">
           <MessageComposer
             value={message}
             onChangeText={setMessage}
@@ -53,7 +53,7 @@ export function SendMessagesToCustomersScreen({
               '',
               'It will send the message through registered email or mobile phone',
             ]}
-            style={styles.helper}
+            style={{ marginTop: 4 }}
           />
         </View>
       </View>
@@ -61,49 +61,3 @@ export function SendMessagesToCustomersScreen({
   );
 }
 
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    gap: 12,
-  },
-  backBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    flex: 1,
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#1A1A1A',
-    textAlign: 'center',
-  },
-  sendBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#888888',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  content: {
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    gap: 16,
-  },
-  helper: {
-    marginTop: 4,
-  },
-});

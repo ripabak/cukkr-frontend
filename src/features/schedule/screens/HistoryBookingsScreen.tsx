@@ -12,7 +12,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 interface HistoryBooking {
   id: string;
@@ -103,11 +103,11 @@ export function HistoryBookingsScreen() {
         <ScreenHeader
           onBack={() => router.back()}
           rightAction={
-            <View style={styles.headerActions}>
+            <View className="flex-row items-center gap-sm">
               <TouchableOpacity
                 onPress={() => setStatusMenuVisible(true)}
                 activeOpacity={0.8}
-                style={styles.iconBtn}
+                className="w-9 h-9 rounded-full bg-card border border-border items-center justify-center"
               >
                 <Ionicons name="filter-outline" size={18} color="#1A1A1A" />
               </TouchableOpacity>
@@ -122,19 +122,19 @@ export function HistoryBookingsScreen() {
       overlaySlot={
         <>
           {statusMenuVisible ? (
-            <View style={styles.menuOverlay}>
+            <View className="absolute inset-0 z-50">
               <StatusFilterMenu
                 visible
                 options={HISTORY_STATUS_OPTIONS}
                 selected={statusFilter}
                 onSelect={setStatusFilter}
                 onClose={() => setStatusMenuVisible(false)}
-                style={styles.statusMenuPosition}
+                style={{ top: 100, right: 20 }}
               />
             </View>
           ) : null}
           {sortMenuVisible ? (
-            <View style={styles.menuOverlay}>
+            <View className="absolute inset-0 z-50">
               <SortMenu
                 visible
                 options={SORT_OPTIONS}
@@ -147,14 +147,14 @@ export function HistoryBookingsScreen() {
         </>
       }
     >
-      <View style={styles.sectionHeader}>
-        <Text style={styles.title}>All Booking</Text>
+      <View className="flex-row items-center justify-between mb-lg mt-sm">
+        <Text className="text-[26px] font-bold text-dark">All Booking</Text>
         <TouchableOpacity
           onPress={() => setStatusMenuVisible(true)}
           activeOpacity={0.8}
-          style={styles.filterPill}
+          className="flex-row items-center bg-card rounded-full px-[14px] py-sm gap-xs"
         >
-          <Text style={styles.filterLabel}>
+          <Text className="text-sm font-medium text-dark">
             {HISTORY_STATUS_OPTIONS.find((o) => o.value === statusFilter)
               ?.label ?? "All"}
           </Text>
@@ -162,7 +162,7 @@ export function HistoryBookingsScreen() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.list}>
+      <View>
         {filteredHistory.map((booking, i) => (
           <HistoryBookingRow
             key={booking.id}
@@ -173,7 +173,7 @@ export function HistoryBookingsScreen() {
             status={booking.status}
             onPress={() => router.push("/booking-detail-result" as any)}
             style={
-              i < filteredHistory.length - 1 ? styles.rowMargin : undefined
+              i < filteredHistory.length - 1 ? { marginBottom: 12 } : undefined
             }
           />
         ))}
@@ -190,68 +190,3 @@ export function HistoryBookingsScreen() {
     </ScreenShell>
   );
 }
-
-const styles = StyleSheet.create({
-  headerActions: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  iconBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: "#FFFFFF",
-    borderWidth: 1,
-    borderColor: "#E0DDD0",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  sectionHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 16,
-    marginTop: 8,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: "700",
-    color: "#1A1A1A",
-  },
-  filterPill: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 999,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    gap: 4,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 1,
-  },
-  filterLabel: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#1A1A1A",
-  },
-  list: {},
-  rowMargin: {
-    marginBottom: 12,
-  },
-  menuOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 50,
-  },
-  statusMenuPosition: {
-    top: 100,
-    right: 20,
-  },
-});

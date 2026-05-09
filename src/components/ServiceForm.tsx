@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, ViewStyle } from 'react-native';
 import { ImageUploadBox } from '@/src/components/ImageUploadBox';
 import { TextInputField } from '@/src/components/TextInputField';
 import { MultilineInputField } from '@/src/components/MultilineInputField';
@@ -23,6 +23,7 @@ interface Props {
   onImagePress?: () => void;
   showDiscount?: boolean;
   style?: ViewStyle;
+  className?: string;
 }
 
 export function ServiceForm({
@@ -42,13 +43,14 @@ export function ServiceForm({
   onImagePress,
   showDiscount = false,
   style,
+  className,
 }: Props) {
   return (
-    <View style={[styles.container, style]}>
+    <View className={className} style={style}>
       <ImageUploadBox
         imageUri={imageUri}
         onPress={onImagePress}
-        style={styles.imageBox}
+        style={{ height: 100, marginBottom: 20 }}
       />
 
       <TextInputField
@@ -56,7 +58,7 @@ export function ServiceForm({
         placeholder="Service Name"
         value={name}
         onChangeText={onNameChange}
-        style={styles.field}
+        style={{ marginBottom: 16 }}
       />
 
       <MultilineInputField
@@ -64,28 +66,28 @@ export function ServiceForm({
         placeholder="Service Description"
         value={description}
         onChangeText={onDescriptionChange}
-        style={styles.field}
+        style={{ marginBottom: 16 }}
       />
 
-      <Text style={styles.fieldLabel}>Price</Text>
+      <Text className="text-caption text-gray mb-[6px] mt-[4px]">Price</Text>
       <PrefixedInputField
         prefix="Rp"
         placeholder="0"
         value={price}
         onChangeText={onPriceChange}
-        style={styles.prefixField}
+        style={{ marginBottom: 16 }}
       />
 
-      <Text style={styles.fieldLabel}>Duration</Text>
+      <Text className="text-caption text-gray mb-[6px] mt-[4px]">Duration</Text>
       <PrefixedInputField
         prefix="In Minutes"
         placeholder="0"
         value={duration}
         onChangeText={onDurationChange}
-        style={styles.prefixField}
+        style={{ marginBottom: 16 }}
       />
 
-      <View style={styles.card}>
+      <View className="bg-[#D9E8A0] rounded-xl mb-lg">
         <ToggleRow
           label="Active"
           value={isActive}
@@ -96,43 +98,16 @@ export function ServiceForm({
 
       {showDiscount && onDiscountChange ? (
         <>
-          <Text style={styles.fieldLabel}>Discount</Text>
+          <Text className="text-caption text-gray mb-[6px] mt-[4px]">Discount</Text>
           <PrefixedInputField
             prefix="%"
             placeholder="0"
             value={discount ?? ''}
             onChangeText={onDiscountChange}
-            style={styles.prefixField}
+            style={{ marginBottom: 16 }}
           />
         </>
       ) : null}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    gap: 0,
-  },
-  imageBox: {
-    height: 100,
-    marginBottom: 20,
-  },
-  field: {
-    marginBottom: 16,
-  },
-  fieldLabel: {
-    fontSize: 13,
-    color: '#666666',
-    marginBottom: 6,
-    marginTop: 4,
-  },
-  prefixField: {
-    marginBottom: 16,
-  },
-  card: {
-    backgroundColor: '#D9E8A0',
-    borderRadius: 16,
-    marginBottom: 16,
-  },
-});

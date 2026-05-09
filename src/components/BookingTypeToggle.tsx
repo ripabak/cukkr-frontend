@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 type BookingType = 'appointment' | 'walkin';
@@ -11,11 +11,11 @@ interface Props {
 
 export function BookingTypeToggle({ value, onChange }: Props) {
   return (
-    <View style={styles.container}>
+    <View className="flex-row gap-[6px]">
       <TouchableOpacity
         onPress={() => onChange('appointment')}
         activeOpacity={0.8}
-        style={[styles.iconBtn, value === 'appointment' && styles.iconBtnActive]}
+        className={`w-9 h-9 rounded-[10px] items-center justify-center${value === 'appointment' ? ' bg-[#B7DF2B]' : ''}`}
       >
         <Ionicons
           name="calendar-outline"
@@ -26,7 +26,7 @@ export function BookingTypeToggle({ value, onChange }: Props) {
       <TouchableOpacity
         onPress={() => onChange('walkin')}
         activeOpacity={0.8}
-        style={[styles.iconBtn, value === 'walkin' && styles.iconBtnActive]}
+        className={`w-9 h-9 rounded-[10px] items-center justify-center${value === 'walkin' ? ' bg-[#B7DF2B]' : ''}`}
       >
         <Ionicons
           name="person-outline"
@@ -38,20 +38,4 @@ export function BookingTypeToggle({ value, onChange }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    gap: 6,
-  },
-  iconBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
-  iconBtnActive: {
-    backgroundColor: '#B7DF2B',
-  },
-});
+

@@ -3,7 +3,7 @@ import { HelperCopy } from "@/src/components/HelperCopy";
 import { PrefixedInputField } from "@/src/components/PrefixedInputField";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // --- MOCK DATA ---
@@ -14,14 +14,14 @@ export function EditBookingUrlScreen() {
   const [slug, setSlug] = useState(MOCK_BOOKING_SLUG);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.outer}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#EEEEE0' }}>
+      <View className="flex-1">
         <EditFieldHeader
           title="Book Url"
           onBack={() => router.back()}
           onSave={() => router.back()}
         />
-        <View style={styles.content}>
+        <View className="flex-1 px-[20px] pt-lg">
           <PrefixedInputField
             prefix="https://cukkr.com/"
             value={slug}
@@ -33,28 +33,10 @@ export function EditBookingUrlScreen() {
               "Use only letters, numbers, and hyphens.",
             ]}
             errorLine="Spaces are not allowed."
-            style={styles.helper}
+            style={{ marginTop: 16 }}
           />
         </View>
       </View>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#EEEEE0",
-  },
-  outer: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 16,
-  },
-  helper: {
-    marginTop: 16,
-  },
-});

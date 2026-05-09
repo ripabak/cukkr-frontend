@@ -5,7 +5,7 @@ import { TextInputField } from "@/src/components/TextInputField";
 import { WizardProgress } from "@/src/components/WizardProgress";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 export function CreateBarbershopInviteBarberEmptyScreen() {
   const router = useRouter();
@@ -13,17 +13,17 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
 
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
-      <WizardProgress totalSteps={3} currentStep={1} style={styles.wizard} />
-      <Text style={styles.title}>Invite Barber</Text>
-      <Text style={styles.subtitle}>Inviting barber to your barbershop</Text>
+      <WizardProgress totalSteps={3} currentStep={1} style={{ marginBottom: 32 }} />
+      <Text className="text-[28px] font-bold text-dark">Invite Barber</Text>
+      <Text className="text-[14px] text-gray mt-sm mb-xxxl">Inviting barber to your barbershop</Text>
       <TextInputField
         label="Add Barber"
         placeholder="email / phone number *"
         value={barber}
         onChangeText={setBarber}
       />
-      <SecondaryButton label="Invite" style={styles.inviteBtn} />
-      <View style={styles.flex} />
+      <SecondaryButton label="Invite" style={{ marginTop: 12, alignSelf: 'center', paddingHorizontal: 32 }} />
+      <View className="flex-1" />
       <PrimaryButton
         label="Skip"
         onPress={() => router.push("/create-barbershop-first-service")}
@@ -31,29 +31,3 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
     </ScreenShell>
   );
 }
-
-const styles = StyleSheet.create({
-  wizard: {
-    marginBottom: 32,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#1A1A1A",
-  },
-  subtitle: {
-    fontSize: 14,
-    color: "#666666",
-    marginTop: 8,
-    marginBottom: 32,
-  },
-  inviteBtn: {
-    marginTop: 12,
-    alignSelf: "center",
-    width: "auto",
-    paddingHorizontal: 32,
-  },
-  flex: {
-    flex: 1,
-  },
-});

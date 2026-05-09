@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ScreenHeader } from '@/src/components/ScreenHeader';
@@ -42,17 +42,17 @@ export function OpenHoursScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#EEEEE0' }}>
       <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
+        className="flex-1"
+        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
       >
         <ScreenHeader onBack={() => router.back()} />
-        <Text style={styles.title}>Open Hours</Text>
-        <Text style={styles.subtitle}>Set your barbershop operating hours for each day</Text>
+        <Text className="text-[28px] font-bold text-dark mt-sm">Open Hours</Text>
+        <Text className="text-[14px] text-gray mt-[4px] mb-xl">Set your barbershop operating hours for each day</Text>
 
-        <View style={styles.card}>
+        <View className="bg-info-row-bg rounded-lg mb-xxl">
           {days.map((day, index) => (
             <DayHoursRow
               key={day.key}
@@ -71,41 +71,9 @@ export function OpenHoursScreen() {
         <PrimaryButton
           label="Save Hours"
           onPress={() => router.back()}
-          style={styles.saveBtn}
         />
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#EEEEE0',
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#1A1A1A',
-    marginTop: 8,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: '#666666',
-    marginTop: 4,
-    marginBottom: 20,
-  },
-  card: {
-    backgroundColor: '#D9E8A0',
-    borderRadius: 16,
-    marginBottom: 24,
-  },
-  saveBtn: {},
-});

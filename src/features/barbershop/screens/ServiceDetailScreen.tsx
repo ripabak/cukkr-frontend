@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -29,15 +29,15 @@ export function ServiceDetailScreen() {
   const [showSetDefaultModal, setShowSetDefaultModal] = useState(false);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.outer}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#EEEEE0' }}>
+      <View className="flex-1">
         <ScreenHeader
           onBack={() => router.back()}
           rightAction={
             <TouchableOpacity
               onPress={() => setOverflowVisible(true)}
               activeOpacity={0.7}
-              style={styles.overflowBtn}
+              className="w-9 h-9 rounded-full bg-dark items-center justify-center"
             >
               <Ionicons name="ellipsis-horizontal" size={18} color="#FFFFFF" />
             </TouchableOpacity>
@@ -45,44 +45,44 @@ export function ServiceDetailScreen() {
         />
 
         <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
+          className="flex-1"
+          contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.imageWrapper}>
-            <View style={styles.serviceImage}>
-              <View style={styles.cameraBadge}>
+          <View className="items-center mb-[20px]">
+            <View className="w-20 h-20 rounded-md bg-[#D9D9D9] relative">
+              <View className="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-dark items-center justify-center">
                 <Ionicons name="camera" size={14} color="#FFFFFF" />
               </View>
             </View>
           </View>
 
-          <Text style={styles.sectionLabel}>General Information</Text>
-          <View style={styles.card}>
+          <Text className="text-[13px] text-gray mb-sm">General Information</Text>
+          <View className="bg-card rounded-lg">
             <InfoRow label="Name" value={MOCK_SERVICE.name} />
             <InfoRow label="Description" value={MOCK_SERVICE.description} isLast />
           </View>
 
-          <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>Pricing & Duration</Text>
-          <View style={styles.card}>
+          <Text className="text-[13px] text-gray mb-sm mt-lg">Pricing & Duration</Text>
+          <View className="bg-card rounded-lg">
             <InfoRow label="Duration" value={MOCK_SERVICE.duration} />
             <InfoRow label="Price" value={MOCK_SERVICE.price} />
             <InfoRow label="Discount" value={MOCK_SERVICE.discount} isLast />
           </View>
 
-          <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>Operational Details</Text>
-          <Text style={styles.operationalSubtitle}>
+          <Text className="text-[13px] text-gray mb-sm mt-lg">Operational Details</Text>
+          <Text className="text-caption text-light-gray mb-sm">
             Toggle activation and configure default service settings.
           </Text>
-          <View style={styles.card}>
+          <View className="bg-card rounded-lg">
             <ToggleRow
               label="Active"
               value={isActive}
               onValueChange={setIsActive}
             />
             {isDefault ? (
-              <View style={styles.defaultRow}>
-                <Text style={styles.defaultLabel}>Set As Default</Text>
+              <View className="flex-row items-center px-lg py-[14px]">
+                <Text className="flex-1 font-bold text-[14px] text-dark">Set As Default</Text>
                 <StatusBadge label="Default" variant="default" />
               </View>
             ) : (
@@ -96,7 +96,7 @@ export function ServiceDetailScreen() {
         </ScrollView>
 
         {overflowVisible ? (
-          <View style={styles.overflowOverlay}>
+          <View className="absolute inset-0 z-50">
             <OverflowMenu
               visible
               items={[
@@ -133,86 +133,3 @@ export function ServiceDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#EEEEE0',
-  },
-  outer: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-  },
-  imageWrapper: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  serviceImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 12,
-    backgroundColor: '#D9D9D9',
-    position: 'relative',
-  },
-  cameraBadge: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: '#1A1A1A',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sectionLabel: {
-    fontSize: 13,
-    color: '#666666',
-    marginBottom: 8,
-  },
-  sectionLabelTop: {
-    marginTop: 16,
-  },
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-  },
-  operationalSubtitle: {
-    fontSize: 12,
-    color: '#B0ADA0',
-    marginBottom: 8,
-  },
-  overflowBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#1A1A1A',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  overflowOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 50,
-  },
-  defaultRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  defaultLabel: {
-    flex: 1,
-    fontWeight: '700',
-    fontSize: 14,
-    color: '#1A1A1A',
-  },
-});

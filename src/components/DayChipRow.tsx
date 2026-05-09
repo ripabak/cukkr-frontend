@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { ScrollView, TouchableOpacity, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 export interface DayChip {
@@ -20,7 +20,7 @@ export function DayChipRow({ days, selectedKey, onSelect, onShowMore }: Props) {
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.row}
+      contentContainerStyle={{ flexDirection: 'row', gap: 8, paddingVertical: 4 }}
     >
       {days.map((day) => {
         const isSelected = day.dateKey === selectedKey;
@@ -29,12 +29,12 @@ export function DayChipRow({ days, selectedKey, onSelect, onShowMore }: Props) {
             key={day.dateKey}
             onPress={() => onSelect(day.dateKey)}
             activeOpacity={0.8}
-            style={[styles.chip, isSelected && styles.chipSelected]}
+            className={`w-[58px] h-[68px] rounded-[16px] items-center justify-center gap-[2px] shadow-sm${isSelected ? ' bg-dark' : ' bg-card'}`}
           >
-            <Text style={[styles.dayLabel, isSelected && styles.dayLabelSelected]}>
+            <Text className={`text-[12px] font-medium${isSelected ? ' text-white' : ' text-[#888888]'}`}>
               {day.dayLabel}
             </Text>
-            <Text style={[styles.dayNumber, isSelected && styles.dayNumberSelected]}>
+            <Text className={`text-[18px] font-bold${isSelected ? ' text-white' : ' text-dark'}`}>
               {day.dayNumber}
             </Text>
           </TouchableOpacity>
@@ -44,7 +44,7 @@ export function DayChipRow({ days, selectedKey, onSelect, onShowMore }: Props) {
         <TouchableOpacity
           onPress={onShowMore}
           activeOpacity={0.8}
-          style={[styles.chip, styles.moreChip]}
+          className="w-[58px] h-[68px] rounded-[16px] items-center justify-center gap-[2px] shadow-sm bg-card"
         >
           <Ionicons name="chevron-forward" size={18} color="#1A1A1A" />
         </TouchableOpacity>
@@ -53,46 +53,4 @@ export function DayChipRow({ days, selectedKey, onSelect, onShowMore }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    gap: 8,
-    paddingVertical: 4,
-  },
-  chip: {
-    width: 58,
-    height: 68,
-    borderRadius: 16,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 1,
-  },
-  chipSelected: {
-    backgroundColor: '#1A1A1A',
-  },
-  moreChip: {
-    backgroundColor: '#FFFFFF',
-  },
-  dayLabel: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: '#888888',
-  },
-  dayLabelSelected: {
-    color: '#FFFFFF',
-  },
-  dayNumber: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#1A1A1A',
-  },
-  dayNumberSelected: {
-    color: '#FFFFFF',
-  },
-});
+

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, ViewStyle } from 'react-native';
 import { ToggleSwitch } from '@/src/components/ToggleSwitch';
 
 interface Props {
@@ -8,32 +8,17 @@ interface Props {
   onValueChange: (v: boolean) => void;
   isLast?: boolean;
   style?: ViewStyle;
+  className?: string;
 }
 
-export function ToggleRow({ label, value, onValueChange, isLast, style }: Props) {
+export function ToggleRow({ label, value, onValueChange, isLast, style, className }: Props) {
   return (
-    <View style={[styles.container, !isLast && styles.borderBottom, style]}>
-      <Text style={styles.label}>{label}</Text>
+    <View
+      className={`flex-row items-center px-lg py-[14px]${!isLast ? ' border-b border-border' : ''} ${className ?? ''}`}
+      style={style}
+    >
+      <Text className="flex-1 font-bold text-body text-dark">{label}</Text>
       <ToggleSwitch value={value} onValueChange={onValueChange} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  borderBottom: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0DDD0',
-  },
-  label: {
-    flex: 1,
-    fontWeight: '700',
-    fontSize: 14,
-    color: '#1A1A1A',
-  },
-});

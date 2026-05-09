@@ -1,3 +1,9 @@
+/**
+ * Design tokens for cukkr-frontend.
+ * These values are sourced into tailwind.config.js as custom tokens.
+ * Do NOT import this file directly in components — use Tailwind className instead.
+ * Exception: tailwind.config.js reads this file to generate class aliases.
+ */
 export const AppTheme = {
   colors: {
     bg: '#EEEEE0',

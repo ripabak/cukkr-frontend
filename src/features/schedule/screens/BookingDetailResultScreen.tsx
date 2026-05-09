@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -34,11 +34,11 @@ export function BookingDetailResultScreen({ status = 'completed' }: Props) {
   const router = useRouter();
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.outer}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F4E8' }}>
+      <View className="flex-1">
         {/* Nav bar — back only, no overflow */}
-        <View style={styles.navBar}>
-          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={styles.backBtn}>
+        <View className="px-xl pt-sm pb-xs">
+          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} className="w-10 h-10 rounded-full bg-[#F0F0E8] items-center justify-center self-start">
             <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
           </TouchableOpacity>
         </View>
@@ -61,26 +61,4 @@ export function BookingDetailResultScreen({ status = 'completed' }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#F5F4E8',
-  },
-  outer: {
-    flex: 1,
-  },
-  navBar: {
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 4,
-  },
-  backBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F0F0E8',
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'flex-start',
-  },
-});
+

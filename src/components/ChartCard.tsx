@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, ViewStyle } from 'react-native';
 
 interface ChartPoint {
   x: number;
@@ -13,6 +13,7 @@ interface Props {
   xLabels?: string[];
   yLabels?: string[];
   style?: ViewStyle;
+  className?: string;
 }
 
 const MOCK_POINTS: ChartPoint[] = [
@@ -27,26 +28,26 @@ const MOCK_POINTS: ChartPoint[] = [
   { x: 1.0, y: 0.18 },
 ];
 
-export function ChartCard({ title, subtitle, subtitleColor = '#B8E031', xLabels = ['Jan', 'Jun', 'Dec'], yLabels = ['100K', '50K', '00'], style }: Props) {
+export function ChartCard({ title, subtitle, subtitleColor = '#B8E031', xLabels = ['Jan', 'Jun', 'Dec'], yLabels = ['100K', '50K', '00'], style, className }: Props) {
   const CHART_HEIGHT = 100;
 
   return (
-    <View style={[styles.card, style]}>
-      <Text style={styles.title}>{title}</Text>
-      {subtitle && <Text style={[styles.subtitle, { color: subtitleColor }]}>{subtitle}</Text>}
+    <View className={`bg-card rounded-xl p-lg gap-[4px] ${className ?? ''}`} style={style}>
+      <Text className="text-[15px] font-bold text-dark">{title}</Text>
+      {subtitle && <Text className="text-[12px] font-medium mb-sm" style={{ color: subtitleColor }}>{subtitle}</Text>}
 
-      <View style={styles.chartArea}>
-        <View style={styles.yAxis}>
+      <View className="flex-row mt-[4px]" style={{ height: 120 }}>
+        <View style={{ width: 36, justifyContent: 'space-between', alignItems: 'flex-end', paddingRight: 6, paddingBottom: 18 }}>
           {yLabels.map((label) => (
-            <Text key={label} style={styles.axisLabel}>{label}</Text>
+            <Text key={label} className="text-[10px] text-[#AAAAAA]">{label}</Text>
           ))}
         </View>
 
-        <View style={styles.chartBody}>
-          <View style={styles.gridLine} />
-          <View style={[styles.gridLine, { top: '50%' }]} />
+        <View className="flex-1 relative">
+          <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, borderStyle: 'dashed', borderWidth: 1, borderColor: '#E8E8E0' }} />
+          <View style={{ position: 'absolute', top: '50%' as unknown as number, left: 0, right: 0, height: 1, borderStyle: 'dashed', borderWidth: 1, borderColor: '#E8E8E0' }} />
 
-          <View style={styles.lineContainer}>
+          <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 100, overflow: 'hidden' }}>
             {MOCK_POINTS.map((pt, i) => {
               if (i === MOCK_POINTS.length - 1) return null;
               const next = MOCK_POINTS[i + 1];
@@ -77,9 +78,9 @@ export function ChartCard({ title, subtitle, subtitleColor = '#B8E031', xLabels 
             })}
           </View>
 
-          <View style={styles.xAxis}>
+          <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, flexDirection: 'row', justifyContent: 'space-between' }}>
             {xLabels.map((label) => (
-              <Text key={label} style={styles.axisLabel}>{label}</Text>
+              <Text key={label} className="text-[10px] text-[#AAAAAA]">{label}</Text>
             ))}
           </View>
         </View>
@@ -88,67 +89,4 @@ export function ChartCard({ title, subtitle, subtitleColor = '#B8E031', xLabels 
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
-    gap: 4,
-  },
-  title: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#1A1A1A',
-  },
-  subtitle: {
-    fontSize: 12,
-    fontWeight: '500',
-    marginBottom: 8,
-  },
-  chartArea: {
-    flexDirection: 'row',
-    height: 120,
-    marginTop: 4,
-  },
-  yAxis: {
-    width: 36,
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    paddingRight: 6,
-    paddingBottom: 18,
-  },
-  chartBody: {
-    flex: 1,
-    position: 'relative',
-  },
-  gridLine: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 1,
-    borderStyle: 'dashed',
-    borderWidth: 1,
-    borderColor: '#E8E8E0',
-  },
-  lineContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 100,
-    overflow: 'hidden',
-  },
-  xAxis: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  axisLabel: {
-    fontSize: 10,
-    color: '#AAAAAA',
-  },
-});
+

@@ -4,7 +4,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
   PanResponder,
   Animated,
 } from 'react-native';
@@ -69,23 +68,25 @@ export function SwipeConfirmationModal({
 
   return (
     <Modal visible={visible} transparent animationType="slide">
-      <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={handleClose}>
-        <TouchableOpacity activeOpacity={1} style={styles.card}>
-          <View style={styles.iconWrapper}>
-            <Ionicons name="checkmark" size={28} color="#FFFFFF" style={styles.checkIcon} />
+      <TouchableOpacity className="flex-1 bg-black/30 justify-center items-center px-xxl" activeOpacity={1} onPress={handleClose}>
+        <TouchableOpacity activeOpacity={1} className="bg-card rounded-[24px] p-[28px] w-full items-center">
+          <View className="w-14 h-14 rounded-full bg-[#55C46B] items-center justify-center mb-lg">
+            <Ionicons name="checkmark" size={28} color="#FFFFFF" />
           </View>
-          <Text style={styles.title}>{title}</Text>
-          {description ? <Text style={styles.description}>{description}</Text> : null}
+          <Text className="text-[20px] font-bold text-dark text-center mb-sm">{title}</Text>
+          {description ? <Text className="text-[13px] text-gray text-center leading-[18px] mb-xxl">{description}</Text> : null}
 
           {/* Swipe track */}
-          <View style={styles.track}>
+          <View
+            style={{ width: SWIPE_TRACK_WIDTH, height: THUMB_SIZE + 8, backgroundColor: '#F0F0E8', borderRadius: 999, justifyContent: 'center', overflow: 'hidden', paddingHorizontal: 8 }}
+          >
             <Animated.View
-              style={[styles.thumb, { transform: [{ translateX: pan }] }]}
+              style={[{ width: THUMB_SIZE, height: THUMB_SIZE, borderRadius: THUMB_SIZE / 2, backgroundColor: '#55C46B', alignItems: 'center', justifyContent: 'center', position: 'absolute', left: 4, zIndex: 1 }, { transform: [{ translateX: pan }] }]}
               {...panResponder.panHandlers}
             >
               <Ionicons name="arrow-forward" size={22} color="#FFFFFF" />
             </Animated.View>
-            <Text style={styles.swipeLabel}>{completed ? 'Completed!' : swipeLabel}</Text>
+            <Text style={{ textAlign: 'center', fontSize: 14, fontWeight: '500', color: '#55C46B', marginLeft: THUMB_SIZE + 4 }}>{completed ? 'Completed!' : swipeLabel}</Text>
           </View>
         </TouchableOpacity>
       </TouchableOpacity>
@@ -93,70 +94,4 @@ export function SwipeConfirmationModal({
   );
 }
 
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-  },
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 24,
-    padding: 28,
-    width: '100%',
-    alignItems: 'center',
-  },
-  iconWrapper: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#55C46B',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-  },
-  checkIcon: {},
-  title: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#1A1A1A',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  description: {
-    fontSize: 13,
-    color: '#666666',
-    textAlign: 'center',
-    lineHeight: 18,
-    marginBottom: 24,
-  },
-  track: {
-    width: SWIPE_TRACK_WIDTH,
-    height: THUMB_SIZE + 8,
-    backgroundColor: '#F0F0E8',
-    borderRadius: 999,
-    justifyContent: 'center',
-    overflow: 'hidden',
-    paddingHorizontal: 8,
-  },
-  thumb: {
-    width: THUMB_SIZE,
-    height: THUMB_SIZE,
-    borderRadius: THUMB_SIZE / 2,
-    backgroundColor: '#55C46B',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    left: 4,
-    zIndex: 1,
-  },
-  swipeLabel: {
-    textAlign: 'center',
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#55C46B',
-    marginLeft: THUMB_SIZE + 4,
-  },
-});
+

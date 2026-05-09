@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, TouchableOpacity, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
@@ -9,13 +9,17 @@ interface Props {
   showChevron?: boolean;
   isLast?: boolean;
   style?: ViewStyle;
+  className?: string;
 }
 
-export function InfoRow({ label, value, onPress, showChevron, isLast, style }: Props) {
+export function InfoRow({ label, value, onPress, showChevron, isLast, style, className }: Props) {
   const content = (
-    <View style={[styles.container, !isLast && styles.borderBottom, style]}>
-      <Text style={styles.label}>{label}</Text>
-      {value ? <Text style={styles.value}>{value}</Text> : null}
+    <View
+      className={`flex-row items-center px-lg py-[14px]${!isLast ? ' border-b border-border' : ''} ${className ?? ''}`}
+      style={style}
+    >
+      <Text className="font-bold text-body text-dark">{label}</Text>
+      {value ? <Text className="text-body text-gray flex-1 text-right">{value}</Text> : null}
       {showChevron ? (
         <Ionicons name="chevron-forward" size={16} color="#666666" />
       ) : null}
@@ -32,27 +36,3 @@ export function InfoRow({ label, value, onPress, showChevron, isLast, style }: P
 
   return content;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  borderBottom: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0DDD0',
-  },
-  label: {
-    fontWeight: '700',
-    fontSize: 14,
-    color: '#1A1A1A',
-  },
-  value: {
-    fontSize: 14,
-    color: '#666666',
-    flex: 1,
-    textAlign: 'right',
-  },
-});

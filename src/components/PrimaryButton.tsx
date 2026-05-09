@@ -1,41 +1,24 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { TouchableOpacity, Text, ViewStyle } from 'react-native';
 
 interface Props {
   label: string;
   onPress?: () => void;
   disabled?: boolean;
   style?: ViewStyle;
+  className?: string;
 }
 
-export function PrimaryButton({ label, onPress, disabled, style }: Props) {
+export function PrimaryButton({ label, onPress, disabled, style, className }: Props) {
   return (
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled}
       activeOpacity={0.8}
-      style={[styles.button, disabled && styles.disabled, style]}
+      className={`w-full h-[52px] rounded-full bg-dark items-center justify-center${disabled ? ' opacity-50' : ''}${className ? ` ${className}` : ''}`}
+      style={style}
     >
-      <Text style={styles.label}>{label}</Text>
+      <Text className="text-white text-base font-semibold">{label}</Text>
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: '#1A1A1A',
-    borderRadius: 999,
-    height: 52,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  disabled: {
-    opacity: 0.5,
-  },
-  label: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});

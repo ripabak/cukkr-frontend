@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, ScrollView, ViewStyle } from 'react-native';
 
 export interface MessageItem {
   id: string;
@@ -14,14 +14,14 @@ interface Props {
 
 export function MessageThread({ messages, style }: Props) {
   return (
-    <View style={[styles.container, style]}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.list}>
+    <View className="bg-card rounded-xl p-lg min-h-[160px]" style={style}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: 16 }}>
         {messages.map((msg) => (
-          <View key={msg.id} style={styles.messageGroup}>
-            <View style={styles.bubble}>
-              <Text style={styles.bubbleText}>{msg.text}</Text>
+          <View key={msg.id} className="gap-[4px]">
+            <View className="self-start bg-[#C6ED3C] rounded-xl rounded-bl-[4px] px-[14px] py-[10px] max-w-[85%]">
+              <Text className="text-[13px] text-dark leading-[18px]">{msg.text}</Text>
             </View>
-            <Text style={styles.timestamp}>{msg.timestamp}</Text>
+            <Text className="text-[11px] text-[#8E8E97] self-end">{msg.timestamp}</Text>
           </View>
         ))}
       </ScrollView>
@@ -29,36 +29,4 @@ export function MessageThread({ messages, style }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
-    minHeight: 160,
-  },
-  list: {
-    gap: 16,
-  },
-  messageGroup: {
-    gap: 4,
-  },
-  bubble: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#C6ED3C',
-    borderRadius: 12,
-    borderBottomLeftRadius: 4,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    maxWidth: '85%',
-  },
-  bubbleText: {
-    fontSize: 13,
-    color: '#1A1A1A',
-    lineHeight: 18,
-  },
-  timestamp: {
-    fontSize: 11,
-    color: '#8E8E97',
-    alignSelf: 'flex-end',
-  },
-});
+

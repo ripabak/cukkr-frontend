@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
+import { TouchableOpacity, View, ViewStyle } from "react-native";
 
 type Tab = "home" | "stats" | "schedule" | "profile";
 
@@ -22,7 +22,7 @@ const TABS: {
 
 export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
   return (
-    <View style={[styles.container, style]}>
+    <View className="flex-row bg-card rounded-full px-sm py-sm" style={[{ shadowColor: '#000000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 8, elevation: 4 }, style]}>
       {TABS.map((tab) => {
         const isActive = tab.key === activeTab;
         return (
@@ -30,9 +30,9 @@ export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
             key={tab.key}
             onPress={() => onTabPress?.(tab.key)}
             activeOpacity={0.7}
-            style={styles.tab}
+            className="flex-1 items-center py-sm"
           >
-            <View style={[styles.iconCircle, isActive && styles.activeCircle]}>
+            <View className={`w-11 h-11 rounded-full items-center justify-center${isActive ? ' bg-accent' : ''}`}>
               <Ionicons
                 name={tab.icon}
                 size={22}
@@ -46,33 +46,4 @@ export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 999,
-    paddingHorizontal: 8,
-    paddingVertical: 8,
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  tab: {
-    flex: 1,
-    alignItems: "center",
-    paddingVertical: 8,
-  },
-  iconCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: "transparent",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  activeCircle: {
-    backgroundColor: "#C6FF4D",
-  },
-});
+

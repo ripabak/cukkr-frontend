@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, View, Text, Image, StyleSheet, ViewStyle } from 'react-native';
+import { TouchableOpacity, View, Text, Image, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
@@ -7,48 +7,25 @@ interface Props {
   imageUri?: string;
   label?: string;
   style?: ViewStyle;
+  className?: string;
 }
 
-export function ImageUploadBox({ onPress, imageUri, label, style }: Props) {
+export function ImageUploadBox({ onPress, imageUri, label, style, className }: Props) {
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={[styles.container, style]}>
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.7}
+      className={`w-full h-[60px] rounded-lg border-[1.5px] border-dashed border-light-gray bg-card items-center justify-center overflow-hidden${className ? ` ${className}` : ''}`}
+      style={style}
+    >
       {imageUri ? (
-        <Image source={{ uri: imageUri }} style={styles.image} />
+        <Image source={{ uri: imageUri }} className="w-full h-full" resizeMode="cover" />
       ) : (
-        <View style={styles.row}>
+        <View className="flex-row items-center">
           <Ionicons name="image-outline" size={20} color="#B0ADA0" />
-          <Text style={styles.label}>{label ?? 'Choose Image'}</Text>
+          <Text className="text-body text-light-gray ml-[10px]">{label ?? 'Choose Image'}</Text>
         </View>
       )}
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: 60,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderStyle: 'dashed',
-    borderColor: '#B0ADA0',
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  label: {
-    fontSize: 14,
-    color: '#B0ADA0',
-    marginLeft: 10,
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-});

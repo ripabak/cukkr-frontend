@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, ViewStyle } from 'react-native';
+import { View, TextInput, ViewStyle } from 'react-native';
 
 interface Props {
   value: string;
@@ -10,7 +10,7 @@ interface Props {
 
 export function MessageComposer({ value, onChangeText, placeholder = 'Messages to selected customers', style }: Props) {
   return (
-    <View style={[styles.container, style]}>
+    <View className="bg-card rounded-xl p-lg min-h-[120px]" style={style}>
       <TextInput
         value={value}
         onChangeText={onChangeText}
@@ -18,24 +18,10 @@ export function MessageComposer({ value, onChangeText, placeholder = 'Messages t
         placeholderTextColor="#B0ADA0"
         multiline
         textAlignVertical="top"
-        style={styles.input}
+        className="text-body text-dark leading-[22px] flex-1 min-h-[88px]"
       />
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
-    minHeight: 120,
-  },
-  input: {
-    fontSize: 14,
-    color: '#1A1A1A',
-    lineHeight: 22,
-    flex: 1,
-    minHeight: 88,
-  },
-});
+

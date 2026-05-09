@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 import { TextInputField } from '@/src/components/TextInputField';
 import { SelectorInput } from '@/src/components/SelectorInput';
 import { ServiceSelectionCard } from '@/src/components/ServiceSelectionCard';
@@ -23,6 +23,7 @@ interface Props {
   services: ServiceItem[];
   onServicePress?: () => void;
   style?: ViewStyle;
+  className?: string;
 }
 
 export function BookingForm({
@@ -38,9 +39,10 @@ export function BookingForm({
   services,
   onServicePress,
   style,
+  className,
 }: Props) {
   return (
-    <View style={[styles.container, style]}>
+    <View className={`gap-[14px] ${className ?? ''}`} style={style}>
       <TextInputField
         label="Customer Name"
         value={customerName}
@@ -77,9 +79,3 @@ export function BookingForm({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    gap: 14,
-  },
-});

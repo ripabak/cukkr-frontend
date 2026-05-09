@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { InfoRow } from './InfoRow';
 import { StatusBadge } from './StatusBadge';
 
@@ -29,6 +29,7 @@ interface Props {
   paymentSummary?: { label: string; value: string }[];
   onWhatsApp?: () => void;
   style?: ViewStyle;
+  className?: string;
   children?: React.ReactNode;
 }
 
@@ -63,38 +64,40 @@ export function BookingDetailCard({
   paymentSummary = [],
   onWhatsApp,
   style,
+  className,
   children,
 }: Props) {
   return (
     <ScrollView
-      style={[styles.scroll, style]}
-      contentContainerStyle={styles.content}
+      className={`flex-1 ${className ?? ''}`}
+      style={style}
+      contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 120, gap: 12 }}
       showsVerticalScrollIndicator={false}
     >
       {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <Text style={styles.customerName}>{customerName}</Text>
-          <Text style={styles.dateLabel}>{dateLabel}</Text>
-          <View style={styles.metaRow}>
+      <View className="flex-row justify-between items-start pt-sm pb-[4px]">
+        <View className="flex-1">
+          <Text className="text-[28px] font-bold text-dark mb-[2px]">{customerName}</Text>
+          <Text className="text-body text-gray mb-sm">{dateLabel}</Text>
+          <View className="flex-row items-start gap-[6px] mb-sm">
             <Ionicons
               name={metaIcon === 'people' ? 'people' : 'calendar'}
               size={14}
               color="#666666"
             />
-            <View style={styles.metaText}>
-              <Text style={styles.metaLine}>{metaLine1}</Text>
-              {metaLine2 ? <Text style={styles.metaLine}>{metaLine2}</Text> : null}
+            <View className="flex-1">
+              <Text className="text-[13px] text-[#444444] leading-[18px]">{metaLine1}</Text>
+              {metaLine2 ? <Text className="text-[13px] text-[#444444] leading-[18px]">{metaLine2}</Text> : null}
             </View>
           </View>
           <StatusBadge
             label={STATUS_LABEL[status]}
             variant={STATUS_TO_BADGE[status] as any}
-            style={styles.badge}
+            style={{ marginTop: 4 }}
           />
         </View>
         {onWhatsApp ? (
-          <TouchableOpacity onPress={onWhatsApp} activeOpacity={0.7} style={styles.whatsappBtn}>
+          <TouchableOpacity onPress={onWhatsApp} activeOpacity={0.7} className="w-10 h-10 rounded-full bg-[#F0F0E8] items-center justify-center mt-[4px]">
             <Ionicons name="logo-whatsapp" size={22} color="#AAAAAA" />
           </TouchableOpacity>
         ) : null}
@@ -102,7 +105,7 @@ export function BookingDetailCard({
 
       {/* Info rows */}
       {infoRows.length > 0 ? (
-        <View style={styles.section}>
+        <View className="bg-card rounded-xl p-lg">
           {infoRows.map((row, i) => (
             <InfoRow
               key={i}
@@ -116,19 +119,19 @@ export function BookingDetailCard({
 
       {/* Services */}
       {services.length > 0 ? (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Services</Text>
+        <View className="bg-card rounded-xl p-lg">
+          <Text className="text-body font-semibold text-dark mb-[10px]">Services</Text>
           {services.map((s, i) => (
-            <View key={i} style={styles.serviceLine}>
-              <Text style={styles.serviceLabel}>{s.name}</Text>
-              <Text style={styles.servicePrice}>{s.price}</Text>
+            <View key={i} className="flex-row justify-between mb-[6px]">
+              <Text className="text-body text-[#444444]">{s.name}</Text>
+              <Text className="text-body text-dark font-medium">{s.price}</Text>
             </View>
           ))}
           {notes ? (
             <>
-              <View style={styles.divider} />
-              <Text style={styles.sectionTitle}>Notes</Text>
-              <Text style={styles.notes}>{notes}</Text>
+              <View className="h-px bg-[#E8E5D8] my-md" />
+              <Text className="text-body font-semibold text-dark mb-[10px]">Notes</Text>
+              <Text className="text-[13px] text-gray leading-[18px]">{notes}</Text>
             </>
           ) : null}
         </View>
@@ -136,12 +139,12 @@ export function BookingDetailCard({
 
       {/* Payment Summary */}
       {paymentSummary.length > 0 ? (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Payment Summary</Text>
+        <View className="bg-card rounded-xl p-lg">
+          <Text className="text-body font-semibold text-dark mb-[10px]">Payment Summary</Text>
           {paymentSummary.map((line, i) => (
-            <View key={i} style={styles.paymentLine}>
-              <Text style={styles.paymentLabel}>{line.label}</Text>
-              <Text style={styles.paymentValue}>{line.value}</Text>
+            <View key={i} className="flex-row justify-between mb-[6px]">
+              <Text className="text-body text-gray">{line.label}</Text>
+              <Text className="text-body text-dark font-medium">{line.value}</Text>
             </View>
           ))}
         </View>
@@ -151,110 +154,3 @@ export function BookingDetailCard({
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  scroll: {
-    flex: 1,
-  },
-  content: {
-    paddingHorizontal: 20,
-    paddingBottom: 120,
-    gap: 12,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    paddingTop: 8,
-    paddingBottom: 4,
-  },
-  headerLeft: {
-    flex: 1,
-  },
-  customerName: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#1A1A1A',
-    marginBottom: 2,
-  },
-  dateLabel: {
-    fontSize: 14,
-    color: '#666666',
-    marginBottom: 8,
-  },
-  metaRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 6,
-    marginBottom: 8,
-  },
-  metaText: {
-    flex: 1,
-  },
-  metaLine: {
-    fontSize: 13,
-    color: '#444444',
-    lineHeight: 18,
-  },
-  badge: {
-    marginTop: 4,
-  },
-  whatsappBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F0F0E8',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 4,
-  },
-  section: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
-  },
-  sectionTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1A1A1A',
-    marginBottom: 10,
-  },
-  serviceLine: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-  },
-  serviceLabel: {
-    fontSize: 14,
-    color: '#444444',
-  },
-  servicePrice: {
-    fontSize: 14,
-    color: '#1A1A1A',
-    fontWeight: '500',
-  },
-  divider: {
-    height: 1,
-    backgroundColor: '#E8E5D8',
-    marginVertical: 12,
-  },
-  notes: {
-    fontSize: 13,
-    color: '#666666',
-    lineHeight: 18,
-  },
-  paymentLine: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-  },
-  paymentLabel: {
-    fontSize: 14,
-    color: '#666666',
-  },
-  paymentValue: {
-    fontSize: 14,
-    color: '#1A1A1A',
-    fontWeight: '500',
-  },
-});

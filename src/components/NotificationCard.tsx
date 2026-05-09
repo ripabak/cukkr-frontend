@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
+import { View, Text, TouchableOpacity, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBadge } from './StatusBadge';
 import { InlineDecisionButtons } from './InlineDecisionButtons';
@@ -18,6 +18,7 @@ interface Props {
   onDecline?: () => void;
   onPress?: () => void;
   style?: ViewStyle;
+  className?: string;
 }
 
 const TYPE_ICON: Record<NotificationType, React.ComponentProps<typeof Ionicons>['name']> = {
@@ -39,34 +40,36 @@ export function NotificationCard({
   onDecline,
   onPress,
   style,
+  className,
 }: Props) {
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={onPress ? 0.85 : 1}
-      style={[styles.card, style]}
+      className={`bg-card rounded-xl p-lg ${className ?? ''}`}
+      style={style}
     >
-      <View style={styles.topRow}>
-        <Text style={styles.typeLabel}>{title}</Text>
-        <Text style={styles.timestamp}>{timestamp}</Text>
+      <View className="flex-row justify-between items-center mb-sm">
+        <Text className="text-[12px] text-[#888888] font-medium">{title}</Text>
+        <Text className="text-[12px] text-[#AAAAAA]">{timestamp}</Text>
       </View>
-      <View style={styles.bodyRow}>
-        <View style={styles.bodyLeft}>
+      <View className="flex-row items-start justify-between">
+        <View className="flex-1 flex-row items-start gap-sm">
           {status === 'pending' ? (
-            <View style={styles.dot} />
+            <View className="w-[8px] h-[8px] rounded-full bg-blue mt-[6px]" />
           ) : null}
-          <View style={styles.bodyText}>
-            <Text style={styles.name}>{name}</Text>
-            {detail ? <Text style={styles.detail}>{detail}</Text> : null}
+          <View className="flex-1">
+            <Text className="text-[16px] font-semibold text-dark mb-[4px]">{name}</Text>
+            {detail ? <Text className="text-[13px] text-gray leading-[18px]">{detail}</Text> : null}
             {status === 'declined' ? (
-              <StatusBadge label="Declined" variant="declined" style={styles.declinedBadge} />
+              <StatusBadge label="Declined" variant="declined" style={{ marginTop: 8 }} />
             ) : null}
             {showActions && status === 'pending' ? (
               <InlineDecisionButtons onDecline={onDecline} onAccept={onAccept} />
             ) : null}
           </View>
         </View>
-        <View style={styles.iconCircle}>
+        <View className="w-10 h-10 rounded-full bg-[#F5F5F5] items-center justify-center ml-md">
           <Ionicons name={TYPE_ICON[type]} size={20} color="#CCCCCC" />
         </View>
       </View>
@@ -74,69 +77,3 @@ export function NotificationCard({
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
-  },
-  topRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  typeLabel: {
-    fontSize: 12,
-    color: '#888888',
-    fontWeight: '500',
-  },
-  timestamp: {
-    fontSize: 12,
-    color: '#AAAAAA',
-  },
-  bodyRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-  },
-  bodyLeft: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 8,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#0D78FF',
-    marginTop: 6,
-  },
-  bodyText: {
-    flex: 1,
-  },
-  name: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1A1A1A',
-    marginBottom: 4,
-  },
-  detail: {
-    fontSize: 13,
-    color: '#666666',
-    lineHeight: 18,
-  },
-  declinedBadge: {
-    marginTop: 8,
-  },
-  iconCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F5F5F5',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 12,
-  },
-});

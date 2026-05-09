@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -40,17 +40,17 @@ export function BookingDetailInProgressScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.outer}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#F5F4E8' }}>
+      <View className="flex-1">
         {/* Nav bar */}
-        <View style={styles.navBar}>
-          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={styles.backBtn}>
+        <View className="flex-row justify-between items-center px-xl pt-sm pb-xs">
+          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} className="w-10 h-10 rounded-full bg-[#F0F0E8] items-center justify-center">
             <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setOverflowVisible(true)}
             activeOpacity={0.7}
-            style={styles.overflowBtn}
+            className="w-10 h-10 rounded-full bg-dark items-center justify-center"
           >
             <Ionicons name="ellipsis-horizontal" size={20} color="#FFFFFF" />
           </TouchableOpacity>
@@ -79,7 +79,7 @@ export function BookingDetailInProgressScreen() {
 
         {/* Overflow menu */}
         {overflowVisible ? (
-          <View style={styles.menuOverlay}>
+          <View className="absolute inset-0 z-50">
             <OverflowMenu
               visible
               items={[
@@ -109,44 +109,4 @@ export function BookingDetailInProgressScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#F5F4E8',
-  },
-  outer: {
-    flex: 1,
-  },
-  navBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 4,
-  },
-  backBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F0F0E8',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  overflowBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#1A1A1A',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  menuOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 50,
-  },
-});
+

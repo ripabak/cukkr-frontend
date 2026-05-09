@@ -1,38 +1,23 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { TouchableOpacity, Text, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
   onPress?: () => void;
   style?: ViewStyle;
+  className?: string;
 }
 
-export function LogoutRow({ onPress, style }: Props) {
+export function LogoutRow({ onPress, style, className }: Props) {
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.7}
-      style={[styles.container, style]}
+      className={`bg-card rounded-lg flex-row items-center px-lg py-[18px]${className ? ` ${className}` : ''}`}
+      style={style}
     >
-      <Text style={styles.label}>Logout</Text>
+      <Text className="flex-1 text-[15px] font-semibold text-dark">Logout</Text>
       <Ionicons name="exit-outline" size={20} color="#1A1A1A" />
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 18,
-  },
-  label: {
-    flex: 1,
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#1A1A1A',
-  },
-});
