@@ -1,3 +1,4 @@
+import { AppTheme } from "@/src/app-theme";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { SelectionRow } from "@/src/features/workspace/components/SelectionRow";
@@ -101,6 +102,7 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
+    paddingTop: AppTheme.spacing.lg,
   },
   container: {
     flex: 1,
