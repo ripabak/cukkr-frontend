@@ -17,14 +17,17 @@ export function useFrame() {
 export function FrameProvider({ children }: { children: React.ReactNode }) {
   const { width: viewportWidth } = useWindowDimensions();
 
+  const effectiveWidth =
+    viewportWidth || (typeof window !== "undefined" ? window.innerWidth : FRAME_DESKTOP);
+
   // mobile/tablet: full viewport width (no side gaps)
   // desktop (≥1024px): fixed 390px centered
   const frameWidth =
     Platform.OS !== "web"
-      ? viewportWidth
-      : viewportWidth >= DESKTOP_BREAKPOINT
+      ? effectiveWidth
+      : effectiveWidth >= DESKTOP_BREAKPOINT
       ? FRAME_DESKTOP
-      : viewportWidth;
+      : effectiveWidth;
 
   return (
     <FrameContext.Provider value={{ frameWidth }}>
