@@ -11,3 +11,20 @@ export function useInviteBarber() {
     },
   });
 }
+
+
+export function useAcceptInvitation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (invitationId: string) => barbersService.acceptInvitation(invitationId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: BARBERSHOP_QUERY_KEYS.all });
+    },
+  });
+}
+
+export function useRejectInvitation() {
+  return useMutation({
+    mutationFn: (invitationId: string) => barbersService.rejectInvitation(invitationId),
+  });
+}
