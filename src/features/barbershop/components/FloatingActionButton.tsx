@@ -1,6 +1,6 @@
-import React from 'react';
-import { TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 
 interface Props {
   onPress?: () => void;
@@ -30,10 +30,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#111111',
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
+    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
     elevation: 6,
   },
 });

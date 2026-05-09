@@ -1,7 +1,7 @@
+import { BookingStatus } from '@/src/components/BookingCard';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
-import { BookingStatus } from '@/src/components/BookingCard';
 
 interface Props {
   customerName: string;
@@ -82,10 +82,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 14,
     gap: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.04,
-    shadowRadius: 3,
+    boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.04)',
     elevation: 1,
   },
   iconCircle: {

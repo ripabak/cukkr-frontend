@@ -97,7 +97,7 @@ export function ToastContainer() {
   }, [toasts]);
 
   return (
-    <View style={styles.root} pointerEvents="box-none">
+    <View style={[styles.root, { pointerEvents: "box-none" }]} >
       {displayedToasts.map((toast) => (
         <AnimatedToast
           key={toast.id}

@@ -150,7 +150,7 @@ function ScrollPicker({
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <View style={pickerStyles.selectionBar} pointerEvents="none" />
+      <View style={[pickerStyles.selectionBar, {pointerEvents: "none"}]} />
     </View>
   );
 }
@@ -346,10 +346,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 16,
     width: "100%",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 20,
+    boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.15)",
     elevation: 10,
     gap: 16,
   },

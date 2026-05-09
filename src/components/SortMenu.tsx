@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 interface SortOption {
   label: string;
@@ -64,10 +64,7 @@ const styles = StyleSheet.create({
     right: 20,
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
+    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.12)',
     elevation: 8,
     minWidth: 200,
     zIndex: 100,
