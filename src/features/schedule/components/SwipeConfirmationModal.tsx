@@ -9,6 +9,7 @@ import {
   Animated,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useFrame } from '@/src/components/FrameContext';
 
 interface Props {
   visible: boolean;
@@ -31,6 +32,7 @@ export function SwipeConfirmationModal({
   onComplete,
   onCancel,
 }: Props) {
+  const { frameWidth } = useFrame();
   const pan = useRef(new Animated.Value(0)).current;
   const [completed, setCompleted] = useState(false);
 
@@ -70,7 +72,7 @@ export function SwipeConfirmationModal({
   return (
     <Modal visible={visible} transparent animationType="slide">
       <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={handleClose}>
-        <TouchableOpacity activeOpacity={1} style={styles.card}>
+        <TouchableOpacity activeOpacity={1} style={[styles.card, { maxWidth: frameWidth - 48 }]}>
           <View style={styles.iconWrapper}>
             <Ionicons name="checkmark" size={28} color="#FFFFFF" style={styles.checkIcon} />
           </View>
@@ -106,6 +108,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     padding: 28,
     width: '100%',
+    alignSelf: 'center',
     alignItems: 'center',
   },
   iconWrapper: {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { useFrame } from '@/src/components/FrameContext';
 
 interface Props {
   visible: boolean;
@@ -10,10 +11,12 @@ interface Props {
 }
 
 export function AlertModal({ visible, title, description, actionLabel, onAction }: Props) {
+  const { frameWidth } = useFrame();
+
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.overlay}>
-        <View style={styles.card}>
+        <View style={[styles.card, { width: frameWidth * 0.85 }]}>
           <Text style={styles.title}>{title}</Text>
           {description ? <Text style={styles.description}>{description}</Text> : null}
           {actionLabel ? (
@@ -38,7 +41,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 24,
     padding: 28,
-    width: '85%',
   },
   title: {
     fontSize: 20,

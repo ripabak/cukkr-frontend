@@ -11,6 +11,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import { useFrame } from "./FrameContext";
 
 const ITEM_HEIGHT = 44;
 const VISIBLE_COUNT = 3;
@@ -258,6 +259,8 @@ export function TimePickerModal({
     setHourIndex(idx);
   }
 
+  const { frameWidth } = useFrame();
+
   if (!visible) return null;
 
   const safeHourIdx = Math.min(hourIndex, validHours.length - 1);
@@ -270,7 +273,7 @@ export function TimePickerModal({
         activeOpacity={1}
         onPress={onClose}
       >
-        <TouchableOpacity activeOpacity={1} style={[styles.container, style]}>
+        <TouchableOpacity activeOpacity={1} style={[styles.container, { maxWidth: frameWidth - 48 }, style]}>
           {/* Header */}
           <View style={styles.header}>
             <Text style={styles.title}>Select Time</Text>

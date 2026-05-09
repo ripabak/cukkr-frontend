@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useFrame } from '@/src/components/FrameContext';
 
 interface DayHourInfo {
   dayOfWeek: number;
@@ -31,6 +32,7 @@ function getFirstDayOfMonth(year: number, month: number) {
 }
 
 export function CalendarModal({ visible, selectedDate, openHours, disablePast = true, onSelect, onClose }: Props) {
+  const { frameWidth } = useFrame();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -106,7 +108,7 @@ export function CalendarModal({ visible, selectedDate, openHours, disablePast = 
   return (
     <Modal visible={visible} transparent animationType="fade">
       <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={onClose}>
-        <TouchableOpacity activeOpacity={1} style={styles.card}>
+        <TouchableOpacity activeOpacity={1} style={[styles.card, { maxWidth: frameWidth - 48 }]}>
           {/* Month navigation */}
           <View style={styles.monthRow}>
             <TouchableOpacity onPress={prevMonth} activeOpacity={0.7} style={styles.navBtn}>
@@ -202,6 +204,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 20,
     width: '100%',
+    alignSelf: 'center',
   },
   monthRow: {
     flexDirection: 'row',

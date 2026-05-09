@@ -179,6 +179,16 @@ Screen shows toast feedback & updates UI
 
 **Expo routing type errors**: If you see `Argument of type '"/path"' is not assignable` for Link href, run `npx expo start` then Ctrl+C. This generates Expo routing types.
 
+**Modal width on desktop**: React Native `Modal` renders at full viewport width. On desktop (≥1024px), the app uses a 390px mobile frame — so any modal card/container using `width: '85%'` or `width: '100%'` will overflow the frame. Always use `useFrame()` from `src/components/FrameContext.tsx` to constrain modal content:
+```ts
+import { useFrame } from '@/src/components/FrameContext';
+const { frameWidth } = useFrame();
+```
+- Fixed-percentage card (e.g. `width: '85%'`): replace with inline `width: frameWidth * 0.85`
+- Full-width container with `paddingHorizontal: N` on overlay: replace with inline `maxWidth: frameWidth - N*2` on the container, add `alignSelf: 'center'`
+
+See `src/components/ConfirmationModal.tsx` and `src/components/TimePickerModal.tsx` for reference implementations.
+
 ## Eden Treaty API Client
 
 The app uses **Eden Treaty** (`@elysia/eden`) as a type-safe API client. All API requests go through `src/lib/eden-app.ts`.

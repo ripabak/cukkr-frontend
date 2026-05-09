@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useFrame } from './FrameContext';
 
 interface Props {
   visible: boolean;
@@ -23,12 +24,13 @@ export function ConfirmationModal({
   onConfirm,
   onCancel,
 }: Props) {
+  const { frameWidth } = useFrame();
   const hasBoth = !!confirmLabel && !!cancelLabel;
 
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.overlay}>
-        <View style={styles.card}>
+        <View style={[styles.card, { width: frameWidth * 0.85 }]}>
           {icon ? (
             <View style={styles.iconWrapper}>
               <Ionicons name={icon as React.ComponentProps<typeof Ionicons>['name']} size={32} color="#1A1A1A" />
@@ -73,7 +75,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 24,
     padding: 28,
-    width: '85%',
   },
   iconWrapper: {
     alignItems: 'center',
