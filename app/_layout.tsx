@@ -3,6 +3,7 @@ import { MobileFrame } from "@/src/components/MobileFrame";
 import { QueryProvider, ToastProvider } from "@/src/lib/providers";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -65,6 +66,7 @@ function RootLayoutNav() {
           </MobileFrame>
         </ToastProvider>
       </FrameProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryProvider>
   );
 }
