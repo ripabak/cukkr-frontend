@@ -1,25 +1,21 @@
-import { useWorkspaceGuard } from "@/src/hooks/useWorkspaceGuard";
-import React from "react";
-import { ActivityIndicator, View } from "react-native";
+import { usePathname, useRouter } from "expo-router";
+import React, { useEffect } from "react";
+import { authClient } from "../lib/auth-client";
 
 interface WorkspaceRouteProps {
   children: React.ReactNode;
 }
 
 export function WorkspaceRoute({ children }: WorkspaceRouteProps) {
-  const { isLoading, hasWorkspace } = useWorkspaceGuard();
+  const router = useRouter();
+  const pathname = usePathname();
+  const { data: org, isPending } = authClient.useActiveOrganization();
 
-  if (isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#1A1A1A" />
-      </View>
-    );
-  }
-
-  if (!hasWorkspace) {
-    return null;
-  }
+  useEffect(() => {
+    if (!isPending && !org && pathname !== "/switch-barbershop") {
+      router.replace("/switch-barbershop");
+    }
+  }, [org, isPending, pathname]);
 
   return <>{children}</>;
 }

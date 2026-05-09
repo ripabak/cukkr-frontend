@@ -1,13 +1,8 @@
 import { AppTheme } from "@/src/app-theme";
-import { WorkspaceRoute } from "@/src/components/WorkspaceRoute";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function StatsTab() {
-  return (
-    <WorkspaceRoute>
-       <StatsScreen />
-    </WorkspaceRoute>
-  );
+  return <StatsScreen />;
 }
 
 function StatsScreen() {
