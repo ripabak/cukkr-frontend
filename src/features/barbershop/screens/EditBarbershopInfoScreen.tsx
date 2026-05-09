@@ -1,6 +1,7 @@
 import { EditFieldHeader } from "@/src/components/EditFieldHeader";
 import { HelperCopy } from "@/src/components/HelperCopy";
 import { MultilineInputField } from "@/src/components/MultilineInputField";
+import { ScreenShell } from "@/src/components/ScreenShell";
 import { TextInputField } from "@/src/components/TextInputField";
 import {
   useBarbershopCurrent,
@@ -9,8 +10,7 @@ import {
 import { useToast } from "@/src/lib/providers";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ActivityIndicator, StyleSheet } from "react-native";
 
 type Mode = "name" | "description" | "address";
 
@@ -109,51 +109,42 @@ export function EditBarbershopInfoScreen() {
   const config = MODE_CONFIG[mode];
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.outer}>
+    <ScreenShell
+      headerSlot={
         <EditFieldHeader
           title={config.title}
           onBack={() => router.back()}
           onSave={isSaving ? undefined : handleSave}
         />
-        <View style={styles.content}>
-          {isFetching && !initialized ? (
-            <ActivityIndicator
-              size="small"
-              color="#C6FF4D"
-              style={styles.loader}
-            />
-          ) : config.multiline ? (
-            <MultilineInputField
-              placeholder={config.placeholder}
-              value={value}
-              onChangeText={setValue}
-            />
-          ) : (
-            <TextInputField
-              placeholder={config.placeholder}
-              value={value}
-              onChangeText={setValue}
-            />
-          )}
-          <HelperCopy lines={config.helperLines} style={styles.helper} />
-        </View>
-      </View>
-    </SafeAreaView>
+      }
+      contentStyle={styles.content}
+    >
+      {isFetching && !initialized ? (
+        <ActivityIndicator
+          size="small"
+          color="#C6FF4D"
+          style={styles.loader}
+        />
+      ) : config.multiline ? (
+        <MultilineInputField
+          placeholder={config.placeholder}
+          value={value}
+          onChangeText={setValue}
+        />
+      ) : (
+        <TextInputField
+          placeholder={config.placeholder}
+          value={value}
+          onChangeText={setValue}
+        />
+      )}
+      <HelperCopy lines={config.helperLines} style={styles.helper} />
+    </ScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#EEEEE0",
-  },
-  outer: {
-    flex: 1,
-  },
   content: {
-    flex: 1,
-    paddingHorizontal: 20,
     paddingTop: 16,
   },
   loader: {

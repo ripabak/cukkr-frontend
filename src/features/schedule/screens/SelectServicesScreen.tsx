@@ -1,5 +1,7 @@
+import AppTheme from "@/src/app-theme";
 import React, { useState } from "react";
-import { View, FlatList, TouchableOpacity, StyleSheet, SafeAreaView, Text } from "react-native";
+import { View, FlatList, TouchableOpacity, StyleSheet, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -104,6 +106,7 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: "#F5F4E8",
+    paddingTop: AppTheme.spacing.lg,
   },
   content: {
     flex: 1,

@@ -1,3 +1,4 @@
+import AppTheme from "@/src/app-theme";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { InfoRow } from "@/src/components/InfoRow";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -227,6 +228,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#EEEEE0",
+    paddingTop: AppTheme.spacing.lg,
   },
   outer: {
     flex: 1,

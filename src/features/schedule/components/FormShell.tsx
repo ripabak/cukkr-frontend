@@ -65,6 +65,7 @@ export function FormShell({
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    paddingTop: AppTheme.spacing.lg,
   },
   keyboardView: {
     flex: 1,

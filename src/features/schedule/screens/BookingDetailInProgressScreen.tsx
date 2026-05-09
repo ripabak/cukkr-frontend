@@ -1,3 +1,4 @@
+import AppTheme from "@/src/app-theme";
 import { OverflowMenu } from "@/src/components/OverflowMenu";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { BookingDetailCard } from "@/src/features/schedule/components/BookingDetailCard";
@@ -183,6 +184,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#F5F4E8",
+    paddingTop: AppTheme.spacing.lg,
   },
   outer: {
     flex: 1,

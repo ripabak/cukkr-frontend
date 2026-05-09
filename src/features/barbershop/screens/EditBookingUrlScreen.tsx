@@ -1,6 +1,7 @@
 import { EditFieldHeader } from "@/src/components/EditFieldHeader";
 import { HelperCopy } from "@/src/components/HelperCopy";
 import { PrefixedInputField } from "@/src/components/PrefixedInputField";
+import { ScreenShell } from "@/src/components/ScreenShell";
 import {
   useBarbershopCurrent,
   useBarbershopSlugCheck,
@@ -10,8 +11,7 @@ import { useDebounce } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ActivityIndicator, StyleSheet, Text } from "react-native";
 
 export function EditBookingUrlScreen() {
   const router = useRouter();
@@ -75,59 +75,50 @@ export function EditBookingUrlScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.outer}>
+    <ScreenShell
+      headerSlot={
         <EditFieldHeader
           title="Book Url"
           onBack={() => router.back()}
           onSave={canSave ? handleSave : undefined}
         />
-        <View style={styles.content}>
-          {isFetching && !initialized ? (
-            <ActivityIndicator
-              size="small"
-              color="#C6FF4D"
-              style={styles.loader}
-            />
-          ) : (
-            <>
-              <PrefixedInputField
-                prefix="https://cukkr.com/"
-                value={slug}
-                onChangeText={setSlug}
-              />
-              {slugFeedback && (
-                <Text style={[styles.slugFeedback, { color: slugFeedback.color }]}>
-                  {slugFeedback.text}
-                </Text>
-              )}
-              <HelperCopy
-                lines={[
-                  "This is your public booking link that customers use to make appointments.",
-                  "Use only letters, numbers, and hyphens.",
-                ]}
-                errorLine={isChanged && !isValidSlug ? "Only letters, numbers, and hyphens between words." : undefined}
-                style={styles.helper}
-              />
-            </>
+      }
+      contentStyle={styles.content}
+    >
+      {isFetching && !initialized ? (
+        <ActivityIndicator
+          size="small"
+          color="#C6FF4D"
+          style={styles.loader}
+        />
+      ) : (
+        <>
+          <PrefixedInputField
+            prefix="https://cukkr.com/"
+            value={slug}
+            onChangeText={setSlug}
+          />
+          {slugFeedback && (
+            <Text style={[styles.slugFeedback, { color: slugFeedback.color }]}>
+              {slugFeedback.text}
+            </Text>
           )}
-        </View>
-      </View>
-    </SafeAreaView>
+          <HelperCopy
+            lines={[
+              "This is your public booking link that customers use to make appointments.",
+              "Use only letters, numbers, and hyphens.",
+            ]}
+            errorLine={isChanged && !isValidSlug ? "Only letters, numbers, and hyphens between words." : undefined}
+            style={styles.helper}
+          />
+        </>
+      )}
+    </ScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#EEEEE0",
-  },
-  outer: {
-    flex: 1,
-  },
   content: {
-    flex: 1,
-    paddingHorizontal: 20,
     paddingTop: 16,
   },
   loader: {

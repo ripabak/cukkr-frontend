@@ -1,3 +1,4 @@
+import AppTheme from "@/src/app-theme";
 import { HelperCopy } from "@/src/components/HelperCopy";
 import { IconActionButton } from "@/src/features/barbershop/components/IconActionButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -74,6 +75,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#EEEEE0",
+    paddingTop: AppTheme.spacing.lg,
   },
   container: {
     flex: 1,

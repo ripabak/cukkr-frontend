@@ -1,3 +1,4 @@
+import AppTheme from "@/src/app-theme";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { OverflowMenu } from "@/src/components/OverflowMenu";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -214,6 +215,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#F5F4E8",
+    paddingTop: AppTheme.spacing.lg,
   },
   outer: {
     flex: 1,

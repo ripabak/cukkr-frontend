@@ -1,3 +1,4 @@
+import AppTheme from "@/src/app-theme";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ServiceForm } from "@/src/features/barbershop/components/ServiceForm";
@@ -162,6 +163,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#EEEEE0",
+    paddingTop: AppTheme.spacing.lg,
   },
   outer: {
     flex: 1,

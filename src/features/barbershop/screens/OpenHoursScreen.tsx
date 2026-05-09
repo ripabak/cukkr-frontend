@@ -1,6 +1,7 @@
 import { DayHoursRow } from "@/src/features/barbershop/components/DayHoursRow";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
+import { ScreenShell } from "@/src/components/ScreenShell";
 import { useOpenHours, useUpdateOpenHours } from "@/src/features/barbershop/hooks";
 import {
   DAY_LABELS,
@@ -13,13 +14,7 @@ import {
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet, Text, View } from "react-native";
 
 interface DayConfig {
   dayOfWeek: number;
@@ -87,57 +82,39 @@ export function OpenHoursScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScreenHeader onBack={() => router.back()} />
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <Text style={styles.title}>Open Hours</Text>
-        <Text style={styles.subtitle}>
-          Set your barbershop operating hours for each day
-        </Text>
+    <ScreenShell headerSlot={<ScreenHeader onBack={() => router.back()} />}>
+      <Text style={styles.title}>Open Hours</Text>
+      <Text style={styles.subtitle}>
+        Set your barbershop operating hours for each day
+      </Text>
 
-        <View style={styles.card}>
-          {days.map((day, index) => (
-            <DayHoursRow
-              key={day.dayOfWeek}
-              day={day.label}
-              enabled={day.enabled}
-              onEnabledChange={(v) => updateDay(day.dayOfWeek, { enabled: v })}
-              openTime={day.open}
-              closeTime={day.close}
-              onOpenTimeChange={(t) => updateDay(day.dayOfWeek, { open: t })}
-              onCloseTimeChange={(t) => updateDay(day.dayOfWeek, { close: t })}
-              isLast={index === days.length - 1}
-            />
-          ))}
-        </View>
+      <View style={styles.card}>
+        {days.map((day, index) => (
+          <DayHoursRow
+            key={day.dayOfWeek}
+            day={day.label}
+            enabled={day.enabled}
+            onEnabledChange={(v) => updateDay(day.dayOfWeek, { enabled: v })}
+            openTime={day.open}
+            closeTime={day.close}
+            onOpenTimeChange={(t) => updateDay(day.dayOfWeek, { open: t })}
+            onCloseTimeChange={(t) => updateDay(day.dayOfWeek, { close: t })}
+            isLast={index === days.length - 1}
+          />
+        ))}
+      </View>
 
-        <PrimaryButton
-          label={isSaving ? "Saving..." : "Save Hours"}
-          onPress={handleSave}
-          disabled={isSaving || isLoading}
-          style={styles.saveBtn}
-        />
-      </ScrollView>
-    </SafeAreaView>
+      <PrimaryButton
+        label={isSaving ? "Saving..." : "Save Hours"}
+        onPress={handleSave}
+        disabled={isSaving || isLoading}
+        style={styles.saveBtn}
+      />
+    </ScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#EEEEE0",
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-  },
   title: {
     fontSize: 28,
     fontWeight: "700",

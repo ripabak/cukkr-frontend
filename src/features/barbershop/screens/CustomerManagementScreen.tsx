@@ -1,3 +1,4 @@
+import AppTheme from "@/src/app-theme";
 import { CustomerCard } from "@/src/features/barbershop/components/CustomerCard";
 import { FloatingActionButton } from "@/src/features/barbershop/components/FloatingActionButton";
 import { SearchInput } from "@/src/components/SearchInput";
@@ -146,7 +147,7 @@ export function CustomerManagementScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1 },
+  safe: { flex: 1, paddingTop: AppTheme.spacing.lg },
   container: { flex: 1 },
   content: { paddingHorizontal: 20, paddingBottom: 40 },
   title: {

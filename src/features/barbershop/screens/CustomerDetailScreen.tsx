@@ -1,3 +1,4 @@
+import AppTheme from "@/src/app-theme";
 import { BookingCard } from "@/src/components/BookingCard";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { SCHEDULE_STATUS_OPTIONS, StatusFilterMenu } from "@/src/components/StatusFilterMenu";
@@ -206,7 +207,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#F5F4E8" },
+  safe: { flex: 1, backgroundColor: "#F5F4E8", paddingTop: AppTheme.spacing.lg },
   container: { flex: 1, backgroundColor: "#F5F4E8" },
   loader: { marginTop: 80 },
   content: { paddingHorizontal: 20, paddingBottom: 40 },
