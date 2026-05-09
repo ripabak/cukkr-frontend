@@ -54,6 +54,7 @@ export function ScreenShell({
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    paddingTop: AppTheme.spacing.lg, // default paddingTop to match headerSlot spacing for all screens using ScreenShell, can be overridden by passing a custom style prop
   },
   scroll: {
     flex: 1,

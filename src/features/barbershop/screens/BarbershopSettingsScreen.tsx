@@ -118,7 +118,7 @@ export function BarbershopSettingsScreen() {
           label="Book Url"
           value={
             barbershop?.slug
-              ? `https://cukkr.com/${barbershop.slug}`
+              ? `${process.env.EXPO_BASE_URL}/${barbershop.slug}`
               : undefined
           }
           placeholder="—"

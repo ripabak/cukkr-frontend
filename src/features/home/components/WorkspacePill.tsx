@@ -1,6 +1,6 @@
-import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
 
 interface Props {
   name: string;
@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 15,
-    fontWeight: '600',
     color: '#1A1A1A',
   },
   icon: {
