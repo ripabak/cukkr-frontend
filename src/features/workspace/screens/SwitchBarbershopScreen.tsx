@@ -57,40 +57,39 @@ export function SwitchBarbershopScreen() {
   };
 
   return (
-    <Animated.View
-      entering={SlideInUp.duration(400)}
-      style={[styles.animatedWrapper, animatedStyle]}
-    >
-      <SafeAreaView style={styles.safeArea}>
-        <ScreenHeader onBack={() => slideOutUp(() => router.canGoBack() ? router.back() : router.replace("/"))} />
-        <View style={styles.container}>
-          <Text style={styles.title}>Switch Barbershop</Text>
-          <Text style={styles.subtitle}>
-            {"Choose barbershop you're working on"}
-          </Text>
+    <Animated.View entering={SlideInUp.duration(400)} style={styles.animatedWrapper}>
+      <Animated.View style={[styles.flex, animatedStyle]}>
+        <SafeAreaView style={styles.safeArea}>
+          <ScreenHeader onBack={() => slideOutUp(() => router.canGoBack() ? router.back() : router.replace("/"))} />
+          <View style={styles.container}>
+            <Text style={styles.title}>Switch Barbershop</Text>
+            <Text style={styles.subtitle}>
+              {"Choose barbershop you're working on"}
+            </Text>
 
-          {barbershops.map((shop, index) => (
-            <SelectionRow
-              key={shop.id}
-              label={shop.name}
-              onPress={() => handleSelectBarbershop(shop.id)}
-              isLast={index === barbershops.length - 1}
-              isActive={activeOrg?.id === shop.id}
+            {barbershops.map((shop, index) => (
+              <SelectionRow
+                key={shop.id}
+                label={shop.name}
+                onPress={() => handleSelectBarbershop(shop.id)}
+                isLast={index === barbershops.length - 1}
+                isActive={activeOrg?.id === shop.id}
+              />
+            ))}
+            {!isLoading && barbershops.length === 0 ? (
+              <View style={styles.centerContainer}>
+                <Text style={styles.emptyText}>No barbershops found</Text>
+              </View>
+            ) : null}
+
+            <View style={styles.flex} />
+            <PrimaryButton
+              label="Create New Barbershop"
+              onPress={() => router.push("/create-barbershop-name-logo")}
             />
-          ))}
-          {!isLoading && barbershops.length === 0 ? (
-            <View style={styles.centerContainer}>
-              <Text style={styles.emptyText}>No barbershops found</Text>
-            </View>
-          ) : null}
-
-          <View style={styles.flex} />
-          <PrimaryButton
-            label="Create New Barbershop"
-            onPress={() => router.push("/create-barbershop-name-logo")}
-          />
-        </View>
-      </SafeAreaView>
+          </View>
+        </SafeAreaView>
+      </Animated.View>
     </Animated.View>
   );
 }
