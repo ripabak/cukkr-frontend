@@ -1,7 +1,7 @@
 import { Colors } from '@/src/theme/colors';
-import AppTheme from "@/src/app-theme";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
+import { ScreenShell } from "@/src/components/ScreenShell";
 import { ServiceForm } from "@/src/features/barbershop/components/ServiceForm";
 import {
   useCreateService,
@@ -17,8 +17,7 @@ import {
 import { useToast } from "@/src/lib/providers";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ActivityIndicator, StyleSheet } from "react-native";
 
 export function AddOrEditServiceScreen() {
   const router = useRouter();
@@ -110,27 +109,20 @@ export function AddOrEditServiceScreen() {
     }
   };
 
-  if (isEdit && isFetching && !initialized) {
-    return (
-      <SafeAreaView style={styles.safeArea}>
-        <ActivityIndicator size="large" color={Colors.brand.primary} style={styles.loader} />
-      </SafeAreaView>
-    );
-  }
-
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.outer}>
+    <ScreenShell
+      keyboardAvoid
+      headerSlot={
         <ScreenHeader
           title={isEdit ? "Edit Service" : "New Service"}
           onBack={() => router.back()}
         />
-
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
+      }
+    >
+      {isEdit && isFetching && !initialized ? (
+        <ActivityIndicator size="large" color={Colors.brand.primary} style={styles.loader} />
+      ) : (
+        <>
           <ServiceForm
             name={name}
             onNameChange={setName}
@@ -154,31 +146,15 @@ export function AddOrEditServiceScreen() {
             disabled={isPending}
             style={styles.submitBtn}
           />
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+        </>
+      )}
+    </ScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: Colors.bg.default,
-    paddingTop: AppTheme.spacing.lg,
-  },
-  outer: {
-    flex: 1,
-  },
   loader: {
     marginTop: 80,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-    paddingTop: 8,
   },
   submitBtn: {
     marginTop: 8,

@@ -1,7 +1,5 @@
-import { Colors } from '@/src/theme/colors';
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { InfoRow } from "@/src/components/InfoRow";
-import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { DangerButton } from "@/src/features/barbershop/components/DangerButton";
 import { OperationRow } from "@/src/features/barbershop/components/OperationRow";
@@ -10,6 +8,7 @@ import {
   useLeaveBarbershop,
 } from "@/src/features/barbershop/hooks";
 import { useToast } from "@/src/lib/providers";
+import { Colors } from '@/src/theme/colors';
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
@@ -50,10 +49,11 @@ export function BarbershopSettingsScreen() {
 
   return (
     <ScreenShell
-      headerSlot={<ScreenHeader onBack={() => router.back()} />}
       contentStyle={styles.scrollContentPadding}
     >
-      <Text style={styles.title}>Barbershop Settings</Text>
+      <View style={styles.titleRow}>
+        <Text style={styles.title}>Barbershop Settings</Text>
+      </View>
       <Text style={styles.subtitle}>Setup based on your barbershop needs</Text>
 
       <View style={styles.avatarWrapper}>
@@ -174,11 +174,19 @@ export function BarbershopSettingsScreen() {
 }
 
 const styles = StyleSheet.create({
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 8,
+    gap: 4,
+  },
+  backButton: {
+    padding: 4,
+  },
   title: {
     fontSize: 28,
     fontWeight: "700",
     color: Colors.text.primary,
-    marginTop: 8,
   },
   subtitle: {
     fontSize: 14,
