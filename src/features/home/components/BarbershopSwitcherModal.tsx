@@ -16,12 +16,16 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  useWindowDimensions,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useFrame } from "@/src/components/FrameContext";
 import {
   useBarbershopList,
   useSetActiveOrganization,
 } from "@/src/features/workspace/hooks";
+import { WORKSPACE_SCOPED_KEYS } from "@/src/features/workspace/hooks/useOrganizationMutations";
+import { useQueryClient } from "@tanstack/react-query";
 
 const APP_HEADER_HEIGHT = 48;
 
@@ -35,11 +39,20 @@ export function BarbershopSwitcherModal({ visible, onClose, headerHeight }: Prop
   const router = useRouter();
   const toast = useToast();
   const insets = useSafeAreaInsets();
+  const { frameWidth } = useFrame();
+  const { width: viewportWidth } = useWindowDimensions();
+  const frameOffset = (viewportWidth - frameWidth) / 2;
   const [search, setSearch] = useState("");
 
+  const queryClient = useQueryClient();
   const { data: barbershops = [], isLoading } = useBarbershopList();
-  const { mutate: setActive, isPending: isSwitching } = useSetActiveOrganization();
+  const { mutate: setActive } = useSetActiveOrganization();
   const { data: sessionData } = authClient.useSession();
+
+  // Controlled manually so the loading modal stays up until session + cache reset finish.
+  // isPending from useMutation turns false before onSuccess callbacks complete, which
+  // would cause the UI to flash old data before invalidation runs.
+  const [isSwitchingWorkspace, setIsSwitchingWorkspace] = useState(false);
 
   const slideAnim = useRef(new Animated.Value(-400)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -86,15 +99,28 @@ export function BarbershopSwitcherModal({ visible, onClose, headerHeight }: Prop
       onClose();
       return;
     }
-    setActive(id, {
-      onSuccess: async () => {
-        await authClient.getSession();
-        onClose();
-      },
-      onError: (error) => {
-        toast.error("Failed to switch barbershop: " + error.message);
-      },
-    });
+
+    // Close the picker first, then after the close animation (200ms), start switching.
+    onClose();
+    setTimeout(() => {
+      setIsSwitchingWorkspace(true);
+      setActive(id, {
+        onSuccess: async () => {
+          // Refresh the session first so subsequent queries see the new active org.
+          await authClient.getSession();
+          // Reset all workspace-scoped caches — removes stale data and triggers
+          // immediate refetch for any mounted screens.
+          WORKSPACE_SCOPED_KEYS.forEach((key) => {
+            queryClient.resetQueries({ queryKey: key });
+          });
+          setIsSwitchingWorkspace(false);
+        },
+        onError: (error) => {
+          setIsSwitchingWorkspace(false);
+          toast.error("Failed to switch barbershop: " + error.message);
+        },
+      });
+    }, 220);
   };
 
   const handleCreateNew = () => {
@@ -105,7 +131,17 @@ export function BarbershopSwitcherModal({ visible, onClose, headerHeight }: Prop
   const topOffset = insets.top + APP_HEADER_HEIGHT + headerHeight;
 
   return (
-    <Modal visible={visible} transparent animationType="none" statusBarTranslucent>
+    <>
+    <Modal visible={isSwitchingWorkspace} transparent animationType="fade" statusBarTranslucent>
+      <View style={styles.switchingOverlay}>
+        <View style={[styles.switchingCard, { width: frameWidth * 0.72 }]}>
+          <ActivityIndicator size="large" color={Colors.brand.primary} />
+          <Text style={styles.switchingTitle}>Switching workspace</Text>
+          <Text style={styles.switchingSubText}>Please wait a moment...</Text>
+        </View>
+      </View>
+    </Modal>
+    <Modal visible={visible && !isSwitchingWorkspace} transparent animationType="none" statusBarTranslucent>
       {/* Full-screen tap target to close — no visual dim above the workspaceBar */}
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={StyleSheet.absoluteFill} />
@@ -114,13 +150,13 @@ export function BarbershopSwitcherModal({ visible, onClose, headerHeight }: Prop
       {/* Dim only the area below AppHeader + workspaceBar */}
       <Animated.View
         pointerEvents="none"
-        style={[styles.overlay, { top: topOffset, opacity: fadeAnim }]}
+        style={[styles.overlay, { top: topOffset, left: frameOffset, right: frameOffset, opacity: fadeAnim }]}
       />
 
       <Animated.View
         style={[
           styles.panel,
-          { top: topOffset, transform: [{ translateY: slideAnim }] },
+          { top: topOffset, left: frameOffset, right: frameOffset, transform: [{ translateY: slideAnim }] },
         ]}
       >
         <View style={styles.searchRow}>
@@ -169,7 +205,7 @@ export function BarbershopSwitcherModal({ visible, onClose, headerHeight }: Prop
                   style={styles.item}
                   onPress={() => handleSelect(shop.id)}
                   activeOpacity={0.7}
-                  disabled={isSwitching}
+                  disabled={isSwitchingWorkspace}
                 >
                   <View
                     style={[
@@ -213,6 +249,7 @@ export function BarbershopSwitcherModal({ visible, onClose, headerHeight }: Prop
         </TouchableOpacity>
       </Animated.View>
     </Modal>
+    </>
   );
 }
 
@@ -334,5 +371,34 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Colors.text.muted,
     marginTop: 1,
+  },
+  switchingOverlay: {
+    flex: 1,
+    backgroundColor: Colors.bg.overlay,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  switchingCard: {
+    backgroundColor: Colors.bg.default,
+    borderRadius: 20,
+    paddingVertical: 32,
+    paddingHorizontal: 40,
+    alignItems: "center",
+    gap: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 16,
+  },
+  switchingTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: Colors.text.primary,
+    marginTop: 4,
+  },
+  switchingSubText: {
+    fontSize: 13,
+    color: Colors.text.muted,
   },
 });

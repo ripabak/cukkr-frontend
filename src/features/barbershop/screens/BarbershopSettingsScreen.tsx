@@ -35,7 +35,7 @@ export function BarbershopSettingsScreen() {
       onSuccess: () => {
         setShowDeleteModal(false);
         toast.success("Barbershop deleted");
-        router.replace("/switch-barbershop");
+        router.replace("/");
       },
       onError: (error) => {
         setShowDeleteModal(false);

@@ -37,16 +37,12 @@ export function useCreateOrganization() {
 }
 
 export function useSetActiveOrganization() {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (organizationId: string) =>
       organizationService.setActive(organizationId),
-    onSuccess: () => {
-      WORKSPACE_SCOPED_KEYS.forEach((key) => {
-        queryClient.invalidateQueries({ queryKey: key });
-      });
-    },
+    // Cache invalidation is handled by the caller AFTER getSession() completes,
+    // so refetches always use the fresh session.
   });
 }
 
-export { ORGANIZATION_QUERY_KEYS };
+export { ORGANIZATION_QUERY_KEYS, WORKSPACE_SCOPED_KEYS };

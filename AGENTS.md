@@ -186,6 +186,7 @@ const { frameWidth } = useFrame();
 ```
 - Fixed-percentage card (e.g. `width: '85%'`): replace with inline `width: frameWidth * 0.85`
 - Full-width container with `paddingHorizontal: N` on overlay: replace with inline `maxWidth: frameWidth - N*2` on the container, add `alignSelf: 'center'`
+- **Absolutely-positioned panel** (dropdown/sheet anchored to top): `left: 0, right: 0` spans the full viewport on desktop. Fix by computing `frameOffset = (viewportWidth - frameWidth) / 2` via `useWindowDimensions()` + `useFrame()`, then apply `left: frameOffset, right: frameOffset` to the panel.
 
 See `src/components/ConfirmationModal.tsx` and `src/components/TimePickerModal.tsx` for reference implementations.
 

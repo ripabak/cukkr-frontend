@@ -1,10 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "@/src/lib/providers/query-client";
 import { authService } from "../services";
 
 export function useSignIn() {
   return useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       authService.signIn(email, password),
+    onSuccess: () => {
+      queryClient.clear();
+    },
   });
 }
 
@@ -37,5 +41,8 @@ export function useChangePassword() {
 export function useSignOut() {
   return useMutation({
     mutationFn: () => authService.signOut(),
+    onSuccess: () => {
+      queryClient.clear();
+    },
   });
 }

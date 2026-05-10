@@ -38,7 +38,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
     accept(invitationId, {
       onSuccess: () => {
         toast.success("You've joined the barbershop!");
-        router.replace("/switch-barbershop");
+        router.replace("/");
       },
       onError: (e) => {
         toast.error(e.message || "Failed to accept invitation");
