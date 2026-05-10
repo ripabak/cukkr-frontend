@@ -10,13 +10,13 @@ import { OtpCodeInput } from "../components/OtpCodeInput";
 import { useCountdown, useSendVerificationOtp } from "../hooks";
 import { getErrorMessage } from "../utils/error-handler";
 
+// This screen is used exclusively in the forgot-password flow.
+// OTP is not verified here — it's passed to CreatePasswordScreen
+// and verified server-side when resetPassword is called.
 export function VerifyOtpScreen() {
   const router = useRouter();
   const toast = useToast();
-  const { email, isPasswordReset } = useLocalSearchParams<{
-    email: string;
-    isPasswordReset?: string;
-  }>();
+  const { email } = useLocalSearchParams<{ email: string }>();
   const [otp, setOtp] = useState("");
   const countdown = useCountdown(300);
   const { mutateAsync: sendOtp, isPending: resending } = useSendVerificationOtp();
@@ -24,10 +24,7 @@ export function VerifyOtpScreen() {
   const handleResend = async () => {
     if (!email) return;
     try {
-      await sendOtp({
-        email,
-        type: isPasswordReset === "true" ? "forget-password" : "email-verification",
-      });
+      await sendOtp({ email, type: "forget-password" });
       countdown.reset();
       toast.success("OTP sent successfully");
     } catch (error) {
@@ -41,14 +38,10 @@ export function VerifyOtpScreen() {
       return;
     }
 
-    if (isPasswordReset === "true") {
-      router.push({
-        pathname: "/create-password",
-        params: { email, otp },
-      });
-    } else {
-      router.replace("/");
-    }
+    router.push({
+      pathname: "/create-password",
+      params: { email, otp },
+    });
   };
 
   return (

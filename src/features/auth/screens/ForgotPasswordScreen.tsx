@@ -31,7 +31,7 @@ export function ForgotPasswordScreen() {
       await sendOtp({ email, type: "forget-password" });
       router.push({
         pathname: "/verify-otp",
-        params: { email, isPasswordReset: "true" },
+        params: { email },
       });
     } catch (error) {
       toast.error(getErrorMessage(error));

@@ -4,11 +4,9 @@ export function useCountdown(initialSeconds: number) {
   const [secondsLeft, setSecondsLeft] = useState(initialSeconds);
   const [isActive, setIsActive] = useState(true);
 
+  // Only depend on isActive — one interval lives for the full active period
   useEffect(() => {
-    if (!isActive || secondsLeft === 0) {
-      setIsActive(false);
-      return;
-    }
+    if (!isActive) return;
 
     const interval = setInterval(() => {
       setSecondsLeft((prev) => {
@@ -21,7 +19,7 @@ export function useCountdown(initialSeconds: number) {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isActive, secondsLeft]);
+  }, [isActive]);
 
   const reset = () => {
     setSecondsLeft(initialSeconds);

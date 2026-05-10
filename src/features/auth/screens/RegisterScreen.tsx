@@ -8,7 +8,9 @@ import { AuthScreenShell } from "../components/AuthScreenShell";
 import { AuthTextField } from "../components/AuthTextField";
 import { useSignUp, useSendVerificationOtp } from "../hooks";
 import { getErrorMessage } from "../utils/error-handler";
-import { validatePasswordsMatch } from "../utils/validation";
+import { validateEmail, validatePassword, validatePasswordsMatch } from "../utils/validation";
+
+const MIN_PASSWORD_LENGTH = 8;
 
 export function RegisterScreen() {
   const router = useRouter();
@@ -24,9 +26,21 @@ export function RegisterScreen() {
   const handleRegister = async () => {
     if (!name || !identifier || !password || !confirmPassword) return;
 
-    const match = validatePasswordsMatch(password, confirmPassword);
-    if (!match.isValid) {
-      toast.error(match.message);
+    const emailResult = validateEmail(identifier);
+    if (!emailResult.isValid) {
+      toast.error(emailResult.message);
+      return;
+    }
+
+    const passwordResult = validatePassword(password, MIN_PASSWORD_LENGTH);
+    if (!passwordResult.isValid) {
+      toast.error(passwordResult.message);
+      return;
+    }
+
+    const matchResult = validatePasswordsMatch(password, confirmPassword);
+    if (!matchResult.isValid) {
+      toast.error(matchResult.message);
       return;
     }
 

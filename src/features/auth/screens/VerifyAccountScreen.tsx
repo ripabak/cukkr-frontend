@@ -23,7 +23,7 @@ export function VerifyAccountScreen() {
     if (!otp) return;
     try {
       await verifyEmail({ email, otp });
-      router.replace("/");
+      router.replace("/(tabs)/home");
     } catch (error) {
       toast.error(getErrorMessage(error));
     }
