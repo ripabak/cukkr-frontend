@@ -21,4 +21,4 @@ RUN chmod +x build_web.sh && sh build_web.sh
 EXPOSE 8080
 
 # Serve the exported web build
-CMD ["npx", "expo", "serve", "/app/dist", "--port", "8080"]
+CMD ["npx", "expo", "serve", "dist", "--port", "8080"]
