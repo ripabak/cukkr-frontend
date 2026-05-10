@@ -1,13 +1,12 @@
 import { Colors } from '@/src/theme/colors';
-import AppTheme from '@/src/app-theme';
 import { ConfirmationModal } from '@/src/components/ConfirmationModal';
 import { ScreenHeader } from '@/src/components/ScreenHeader';
+import { ScreenShell } from '@/src/components/ScreenShell';
 import { NotificationCard, NotificationType } from '@/src/features/notifications/components/NotificationCard';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAcceptNotification, useDeclineNotification, useMarkAllAsRead } from '../hooks/useNotificationsMutations';
 import { useNotificationsList } from '../hooks/useNotificationsQueries';
 
@@ -58,8 +57,8 @@ export function NotificationsListScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.outer}>
+    <ScreenShell
+      headerSlot={
         <ScreenHeader
           onBack={() => router.back()}
           rightAction={
@@ -72,49 +71,48 @@ export function NotificationsListScreen() {
             </TouchableOpacity>
           }
         />
+      }
+      contentStyle={styles.content}
+    >
+      {!isLoading && isError ? (
+        <View style={styles.centered}>
+          <Text style={styles.errorText}>Failed to load notifications</Text>
+        </View>
+      ) : null}
 
-        {!isLoading && isError ? (
-          <View style={styles.centered}>
-            <Text style={styles.errorText}>Failed to load notifications</Text>
-          </View>
-        ) : null}
-        {!isLoading && !isError && notifications.length === 0 ? (
-          <View style={styles.centered}>
-            <Ionicons name="notifications-off-outline" size={48} color={Colors.icon.muted} />
-            <Text style={styles.emptyTitle}>No Notifications</Text>
-            <Text style={styles.emptySubtitle}>You're all caught up!</Text>
-          </View>
-        ) : null}
-        {!isLoading && !isError && notifications.length > 0 ? (
-          <ScrollView
-            style={styles.scrollView}
-            contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={false}
-          >
-            {notifications.map((notif, i) => (
-              <NotificationCard
-                key={notif.id}
-                type={API_TYPE_MAP[notif.type] ?? 'general'}
-                title={notif.title}
-                name={notif.body}
-                timestamp={formatRelativeTime(notif.createdAt)}
-                status={notif.actionType !== null ? 'pending' : 'accepted'}
-                showActions={notif.actionType === 'accept_decline_appointment'}
-                onAccept={() => acceptMutation.mutate(notif.id)}
-                onDecline={() => declineMutation.mutate({ id: notif.id })}
-                onPress={
-                  notif.referenceType === 'booking'
-                    ? () => handleBookingPress(notif)
-                    : notif.referenceType === 'invitation'
-                    ? () => setInvitationModal(notif)
-                    : undefined
-                }
-                style={i < notifications.length - 1 ? styles.cardMargin : undefined}
-              />
-            ))}
-          </ScrollView>
-        ) : null}
-      </View>
+      {!isLoading && !isError && notifications.length === 0 ? (
+        <View style={styles.centered}>
+          <Ionicons name="notifications-off-outline" size={48} color={Colors.icon.muted} />
+          <Text style={styles.emptyTitle}>No Notifications</Text>
+          <Text style={styles.emptySubtitle}>You're all caught up!</Text>
+        </View>
+      ) : null}
+
+      {!isLoading && !isError && notifications.length > 0 ? (
+        <View style={styles.list}>
+          {notifications.map((notif, i) => (
+            <NotificationCard
+              key={notif.id}
+              type={API_TYPE_MAP[notif.type] ?? 'general'}
+              title={notif.title}
+              name={notif.body}
+              timestamp={formatRelativeTime(notif.createdAt)}
+              status={notif.actionType !== null ? 'pending' : 'accepted'}
+              showActions={notif.actionType === 'accept_decline_appointment'}
+              onAccept={() => acceptMutation.mutate(notif.id)}
+              onDecline={() => declineMutation.mutate({ id: notif.id })}
+              onPress={
+                notif.referenceType === 'booking'
+                  ? () => handleBookingPress(notif)
+                  : notif.referenceType === 'invitation'
+                  ? () => setInvitationModal(notif)
+                  : undefined
+              }
+              style={i < notifications.length - 1 ? styles.cardMargin : undefined}
+            />
+          ))}
+        </View>
+      ) : null}
 
       <ConfirmationModal
         visible={invitationModal !== null}
@@ -126,18 +124,15 @@ export function NotificationsListScreen() {
         onCancel={handleAcceptInvitation}
         onConfirm={handleDeclineInvitation}
       />
-    </SafeAreaView>
+    </ScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: Colors.bg.default,
-    paddingTop: AppTheme.spacing.lg,
-  },
-  outer: {
-    flex: 1,
+  content: {
+    flexGrow: 1,
+    paddingTop: 8,
+    paddingBottom: 40,
   },
   moreBtn: {
     width: 36,
@@ -147,34 +142,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-    paddingTop: 8,
+  list: {
+    gap: 12,
   },
   cardMargin: {
-    marginBottom: 12,
+    marginBottom: 0,
   },
   centered: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: 80,
+    gap: 8,
   },
   errorText: {
     color: Colors.text.secondary,
     fontSize: 14,
   },
   emptyTitle: {
-    marginTop: 16,
     fontSize: 16,
     fontWeight: '600',
     color: Colors.text.primary,
   },
   emptySubtitle: {
-    marginTop: 6,
     fontSize: 13,
     color: Colors.text.muted,
   },

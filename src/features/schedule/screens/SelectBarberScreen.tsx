@@ -1,14 +1,13 @@
 import { Colors } from '@/src/theme/colors';
-import AppTheme from "@/src/app-theme";
-import React, { useState } from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
+import { ScreenShell } from "@/src/components/ScreenShell";
 import { SearchInput } from "@/src/components/SearchInput";
 import { useNewBookingForm } from "@/src/features/schedule/context/NewBookingContext";
 import { useScheduleBarbers } from "@/src/features/schedule/hooks";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export function SelectBarberScreen() {
   const router = useRouter();
@@ -27,16 +26,19 @@ export function SelectBarberScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScreenHeader title="Select Barber" onBack={() => router.back()} />
-      <View style={styles.content}>
-        <SearchInput value={query} onChangeText={setQuery} placeholder="Search" />
-        <FlatList
-          data={filtered}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
-          renderItem={({ item }) => (
+    <ScreenShell
+      headerSlot={<ScreenHeader title="Select Barber" onBack={() => router.back()} />}
+      contentStyle={styles.content}
+    >
+      <SearchInput value={query} onChangeText={setQuery} placeholder="Search" />
+
+      {!isLoading && filtered.length === 0 ? (
+        <Text style={styles.emptyText}>No barbers found.</Text>
+      ) : (
+        <View style={styles.list}>
+          {filtered.map((item) => (
             <TouchableOpacity
+              key={item.id}
               activeOpacity={0.7}
               style={styles.barberRow}
               onPress={() => handleSelect(item.id, item.name)}
@@ -47,29 +49,18 @@ export function SelectBarberScreen() {
               <Text style={styles.barberName}>{item.name}</Text>
               <Ionicons name="chevron-forward" size={18} color={Colors.text.primary} />
             </TouchableOpacity>
-          )}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          ListEmptyComponent={
-            !isLoading ? (
-              <Text style={styles.emptyText}>No barbers found.</Text>
-            ) : null
-          }
-        />
-      </View>
-    </SafeAreaView>
+          ))}
+        </View>
+      )}
+    </ScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: Colors.bg.default,
-    paddingTop: AppTheme.spacing.lg,
-  },
   content: {
-    flex: 1,
-    padding: 20,
+    paddingTop: 16,
     gap: 16,
+    paddingBottom: 40,
   },
   list: {
     gap: 10,
@@ -97,9 +88,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     color: Colors.text.primary,
-  },
-  separator: {
-    height: 0,
   },
   emptyText: {
     textAlign: "center",

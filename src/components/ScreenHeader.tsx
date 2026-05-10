@@ -5,12 +5,13 @@ import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-nativ
 
 interface Props {
   title?: string;
+  titleSlot?: React.ReactNode;
   onBack?: () => void;
   rightAction?: React.ReactNode;
   style?: ViewStyle;
 }
 
-export function ScreenHeader({ title, onBack, rightAction, style }: Props) {
+export function ScreenHeader({ title, titleSlot, onBack, rightAction, style }: Props) {
   return (
     <View style={[styles.container, style]}>
       {onBack ? (
@@ -20,7 +21,11 @@ export function ScreenHeader({ title, onBack, rightAction, style }: Props) {
       ) : (
         <View style={styles.placeholder} />
       )}
-      {title ? <Text style={styles.title}>{title}</Text> : <View style={styles.titleSpacer} />}
+      {titleSlot
+        ? <View style={styles.titleSpacer}>{titleSlot}</View>
+        : title
+        ? <Text style={styles.title}>{title}</Text>
+        : <View style={styles.titleSpacer} />}
       {rightAction ? (
         <View style={styles.rightSlot}>{rightAction}</View>
       ) : (

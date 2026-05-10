@@ -1,15 +1,14 @@
 import { Colors } from '@/src/theme/colors';
-import AppTheme from "@/src/app-theme";
-import React, { useState } from "react";
-import { View, FlatList, TouchableOpacity, StyleSheet, Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
+import { ScreenShell } from "@/src/components/ScreenShell";
 import { SearchInput } from "@/src/components/SearchInput";
 import { ServiceCard } from "@/src/components/ServiceCard";
 import { useNewBookingForm, SelectedService } from "@/src/features/schedule/context/NewBookingContext";
 import { useScheduleServices } from "@/src/features/schedule/hooks";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export function SelectServicesScreen() {
   const router = useRouter();
@@ -29,11 +28,8 @@ export function SelectServicesScreen() {
   function toggleService(id: string) {
     setSelected((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
   }
@@ -52,28 +48,33 @@ export function SelectServicesScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScreenHeader
-        title="Select Services"
-        onBack={() => router.back()}
-        rightAction={
-          <TouchableOpacity
-            onPress={handleConfirm}
-            activeOpacity={0.8}
-            style={styles.confirmBtn}
-          >
-            <Ionicons name="checkmark" size={20} color={Colors.text.primary} />
-          </TouchableOpacity>
-        }
-      />
-      <View style={styles.content}>
-        <SearchInput value={query} onChangeText={setQuery} placeholder="Search" />
-        <FlatList
-          data={filtered}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
-          renderItem={({ item }) => (
+    <ScreenShell
+      headerSlot={
+        <ScreenHeader
+          title="Select Services"
+          onBack={() => router.back()}
+          rightAction={
             <TouchableOpacity
+              onPress={handleConfirm}
+              activeOpacity={0.8}
+              style={styles.confirmBtn}
+            >
+              <Ionicons name="checkmark" size={20} color={Colors.text.primary} />
+            </TouchableOpacity>
+          }
+        />
+      }
+      contentStyle={styles.content}
+    >
+      <SearchInput value={query} onChangeText={setQuery} placeholder="Search" />
+
+      {!isLoading && filtered.length === 0 ? (
+        <Text style={styles.emptyText}>No services found.</Text>
+      ) : (
+        <View style={styles.list}>
+          {filtered.map((item) => (
+            <TouchableOpacity
+              key={item.id}
               activeOpacity={0.7}
               onPress={() => toggleService(item.id)}
               style={styles.serviceWrapper}
@@ -90,32 +91,21 @@ export function SelectServicesScreen() {
                 ) : null}
               </View>
             </TouchableOpacity>
-          )}
-          ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-          ListEmptyComponent={
-            !isLoading ? (
-              <Text style={styles.emptyText}>No services found.</Text>
-            ) : null
-          }
-        />
-      </View>
-    </SafeAreaView>
+          ))}
+        </View>
+      )}
+    </ScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: Colors.bg.default,
-    paddingTop: AppTheme.spacing.lg,
-  },
   content: {
-    flex: 1,
-    padding: 20,
+    paddingTop: 16,
     gap: 16,
+    paddingBottom: 40,
   },
   list: {
-    paddingBottom: 20,
+    gap: 10,
   },
   confirmBtn: {
     width: 36,

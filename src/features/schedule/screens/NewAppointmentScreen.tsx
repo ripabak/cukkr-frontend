@@ -139,6 +139,7 @@ export function NewAppointmentScreen() {
 
   return (
     <FormShell
+      keyboardAvoid
       headerSlot={
         <ScreenHeader
           title="New Appointment"

@@ -4,9 +4,7 @@ import {
   ActivityCard,
   RecentActivity,
 } from "@/src/features/home/components/ActivityCard";
-import { MetricCard } from "@/src/features/home/components/MetricCard";
 import { ShortcutTile } from "@/src/features/home/components/ShortcutTile";
-import { WorkspacePill } from "@/src/features/home/components/WorkspacePill";
 import {
   useBookingSummary,
   useCurrentBarbershop,
@@ -76,12 +74,34 @@ export function HomeDashboardScreen() {
     : null;
 
   return (
-    <ScreenShell contentStyle={styles.scrollContentPadding}>
-      <View style={styles.topRow}>
-        <WorkspacePill
-          name={barbershop?.name ?? "Loading..."}
+    <ScreenShell
+      contentStyle={styles.scrollContentPadding}
+      headerSlot={
+        <TouchableOpacity
+          style={styles.workspaceBar}
+          activeOpacity={0.7}
           onPress={() => router.push("/switch-barbershop")}
-        />
+        >
+          <Ionicons name="storefront-outline" size={16} color={Colors.text.secondary} />
+          <Text style={styles.workspaceBarName} numberOfLines={1}>
+            {barbershop?.name ?? "Loading..."}
+          </Text>
+          <Ionicons name="chevron-down" size={16} color={Colors.icon.muted} />
+        </TouchableOpacity>
+      }
+    >
+      <View style={styles.topRow}>
+        <TouchableOpacity
+          style={styles.profileRow}
+          activeOpacity={0.7}
+          onPress={() => router.push("/user-profile")}
+        >
+          <View style={styles.avatar} />
+          <View style={styles.greetingText}>
+            <Text style={styles.greetingSmall}>{getGreeting()}</Text>
+            <Text style={styles.greetingName}>{user?.name ?? "..."}</Text>
+          </View>
+        </TouchableOpacity>
         <TouchableOpacity
           style={styles.notifCircle}
           onPress={() => router.push("/notifications-list")}
@@ -89,18 +109,6 @@ export function HomeDashboardScreen() {
           <Ionicons name="notifications-outline" size={20} color={Colors.icon.muted} />
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity
-        style={styles.greetingRow}
-        activeOpacity={0.7}
-        onPress={() => router.push("/user-profile")}
-      >
-        <View style={styles.avatar} />
-        <View style={styles.greetingText}>
-          <Text style={styles.greetingSmall}>{getGreeting()}</Text>
-          <Text style={styles.greetingName}>{user?.name ?? "..."}</Text>
-        </View>
-      </TouchableOpacity>
 
       <View style={styles.pinCard}>
         <Text style={styles.pinLabel}>Walk-In PIN</Text>
@@ -147,39 +155,36 @@ export function HomeDashboardScreen() {
         )}
       </View>
 
-      <View style={styles.metricsSection}>
-        <View style={styles.metricsRow}>
-          <MetricCard
-            label="Today's Schedule"
-            value={String(summary?.total ?? 0)}
-            style={styles.metricFlex}
-          />
-          <MetricCard
-            label="Walk-In"
-            value={String(summary?.walkIn ?? 0)}
-            icon={<Ionicons name="people" size={18} color={Colors.icon.muted} />}
-            style={styles.metricFlex}
-          />
-          <MetricCard
-            label="Appoint."
-            value={String(summary?.appointment ?? 0)}
-            icon={<Ionicons name="calendar" size={18} color={Colors.icon.muted} />}
-            style={styles.metricFlex}
-          />
+      <View style={styles.summaryCard}>
+        <View style={styles.summaryItem}>
+          <Text style={styles.summaryValue}>{summary?.inProgress ?? 0}</Text>
+          <View style={styles.summaryLabelRow}>
+            <View style={[styles.dot, { backgroundColor: Colors.status.inProgress }]} />
+            <Text style={styles.summaryLabel}>LIVE</Text>
+          </View>
         </View>
-        <View style={[styles.metricsRow, styles.metricsRowTop]}>
-          <MetricCard
-            label="In Progress"
-            value={String(summary?.inProgress ?? 0)}
-            accentColor={Colors.status.inProgress}
-            style={styles.metricFlex}
-          />
-          <MetricCard
-            label="Waiting"
-            value={String(summary?.waiting ?? 0)}
-            accentColor={Colors.status.waiting}
-            style={styles.metricFlex}
-          />
+        <View style={styles.summaryDivider} />
+        <View style={styles.summaryItem}>
+          <Text style={styles.summaryValue}>{summary?.waiting ?? 0}</Text>
+          <View style={styles.summaryLabelRow}>
+            <View style={[styles.dot, { backgroundColor: Colors.status.waiting }]} />
+            <Text style={styles.summaryLabel}>WAITING</Text>
+          </View>
+        </View>
+        <View style={styles.summaryDivider} />
+        <View style={styles.summaryItem}>
+          <Text style={styles.summaryValue}>{summary?.walkIn ?? 0}</Text>
+          <Text style={styles.summaryLabel}>WALK-IN</Text>
+        </View>
+        <View style={styles.summaryDivider} />
+        <View style={styles.summaryItem}>
+          <Text style={styles.summaryValue}>{summary?.appointment ?? 0}</Text>
+          <Text style={styles.summaryLabel}>BOOKED</Text>
+        </View>
+        <View style={styles.summaryDivider} />
+        <View style={styles.summaryItem}>
+          <Text style={[styles.summaryValue, styles.summaryValueAccent]}>{summary?.total ?? 0}</Text>
+          <Text style={[styles.summaryLabel, styles.summaryLabelAccent]}>TOTAL</Text>
         </View>
       </View>
 
@@ -222,11 +227,32 @@ export function HomeDashboardScreen() {
 }
 
 const styles = StyleSheet.create({
+  workspaceBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 13,
+    backgroundColor: Colors.bg.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border.light,
+    gap: 10,
+  },
+  workspaceBarName: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: "600",
+    color: Colors.text.primary,
+  },
   topRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     marginTop: 8,
+  },
+  profileRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
   },
   notifCircle: {
     width: 40,
@@ -238,17 +264,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: Colors.bg.surface,
   },
-  greetingRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 16,
-  },
   avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: Colors.bg.surface,
-    marginRight: 12,
+    marginRight: 10,
     borderWidth: 1,
     borderColor: Colors.border.default,
   },
@@ -256,11 +277,11 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   greetingSmall: {
-    fontSize: 13,
+    fontSize: 12,
     color: Colors.text.secondary,
   },
   greetingName: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "700",
     color: Colors.text.primary,
   },
@@ -333,18 +354,52 @@ const styles = StyleSheet.create({
   copyIcon: {
     marginLeft: 8,
   },
-  metricsSection: {
+  summaryCard: {
     marginTop: 16,
-  },
-  metricsRow: {
+    backgroundColor: Colors.bg.surface,
+    borderRadius: 16,
     flexDirection: "row",
-    gap: 8,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    overflow: "hidden",
   },
-  metricsRowTop: {
-    marginTop: 8,
-  },
-  metricFlex: {
+  summaryItem: {
     flex: 1,
+    alignItems: "center",
+    paddingVertical: 14,
+    gap: 4,
+  },
+  summaryDivider: {
+    width: 1,
+    backgroundColor: Colors.border.light,
+    marginVertical: 10,
+  },
+  summaryValue: {
+    fontSize: 26,
+    fontWeight: "700",
+    color: Colors.text.primary,
+  },
+  summaryValueAccent: {
+    color: Colors.brand.primary,
+  },
+  summaryLabelRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  summaryLabel: {
+    fontSize: 9,
+    fontWeight: "600",
+    color: Colors.text.secondary,
+    letterSpacing: 0.5,
+  },
+  summaryLabelAccent: {
+    color: Colors.brand.primaryDark,
+  },
+  dot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
   },
   shortcutsCard: {
     marginTop: 16,

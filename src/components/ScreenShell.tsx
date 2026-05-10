@@ -1,7 +1,8 @@
 import AppTheme from '@/src/app-theme';
+import { AppHeader } from '@/src/components/AppHeader';
 import { Colors } from '@/src/theme/colors';
 import React from 'react';
-import { ScrollView, StyleSheet, ViewStyle } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface Props {
@@ -20,6 +21,10 @@ interface Props {
   style?: ViewStyle;
   /** Safe area edges to apply — default: all */
   edges?: ('top' | 'bottom' | 'left' | 'right')[];
+  /** Hide the global app logo header — default: false */
+  hideAppHeader?: boolean;
+  /** Wrap scroll content in KeyboardAvoidingView — use for form screens */
+  keyboardAvoid?: boolean;
 }
 
 export function ScreenShell({
@@ -31,21 +36,35 @@ export function ScreenShell({
   contentStyle,
   style,
   edges,
+  hideAppHeader = false,
+  keyboardAvoid = false,
 }: Props) {
+  const scrollView = (
+    <ScrollView
+      style={styles.scroll}
+      contentContainerStyle={[styles.scrollContent, contentStyle]}
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled"
+    >
+      {children}
+    </ScrollView>
+  );
+
   return (
     <SafeAreaView
       style={[styles.safeArea, { backgroundColor }, style]}
       edges={edges}
     >
+      {!hideAppHeader && <AppHeader />}
       {headerSlot}
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={[styles.scrollContent, contentStyle]}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-      >
-        {children}
-      </ScrollView>
+      {keyboardAvoid ? (
+        <KeyboardAvoidingView
+          style={styles.keyboardView}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          {scrollView}
+        </KeyboardAvoidingView>
+      ) : scrollView}
       {footerSlot}
       {overlaySlot}
     </SafeAreaView>
@@ -55,7 +74,9 @@ export function ScreenShell({
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    paddingTop: AppTheme.spacing.lg,
+  },
+  keyboardView: {
+    flex: 1,
   },
   scroll: {
     flex: 1,

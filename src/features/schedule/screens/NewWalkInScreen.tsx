@@ -63,6 +63,7 @@ export function NewWalkInScreen() {
 
   return (
     <FormShell
+      keyboardAvoid
       headerSlot={
         <ScreenHeader
           title="New Walk-In"
