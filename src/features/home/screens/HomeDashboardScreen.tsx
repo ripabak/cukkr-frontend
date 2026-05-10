@@ -4,6 +4,7 @@ import {
   ActivityCard,
   RecentActivity,
 } from "@/src/features/home/components/ActivityCard";
+import { BarbershopSwitcherModal } from "@/src/features/home/components/BarbershopSwitcherModal";
 import { ShortcutTile } from "@/src/features/home/components/ShortcutTile";
 import {
   useBookingSummary,
@@ -49,6 +50,8 @@ export function HomeDashboardScreen() {
   const { mutate: generatePin, isPending: isGenerating } = useGenerateWalkInPin();
 
   const [generatedPin, setGeneratedPin] = useState<string | null>(null);
+  const [switcherVisible, setSwitcherVisible] = useState(false);
+  const [workspaceBarHeight, setWorkspaceBarHeight] = useState(0);
 
   const handleGeneratePin = () => {
     generatePin(undefined, {
@@ -74,19 +77,30 @@ export function HomeDashboardScreen() {
     : null;
 
   return (
+    <>
+      <BarbershopSwitcherModal
+        visible={switcherVisible}
+        onClose={() => setSwitcherVisible(false)}
+        headerHeight={workspaceBarHeight}
+      />
     <ScreenShell
       contentStyle={styles.scrollContentPadding}
       headerSlot={
         <TouchableOpacity
           style={styles.workspaceBar}
           activeOpacity={0.7}
-          onPress={() => router.push("/switch-barbershop")}
+          onPress={() => setSwitcherVisible(true)}
+          onLayout={(e) => setWorkspaceBarHeight(e.nativeEvent.layout.height)}
         >
           <Ionicons name="storefront-outline" size={16} color={Colors.text.secondary} />
           <Text style={styles.workspaceBarName} numberOfLines={1}>
             {barbershop?.name ?? "Loading..."}
           </Text>
-          <Ionicons name="chevron-down" size={16} color={Colors.icon.muted} />
+          <Ionicons
+            name={switcherVisible ? "chevron-up" : "chevron-down"}
+            size={16}
+            color={Colors.icon.muted}
+          />
         </TouchableOpacity>
       }
     >
@@ -223,6 +237,7 @@ export function HomeDashboardScreen() {
         <Text style={styles.emptyText}>No active bookings today</Text>
       )}
     </ScreenShell>
+    </>
   );
 }
 

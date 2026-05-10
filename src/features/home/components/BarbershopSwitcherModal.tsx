@@ -1,0 +1,338 @@
+import { Colors } from "@/src/theme/colors";
+import { authClient } from "@/src/lib/auth-client";
+import { useToast } from "@/src/lib/providers";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  Animated,
+  Easing,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  useBarbershopList,
+  useSetActiveOrganization,
+} from "@/src/features/workspace/hooks";
+
+const APP_HEADER_HEIGHT = 48;
+
+interface Props {
+  visible: boolean;
+  onClose: () => void;
+  headerHeight: number;
+}
+
+export function BarbershopSwitcherModal({ visible, onClose, headerHeight }: Props) {
+  const router = useRouter();
+  const toast = useToast();
+  const insets = useSafeAreaInsets();
+  const [search, setSearch] = useState("");
+
+  const { data: barbershops = [], isLoading } = useBarbershopList();
+  const { mutate: setActive, isPending: isSwitching } = useSetActiveOrganization();
+  const { data: sessionData } = authClient.useSession();
+
+  const slideAnim = useRef(new Animated.Value(-400)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (visible) {
+      setSearch("");
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 220,
+          useNativeDriver: true,
+        }),
+        Animated.timing(slideAnim, {
+          toValue: 0,
+          duration: 260,
+          easing: Easing.out(Easing.cubic),
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 180,
+          useNativeDriver: true,
+        }),
+        Animated.timing(slideAnim, {
+          toValue: -400,
+          duration: 200,
+          easing: Easing.in(Easing.cubic),
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [visible]);
+
+  const filtered = barbershops.filter((b) =>
+    b.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const handleSelect = (id: string) => {
+    if (sessionData?.session?.activeOrganizationId === id) {
+      onClose();
+      return;
+    }
+    setActive(id, {
+      onSuccess: async () => {
+        await authClient.getSession();
+        onClose();
+      },
+      onError: (error) => {
+        toast.error("Failed to switch barbershop: " + error.message);
+      },
+    });
+  };
+
+  const handleCreateNew = () => {
+    onClose();
+    router.push("/create-barbershop-name-logo");
+  };
+
+  const topOffset = insets.top + APP_HEADER_HEIGHT + headerHeight;
+
+  return (
+    <Modal visible={visible} transparent animationType="none" statusBarTranslucent>
+      {/* Full-screen tap target to close — no visual dim above the workspaceBar */}
+      <TouchableWithoutFeedback onPress={onClose}>
+        <View style={StyleSheet.absoluteFill} />
+      </TouchableWithoutFeedback>
+
+      {/* Dim only the area below AppHeader + workspaceBar */}
+      <Animated.View
+        pointerEvents="none"
+        style={[styles.overlay, { top: topOffset, opacity: fadeAnim }]}
+      />
+
+      <Animated.View
+        style={[
+          styles.panel,
+          { top: topOffset, transform: [{ translateY: slideAnim }] },
+        ]}
+      >
+        <View style={styles.searchRow}>
+          <Ionicons name="search-outline" size={16} color={Colors.icon.muted} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search barbershop..."
+            placeholderTextColor={Colors.text.muted}
+            value={search}
+            onChangeText={setSearch}
+            autoCorrect={false}
+          />
+          {search.length > 0 && (
+            <TouchableOpacity onPress={() => setSearch("")}>
+              <Ionicons name="close-circle" size={16} color={Colors.icon.muted} />
+            </TouchableOpacity>
+          )}
+        </View>
+
+        <ScrollView
+          style={styles.list}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          {isLoading ? (
+            <ActivityIndicator
+              size="small"
+              color={Colors.brand.primary}
+              style={styles.loader}
+            />
+          ) : filtered.length === 0 ? (
+            <Text style={styles.emptyText}>No barbershop found</Text>
+          ) : (
+            filtered.map((shop) => {
+              const isActive =
+                sessionData?.session?.activeOrganizationId === shop.id;
+              const initials = shop.name
+                .split(" ")
+                .slice(0, 2)
+                .map((w: string) => w[0])
+                .join("")
+                .toUpperCase();
+              return (
+                <TouchableOpacity
+                  key={shop.id}
+                  style={styles.item}
+                  onPress={() => handleSelect(shop.id)}
+                  activeOpacity={0.7}
+                  disabled={isSwitching}
+                >
+                  <View
+                    style={[
+                      styles.avatar,
+                      isActive && styles.avatarActive,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.avatarText,
+                        isActive && styles.avatarTextActive,
+                      ]}
+                    >
+                      {initials}
+                    </Text>
+                  </View>
+                  <Text style={styles.itemName} numberOfLines={1}>
+                    {shop.name}
+                  </Text>
+                  {isActive && (
+                    <Ionicons
+                      name="checkmark-circle"
+                      size={18}
+                      color={Colors.brand.primaryDark}
+                    />
+                  )}
+                </TouchableOpacity>
+              );
+            })
+          )}
+        </ScrollView>
+
+        <TouchableOpacity style={styles.createRow} onPress={handleCreateNew} activeOpacity={0.7}>
+          <View style={styles.createIcon}>
+            <Ionicons name="add" size={20} color={Colors.text.secondary} />
+          </View>
+          <View>
+            <Text style={styles.createLabel}>Add Barbershop</Text>
+            <Text style={styles.createSub}>Create a new workspace</Text>
+          </View>
+        </TouchableOpacity>
+      </Animated.View>
+    </Modal>
+  );
+}
+
+const styles = StyleSheet.create({
+  overlay: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: Colors.bg.overlay,
+  },
+  panel: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    backgroundColor: Colors.bg.default,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
+    maxHeight: 420,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    elevation: 12,
+  },
+  searchRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginHorizontal: 16,
+    marginTop: 14,
+    marginBottom: 8,
+    backgroundColor: Colors.bg.surface,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 9,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 14,
+    color: Colors.text.primary,
+    padding: 0,
+  },
+  list: {
+    maxHeight: 280,
+  },
+  loader: {
+    marginVertical: 20,
+  },
+  emptyText: {
+    fontSize: 13,
+    color: Colors.text.muted,
+    textAlign: "center",
+    marginVertical: 20,
+  },
+  item: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    gap: 12,
+  },
+  avatar: {
+    width: 38,
+    height: 38,
+    borderRadius: 10,
+    backgroundColor: Colors.bg.surface,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  avatarActive: {
+    backgroundColor: Colors.brand.primary,
+    borderColor: Colors.brand.primaryDark,
+  },
+  avatarText: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: Colors.text.secondary,
+  },
+  avatarTextActive: {
+    color: Colors.text.primary,
+  },
+  itemName: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: "500",
+    color: Colors.text.primary,
+  },
+  createRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderTopWidth: 1,
+    borderTopColor: Colors.border.light,
+    marginTop: 2,
+  },
+  createIcon: {
+    width: 38,
+    height: 38,
+    borderRadius: 10,
+    backgroundColor: Colors.bg.surface,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  createLabel: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: Colors.text.primary,
+  },
+  createSub: {
+    fontSize: 12,
+    color: Colors.text.muted,
+    marginTop: 1,
+  },
+});
