@@ -1,7 +1,7 @@
 import { Colors } from '@/src/theme/colors';
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
 import { StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Tab = 'home' | 'stats' | 'schedule' | 'barbershop';
 
@@ -11,10 +11,7 @@ interface Props {
   style?: ViewStyle;
 }
 
-const TABS: {
-  key: Tab;
-  icon: React.ComponentProps<typeof Ionicons>['name'];
-}[] = [
+const TABS: { key: Tab; icon: React.ComponentProps<typeof Ionicons>['name'] }[] = [
   { key: 'home', icon: 'home' },
   { key: 'stats', icon: 'bar-chart' },
   { key: 'schedule', icon: 'calendar' },
@@ -22,27 +19,23 @@ const TABS: {
 ];
 
 export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
+  const insets = useSafeAreaInsets();
   return (
-    <View style={[styles.container, style]}>
-      {TABS.map((tab) => {
-        const isActive = tab.key === activeTab;
-        return (
-          <TouchableOpacity
-            key={tab.key}
-            onPress={() => onTabPress?.(tab.key)}
-            activeOpacity={0.7}
-            style={styles.tab}
-          >
-            <View style={[styles.iconCircle, isActive && styles.activeCircle]}>
-              <Ionicons
-                name={tab.icon}
-                size={22}
-                color={isActive ? Colors.text.primary : Colors.icon.muted}
-              />
-            </View>
-          </TouchableOpacity>
-        );
-      })}
+    <View style={[styles.container, { paddingBottom: insets.bottom || 12 }, style]}>
+      {TABS.map((tab) => (
+        <TouchableOpacity
+          key={tab.key}
+          onPress={() => onTabPress?.(tab.key)}
+          activeOpacity={0.7}
+          style={styles.tab}
+        >
+          <Ionicons
+            name={tab.icon}
+            size={24}
+            color={tab.key === activeTab ? Colors.brand.primary : Colors.icon.muted}
+          />
+        </TouchableOpacity>
+      ))}
     </View>
   );
 }
@@ -51,26 +44,12 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     backgroundColor: Colors.bg.default,
-    borderRadius: 999,
-    paddingHorizontal: 8,
-    paddingVertical: 8,
-    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
-    elevation: 4,
+    borderTopWidth: 1,
+    borderTopColor: Colors.border.default,
+    paddingTop: 12,
   },
   tab: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 8,
-  },
-  iconCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: 'transparent',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  activeCircle: {
-    backgroundColor: Colors.brand.primary,
   },
 });

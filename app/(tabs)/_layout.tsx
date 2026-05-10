@@ -3,7 +3,6 @@ import { ProtectedRoute } from "@/src/components/ProtectedRoute";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { View } from "react-native";
 
 import { useClientOnlyValue } from '@/src/components/useClientOnlyValue';
 import { useColorScheme } from '@/src/components/useColorScheme';
@@ -30,12 +29,10 @@ function CustomTabBar({ state, navigation }: BottomTabBarProps) {
   const activeTab = ROUTE_TO_TAB[activeRoute] ?? "home";
 
   return (
-    <View style={{ position: "absolute", bottom: 24, left: 20, right: 20 }}>
-      <BottomTabBar
-        activeTab={activeTab}
-        onTabPress={(tab) => navigation.navigate(TAB_TO_ROUTE[tab])}
-      />
-    </View>
+    <BottomTabBar
+      activeTab={activeTab}
+      onTabPress={(tab) => navigation.navigate(TAB_TO_ROUTE[tab])}
+    />
   );
 }
 
@@ -48,8 +45,7 @@ function CustomTabBar({ state, navigation }: BottomTabBarProps) {
 // }
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  const theme = colorScheme === 'dark' ? 'dark' : 'light';
+  useColorScheme();
 
   return (
     <ProtectedRoute>
