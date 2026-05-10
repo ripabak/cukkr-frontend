@@ -1,7 +1,8 @@
-import AppTheme from "@/src/app-theme";
-import React from "react";
-import { ScrollView, StyleSheet, ViewStyle } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import AppTheme from '@/src/app-theme';
+import { Colors } from '@/src/theme/colors';
+import React from 'react';
+import { ScrollView, StyleSheet, ViewStyle } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface Props {
   children: React.ReactNode;
@@ -11,14 +12,14 @@ interface Props {
   footerSlot?: React.ReactNode;
   /** Absolutely-positioned overlays (SortMenu, StatusFilterMenu, OverflowMenu — NOT React Native Modal) */
   overlaySlot?: React.ReactNode;
-  /** SafeAreaView background color — default: AppTheme.colors.bg ('#EEEEE0') */
+  /** SafeAreaView background color — default: white */
   backgroundColor?: string;
   /** Additional style for scrollContent */
   contentStyle?: ViewStyle;
   /** Override SafeAreaView root style — always last */
   style?: ViewStyle;
   /** Safe area edges to apply — default: all */
-  edges?: ("top" | "bottom" | "left" | "right")[];
+  edges?: ('top' | 'bottom' | 'left' | 'right')[];
 }
 
 export function ScreenShell({
@@ -26,7 +27,7 @@ export function ScreenShell({
   headerSlot,
   footerSlot,
   overlaySlot,
-  backgroundColor = AppTheme.colors.bg,
+  backgroundColor = Colors.bg.default,
   contentStyle,
   style,
   edges,
@@ -54,7 +55,7 @@ export function ScreenShell({
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    paddingTop: AppTheme.spacing.lg, // default paddingTop to match headerSlot spacing for all screens using ScreenShell, can be overridden by passing a custom style prop
+    paddingTop: AppTheme.spacing.lg,
   },
   scroll: {
     flex: 1,

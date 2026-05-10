@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
 
@@ -34,9 +35,9 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   active: {
-    backgroundColor: '#1A1A1A',
+    backgroundColor: Colors.brand.primary,
   },
   upcoming: {
-    backgroundColor: '#D0D0C8',
+    backgroundColor: Colors.border.default,
   },
 });

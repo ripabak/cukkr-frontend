@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { IconActionButton } from "@/src/features/barbershop/components/IconActionButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
@@ -57,7 +58,7 @@ export function ServicesManagementScreen() {
                 activeOpacity={0.7}
                 style={styles.headerIcon}
               >
-                <Ionicons name="filter-outline" size={18} color="#1A1A1A" />
+                <Ionicons name="filter-outline" size={18} color={Colors.text.primary} />
               </TouchableOpacity>
               <IconActionButton
                 iconName="add"
@@ -126,12 +127,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
     marginTop: 8,
   },
   subtitle: {
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
     marginTop: 4,
     marginBottom: 16,
   },
@@ -140,7 +141,7 @@ const styles = StyleSheet.create({
   },
   empty: {
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
     textAlign: "center",
     marginTop: 40,
   },
@@ -158,10 +159,10 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: "#E0DDD0",
+    borderColor: Colors.border.default,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.bg.default,
   },
   menuOverlay: {
     position: "absolute",

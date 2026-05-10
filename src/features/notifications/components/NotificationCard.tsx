@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -67,7 +68,7 @@ export function NotificationCard({
           </View>
         </View>
         <View style={styles.iconCircle}>
-          <Ionicons name={TYPE_ICON[type]} size={20} color="#CCCCCC" />
+          <Ionicons name={TYPE_ICON[type]} size={20} color={Colors.icon.muted} />
         </View>
       </View>
     </TouchableOpacity>
@@ -76,7 +77,7 @@ export function NotificationCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     borderRadius: 16,
     padding: 16,
   },
@@ -88,12 +89,12 @@ const styles = StyleSheet.create({
   },
   typeLabel: {
     fontSize: 12,
-    color: '#888888',
+    color: Colors.icon.muted,
     fontWeight: '500',
   },
   timestamp: {
     fontSize: 12,
-    color: '#AAAAAA',
+    color: Colors.text.muted,
   },
   bodyRow: {
     flexDirection: 'row',
@@ -110,7 +111,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#0D78FF',
+    backgroundColor: Colors.status.inProgress,
     marginTop: 6,
   },
   bodyText: {
@@ -119,12 +120,12 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
     marginBottom: 4,
   },
   detail: {
     fontSize: 13,
-    color: '#666666',
+    color: Colors.text.secondary,
     lineHeight: 18,
   },
   declinedBadge: {
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.bg.surface,
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: 12,

@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
 
@@ -36,9 +37,11 @@ export function SegmentedTabs({ tabs, activeKey, onTabPress, style }: Props) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    backgroundColor: '#C6ED3C',
+    backgroundColor: Colors.bg.surface,
     borderRadius: 50,
     padding: 4,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
   },
   tab: {
     flex: 1,
@@ -48,15 +51,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   tabActive: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.brand.primary,
   },
   label: {
     fontSize: 13,
     fontWeight: '500',
-    color: '#555533',
+    color: Colors.text.secondary,
   },
   labelActive: {
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
 });

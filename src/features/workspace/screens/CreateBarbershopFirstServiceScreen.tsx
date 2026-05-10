@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { MultilineInputField } from "@/src/components/MultilineInputField";
 import { PrefixedInputField } from "@/src/components/PrefixedInputField";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
@@ -151,11 +152,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
   subtitle: {
     fontSize: 13,
-    color: "#666666",
+    color: Colors.text.secondary,
     marginTop: 8,
     marginBottom: 24,
     textAlign: "center",
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
   },
   fieldLabel: {
     fontSize: 13,
-    color: "#666666",
+    color: Colors.text.secondary,
     marginBottom: 6,
     marginTop: 16,
   },

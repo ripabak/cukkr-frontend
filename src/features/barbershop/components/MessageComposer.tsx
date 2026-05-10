@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, TextInput, StyleSheet, ViewStyle } from 'react-native';
 
@@ -26,14 +27,14 @@ export function MessageComposer({ value, onChangeText, placeholder = 'Messages t
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     borderRadius: 16,
     padding: 16,
     minHeight: 120,
   },
   input: {
     fontSize: 16,
-    color: '#1A1A1A',
+    color: Colors.text.primary,
     lineHeight: 22,
     flex: 1,
     minHeight: 88,

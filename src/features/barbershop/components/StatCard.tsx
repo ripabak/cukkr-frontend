@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,7 +11,7 @@ interface Props {
   style?: ViewStyle;
 }
 
-export function StatCard({ label, value, iconName, iconColor = '#C6ED3C', style }: Props) {
+export function StatCard({ label, value, iconName, iconColor = Colors.brand.primary, style }: Props) {
   return (
     <View style={[styles.card, style]}>
       <Text style={styles.label}>{label}</Text>
@@ -26,7 +27,7 @@ export function StatCard({ label, value, iconName, iconColor = '#C6ED3C', style 
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     borderRadius: 16,
     padding: 16,
     flex: 1,
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 12,
-    color: '#888888',
+    color: Colors.icon.muted,
     fontWeight: '500',
   },
   valueRow: {
@@ -46,6 +47,6 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
 });

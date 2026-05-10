@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
@@ -15,9 +16,9 @@ export function DateSelectorPill({ label, onPress, style }: Props) {
       activeOpacity={0.8}
       style={[styles.pill, style]}
     >
-      <Ionicons name="calendar-outline" size={16} color="#1A1A1A" style={styles.icon} />
+      <Ionicons name="calendar-outline" size={16} color={Colors.text.primary} style={styles.icon} />
       <Text style={styles.label}>{label}</Text>
-      <Ionicons name="chevron-down" size={14} color="#1A1A1A" style={styles.chevron} />
+      <Ionicons name="chevron-down" size={14} color={Colors.text.primary} style={styles.chevron} />
     </TouchableOpacity>
   );
 }

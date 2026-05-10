@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import AppTheme from "@/src/app-theme";
 import React from "react";
 import {
@@ -17,7 +18,7 @@ interface Props {
   footerSlot?: React.ReactNode;
   /** Absolutely-positioned overlays (SortMenu, StatusFilterMenu, OverflowMenu — NOT React Native Modal) */
   overlaySlot?: React.ReactNode;
-  /** SafeAreaView background color — default: AppTheme.colors.bg ('#EEEEE0') */
+  /** SafeAreaView background color — default: Colors.bg.default */
   backgroundColor?: string;
   /** Additional style for scrollContent */
   contentStyle?: ViewStyle;
@@ -32,7 +33,7 @@ export function FormShell({
   headerSlot,
   footerSlot,
   overlaySlot,
-  backgroundColor = AppTheme.colors.bg,
+  backgroundColor = Colors.bg.default,
   contentStyle,
   style,
   edges,

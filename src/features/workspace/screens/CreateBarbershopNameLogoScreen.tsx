@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { ImageUploadBox } from "@/src/components/ImageUploadBox";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
@@ -112,11 +113,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
   subtitle: {
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
     marginTop: 8,
     marginBottom: 24,
   },
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
   },
   slugLabel: {
     fontSize: 12,
-    color: "#666666",
+    color: Colors.text.secondary,
   },
   slugMessage: {
     fontSize: 12,
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
   },
   logoLabel: {
     fontSize: 13,
-    color: "#666666",
+    color: Colors.text.secondary,
     marginBottom: 6,
     marginTop: 16,
   },

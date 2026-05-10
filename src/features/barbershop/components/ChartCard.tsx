@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 
@@ -27,7 +28,7 @@ const MOCK_POINTS: ChartPoint[] = [
   { x: 1.0, y: 0.18 },
 ];
 
-export function ChartCard({ title, subtitle, subtitleColor = '#B8E031', xLabels = ['Jan', 'Jun', 'Dec'], yLabels = ['100K', '50K', '00'], style }: Props) {
+export function ChartCard({ title, subtitle, subtitleColor = Colors.brand.primary, xLabels = ['Jan', 'Jun', 'Dec'], yLabels = ['100K', '50K', '00'], style }: Props) {
   const CHART_HEIGHT = 100;
 
   return (
@@ -68,7 +69,7 @@ export function ChartCard({ title, subtitle, subtitleColor = '#B8E031', xLabels 
                     top: y1,
                     width: len * 1.5,
                     height: 2,
-                    backgroundColor: '#B8E031',
+                    backgroundColor: Colors.brand.primary,
                     transformOrigin: '0 50%',
                     transform: [{ rotate: `${angle}deg` }],
                   }}
@@ -90,7 +91,7 @@ export function ChartCard({ title, subtitle, subtitleColor = '#B8E031', xLabels 
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     borderRadius: 16,
     padding: 16,
     gap: 4,
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   subtitle: {
     fontSize: 12,
@@ -129,7 +130,7 @@ const styles = StyleSheet.create({
     height: 1,
     borderStyle: 'dashed',
     borderWidth: 1,
-    borderColor: '#E8E8E0',
+    borderColor: Colors.border.default,
   },
   lineContainer: {
     position: 'absolute',
@@ -149,6 +150,6 @@ const styles = StyleSheet.create({
   },
   axisLabel: {
     fontSize: 10,
-    color: '#AAAAAA',
+    color: Colors.icon.muted,
   },
 });

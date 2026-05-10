@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, Text, TextInput, StyleSheet, ViewStyle } from 'react-native';
 
@@ -17,7 +18,7 @@ export function PrefixedInputField({ prefix, value, onChangeText, placeholder, s
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor="#B0ADA0"
+        placeholderTextColor={Colors.text.muted}
         style={styles.input}
       />
     </View>
@@ -28,21 +29,21 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     borderRadius: 999,
     borderWidth: 1,
-    borderColor: '#E0DDD0',
+    borderColor: Colors.border.default,
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
   prefix: {
     fontSize: 14,
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#1A1A1A',
+    color: Colors.text.primary,
     padding: 0,
   },
 });

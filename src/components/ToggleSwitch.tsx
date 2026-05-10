@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { TouchableOpacity, View, StyleSheet, ViewStyle } from 'react-native';
 
@@ -28,16 +29,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
   },
   trackOn: {
-    backgroundColor: '#C6FF4D',
+    backgroundColor: Colors.brand.primary,
   },
   trackOff: {
-    backgroundColor: '#D0CEC0',
+    backgroundColor: Colors.border.default,
   },
   thumb: {
     width: 20,
     height: 20,
     borderRadius: 10,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
   },
   thumbOn: {
     alignSelf: 'flex-end',

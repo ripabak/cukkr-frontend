@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
@@ -14,7 +15,7 @@ export function ScreenHeader({ title, onBack, rightAction, style }: Props) {
     <View style={[styles.container, style]}>
       {onBack ? (
         <TouchableOpacity onPress={onBack} style={styles.backButton} activeOpacity={0.7}>
-          <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
+          <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
         </TouchableOpacity>
       ) : (
         <View style={styles.placeholder} />
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   titleSpacer: {
     flex: 1,

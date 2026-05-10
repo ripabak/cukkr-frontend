@@ -1,6 +1,6 @@
-import React from "react";
-import { SafeAreaView, StyleSheet, ViewStyle } from "react-native";
-import { OnboardingTheme } from "../onboarding-theme";
+import React from 'react';
+import { SafeAreaView, StyleSheet, ViewStyle } from 'react-native';
+import { OnboardingTheme } from '../onboarding-theme';
 
 interface OnboardingContainerProps {
   children: React.ReactNode;
@@ -21,9 +21,9 @@ export const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: OnboardingTheme.colors.dark,
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: OnboardingTheme.colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

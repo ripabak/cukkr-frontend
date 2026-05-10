@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 import { ToggleSwitch } from '@/src/components/ToggleSwitch';
@@ -28,12 +29,12 @@ const styles = StyleSheet.create({
   },
   borderBottom: {
     borderBottomWidth: 1,
-    borderBottomColor: '#E0DDD0',
+    borderBottomColor: Colors.border.light,
   },
   label: {
     flex: 1,
     fontWeight: '700',
     fontSize: 14,
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
 });

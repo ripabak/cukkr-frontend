@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, Text, TextInput, StyleSheet, ViewStyle, KeyboardTypeOptions } from 'react-native';
 
@@ -30,7 +31,7 @@ export function TextInputField({
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
-          placeholderTextColor="#B0ADA0"
+          placeholderTextColor={Colors.text.muted}
           keyboardType={keyboardType}
           secureTextEntry={secureTextEntry}
           style={[styles.input, inputStyle]}
@@ -43,20 +44,20 @@ export function TextInputField({
 const styles = StyleSheet.create({
   label: {
     fontSize: 13,
-    color: '#666666',
+    color: Colors.text.secondary,
     marginBottom: 6,
   },
   inputContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     borderRadius: 999,
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderWidth: 1,
-    borderColor: '#E0DDD0',
+    borderColor: Colors.border.default,
   },
   input: {
     fontSize: 16,
-    color: '#1A1A1A',
+    color: Colors.text.primary,
     padding: 0,
   },
 });

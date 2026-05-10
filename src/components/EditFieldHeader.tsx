@@ -1,6 +1,7 @@
+import { Colors } from '@/src/theme/colors';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
   title: string;
@@ -13,11 +14,11 @@ export function EditFieldHeader({ title, onBack, onSave, style }: Props) {
   return (
     <View style={[styles.container, style]}>
       <TouchableOpacity onPress={onBack} activeOpacity={0.7} style={styles.backButton}>
-        <Ionicons name="chevron-back" size={18} color="#1A1A1A" />
+        <Ionicons name="chevron-back" size={18} color={Colors.text.primary} />
       </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>
       <TouchableOpacity onPress={onSave} activeOpacity={0.7} style={styles.saveButton}>
-        <Ionicons name="checkmark" size={18} color="#FFFFFF" />
+        <Ionicons name="checkmark" size={18} color={Colors.text.primary} />
       </TouchableOpacity>
     </View>
   );
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -43,13 +44,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 17,
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   saveButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#1A1A1A',
+    backgroundColor: Colors.brand.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },

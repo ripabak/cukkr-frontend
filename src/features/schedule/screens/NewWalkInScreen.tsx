@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { BookingForm } from "@/src/features/schedule/components/BookingForm";
@@ -80,7 +81,7 @@ export function NewWalkInScreen() {
           />
         </View>
       }
-      backgroundColor="#F5F4E8"
+      backgroundColor={Colors.bg.default}
       contentStyle={{ paddingTop: 20 }}
     >
       <BookingForm

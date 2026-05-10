@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
 
@@ -9,7 +10,7 @@ interface Props {
   style?: ViewStyle;
 }
 
-export function StickyCta({ label, onPress, color = '#1A1A1A', textColor = '#FFFFFF', style }: Props) {
+export function StickyCta({ label, onPress, color = Colors.brand.primary, textColor = Colors.text.primary, style }: Props) {
   return (
     <TouchableOpacity
       onPress={onPress}

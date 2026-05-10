@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -112,13 +113,13 @@ export function CalendarModal({ visible, selectedDate, openHours, disablePast = 
           {/* Month navigation */}
           <View style={styles.monthRow}>
             <TouchableOpacity onPress={prevMonth} activeOpacity={0.7} style={styles.navBtn}>
-              <Ionicons name="chevron-back" size={18} color="#1A1A1A" />
+              <Ionicons name="chevron-back" size={18} color={Colors.text.primary} />
             </TouchableOpacity>
             <Text style={styles.monthTitle}>
               {MONTH_NAMES[viewMonth]} {viewYear}
             </Text>
             <TouchableOpacity onPress={nextMonth} activeOpacity={0.7} style={styles.navBtn}>
-              <Ionicons name="chevron-forward" size={18} color="#1A1A1A" />
+              <Ionicons name="chevron-forward" size={18} color={Colors.text.primary} />
             </TouchableOpacity>
           </View>
 

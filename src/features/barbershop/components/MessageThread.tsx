@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet, ViewStyle } from 'react-native';
 
@@ -31,7 +32,7 @@ export function MessageThread({ messages, style }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     borderRadius: 16,
     padding: 16,
     minHeight: 160,
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
   },
   bubble: {
     alignSelf: 'flex-start',
-    backgroundColor: '#C6ED3C',
+    backgroundColor: Colors.brand.primary,
     borderRadius: 12,
     borderBottomLeftRadius: 4,
     paddingHorizontal: 14,
@@ -53,12 +54,12 @@ const styles = StyleSheet.create({
   },
   bubbleText: {
     fontSize: 13,
-    color: '#1A1A1A',
+    color: Colors.text.primary,
     lineHeight: 18,
   },
   timestamp: {
     fontSize: 11,
-    color: '#8E8E97',
+    color: Colors.icon.muted,
     alignSelf: 'flex-end',
   },
 });

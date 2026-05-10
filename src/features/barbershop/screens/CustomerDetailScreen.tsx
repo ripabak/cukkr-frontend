@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import AppTheme from "@/src/app-theme";
 import { BookingCard } from "@/src/components/BookingCard";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -61,7 +62,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
   if (isLoadingCustomer) {
     return (
       <SafeAreaView style={styles.safe} edges={["top"]}>
-        <ActivityIndicator size="large" color="#C6FF4D" style={styles.loader} />
+        <ActivityIndicator size="large" color={Colors.brand.primary} style={styles.loader} />
       </SafeAreaView>
     );
   }
@@ -122,14 +123,14 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
                   label="Walk-In"
                   value={String(customer.walkInCount)}
                   iconName="people"
-                  iconColor="#C6ED3C"
+                  iconColor={Colors.brand.primary}
                   style={styles.statCard}
                 />
                 <StatCard
                   label="Appoint."
                   value={String(customer.appointmentCount)}
                   iconName="calendar"
-                  iconColor="#C6ED3C"
+                  iconColor={Colors.brand.primary}
                   style={styles.statCard}
                 />
               </View>
@@ -155,11 +156,11 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
                   <Text style={styles.filterBtnText}>
                     {statusFilter === "all" ? "All" : statusFilter}
                   </Text>
-                  <Ionicons name="chevron-down" size={14} color="#1A1A1A" />
+                  <Ionicons name="chevron-down" size={14} color={Colors.text.primary} />
                 </TouchableOpacity>
               </View>
               {isLoadingBookings ? (
-                <ActivityIndicator size="small" color="#C6FF4D" />
+                <ActivityIndicator size="small" color={Colors.brand.primary} />
               ) : (
                 <View style={styles.bookingList}>
                   {filteredBookings.map((b) => (
@@ -207,17 +208,17 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#F5F4E8", paddingTop: AppTheme.spacing.lg },
-  container: { flex: 1, backgroundColor: "#F5F4E8" },
+  safe: { flex: 1, backgroundColor: Colors.bg.default, paddingTop: AppTheme.spacing.lg },
+  container: { flex: 1, backgroundColor: Colors.bg.default },
   loader: { marginTop: 80 },
   content: { paddingHorizontal: 20, paddingBottom: 40 },
   customerName: {
     fontSize: 30,
     fontWeight: "800",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
     marginTop: 8,
   },
-  customerPhone: { fontSize: 14, color: "#555555", marginTop: 4, marginBottom: 16 },
+  customerPhone: { fontSize: 14, color: Colors.text.secondary, marginTop: 4, marginBottom: 16 },
   tabs: { marginBottom: 20 },
   tabContent: { gap: 12 },
   statRow: { flexDirection: "row", gap: 12 },
@@ -229,13 +230,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 8,
   },
-  bookingTitle: { fontSize: 20, fontWeight: "700", color: "#1A1A1A" },
-  bookingCount: { color: "#888888", fontWeight: "500" },
+  bookingTitle: { fontSize: 20, fontWeight: "700", color: Colors.text.primary },
+  bookingCount: { color: Colors.icon.muted, fontWeight: "500" },
   filterBtn: {
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.bg.default,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
@@ -243,10 +244,10 @@ const styles = StyleSheet.create({
   filterBtnText: {
     fontSize: 13,
     fontWeight: "500",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
     textTransform: "capitalize",
   },
   bookingList: { gap: 10 },
   statusMenu: { top: 36, right: 0 },
-  noMessages: { fontSize: 14, color: "#666666", textAlign: "center", marginTop: 24 },
+  noMessages: { fontSize: 14, color: Colors.text.secondary, textAlign: "center", marginTop: 24 },
 });

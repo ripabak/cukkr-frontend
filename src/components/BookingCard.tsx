@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
@@ -15,19 +16,19 @@ interface Props {
 }
 
 const STATUS_COLOR: Record<BookingStatus, string> = {
-  waiting: '#F0A11A',
-  'in_progress': '#0D78FF',
-  completed: '#4CC76B',
-  cancelled: '#FF4A4A',
-  requested: '#1A1A1A',
+  waiting: Colors.status.waiting,
+  'in_progress': Colors.status.inProgress,
+  completed: Colors.status.success,
+  cancelled: Colors.status.danger,
+  requested: Colors.brand.primaryDark,
 };
 
 const STATUS_ICON_BG: Record<BookingStatus, string> = {
-  waiting: '#FFF3E0',
-  'in_progress': '#E3EFFF',
-  completed: '#E8F8EE',
-  cancelled: '#FFE8E8',
-  requested: '#F0F0E8',
+  waiting: Colors.status.waitingSurface,
+  'in_progress': Colors.status.inProgressSurface,
+  completed: Colors.status.successSurface,
+  cancelled: Colors.status.dangerSurface,
+  requested: Colors.brand.primarySurface,
 };
 
 export function BookingCard({
@@ -54,7 +55,7 @@ export function BookingCard({
       <View style={styles.info}>
         <Text style={styles.timeLabel}>{timeLabel}</Text>
         <View style={styles.barberRow}>
-          <Ionicons name="cut" size={12} color="#888888" />
+          <Ionicons name="cut" size={12} color={Colors.icon.muted} />
           <Text style={styles.barberName}> {barberName}</Text>
         </View>
       </View>
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     borderRadius: 16,
     padding: 14,
     gap: 12,
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
   timeLabel: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   barberRow: {
     flexDirection: 'row',
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
   },
   barberName: {
     fontSize: 12,
-    color: '#888888',
+    color: Colors.icon.muted,
   },
   right: {
     alignItems: 'flex-end',
@@ -111,6 +112,6 @@ const styles = StyleSheet.create({
   },
   duration: {
     fontSize: 12,
-    color: '#888888',
+    color: Colors.icon.muted,
   },
 });

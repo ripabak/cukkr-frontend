@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import AppTheme from "@/src/app-theme";
 import React, { useState } from "react";
 import { View, FlatList, TouchableOpacity, StyleSheet, Text } from "react-native";
@@ -61,7 +62,7 @@ export function SelectServicesScreen() {
             activeOpacity={0.8}
             style={styles.confirmBtn}
           >
-            <Ionicons name="checkmark" size={20} color="#FFFFFF" />
+            <Ionicons name="checkmark" size={20} color={Colors.text.primary} />
           </TouchableOpacity>
         }
       />
@@ -85,7 +86,7 @@ export function SelectServicesScreen() {
               />
               <View style={[styles.checkbox, selected.has(item.id) && styles.checkboxSelected]}>
                 {selected.has(item.id) ? (
-                  <Ionicons name="checkmark" size={14} color="#FFFFFF" />
+                  <Ionicons name="checkmark" size={14} color={Colors.text.primary} />
                 ) : null}
               </View>
             </TouchableOpacity>
@@ -105,7 +106,7 @@ export function SelectServicesScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#F5F4E8",
+    backgroundColor: Colors.bg.default,
     paddingTop: AppTheme.spacing.lg,
   },
   content: {
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: "#1A1A1A",
+    backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -136,19 +137,19 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 6,
     borderWidth: 1.5,
-    borderColor: "#1A1A1A",
-    backgroundColor: "#FFFFFF",
+    borderColor: Colors.border.default,
+    backgroundColor: Colors.bg.default,
     alignItems: "center",
     justifyContent: "center",
   },
   checkboxSelected: {
-    backgroundColor: "#1A1A1A",
-    borderColor: "#1A1A1A",
+    backgroundColor: Colors.brand.primary,
+    borderColor: Colors.border.default,
   },
   emptyText: {
     textAlign: "center",
     marginTop: 40,
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
   },
 });

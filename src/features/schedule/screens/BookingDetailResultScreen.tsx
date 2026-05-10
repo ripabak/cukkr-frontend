@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import AppTheme from "@/src/app-theme";
 import React from "react";
 import { View, StyleSheet, ActivityIndicator, Text } from "react-native";
@@ -24,7 +25,7 @@ export function BookingDetailResultScreen() {
     if (isLoading) {
       return (
         <View style={styles.centered}>
-          <ActivityIndicator size="large" color="#1A1A1A" />
+          <ActivityIndicator size="large" color={Colors.text.primary} />
         </View>
       );
     }
@@ -97,7 +98,7 @@ export function BookingDetailResultScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#F5F4E8",
+    backgroundColor: Colors.bg.default,
     paddingTop: AppTheme.spacing.lg,
   },
   outer: {
@@ -110,6 +111,6 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
   },
 });

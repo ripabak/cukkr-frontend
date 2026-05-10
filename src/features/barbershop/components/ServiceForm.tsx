@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 import { ImageUploadBox } from '@/src/components/ImageUploadBox';
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
   },
   fieldLabel: {
     fontSize: 13,
-    color: '#666666',
+    color: Colors.text.secondary,
     marginBottom: 6,
     marginTop: 4,
   },
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   card: {
-    backgroundColor: '#D9E8A0',
+    backgroundColor: Colors.brand.primarySurface,
     borderRadius: 16,
     marginBottom: 16,
   },

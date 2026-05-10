@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import AppTheme from "@/src/app-theme";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -112,7 +113,7 @@ export function AddOrEditServiceScreen() {
   if (isEdit && isFetching && !initialized) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <ActivityIndicator size="large" color="#C6FF4D" style={styles.loader} />
+        <ActivityIndicator size="large" color={Colors.brand.primary} style={styles.loader} />
       </SafeAreaView>
     );
   }
@@ -162,7 +163,7 @@ export function AddOrEditServiceScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#EEEEE0",
+    backgroundColor: Colors.bg.default,
     paddingTop: AppTheme.spacing.lg,
   },
   outer: {

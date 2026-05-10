@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { HelperCopy } from "@/src/components/HelperCopy";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { MessageComposer } from "@/src/features/barbershop/components/MessageComposer";
@@ -22,7 +23,7 @@ export function SendMessagesToCustomersScreen() {
     : `Send Messages (${count})`;
 
   const selectionMode = !recipientName;
-  const bgColor = selectionMode ? "#C6ED3C" : "#F5F4E8";
+  const bgColor = selectionMode ? Colors.brand.primary : Colors.bg.default;
 
   const handleSend = () => {
     if (!message.trim()) {
@@ -42,11 +43,11 @@ export function SendMessagesToCustomersScreen() {
           onBack={() => router.back()}
           rightAction={
             <TouchableOpacity
-              style={[styles.sendBtn, { backgroundColor: canSend ? "#1A1A1A" : "#888888" }]}
+              style={[styles.sendBtn, { backgroundColor: canSend ? Colors.brand.primary : Colors.bg.surface }]}
               onPress={handleSend}
               activeOpacity={0.7}
             >
-              <Ionicons name="send" size={18} color="#FFFFFF" />
+              <Ionicons name="send" size={18} color={Colors.text.primary} />
             </TouchableOpacity>
           }
         />

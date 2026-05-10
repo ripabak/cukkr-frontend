@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { BookingStatus } from '@/src/components/BookingCard';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';

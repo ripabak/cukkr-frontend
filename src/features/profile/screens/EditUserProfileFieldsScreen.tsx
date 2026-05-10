@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { EditFieldHeader } from '@/src/components/EditFieldHeader';
 import { HelperCopy } from '@/src/components/HelperCopy';
 import { MultilineInputField } from '@/src/components/MultilineInputField';
@@ -107,7 +108,7 @@ export function EditUserProfileFieldsScreen() {
     return (
       <View style={[styles.safe, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#1A1A1A" />
+          <ActivityIndicator size="large" color={Colors.text.primary} />
         </View>
       </View>
     );
@@ -129,7 +130,7 @@ export function EditUserProfileFieldsScreen() {
                 inputStyle={{ paddingRight: 40 }}
               />
               <TouchableOpacity onPress={() => setShowCurrentPw((v) => !v)} style={styles.eyeBtn}>
-                <Ionicons name={showCurrentPw ? 'eye-off-outline' : 'eye-outline'} size={20} color="#9D9DA5" />
+                <Ionicons name={showCurrentPw ? 'eye-off-outline' : 'eye-outline'} size={20} color={Colors.icon.muted} />
               </TouchableOpacity>
             </View>
             {currentPwError ? <Text style={styles.errorText}>{currentPwError}</Text> : null}
@@ -145,7 +146,7 @@ export function EditUserProfileFieldsScreen() {
                 inputStyle={{ paddingRight: 40 }}
               />
               <TouchableOpacity onPress={() => setShowNewPw((v) => !v)} style={styles.eyeBtn}>
-                <Ionicons name={showNewPw ? 'eye-off-outline' : 'eye-outline'} size={20} color="#9D9DA5" />
+                <Ionicons name={showNewPw ? 'eye-off-outline' : 'eye-outline'} size={20} color={Colors.icon.muted} />
               </TouchableOpacity>
             </View>
             {newPwError ? <Text style={styles.errorText}>{newPwError}</Text> : null}
@@ -157,7 +158,7 @@ export function EditUserProfileFieldsScreen() {
         </ScrollView>
         {changingPassword && (
           <View style={styles.savingOverlay}>
-            <ActivityIndicator size="small" color="#1A1A1A" />
+            <ActivityIndicator size="small" color={Colors.text.primary} />
           </View>
         )}
       </View>
@@ -180,7 +181,7 @@ export function EditUserProfileFieldsScreen() {
         </ScrollView>
         {changingPhone && (
           <View style={styles.savingOverlay}>
-            <ActivityIndicator size="small" color="#1A1A1A" />
+            <ActivityIndicator size="small" color={Colors.text.primary} />
           </View>
         )}
       </View>
@@ -224,7 +225,7 @@ export function EditUserProfileFieldsScreen() {
       </ScrollView>
       {savingProfile && (
         <View style={styles.savingOverlay}>
-          <ActivityIndicator size="small" color="#1A1A1A" />
+          <ActivityIndicator size="small" color={Colors.text.primary} />
         </View>
       )}
     </View>
@@ -234,7 +235,7 @@ export function EditUserProfileFieldsScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#F5F4E8',
+    backgroundColor: Colors.bg.default,
   },
   content: {
     padding: 20,
@@ -250,13 +251,13 @@ const styles = StyleSheet.create({
     bottom: 20,
     right: 20,
     padding: 12,
-    backgroundColor: '#1A1A1A',
+    backgroundColor: Colors.brand.primary,
     borderRadius: 8,
     opacity: 0.8,
   },
   fieldLabel: {
     fontSize: 13,
-    color: '#666',
+    color: Colors.text.secondary,
     marginBottom: 6,
   },
   passwordInputRow: {
@@ -274,12 +275,12 @@ const styles = StyleSheet.create({
   },
   forgotText: {
     fontSize: 13,
-    color: '#C6ED3C',
+    color: Colors.brand.primary,
     fontWeight: '600',
   },
   errorText: {
     fontSize: 12,
-    color: '#EE6352',
+    color: Colors.status.danger,
     marginTop: 6,
   },
 });

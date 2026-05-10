@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
 import { ToggleSwitch } from '@/src/components/ToggleSwitch';
@@ -113,7 +114,7 @@ const styles = StyleSheet.create({
   },
   borderBottom: {
     borderBottomWidth: 1,
-    borderBottomColor: '#E0DDD0',
+    borderBottomColor: Colors.border.light,
   },
   row: {
     flexDirection: 'row',
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
   day: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
     width: 36,
   },
   dayDisabled: {
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   timePill: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 6,
@@ -150,14 +151,14 @@ const styles = StyleSheet.create({
   timeText: {
     fontSize: 12,
     fontWeight: '500',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   timeTextDisabled: {
     color: '#B0ADA0',
   },
   dash: {
     fontSize: 14,
-    color: '#666666',
+    color: Colors.text.secondary,
   },
   pickerWrapper: {
     marginTop: 8,

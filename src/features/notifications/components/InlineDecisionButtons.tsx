@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
 
@@ -51,20 +52,20 @@ const styles = StyleSheet.create({
   },
   declineBtn: {
     borderWidth: 1.5,
-    borderColor: '#FF4A4A',
+    borderColor: Colors.status.danger,
   },
   acceptBtn: {
     borderWidth: 1.5,
-    borderColor: '#55C46B',
+    borderColor: Colors.status.success,
   },
   declineLabel: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#FF4A4A',
+    color: Colors.status.danger,
   },
   acceptLabel: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#55C46B',
+    color: Colors.status.success,
   },
 });

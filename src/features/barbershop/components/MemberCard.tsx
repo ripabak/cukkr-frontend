@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -33,7 +34,7 @@ export function MemberCard({ name, nameSmall, role, isYou, status, statusVariant
         <StatusBadge label={status} variant={statusVariant} />
         {onRemove ? (
           <TouchableOpacity onPress={onRemove} activeOpacity={0.7} style={styles.removeBtn}>
-            <Ionicons name="close" size={14} color="#FFFFFF" />
+            <Ionicons name="close" size={14} color={Colors.text.primary} />
           </TouchableOpacity>
         ) : null}
       </View>
@@ -43,7 +44,7 @@ export function MemberCard({ name, nameSmall, role, isYou, status, statusVariant
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#D9E8A0',
+    backgroundColor: Colors.brand.primarySurface,
     borderRadius: 16,
     flexDirection: 'row',
     alignItems: 'center',
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#B0ADA0',
+    backgroundColor: Colors.bg.surface,
     flexShrink: 0,
   },
   info: {
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
     flexShrink: 1,
   },
   nameSmall: {
@@ -79,12 +80,12 @@ const styles = StyleSheet.create({
   },
   you: {
     fontSize: 12,
-    color: '#666666',
+    color: Colors.text.secondary,
     fontWeight: '400',
   },
   role: {
     fontSize: 12,
-    color: '#666666',
+    color: Colors.text.secondary,
     marginTop: 2,
     textTransform: 'capitalize',
   },
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#1A1A1A',
+    backgroundColor: Colors.brand.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },

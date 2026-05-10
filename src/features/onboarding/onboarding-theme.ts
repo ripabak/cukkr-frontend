@@ -1,12 +1,14 @@
-// Onboarding Feature Theme & Colors
+import { Colors } from '@/src/theme/colors';
+
 export const OnboardingTheme = {
   colors: {
-    primary: "#C6FF4D", // Green accent
-    dark: "#1A1A1A",
-    white: "#FFFFFF",
-    lightBg: "#F5F5F5",
-    textDark: "#000000",
-    textGray: "#666666",
+    primary: Colors.brand.primary,        // #ffc81e — yellow accent
+    primaryDark: Colors.brand.primaryDark, // #e6b80b
+    dark: Colors.text.primary,             // #1a1a1a
+    white: Colors.bg.default,              // #ffffff
+    lightBg: Colors.bg.surface,           // #f9f9f9
+    textDark: Colors.text.primary,         // #1a1a1a
+    textGray: Colors.text.secondary,       // #6b7280
   },
   spacing: {
     xs: 8,
@@ -19,19 +21,19 @@ export const OnboardingTheme = {
   typography: {
     heading: {
       fontSize: 28,
-      fontWeight: "700" as const,
+      fontWeight: '700' as const,
     },
     subheading: {
       fontSize: 18,
-      fontWeight: "600" as const,
+      fontWeight: '600' as const,
     },
     body: {
       fontSize: 16,
-      fontWeight: "400" as const,
+      fontWeight: '400' as const,
     },
     caption: {
       fontSize: 14,
-      fontWeight: "400" as const,
+      fontWeight: '400' as const,
     },
   },
   borderRadius: {

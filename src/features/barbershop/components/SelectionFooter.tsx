@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
@@ -26,6 +27,6 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
 });

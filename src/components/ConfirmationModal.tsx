@@ -1,6 +1,7 @@
+import { Colors } from '@/src/theme/colors';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useFrame } from './FrameContext';
 
 interface Props {
@@ -33,7 +34,7 @@ export function ConfirmationModal({
         <View style={[styles.card, { width: frameWidth * 0.85 }]}>
           {icon ? (
             <View style={styles.iconWrapper}>
-              <Ionicons name={icon as React.ComponentProps<typeof Ionicons>['name']} size={32} color="#1A1A1A" />
+              <Ionicons name={icon as React.ComponentProps<typeof Ionicons>['name']} size={32} color={Colors.text.primary} />
             </View>
           ) : null}
           <Text style={styles.title}>{title}</Text>
@@ -67,12 +68,12 @@ export function ConfirmationModal({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    backgroundColor: Colors.bg.overlay,
     justifyContent: 'center',
     alignItems: 'center',
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     borderRadius: 24,
     padding: 28,
   },
@@ -84,11 +85,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     textAlign: 'center',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   description: {
     fontSize: 14,
-    color: '#666666',
+    color: Colors.text.secondary,
     textAlign: 'center',
     marginTop: 8,
   },
@@ -109,19 +110,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   btnDark: {
-    backgroundColor: '#1A1A1A',
+    backgroundColor: Colors.brand.primary,
   },
   btnDarkLabel: {
-    color: '#FFFFFF',
+    color: Colors.text.primary,
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   btnOutline: {
     borderWidth: 1.5,
-    borderColor: '#1A1A1A',
+    borderColor: Colors.border.default,
   },
   btnOutlineLabel: {
-    color: '#1A1A1A',
+    color: Colors.text.primary,
     fontSize: 16,
     fontWeight: '600',
   },

@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { useRouter } from "expo-router";
 import React from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
@@ -68,7 +69,7 @@ export function OnboardingCustomerHappyScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F5F4E8",
+    backgroundColor: Colors.bg.default,
     justifyContent: "flex-start",
     alignItems: "flex-start",
   },
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     justifyContent: "space-around",
     padding: OnboardingTheme.spacing.md,
-    backgroundColor: "#F0F5E8",
+    backgroundColor: Colors.brand.primarySurface,
     borderRadius: OnboardingTheme.borderRadius.lg,
     margin: OnboardingTheme.spacing.xs,
   },

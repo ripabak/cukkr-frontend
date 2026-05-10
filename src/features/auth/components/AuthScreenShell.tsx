@@ -1,7 +1,7 @@
-import type { PropsWithChildren, ReactNode } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import type { PropsWithChildren, ReactNode } from 'react';
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { authTheme } from "../auth-theme";
+import { authTheme } from '../auth-theme';
 
 type AuthScreenShellProps = PropsWithChildren<{
   title: string;
@@ -18,7 +18,7 @@ export function AuthScreenShell({
   return (
     <View style={styles.page}>
       <KeyboardAvoidingView
-        behavior={Platform.select({ ios: "padding", default: undefined })}
+        behavior={Platform.select({ ios: 'padding', default: undefined })}
         style={styles.keyboardAvoidingView}
       >
         <ScrollView
@@ -53,18 +53,23 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
     paddingHorizontal: authTheme.spacing.lg,
     paddingVertical: authTheme.spacing.xl,
   },
   card: {
-    width: "100%",
+    width: '100%',
     maxWidth: 420,
-    alignSelf: "center",
+    alignSelf: 'center',
     backgroundColor: authTheme.colors.cardBackground,
     borderRadius: authTheme.radius.card,
     paddingHorizontal: authTheme.spacing.xl,
     paddingVertical: 40,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 12,
+    elevation: 3,
   },
   header: {
     gap: authTheme.spacing.sm,
@@ -73,14 +78,14 @@ const styles = StyleSheet.create({
   title: {
     color: authTheme.colors.textPrimary,
     fontSize: 34,
-    fontWeight: "800",
-    textAlign: "center",
+    fontWeight: '800',
+    textAlign: 'center',
   },
   description: {
     color: authTheme.colors.textSecondary,
     fontSize: 14,
     lineHeight: 20,
-    textAlign: "center",
+    textAlign: 'center',
   },
   content: {
     gap: authTheme.spacing.md,

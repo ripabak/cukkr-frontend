@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import AppTheme from "@/src/app-theme";
 import { CustomerCard } from "@/src/features/barbershop/components/CustomerCard";
 import { FloatingActionButton } from "@/src/features/barbershop/components/FloatingActionButton";
@@ -64,7 +65,7 @@ export function CustomerManagementScreen() {
     setSelectedIds(new Set());
   }
 
-  const bgColor = selectionMode ? "#C6ED3C" : "#F5F4E8";
+  const bgColor = selectionMode ? Colors.brand.primary : Colors.bg.default;
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: bgColor }]} edges={["top"]}>
@@ -153,14 +154,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 34,
     fontWeight: "800",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
     lineHeight: 40,
     marginTop: 8,
   },
-  subtitle: { fontSize: 14, color: "#444444", marginTop: 8 },
-  hint: { fontSize: 14, color: "#444444", marginTop: 4 },
+  subtitle: { fontSize: 14, color: Colors.text.secondary, marginTop: 8 },
+  hint: { fontSize: 14, color: Colors.text.secondary, marginTop: 4 },
   searchWrapper: { marginTop: 24, marginBottom: 16 },
-  empty: { fontSize: 14, color: "#666666", textAlign: "center", marginTop: 40 },
+  empty: { fontSize: 14, color: Colors.text.secondary, textAlign: "center", marginTop: 40 },
   list: { gap: 10 },
   sortMenu: { top: 52, right: 20, left: 20 },
 });

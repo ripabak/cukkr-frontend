@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
@@ -361,7 +362,7 @@ const styles = StyleSheet.create({
     color: "#1A1A1A",
   },
   rangeChip: {
-    backgroundColor: "#F5F4E8",
+    backgroundColor: Colors.bg.surface,
     borderRadius: 20,
     paddingHorizontal: 10,
     paddingVertical: 4,

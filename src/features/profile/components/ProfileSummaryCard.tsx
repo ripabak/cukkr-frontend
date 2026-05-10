@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
 
@@ -16,7 +17,7 @@ export function ProfileSummaryCard({ children, style }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#D4E88F',
+    backgroundColor: Colors.brand.primarySurface,
     borderRadius: 16,
     overflow: 'hidden',
   },

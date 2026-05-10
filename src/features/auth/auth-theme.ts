@@ -1,19 +1,21 @@
+import { Colors } from '@/src/theme/colors';
+
 export const authTheme = {
   colors: {
-    pageBackground: "#63B476",
-    cardBackground: "#F4F2E7",
-    textPrimary: "#2F3A2F",
-    textSecondary: "#6E766C",
-    border: "#BCC4B6",
-    inputBackground: "#FBFAF5",
-    accent: "#C4EB35",
-    accentText: "#1F2A18",
-    mutedAccent: "#A7D92C",
-    white: "#FFFFFF",
+    pageBackground: Colors.bg.surface,        // #f9f9f9 — clean neutral page
+    cardBackground: Colors.bg.default,         // #ffffff — white card
+    textPrimary: Colors.text.primary,          // #1a1a1a
+    textSecondary: Colors.text.secondary,      // #6b7280
+    border: Colors.border.default,             // #ebebeb
+    inputBackground: Colors.bg.default,        // #ffffff
+    accent: Colors.brand.primary,             // #ffc81e — yellow CTA
+    accentDark: Colors.brand.primaryDark,     // #e6b80b — pressed/emphasis
+    accentText: Colors.text.primary,          // #1a1a1a — text on yellow bg
+    white: Colors.bg.default,
   },
   radius: {
     card: 32,
-    input: 16,
+    input: 14,
     pill: 999,
   },
   spacing: {

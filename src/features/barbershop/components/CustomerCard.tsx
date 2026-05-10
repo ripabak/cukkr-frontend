@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -20,7 +21,7 @@ export function CustomerCard({ name, totalBook, bookValue, selected, selectionMo
       style={[styles.card, selected && styles.cardSelected, style]}
     >
       <View style={styles.avatar}>
-        <Ionicons name="person" size={22} color="#1A1A1A" />
+        <Ionicons name="person" size={22} color={Colors.text.primary} />
       </View>
       <View style={styles.info}>
         <Text style={styles.name}>{name}</Text>
@@ -29,7 +30,7 @@ export function CustomerCard({ name, totalBook, bookValue, selected, selectionMo
           {'  ·  '}Book Value <Text style={styles.metaBold}>{bookValue}</Text>
         </Text>
       </View>
-      <Ionicons name="chevron-forward" size={18} color="#555555" />
+      <Ionicons name="chevron-forward" size={18} color={Colors.icon.muted} />
     </TouchableOpacity>
   );
 }
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#CFE57C',
+    backgroundColor: Colors.brand.primarySurface,
     borderRadius: 16,
     paddingVertical: 14,
     paddingHorizontal: 16,
@@ -46,13 +47,13 @@ const styles = StyleSheet.create({
   },
   cardSelected: {
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: Colors.bg.default,
   },
   avatar: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#B8CC6A',
+    backgroundColor: Colors.brand.primaryDark,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -63,14 +64,14 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   meta: {
     fontSize: 12,
-    color: '#555555',
+    color: Colors.text.secondary,
   },
   metaBold: {
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
 });

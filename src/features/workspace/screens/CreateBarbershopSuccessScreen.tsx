@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { GradientButton } from "@/src/features/workspace/components/GradientButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
@@ -41,12 +42,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
     textAlign: "center",
   },
   subtitle: {
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
     textAlign: "center",
     marginTop: 12,
   },

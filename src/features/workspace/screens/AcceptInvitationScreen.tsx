@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import {
@@ -61,7 +62,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
     return (
       <ScreenShell>
         <View style={styles.center}>
-          <ActivityIndicator size="large" color="#1A1A1A" />
+          <ActivityIndicator size="large" color={Colors.text.primary} />
         </View>
       </ScreenShell>
     );
@@ -71,7 +72,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
     return (
       <ScreenShell>
         <View style={styles.iconWrapper}>
-          <Ionicons name="mail-outline" size={56} color="#1A1A1A" />
+          <Ionicons name="mail-outline" size={56} color={Colors.text.primary} />
         </View>
         <Text style={styles.title}>You're Invited!</Text>
         <Text style={styles.subtitle}>
@@ -105,7 +106,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
     return (
       <ScreenShell>
         <View style={styles.center}>
-          <ActivityIndicator size="large" color="#1A1A1A" />
+          <ActivityIndicator size="large" color={Colors.text.primary} />
           <Text style={styles.loadingText}>Loading invitation...</Text>
         </View>
       </ScreenShell>
@@ -137,7 +138,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
   return (
     <ScreenShell>
       <View style={styles.iconWrapper}>
-        <Ionicons name="cut-outline" size={48} color="#1A1A1A" />
+        <Ionicons name="cut-outline" size={48} color={Colors.text.primary} />
       </View>
 
       <Text style={styles.title}>You're Invited!</Text>
@@ -209,18 +210,18 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
     marginTop: 8,
   },
   errorTitle: {
     fontSize: 22,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
     textAlign: "center",
   },
   errorSubtitle: {
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
     textAlign: "center",
     marginTop: 4,
     lineHeight: 20,
@@ -230,7 +231,7 @@ const styles = StyleSheet.create({
   },
   backLinkText: {
     fontSize: 14,
-    color: "#1A1A1A",
+    color: Colors.text.primary,
     fontWeight: "600",
     textDecorationLine: "underline",
   },
@@ -242,12 +243,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
     textAlign: "center",
   },
   subtitle: {
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
     textAlign: "center",
     marginTop: 6,
     marginBottom: 28,
@@ -262,14 +263,14 @@ const styles = StyleSheet.create({
   },
   registerLinkText: {
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
   },
   registerLinkBold: {
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
   card: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.bg.default,
     borderRadius: 16,
     padding: 20,
     marginBottom: 24,
@@ -291,7 +292,7 @@ const styles = StyleSheet.create({
   cardValue: {
     fontSize: 15,
     fontWeight: "600",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
   divider: {
     height: 1,
@@ -312,7 +313,7 @@ const styles = StyleSheet.create({
   rejectLabel: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
   disabled: {
     opacity: 0.5,

@@ -1,3 +1,4 @@
+import { Colors } from "@/src/theme/colors";
 import React from "react";
 import { StyleSheet, Text, View, ViewStyle } from "react-native";
 
@@ -40,14 +41,14 @@ export function MetricCard({ label, value, icon, accentColor, style }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.bg.surface,
     borderRadius: 12,
     padding: 12,
     flex: 1,
   },
   label: {
     fontSize: 12,
-    color: "#666666",
+    color: Colors.text.secondary,
   },
   valueRow: {
     flexDirection: "row",
@@ -61,6 +62,6 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 22,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
 });

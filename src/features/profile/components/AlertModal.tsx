@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useFrame } from '@/src/components/FrameContext';
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     borderRadius: 24,
     padding: 28,
   },
@@ -46,11 +47,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     textAlign: 'center',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   description: {
     fontSize: 14,
-    color: '#666666',
+    color: Colors.text.secondary,
     textAlign: 'center',
     marginTop: 8,
   },
@@ -58,13 +59,13 @@ const styles = StyleSheet.create({
     marginTop: 24,
     height: 52,
     borderRadius: 999,
-    backgroundColor: '#1A1A1A',
+    backgroundColor: Colors.brand.primary,
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
   },
   btnLabel: {
-    color: '#FFFFFF',
+    color: Colors.text.primary,
     fontSize: 16,
     fontWeight: '600',
   },

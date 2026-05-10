@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 
@@ -53,9 +54,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 56,
     right: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     borderRadius: 12,
-    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.12)',
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.08)',
     elevation: 8,
     minWidth: 180,
     zIndex: 100,
@@ -66,14 +69,14 @@ const styles = StyleSheet.create({
   },
   itemBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: '#E0DDD0',
+    borderBottomColor: Colors.border.light,
   },
   itemText: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   itemTextDanger: {
-    color: '#E53E3E',
+    color: Colors.status.danger,
   },
 });

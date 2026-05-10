@@ -1,4 +1,5 @@
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { Colors } from "@/src/theme/colors";
 import {
   ActivityCard,
   RecentActivity,
@@ -85,7 +86,7 @@ export function HomeDashboardScreen() {
           style={styles.notifCircle}
           onPress={() => router.push("/notifications-list")}
         >
-          <Ionicons name="notifications-outline" size={20} color="#1A1A1A" />
+          <Ionicons name="notifications-outline" size={20} color={Colors.icon.muted} />
         </TouchableOpacity>
       </View>
 
@@ -113,7 +114,7 @@ export function HomeDashboardScreen() {
                 style={styles.regenerateBtn}
               >
                 {isGenerating ? (
-                  <ActivityIndicator size="small" color="#666666" />
+                  <ActivityIndicator size="small" color={Colors.icon.muted} />
                 ) : (
                   <Text style={styles.regenerateBtnText}>Regenerate</Text>
                 )}
@@ -125,7 +126,7 @@ export function HomeDashboardScreen() {
                 <Ionicons
                   name="copy-outline"
                   size={14}
-                  color="#1A1A1A"
+                  color={Colors.text.primary}
                   style={styles.copyIcon}
                 />
               </View>
@@ -138,7 +139,7 @@ export function HomeDashboardScreen() {
             style={styles.generateBtn}
           >
             {isGenerating ? (
-              <ActivityIndicator size="small" color="#1A1A1A" />
+              <ActivityIndicator size="small" color={Colors.text.primary} />
             ) : (
               <Text style={styles.generateBtnText}>Generate Walk-In PIN</Text>
             )}
@@ -156,13 +157,13 @@ export function HomeDashboardScreen() {
           <MetricCard
             label="Walk-In"
             value={String(summary?.walkIn ?? 0)}
-            icon={<Ionicons name="people" size={18} color="#1A1A1A" />}
+            icon={<Ionicons name="people" size={18} color={Colors.icon.muted} />}
             style={styles.metricFlex}
           />
           <MetricCard
             label="Appoint."
             value={String(summary?.appointment ?? 0)}
-            icon={<Ionicons name="calendar" size={18} color="#1A1A1A" />}
+            icon={<Ionicons name="calendar" size={18} color={Colors.icon.muted} />}
             style={styles.metricFlex}
           />
         </View>
@@ -170,13 +171,13 @@ export function HomeDashboardScreen() {
           <MetricCard
             label="In Progress"
             value={String(summary?.inProgress ?? 0)}
-            accentColor="#2196F3"
+            accentColor={Colors.status.inProgress}
             style={styles.metricFlex}
           />
           <MetricCard
             label="Waiting"
             value={String(summary?.waiting ?? 0)}
-            accentColor="#FF9800"
+            accentColor={Colors.status.waiting}
             style={styles.metricFlex}
           />
         </View>
@@ -185,17 +186,17 @@ export function HomeDashboardScreen() {
       <View style={styles.shortcutsCard}>
         <ShortcutTile
           label="Barbers"
-          icon={<Ionicons name="people" size={24} color="#1A1A1A" />}
+          icon={<Ionicons name="people" size={24} color={Colors.icon.muted} />}
           onPress={() => router.push("/barbers-management")}
         />
         <ShortcutTile
           label="Customers"
-          icon={<Ionicons name="person" size={24} color="#1A1A1A" />}
+          icon={<Ionicons name="person" size={24} color={Colors.icon.muted} />}
           onPress={() => router.push("/customer-management")}
         />
         <ShortcutTile
           label="Services"
-          icon={<Ionicons name="cut" size={24} color="#1A1A1A" />}
+          icon={<Ionicons name="cut" size={24} color={Colors.icon.muted} />}
           onPress={() => router.push("/services-management")}
         />
       </View>
@@ -232,10 +233,10 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#E0DDD0",
+    borderColor: Colors.border.default,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.bg.surface,
   },
   greetingRow: {
     flexDirection: "row",
@@ -246,30 +247,34 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: "#D9D9D9",
+    backgroundColor: Colors.bg.surface,
     marginRight: 12,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
   },
   greetingText: {
     flexDirection: "column",
   },
   greetingSmall: {
     fontSize: 13,
-    color: "#666666",
+    color: Colors.text.secondary,
   },
   greetingName: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
   pinCard: {
     marginTop: 20,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.bg.surface,
     borderRadius: 16,
     padding: 16,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
   },
   pinLabel: {
     fontSize: 12,
-    color: "#666666",
+    color: Colors.text.secondary,
     marginBottom: 8,
   },
   pinValueRow: {
@@ -279,7 +284,7 @@ const styles = StyleSheet.create({
   pinValue: {
     fontSize: 32,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
     flex: 1,
     letterSpacing: 4,
   },
@@ -288,39 +293,42 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#E0DDD0",
+    borderColor: Colors.border.default,
     minWidth: 90,
     alignItems: "center",
   },
   regenerateBtnText: {
     fontSize: 12,
-    color: "#666666",
+    color: Colors.text.secondary,
     fontWeight: "500",
   },
   generateBtn: {
-    backgroundColor: "#CFE57C",
+    backgroundColor: Colors.brand.primary,
     borderRadius: 10,
     paddingVertical: 12,
     alignItems: "center",
   },
   generateBtnText: {
     fontSize: 14,
-    fontWeight: "600",
-    color: "#1A1A1A",
+    fontWeight: "700",
+    color: Colors.text.primary,
   },
   linkPill: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: 10,
-    backgroundColor: "#CFE57C",
+    backgroundColor: Colors.brand.primarySurface,
     borderRadius: 999,
     paddingHorizontal: 12,
     paddingVertical: 6,
     alignSelf: "flex-start",
+    borderWidth: 1,
+    borderColor: Colors.brand.primary,
   },
   linkText: {
     fontSize: 13,
-    color: "#1A1A1A",
+    color: Colors.brand.primaryDark,
+    fontWeight: "500",
   },
   copyIcon: {
     marginLeft: 8,
@@ -340,14 +348,16 @@ const styles = StyleSheet.create({
   },
   shortcutsCard: {
     marginTop: 16,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.bg.surface,
     borderRadius: 16,
     flexDirection: "row",
+    borderWidth: 1,
+    borderColor: Colors.border.light,
   },
   recentLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#7D7D7D",
+    color: Colors.text.secondary,
   },
   upcomingRow: {
     flex: 1,
@@ -362,11 +372,12 @@ const styles = StyleSheet.create({
   },
   seeMore: {
     fontSize: 13,
-    color: "#1A1A1A",
+    color: Colors.brand.primaryDark,
+    fontWeight: "600",
   },
   emptyText: {
     fontSize: 13,
-    color: "#999999",
+    color: Colors.text.muted,
     textAlign: "center",
     marginTop: 16,
     paddingHorizontal: 16,

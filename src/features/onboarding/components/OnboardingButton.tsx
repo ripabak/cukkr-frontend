@@ -1,17 +1,11 @@
-import React from "react";
-import {
-    StyleSheet,
-    Text,
-    TextStyle,
-    TouchableOpacity,
-    ViewStyle,
-} from "react-native";
-import { OnboardingTheme } from "../onboarding-theme";
+import React from 'react';
+import { StyleSheet, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
+import { OnboardingTheme } from '../onboarding-theme';
 
 interface OnboardingButtonProps {
   label: string;
   onPress: () => void;
-  variant?: "primary" | "secondary";
+  variant?: 'primary' | 'secondary';
   style?: ViewStyle;
   textStyle?: TextStyle;
 }
@@ -19,29 +13,19 @@ interface OnboardingButtonProps {
 export const OnboardingButton: React.FC<OnboardingButtonProps> = ({
   label,
   onPress,
-  variant = "primary",
+  variant = 'primary',
   style,
   textStyle,
 }) => {
-  const isSecondary = variant === "secondary";
+  const isSecondary = variant === 'secondary';
 
   return (
     <TouchableOpacity
-      style={[
-        styles.button,
-        isSecondary && styles.buttonSecondary,
-        style,
-      ]}
+      style={[styles.button, isSecondary && styles.buttonSecondary, style]}
       onPress={onPress}
       activeOpacity={0.8}
     >
-      <Text
-        style={[
-          styles.buttonText,
-          isSecondary && styles.buttonTextSecondary,
-          textStyle,
-        ]}
-      >
+      <Text style={[styles.buttonText, isSecondary && styles.buttonTextSecondary, textStyle]}>
         {label}
       </Text>
     </TouchableOpacity>
@@ -50,21 +34,23 @@ export const OnboardingButton: React.FC<OnboardingButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: OnboardingTheme.colors.dark,
+    backgroundColor: OnboardingTheme.colors.primary,
     paddingVertical: OnboardingTheme.spacing.md,
     paddingHorizontal: OnboardingTheme.spacing.lg,
-    borderRadius: OnboardingTheme.borderRadius.md,
-    width: "100%",
-    alignItems: "center",
+    borderRadius: 999,
+    width: '100%',
+    alignItems: 'center',
     marginTop: OnboardingTheme.spacing.md,
   },
   buttonSecondary: {
-    backgroundColor: OnboardingTheme.colors.primary,
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: OnboardingTheme.colors.dark,
   },
   buttonText: {
-    color: OnboardingTheme.colors.white,
+    color: OnboardingTheme.colors.dark,
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '700',
   },
   buttonTextSecondary: {
     color: OnboardingTheme.colors.dark,

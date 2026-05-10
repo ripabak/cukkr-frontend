@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { BookingCard } from "@/src/components/BookingCard";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import {
@@ -77,7 +78,7 @@ export function ScheduleActiveBookingsScreen() {
 
   return (
     <ScreenShell
-      backgroundColor="#F5F4E8"
+      backgroundColor={Colors.bg.default}
       contentStyle={styles.scrollContentPadding}
       headerSlot={
         <>
@@ -92,14 +93,14 @@ export function ScheduleActiveBookingsScreen() {
                 activeOpacity={0.8}
                 style={styles.iconBtn}
               >
-                <Ionicons name="clipboard-outline" size={20} color="#1A1A1A" />
+                <Ionicons name="clipboard-outline" size={20} color={Colors.text.primary} />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => router.push("/new-appointment")}
                 activeOpacity={0.8}
                 style={[styles.iconBtn, styles.iconBtnDark]}
               >
-                <Ionicons name="add" size={22} color="#FFFFFF" />
+                <Ionicons name="add" size={22} color={Colors.text.primary} />
               </TouchableOpacity>
             </View>
           </View>
@@ -141,7 +142,7 @@ export function ScheduleActiveBookingsScreen() {
           <Text style={styles.filterLabel}>
             {SCHEDULE_STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ?? "All"}
           </Text>
-          <Ionicons name="chevron-down" size={14} color="#1A1A1A" />
+          <Ionicons name="chevron-down" size={14} color={Colors.text.primary} />
         </TouchableOpacity>
       </View>
 
@@ -195,14 +196,14 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.bg.default,
     alignItems: "center",
     justifyContent: "center",
     boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.06)',
     elevation: 2,
   },
   iconBtnDark: {
-    backgroundColor: "#1A1A1A",
+    backgroundColor: Colors.brand.primary,
   },
   dayChipsWrapper: {
     paddingHorizontal: 20,
@@ -218,16 +219,16 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 22,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
   sectionCount: {
     fontWeight: "400",
-    color: "#666666",
+    color: Colors.text.secondary,
   },
   filterPill: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.bg.default,
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 8,
@@ -238,7 +239,7 @@ const styles = StyleSheet.create({
   filterLabel: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
   list: {
     gap: 0,
@@ -250,7 +251,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 40,
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
   },
   scrollContentPadding: {
     paddingBottom: 100,

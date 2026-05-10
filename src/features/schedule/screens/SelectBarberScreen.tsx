@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import AppTheme from "@/src/app-theme";
 import React, { useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
@@ -41,10 +42,10 @@ export function SelectBarberScreen() {
               onPress={() => handleSelect(item.id, item.name)}
             >
               <View style={styles.avatar}>
-                <Ionicons name="person" size={22} color="#1A1A1A" />
+                <Ionicons name="person" size={22} color={Colors.text.primary} />
               </View>
               <Text style={styles.barberName}>{item.name}</Text>
-              <Ionicons name="chevron-forward" size={18} color="#1A1A1A" />
+              <Ionicons name="chevron-forward" size={18} color={Colors.text.primary} />
             </TouchableOpacity>
           )}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
@@ -62,7 +63,7 @@ export function SelectBarberScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#F5F4E8",
+    backgroundColor: Colors.bg.default,
     paddingTop: AppTheme.spacing.lg,
   },
   content: {
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
   barberRow: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#CFE57C",
+    backgroundColor: Colors.brand.primary,
     borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 14,
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: "#B0ADA0",
+    backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 15,
     fontWeight: "600",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
   separator: {
     height: 0,
@@ -104,6 +105,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 40,
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
   },
 });

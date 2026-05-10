@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     marginTop: -4,
   },
   forgotPasswordLink: {
-    color: authTheme.colors.mutedAccent,
+    color: authTheme.colors.accentDark,
     fontSize: 13,
     fontWeight: "600",
   },

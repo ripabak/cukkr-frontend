@@ -1,6 +1,7 @@
+import { Colors } from '@/src/theme/colors';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 
 type BookingType = 'appointment' | 'walkin';
 
@@ -20,7 +21,7 @@ export function BookingTypeToggle({ value, onChange }: Props) {
         <Ionicons
           name="calendar-outline"
           size={20}
-          color={value === 'appointment' ? '#1A1A1A' : '#9D9DA5'}
+          color={value === 'appointment' ? Colors.text.primary : Colors.icon.muted}
         />
       </TouchableOpacity>
       <TouchableOpacity
@@ -31,7 +32,7 @@ export function BookingTypeToggle({ value, onChange }: Props) {
         <Ionicons
           name="person-outline"
           size={20}
-          color={value === 'walkin' ? '#1A1A1A' : '#9D9DA5'}
+          color={value === 'walkin' ? Colors.text.primary : Colors.icon.muted}
         />
       </TouchableOpacity>
     </View>
@@ -52,6 +53,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   iconBtnActive: {
-    backgroundColor: '#B7DF2B',
+    backgroundColor: Colors.brand.primary,
   },
 });

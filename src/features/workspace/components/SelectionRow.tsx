@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,7 +22,7 @@ export function SelectionRow({ label, onPress, isLast, isActive, style }: Props)
       <Ionicons
         name="chevron-forward"
         size={18}
-        color={isActive ? '#AAAAAA' : '#1A1A1A'}
+        color={isActive ? Colors.icon.muted : Colors.text.primary}
       />
     </TouchableOpacity>
   );
@@ -43,10 +44,10 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 15,
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   labelDisabled: {
-    color: '#AAAAAA',
+    color: Colors.icon.muted,
     fontWeight: '400',
   },
 });

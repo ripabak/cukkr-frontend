@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { InfoRow } from '@/src/components/InfoRow';
 import { StatusBadge } from '@/src/components/StatusBadge';
 import { Ionicons } from '@expo/vector-icons';
@@ -80,7 +81,7 @@ export function BookingDetailCard({
             <Ionicons
               name={metaIcon === 'people' ? 'people' : 'calendar'}
               size={14}
-              color="#666666"
+              color={Colors.text.secondary}
             />
             <View style={styles.metaText}>
               <Text style={styles.metaLine}>{metaLine1}</Text>

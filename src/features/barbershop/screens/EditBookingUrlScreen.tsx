@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { EditFieldHeader } from "@/src/components/EditFieldHeader";
 import { HelperCopy } from "@/src/components/HelperCopy";
 import { PrefixedInputField } from "@/src/components/PrefixedInputField";
@@ -88,7 +89,7 @@ export function EditBookingUrlScreen() {
       {isFetching && !initialized ? (
         <ActivityIndicator
           size="small"
-          color="#C6FF4D"
+          color={Colors.brand.primary}
           style={styles.loader}
         />
       ) : (

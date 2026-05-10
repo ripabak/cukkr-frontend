@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { DayHoursRow } from "@/src/features/barbershop/components/DayHoursRow";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -118,12 +119,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
     marginTop: 8,
   },
   subtitle: {
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
     marginTop: 4,
     marginBottom: 20,
   },

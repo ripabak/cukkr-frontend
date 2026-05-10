@@ -1,6 +1,7 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from '@/src/theme/colors';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 interface ServiceItem {
   name: string;
@@ -24,7 +25,7 @@ export function ServiceSelectionCard({ services, onSelectPress, style }: Props) 
       <Text style={styles.sectionLabel}>Service</Text>
       {services.length === 0 ? (
         <TouchableOpacity onPress={onSelectPress} activeOpacity={0.7} style={styles.emptyRow}>
-          <Ionicons name="add-circle-outline" size={18} color="#B0ADA0" />
+          <Ionicons name="add-circle-outline" size={18} color={Colors.icon.muted} />
           <Text style={styles.emptyText}>Select a service</Text>
         </TouchableOpacity>
       ) : (
@@ -55,14 +56,14 @@ export function ServiceSelectionCard({ services, onSelectPress, style }: Props) 
 const styles = StyleSheet.create({
   wrapper: {
     borderWidth: 1,
-    borderColor: '#E0DDD0',
+    borderColor: Colors.border.default,
     borderRadius: 16,
     padding: 14,
     gap: 10,
   },
   sectionLabel: {
     fontSize: 12,
-    color: '#888',
+    color: Colors.icon.muted,
     marginBottom: 2,
   },
   emptyRow: {
@@ -73,12 +74,12 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 14,
-    color: '#B0ADA0',
+    color: Colors.text.muted,
   },
   serviceRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#CFE57C',
+    backgroundColor: Colors.brand.primary,
     borderRadius: 12,
     padding: 10,
     gap: 12,
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 8,
-    backgroundColor: '#B0ADA0',
+    backgroundColor: Colors.bg.surface,
   },
   serviceInfo: {
     flex: 1,
@@ -96,16 +97,16 @@ const styles = StyleSheet.create({
   serviceName: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   servicePrice: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   defaultBadge: {
     borderWidth: 1,
-    borderColor: '#1A1A1A',
+    borderColor: Colors.text.primary,
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 4,
@@ -113,14 +114,14 @@ const styles = StyleSheet.create({
   defaultText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   changeRow: {
     alignSelf: 'flex-end',
   },
   changeText: {
     fontSize: 13,
-    color: '#666',
+    color: Colors.text.secondary,
     textDecorationLine: 'underline',
   },
 });

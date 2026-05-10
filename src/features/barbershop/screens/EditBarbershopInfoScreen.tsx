@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { EditFieldHeader } from "@/src/components/EditFieldHeader";
 import { HelperCopy } from "@/src/components/HelperCopy";
 import { MultilineInputField } from "@/src/components/MultilineInputField";
@@ -122,7 +123,7 @@ export function EditBarbershopInfoScreen() {
       {isFetching && !initialized ? (
         <ActivityIndicator
           size="small"
-          color="#C6FF4D"
+          color={Colors.brand.primary}
           style={styles.loader}
         />
       ) : config.multiline ? (

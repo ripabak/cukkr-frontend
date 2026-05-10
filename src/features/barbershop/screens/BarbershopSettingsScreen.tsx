@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { InfoRow } from "@/src/components/InfoRow";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -67,7 +68,7 @@ export function BarbershopSettingsScreen() {
             <View style={styles.avatarCircle} />
           )}
           <View style={styles.cameraBadge}>
-            <Ionicons name="camera" size={14} color="#FFFFFF" />
+            <Ionicons name="camera" size={14} color={Colors.text.primary} />
           </View>
         </TouchableOpacity>
       </View>
@@ -176,12 +177,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
     marginTop: 8,
   },
   subtitle: {
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
     marginTop: 4,
     marginBottom: 20,
   },
@@ -193,7 +194,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: "#D9D9D9",
+    backgroundColor: Colors.bg.surface,
   },
   cameraBadge: {
     position: "absolute",
@@ -202,20 +203,20 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: "#1A1A1A",
+    backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   sectionLabel: {
     fontSize: 13,
-    color: "#666666",
+    color: Colors.text.secondary,
     marginBottom: 8,
   },
   sectionLabelTop: {
     marginTop: 16,
   },
   card: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.bg.default,
     borderRadius: 16,
   },
   dangerBtn: {

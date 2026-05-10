@@ -296,5 +296,47 @@ Update `docs/project-conventions.md` whenever a new pattern is established.
 Update `docs/track_pages_and_components.md` whenever a page, component, or infrastructure item is created or modified.
 
 
+## Brand Color System
+
+All colors must use tokens from `src/theme/colors.ts`. **Never hardcode hex values** in components or screens. See that file for the full token list and actual values.
+
+### Token Reference
+
+| Token | When to Use |
+|---|---|
+| `Colors.brand.primary` | CTA button bg, active tab, toggle ON, selected chip, highlight |
+| `Colors.brand.primaryDark` | Pressed/emphasis state, link color |
+| `Colors.brand.primarySurface` | Subtle brand-tinted background |
+| `Colors.bg.default` | Screen background, card background |
+| `Colors.bg.surface` | Section bg inside white screen, secondary cards |
+| `Colors.text.primary` | Headings, main body copy |
+| `Colors.text.secondary` | Labels, captions, hints, subtext |
+| `Colors.text.muted` | Placeholder text, disabled text |
+| `Colors.icon.muted` | Inactive/decorative icons |
+| `Colors.icon.default` | Active/emphasis icons |
+| `Colors.border.default` | Input borders, card outlines |
+| `Colors.border.light` | Subtle dividers, separators |
+| `Colors.status.danger` | Error, delete, cancel |
+| `Colors.status.success` | Completed, accepted |
+| `Colors.status.warning` | Pending, caution |
+| `Colors.status.inProgress` | In-progress bookings |
+| `Colors.status.waiting` | Waiting bookings |
+
+### Usage Rules
+
+- **Brand color is an accent, not a dominant color.** Use it on interactive elements (buttons, active states, highlights), never as a full-screen background.
+- **Text on brand-colored background** always uses `Colors.text.primary`, never white.
+- **Inactive icons** use `Colors.icon.muted`. Only use `Colors.icon.default` when the icon represents an active/selected state.
+- To change any color globally, edit only `src/theme/colors.ts` — all components pick up the change automatically.
+
+```ts
+// ✅ Correct
+import { Colors } from '@/src/theme/colors';
+backgroundColor: Colors.brand.primary
+
+// ❌ Never hardcode hex
+backgroundColor: '#ffc81e'
+```
+
 ## Constraints
 - don't use `any` or `as any` as much as possible, use them with proper TypeScript types, use any when the options are just any or unknown, if you can make proper typescript types, make it.

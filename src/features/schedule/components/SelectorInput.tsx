@@ -1,6 +1,7 @@
+import { Colors } from '@/src/theme/colors';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
   placeholder: string;
@@ -18,24 +19,24 @@ export function SelectorInput({ placeholder, value, iconName, onPress, style }: 
       style={[styles.container, style]}
     >
       {iconName ? (
-        <Ionicons name={iconName} size={18} color="#B0ADA0" style={styles.icon} />
+        <Ionicons name={iconName} size={18} color={Colors.icon.muted} style={styles.icon} />
       ) : null}
       <Text style={[styles.text, value ? styles.textFilled : styles.textPlaceholder]} numberOfLines={1}>
         {value || placeholder}
       </Text>
-      <Ionicons name="chevron-forward" size={16} color="#B0ADA0" />
+      <Ionicons name="chevron-forward" size={16} color={Colors.icon.muted} />
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     borderRadius: 999,
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderWidth: 1,
-    borderColor: '#E0DDD0',
+    borderColor: Colors.border.default,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
@@ -46,9 +47,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   textPlaceholder: {
-    color: '#B0ADA0',
+    color: Colors.text.muted,
   },
   textFilled: {
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
 });

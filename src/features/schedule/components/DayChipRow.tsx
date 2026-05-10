@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
@@ -46,7 +47,7 @@ export function DayChipRow({ days, selectedKey, onSelect, onShowMore }: Props) {
           activeOpacity={0.8}
           style={[styles.chip, styles.moreChip]}
         >
-          <Ionicons name="chevron-forward" size={18} color="#1A1A1A" />
+          <Ionicons name="chevron-forward" size={18} color={Colors.icon.muted} />
         </TouchableOpacity>
       ) : null}
     </ScrollView>
@@ -63,33 +64,34 @@ const styles = StyleSheet.create({
     width: 58,
     height: 68,
     borderRadius: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.surface,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 2,
-    boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.05)',
-    elevation: 1,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
   },
   chipSelected: {
-    backgroundColor: '#1A1A1A',
+    backgroundColor: Colors.brand.primary,
+    borderColor: Colors.brand.primary,
   },
   moreChip: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.surface,
   },
   dayLabel: {
     fontSize: 12,
     fontWeight: '500',
-    color: '#888888',
+    color: Colors.icon.muted,
   },
   dayLabelSelected: {
-    color: '#FFFFFF',
+    color: Colors.text.primary,
   },
   dayNumber: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   dayNumberSelected: {
-    color: '#FFFFFF',
+    color: Colors.text.primary,
   },
 });

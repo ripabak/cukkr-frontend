@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { PrimaryButton } from '@/src/components/PrimaryButton';
 import { SecondaryButton } from '@/src/components/SecondaryButton';
 import { OtpCodeInput } from '@/src/features/auth/components/OtpCodeInput';
@@ -117,7 +118,7 @@ export function VerifyContactScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#F5F4E8',
+    backgroundColor: Colors.bg.default,
   },
   content: {
     flex: 1,
@@ -129,18 +130,18 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 14,
-    color: '#666',
+    color: Colors.text.secondary,
     textAlign: 'center',
     marginBottom: -12,
   },
   contact: {
     fontSize: 14,
-    color: '#1A1A1A',
+    color: Colors.text.primary,
     fontWeight: '600',
     textAlign: 'center',
   },
@@ -150,7 +151,7 @@ const styles = StyleSheet.create({
   timer: {
     fontSize: 28,
     fontWeight: '400',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
     letterSpacing: 1,
   },
   buttons: {
@@ -159,10 +160,10 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   sendAgainBtn: {
-    borderColor: '#C6ED3C',
+    borderColor: Colors.brand.primary,
   },
   primaryBtn: {
-    backgroundColor: '#C6ED3C',
+    backgroundColor: Colors.brand.primary,
   },
   disabledButtonContainer: {
     opacity: 0.5,

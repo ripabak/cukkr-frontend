@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import AppTheme from '@/src/app-theme';
 import { ConfirmationModal } from '@/src/components/ConfirmationModal';
 import { ScreenHeader } from '@/src/components/ScreenHeader';
@@ -67,7 +68,7 @@ export function NotificationsListScreen() {
               style={styles.moreBtn}
               onPress={() => markAllRead.mutate()}
             >
-              <Ionicons name="checkmark-done" size={20} color="#FFFFFF" />
+              <Ionicons name="checkmark-done" size={20} color={Colors.text.primary} />
             </TouchableOpacity>
           }
         />
@@ -79,7 +80,7 @@ export function NotificationsListScreen() {
         ) : null}
         {!isLoading && !isError && notifications.length === 0 ? (
           <View style={styles.centered}>
-            <Ionicons name="notifications-off-outline" size={48} color="#C0BFA8" />
+            <Ionicons name="notifications-off-outline" size={48} color={Colors.icon.muted} />
             <Text style={styles.emptyTitle}>No Notifications</Text>
             <Text style={styles.emptySubtitle}>You're all caught up!</Text>
           </View>
@@ -132,7 +133,7 @@ export function NotificationsListScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#F5F4E8',
+    backgroundColor: Colors.bg.default,
     paddingTop: AppTheme.spacing.lg,
   },
   outer: {
@@ -142,7 +143,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#1A1A1A',
+    backgroundColor: Colors.brand.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -163,18 +164,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   errorText: {
-    color: '#666',
+    color: Colors.text.secondary,
     fontSize: 14,
   },
   emptyTitle: {
     marginTop: 16,
     fontSize: 16,
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   emptySubtitle: {
     marginTop: 6,
     fontSize: 13,
-    color: '#999',
+    color: Colors.text.muted,
   },
 });

@@ -1,6 +1,7 @@
-import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
 
 interface Props {
   name: string;
@@ -15,28 +16,32 @@ export function WorkspacePill({ name, onPress, style }: Props) {
       activeOpacity={0.7}
       style={[styles.container, style]}
     >
-      <Text style={styles.name}>{name}</Text>
-      <Ionicons name="chevron-down" size={16} color="#666666" style={styles.icon} />
+      <Text style={styles.name} numberOfLines={1}>{name}</Text>
+      <Ionicons name="chevron-down" size={16} color={Colors.icon.muted} style={styles.icon} />
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 999,
     borderWidth: 1,
-    borderColor: '#E0DDD0',
-    backgroundColor: '#FFFFFF',
+    borderColor: Colors.border.default,
+    backgroundColor: Colors.bg.surface,
+    maxWidth: 220,
   },
   name: {
-    fontSize: 15,
-    color: '#1A1A1A',
+    fontSize: 14,
+    fontWeight: "600",
+    color: Colors.text.primary,
+    flex: 1,
   },
   icon: {
     marginLeft: 4,
+    flexShrink: 0,
   },
 });

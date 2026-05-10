@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SortMenu } from "@/src/components/SortMenu";
 import {
@@ -66,7 +67,7 @@ export function HistoryBookingsScreen() {
 
   return (
     <ScreenShell
-      backgroundColor="#F5F4E8"
+      backgroundColor={Colors.bg.default}
       headerSlot={
         <View style={styles.topBar}>
           <TouchableOpacity
@@ -74,7 +75,7 @@ export function HistoryBookingsScreen() {
             activeOpacity={0.7}
             style={styles.backBtn}
           >
-            <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
+            <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
           </TouchableOpacity>
           <View style={styles.topActions}>
             <TouchableOpacity
@@ -82,7 +83,7 @@ export function HistoryBookingsScreen() {
               activeOpacity={0.8}
               style={styles.iconBtn}
             >
-              <Ionicons name="filter" size={18} color="#1A1A1A" />
+              <Ionicons name="filter" size={18} color={Colors.text.primary} />
             </TouchableOpacity>
             <DateSelectorPill
               label={formatDatePill(selectedDate)}
@@ -132,7 +133,7 @@ export function HistoryBookingsScreen() {
           <Text style={styles.filterLabel}>
             {HISTORY_STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ?? "All"}
           </Text>
-          <Ionicons name="chevron-down" size={14} color="#1A1A1A" />
+          <Ionicons name="chevron-down" size={14} color={Colors.text.primary} />
         </TouchableOpacity>
       </View>
 
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.bg.default,
     alignItems: "center",
     justifyContent: "center",
     boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.06)',
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.bg.default,
     alignItems: "center",
     justifyContent: "center",
     boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.06)',
@@ -212,16 +213,16 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
   titleCount: {
     fontWeight: "400",
-    color: "#666666",
+    color: Colors.text.secondary,
   },
   filterPill: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.bg.default,
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 8,
@@ -232,7 +233,7 @@ const styles = StyleSheet.create({
   filterLabel: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
   list: {},
   rowMargin: {
@@ -242,7 +243,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 40,
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
   },
   menuOverlay: {
     position: "absolute",

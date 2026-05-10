@@ -1,17 +1,15 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import { OnboardingTheme } from "../onboarding-theme";
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { OnboardingTheme } from '../onboarding-theme';
 
 interface OnboardingIndicatorProps {
   current: number;
   total: number;
-  color?: string;
 }
 
 export const OnboardingIndicator: React.FC<OnboardingIndicatorProps> = ({
   current,
   total,
-  color = OnboardingTheme.colors.dark,
 }) => {
   return (
     <View style={styles.container}>
@@ -20,8 +18,7 @@ export const OnboardingIndicator: React.FC<OnboardingIndicatorProps> = ({
           key={index}
           style={[
             styles.dot,
-            { backgroundColor: color },
-            index === current && styles.dotActive,
+            index === current ? styles.dotActive : styles.dotInactive,
           ]}
         />
       ))}
@@ -31,21 +28,24 @@ export const OnboardingIndicator: React.FC<OnboardingIndicatorProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     gap: OnboardingTheme.spacing.xs,
     marginTop: OnboardingTheme.spacing.lg,
   },
   dot: {
-    width: 6,
     height: 6,
     borderRadius: OnboardingTheme.borderRadius.full,
-    opacity: 0.3,
+  },
+  dotInactive: {
+    width: 6,
+    backgroundColor: OnboardingTheme.colors.dark,
+    opacity: 0.2,
   },
   dotActive: {
     width: 22,
-    borderRadius: OnboardingTheme.borderRadius.full,
+    backgroundColor: OnboardingTheme.colors.primary,
     opacity: 1,
   },
 });

@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { TimePickerModal } from "@/src/components/TimePickerModal";
@@ -156,7 +157,7 @@ export function NewAppointmentScreen() {
           />
         </View>
       }
-      backgroundColor="#F5F4E8"
+      backgroundColor={Colors.bg.default}
       contentStyle={{ paddingTop: 20, gap: 14 }}
     >
       <BookingForm

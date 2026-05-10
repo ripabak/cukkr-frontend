@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,14 +17,14 @@ export function IconActionButton({ iconName, onPress, size = 48, style }: Props)
       activeOpacity={0.8}
       style={[styles.button, { width: size, height: size, borderRadius: size / 2 }, style]}
     >
-      <Ionicons name={iconName} size={size * 0.42} color="#FFFFFF" />
+      <Ionicons name={iconName} size={size * 0.42} color={Colors.text.primary} />
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#1A1A1A',
+    backgroundColor: Colors.brand.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },

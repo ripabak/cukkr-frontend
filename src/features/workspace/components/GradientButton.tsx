@@ -1,6 +1,7 @@
+import { Colors } from '@/src/theme/colors';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
   label: string;
@@ -14,7 +15,7 @@ export function GradientButton({ label, onPress, icon, style }: Props) {
     <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={[styles.button, style]}>
       <Text style={styles.label}>{label}</Text>
       {icon === 'login' ? (
-        <Ionicons name="log-in-outline" size={20} color="#FFFFFF" />
+        <Ionicons name="log-in-outline" size={20} color={Colors.text.primary} />
       ) : null}
     </TouchableOpacity>
   );
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#2D3A20',
+    backgroundColor: Colors.brand.primary,
     borderRadius: 999,
     height: 56,
     width: '100%',
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: '700',
+    color: Colors.text.primary,
   },
 });

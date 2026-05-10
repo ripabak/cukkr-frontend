@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import AppTheme from "@/src/app-theme";
 import { OverflowMenu } from "@/src/components/OverflowMenu";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -63,7 +64,7 @@ export function BookingDetailInProgressScreen() {
     if (isLoading) {
       return (
         <View style={styles.centered}>
-          <ActivityIndicator size="large" color="#1A1A1A" />
+          <ActivityIndicator size="large" color={Colors.text.primary} />
         </View>
       );
     }
@@ -125,8 +126,8 @@ export function BookingDetailInProgressScreen() {
         <StickyCta
           label="Complete"
           onPress={() => setSwipeModalVisible(true)}
-          color="#55C46B"
-          textColor="#FFFFFF"
+          color={Colors.status.success}
+          textColor={Colors.text.primary}
         />
       </>
     );
@@ -143,7 +144,7 @@ export function BookingDetailInProgressScreen() {
               activeOpacity={0.7}
               style={styles.overflowBtn}
             >
-              <Ionicons name="ellipsis-horizontal" size={20} color="#FFFFFF" />
+              <Ionicons name="ellipsis-horizontal" size={20} color={Colors.text.primary} />
             </TouchableOpacity>
           }
         />
@@ -183,7 +184,7 @@ export function BookingDetailInProgressScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#F5F4E8",
+    backgroundColor: Colors.bg.default,
     paddingTop: AppTheme.spacing.lg,
   },
   outer: {
@@ -196,13 +197,13 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
   },
   overflowBtn: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: "#1A1A1A",
+    backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },

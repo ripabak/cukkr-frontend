@@ -1,8 +1,9 @@
-import { Ionicons } from "@expo/vector-icons";
-import React from "react";
-import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
+import { Colors } from '@/src/theme/colors';
+import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 
-type Tab = "home" | "stats" | "schedule" | "barbershop";
+type Tab = 'home' | 'stats' | 'schedule' | 'barbershop';
 
 interface Props {
   activeTab: Tab;
@@ -12,12 +13,12 @@ interface Props {
 
 const TABS: {
   key: Tab;
-  icon: React.ComponentProps<typeof Ionicons>["name"];
+  icon: React.ComponentProps<typeof Ionicons>['name'];
 }[] = [
-  { key: "home", icon: "home" },
-  { key: "stats", icon: "bar-chart" },
-  { key: "schedule", icon: "calendar" },
-  { key: "barbershop", icon: "storefront" },
+  { key: 'home', icon: 'home' },
+  { key: 'stats', icon: 'bar-chart' },
+  { key: 'schedule', icon: 'calendar' },
+  { key: 'barbershop', icon: 'storefront' },
 ];
 
 export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
@@ -36,7 +37,7 @@ export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
               <Ionicons
                 name={tab.icon}
                 size={22}
-                color={isActive ? "#1A1A1A" : "#666666"}
+                color={isActive ? Colors.text.primary : Colors.icon.muted}
               />
             </View>
           </TouchableOpacity>
@@ -48,28 +49,28 @@ export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    backgroundColor: "#FFFFFF",
+    flexDirection: 'row',
+    backgroundColor: Colors.bg.default,
     borderRadius: 999,
     paddingHorizontal: 8,
     paddingVertical: 8,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.08)",
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.08)',
     elevation: 4,
   },
   tab: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
     paddingVertical: 8,
   },
   iconCircle: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: "transparent",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   activeCircle: {
-    backgroundColor: "#CFE57C",
+    backgroundColor: Colors.brand.primary,
   },
 });

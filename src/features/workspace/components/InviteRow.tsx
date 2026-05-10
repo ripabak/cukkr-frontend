@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,7 +15,7 @@ export function InviteRow({ email, onRemove, style }: Props) {
       <View style={styles.dot} />
       <Text style={styles.email}>{email}</Text>
       <TouchableOpacity onPress={onRemove} activeOpacity={0.7} style={styles.removeButton}>
-        <Ionicons name="close" size={14} color="#FFFFFF" />
+        <Ionicons name="close" size={14} color={Colors.text.primary} />
       </TouchableOpacity>
     </View>
   );
@@ -24,10 +25,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     borderRadius: 999,
     borderWidth: 1,
-    borderColor: '#E0DDD0',
+    borderColor: Colors.border.default,
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
@@ -35,11 +36,11 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#1A1A1A',
+    backgroundColor: Colors.brand.primary,
   },
   email: {
     fontSize: 14,
-    color: '#1A1A1A',
+    color: Colors.text.primary,
     flex: 1,
     marginLeft: 10,
   },
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#E53E3E',
+    backgroundColor: Colors.status.danger,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
@@ -25,7 +26,7 @@ export function InfoRow({ label, value, placeholder, onPress, showChevron, isLas
         <Text style={styles.placeholder} numberOfLines={1}>{displayPlaceholder}</Text>
       ) : null}
       {showChevron ? (
-        <Ionicons name="chevron-forward" size={16} color="#666666" />
+        <Ionicons name="chevron-forward" size={16} color={Colors.icon.muted} />
       ) : null}
     </View>
   );
@@ -50,23 +51,23 @@ const styles = StyleSheet.create({
   },
   borderBottom: {
     borderBottomWidth: 1,
-    borderBottomColor: '#E0DDD0',
+    borderBottomColor: Colors.border.light,
   },
   label: {
     fontWeight: '700',
     fontSize: 14,
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   value: {
     fontSize: 14,
-    color: '#666666',
+    color: Colors.text.secondary,
     maxWidth: '50%',
     marginLeft: 'auto',
     textAlign: 'right',
   },
   placeholder: {
     fontSize: 14,
-    color: '#BBBBBB',
+    color: Colors.text.muted,
     maxWidth: '50%',
     marginLeft: 'auto',
     textAlign: 'right',

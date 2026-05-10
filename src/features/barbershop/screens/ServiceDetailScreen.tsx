@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import AppTheme from "@/src/app-theme";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { InfoRow } from "@/src/components/InfoRow";
@@ -79,7 +80,7 @@ export function ServiceDetailScreen() {
   if (isLoading) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <ActivityIndicator size="large" color="#C6FF4D" style={styles.loader} />
+        <ActivityIndicator size="large" color={Colors.brand.primary} style={styles.loader} />
       </SafeAreaView>
     );
   }
@@ -95,7 +96,7 @@ export function ServiceDetailScreen() {
               activeOpacity={0.7}
               style={styles.overflowBtn}
             >
-              <Ionicons name="ellipsis-horizontal" size={18} color="#FFFFFF" />
+              <Ionicons name="ellipsis-horizontal" size={18} color={Colors.text.primary} />
             </TouchableOpacity>
           }
         />
@@ -108,7 +109,7 @@ export function ServiceDetailScreen() {
           <View style={styles.imageWrapper}>
             <View style={styles.serviceImage}>
               <View style={styles.cameraBadge}>
-                <Ionicons name="camera" size={14} color="#FFFFFF" />
+                <Ionicons name="camera" size={14} color={Colors.text.primary} />
               </View>
             </View>
           </View>
@@ -227,7 +228,7 @@ export function ServiceDetailScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#EEEEE0",
+    backgroundColor: Colors.bg.default,
     paddingTop: AppTheme.spacing.lg,
   },
   outer: {
@@ -240,7 +241,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: "#1A1A1A",
+    backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -259,7 +260,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 12,
-    backgroundColor: "#D9D9D9",
+    backgroundColor: Colors.bg.surface,
   },
   cameraBadge: {
     position: "absolute",
@@ -268,25 +269,25 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: "#1A1A1A",
+    backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   sectionLabel: {
     fontSize: 13,
-    color: "#666666",
+    color: Colors.text.secondary,
     marginBottom: 8,
   },
   sectionLabelTop: {
     marginTop: 16,
   },
   card: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.bg.default,
     borderRadius: 16,
   },
   operationalSubtitle: {
     fontSize: 12,
-    color: "#B0ADA0",
+    color: Colors.text.muted,
     marginBottom: 8,
   },
   overflowOverlay: {
@@ -307,6 +308,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontWeight: "700",
     fontSize: 14,
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
 });

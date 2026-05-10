@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import AppTheme from "@/src/app-theme";
 import { HelperCopy } from "@/src/components/HelperCopy";
 import { IconActionButton } from "@/src/features/barbershop/components/IconActionButton";
@@ -74,7 +75,7 @@ export function InviteBarberScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#EEEEE0",
+    backgroundColor: Colors.bg.default,
     paddingTop: AppTheme.spacing.lg,
   },
   container: {

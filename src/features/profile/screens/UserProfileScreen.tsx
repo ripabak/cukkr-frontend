@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { InfoRow } from "@/src/components/InfoRow";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -36,17 +37,17 @@ export function UserProfileScreen() {
   if (isLoading) {
     return (
       <ScreenShell
-        backgroundColor="#F5F4E8"
+        backgroundColor={Colors.bg.default}
         contentStyle={{ justifyContent: "center", alignItems: "center" }}
       >
-        <ActivityIndicator size="large" color="#1A1A1A" />
+        <ActivityIndicator size="large" color={Colors.text.primary} />
       </ScreenShell>
     );
   }
 
   if (error || !profile) {
     return (
-      <ScreenShell backgroundColor="#F5F4E8">
+      <ScreenShell backgroundColor={Colors.bg.default}>
         <Text style={styles.errorText}>Failed to load profile</Text>
       </ScreenShell>
     );
@@ -57,15 +58,15 @@ export function UserProfileScreen() {
       headerSlot={
         <ScreenHeader title="User Profile" onBack={() => router.back()} />
       }
-      backgroundColor="#F5F4E8"
+      backgroundColor={Colors.bg.default}
       contentStyle={{ paddingTop: 20, gap: 12 }}
     >
       <View style={styles.avatarWrapper}>
         <View style={styles.avatar}>
-          <Ionicons name="person" size={40} color="#666" />
+          <Ionicons name="person" size={40} color={Colors.text.secondary} />
         </View>
         <TouchableOpacity style={styles.editAvatarBtn} activeOpacity={0.8}>
-          <Ionicons name="camera-outline" size={14} color="#1A1A1A" />
+          <Ionicons name="camera-outline" size={14} color={Colors.text.primary} />
         </TouchableOpacity>
       </View>
 
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 12,
-    backgroundColor: "#D0CCC0",
+    backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -145,15 +146,15 @@ const styles = StyleSheet.create({
     width: 26,
     height: 26,
     borderRadius: 13,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.bg.default,
     borderWidth: 1,
-    borderColor: "#E0DDD0",
+    borderColor: Colors.border.default,
     alignItems: "center",
     justifyContent: "center",
   },
   sectionLabel: {
     fontSize: 13,
-    color: "#888",
+    color: Colors.icon.muted,
     marginTop: 4,
   },
   card: {
@@ -161,7 +162,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 16,
-    color: "#EE6352",
+    color: Colors.status.danger,
     textAlign: "center",
   },
 });

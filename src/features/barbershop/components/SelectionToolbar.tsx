@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,12 +19,12 @@ export function SelectionToolbar({ selectionMode, onToggleSelect, onFilterPress 
         <View style={styles.spacer} />
       ) : (
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-          <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
+          <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
         </TouchableOpacity>
       )}
       <View style={styles.right}>
         <TouchableOpacity style={styles.filterBtn} onPress={onFilterPress}>
-          <Ionicons name="filter" size={18} color="#1A1A1A" />
+          <Ionicons name="filter" size={18} color={Colors.text.primary} />
         </TouchableOpacity>
         <TouchableOpacity onPress={onToggleSelect}>
           <Text style={styles.selectText}>{selectionMode ? 'Cancel' : 'Select'}</Text>
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -62,15 +63,15 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     alignItems: 'center',
     justifyContent: 'center',
   },
   selectText: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#1A1A1A',
-    backgroundColor: '#FFFFFF',
+    color: Colors.text.primary,
+    backgroundColor: Colors.bg.default,
     paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 18,

@@ -1,5 +1,6 @@
-import React from 'react';
-import { TouchableOpacity, View, Text, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { TouchableOpacity, View, Text, StyleSheet, ViewStyle } from "react-native";
 
 interface Props {
   label: string;
@@ -20,21 +21,23 @@ export function ShortcutTile({ label, icon, onPress, style }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 16,
   },
   iconCircle: {
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#F0F0E8',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: Colors.bg.default,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    alignItems: "center",
+    justifyContent: "center",
   },
   label: {
     fontSize: 13,
-    fontWeight: '500',
-    color: '#1A1A1A',
+    fontWeight: "500",
+    color: Colors.text.primary,
     marginTop: 8,
   },
 });

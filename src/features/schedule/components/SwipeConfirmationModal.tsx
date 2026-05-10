@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React, { useRef, useState } from 'react';
 import {
   Modal,
