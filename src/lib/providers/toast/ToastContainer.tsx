@@ -119,7 +119,6 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 9999,
     alignItems: "center",
-    paddingTop: 8,
   },
   container: {
     height: TOAST_HEIGHT,
