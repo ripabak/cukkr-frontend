@@ -57,19 +57,23 @@ export function BarbershopSettingsScreen() {
       <Text style={styles.subtitle}>Setup based on your barbershop needs</Text>
 
       <View style={styles.avatarWrapper}>
-        <TouchableOpacity onPress={isLoading ? undefined : handleCameraBadge} activeOpacity={0.8}>
-          {barbershop?.logoUrl ? (
-            <Image
-              source={{ uri: barbershop.logoUrl }}
-              style={styles.avatarCircle}
-              contentFit="cover"
-            />
-          ) : (
-            <View style={styles.avatarCircle} />
-          )}
-          <View style={styles.cameraBadge}>
-            <Ionicons name="camera" size={14} color={Colors.text.primary} />
+        {barbershop?.logoUrl ? (
+          <Image
+            source={{ uri: barbershop.logoUrl }}
+            style={styles.avatarCircle}
+            contentFit="cover"
+          />
+        ) : (
+          <View style={styles.avatar}>
+            <Text style={styles.avatarInitials}>
+              {barbershop?.name
+                ? barbershop.name.split(" ").slice(0, 2).map((w: string) => w[0].toUpperCase()).join("")
+                : "?"}
+            </Text>
           </View>
+        )}
+        <TouchableOpacity style={styles.editAvatarBtn} onPress={isLoading ? undefined : handleCameraBadge} activeOpacity={0.8}>
+          <Ionicons name="camera-outline" size={14} color={Colors.text.primary} />
         </TouchableOpacity>
       </View>
 
@@ -195,23 +199,40 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   avatarWrapper: {
-    alignItems: "center",
+    alignSelf: "center",
     marginBottom: 24,
+    position: "relative",
   },
   avatarCircle: {
     width: 80,
     height: 80,
-    borderRadius: 40,
+    borderRadius: 20,
     backgroundColor: Colors.bg.surface,
   },
-  cameraBadge: {
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 20,
+    backgroundColor: Colors.brand.primaryDark,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  avatarInitials: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#ffffff",
+    letterSpacing: 1,
+  },
+  editAvatarBtn: {
     position: "absolute",
-    bottom: 0,
-    right: 0,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: Colors.brand.primary,
+    bottom: -6,
+    right: -6,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: Colors.bg.default,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
     alignItems: "center",
     justifyContent: "center",
   },
