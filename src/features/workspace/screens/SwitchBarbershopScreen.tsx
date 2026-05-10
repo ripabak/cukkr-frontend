@@ -50,7 +50,8 @@ export function SwitchBarbershopScreen() {
 
   const handleSelectBarbershop = (barbershopId: string) => {
     setActive(barbershopId, {
-      onSuccess: () => {
+      onSuccess: async () => {
+        await authClient.getSession();
         navigateAfterSelect();
       },
       onError: (error) => {
