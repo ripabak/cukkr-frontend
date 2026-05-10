@@ -77,9 +77,11 @@ export function NotificationCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.bg.default,
+    backgroundColor: Colors.bg.surface,
     borderRadius: 16,
     padding: 16,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
   },
   topRow: {
     flexDirection: 'row',

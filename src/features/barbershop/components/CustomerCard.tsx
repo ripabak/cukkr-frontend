@@ -47,7 +47,8 @@ const styles = StyleSheet.create({
   },
   cardSelected: {
     borderWidth: 2,
-    borderColor: Colors.bg.default,
+    borderColor: Colors.brand.primaryDark,
+    backgroundColor: Colors.bg.default,
   },
   avatar: {
     width: 40,

@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   card: {
-    backgroundColor: "#D9E8A0",
+    backgroundColor: Colors.brand.primarySurface,
     borderRadius: 16,
     marginBottom: 24,
   },

@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   card: {
-    backgroundColor: Colors.bg.default,
+    backgroundColor: Colors.bg.surface,
     borderRadius: 16,
   },
   dangerBtn: {

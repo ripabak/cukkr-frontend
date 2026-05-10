@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, Text, Image, StyleSheet, ViewStyle } from 'react-native';
 import { StatusBadge } from '@/src/components/StatusBadge';
@@ -67,7 +68,7 @@ export function ServiceCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#D9E8A0',
+    backgroundColor: Colors.brand.primarySurface,
     borderRadius: 16,
     flexDirection: 'row',
     alignItems: 'center',
@@ -89,7 +90,7 @@ const styles = StyleSheet.create({
   imageEmpty: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#B0ADA0',
+    backgroundColor: Colors.brand.primaryDark,
   },
   info: {
     flex: 1,
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   discountRow: {
     flexDirection: 'row',
@@ -106,25 +107,25 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   discountBadge: {
-    backgroundColor: '#1A1A1A',
+    backgroundColor: Colors.brand.primary,
     borderRadius: 4,
     paddingHorizontal: 5,
     paddingVertical: 2,
   },
   discountText: {
-    color: '#C6FF4D',
+    color: Colors.text.primary,
     fontSize: 10,
     fontWeight: '700',
   },
   originalPrice: {
     fontSize: 12,
-    color: '#666666',
+    color: Colors.text.secondary,
     textDecorationLine: 'line-through',
   },
   finalPrice: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   right: {
     alignItems: 'flex-end',

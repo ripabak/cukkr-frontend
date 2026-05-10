@@ -26,7 +26,7 @@ function AnimatedToast({ message, type, onDismiss, frameWidth }: AnimatedToastPr
     Animated.timing(slideAnim, {
       toValue: 0,
       duration: 300,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== "web",
     }).start();
   }, [slideAnim]);
 
@@ -34,7 +34,7 @@ function AnimatedToast({ message, type, onDismiss, frameWidth }: AnimatedToastPr
     Animated.timing(slideAnim, {
       toValue: -TOAST_HEIGHT - 20,
       duration: 300,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== "web",
     }).start(onDismiss);
   };
 
