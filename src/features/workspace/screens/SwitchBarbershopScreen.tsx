@@ -24,7 +24,7 @@ export function SwitchBarbershopScreen() {
   const toast = useToast();
   const { data: barbershops = [], isLoading } = useBarbershopList();
   const { mutate: setActive } = useSetActiveOrganization();
-  const { data: activeOrg } = authClient.useActiveOrganization();
+  const { data: sessionData } = authClient.useSession();
   const translateY = useSharedValue(0);
   const isAnimating = useRef(false);
 
@@ -76,7 +76,7 @@ export function SwitchBarbershopScreen() {
                 label={shop.name}
                 onPress={() => handleSelectBarbershop(shop.id)}
                 isLast={index === barbershops.length - 1}
-                isActive={activeOrg?.id === shop.id}
+                isActive={sessionData?.session?.activeOrganizationId === shop.id}
               />
             ))}
             {!isLoading && barbershops.length === 0 ? (

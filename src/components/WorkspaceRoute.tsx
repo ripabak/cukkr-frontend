@@ -9,13 +9,17 @@ interface WorkspaceRouteProps {
 export function WorkspaceRoute({ children }: WorkspaceRouteProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { data: org, isPending } = authClient.useActiveOrganization();
+  const { data: session, isPending } = authClient.useSession();
+
+  const hasActiveOrg = !!session?.session?.activeOrganizationId;
 
   useEffect(() => {
-    if (!isPending && !org && pathname !== "/switch-barbershop") {
+    if (!isPending && !hasActiveOrg && pathname !== "/switch-barbershop") {
       router.replace("/switch-barbershop");
     }
-  }, [org, isPending, pathname]);
+  }, [hasActiveOrg, isPending, pathname]);
+
+  if (isPending || !hasActiveOrg) return null;
 
   return <>{children}</>;
 }
