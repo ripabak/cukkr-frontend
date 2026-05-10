@@ -1,5 +1,4 @@
 import { ScreenShell } from "@/src/components/ScreenShell";
-import { Colors } from "@/src/theme/colors";
 import {
   ActivityCard,
   RecentActivity,
@@ -14,7 +13,10 @@ import {
 } from "@/src/features/home/hooks";
 import { toISODateString } from "@/src/features/schedule/utils/booking-formatters";
 import { useAuthUser } from "@/src/hooks/useAuthUser";
+import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
+import * as Clipboard from "expo-clipboard";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -61,6 +63,11 @@ export function HomeDashboardScreen() {
     });
   };
 
+  const handleCopyLink = async () => {
+    if (!bookingUrl) return;
+    await Clipboard.setStringAsync(bookingUrl);
+  };
+
   const upcomingActivities: RecentActivity[] = activeBookings
     .slice(0, 5)
     .map((booking) => ({
@@ -73,7 +80,7 @@ export function HomeDashboardScreen() {
     }));
 
   const bookingUrl = barbershop?.slug
-    ? `cukkr.com/${barbershop.slug}`
+    ? `${(process.env.EXPO_BASE_URL ?? "").replace(/\/$/, "")}/${barbershop.slug}`
     : null;
 
   return (
@@ -99,7 +106,7 @@ export function HomeDashboardScreen() {
           <Ionicons
             name={switcherVisible ? "chevron-up" : "chevron-down"}
             size={16}
-            color={Colors.icon.muted}
+            color={Colors.brand.primaryDark}
           />
         </TouchableOpacity>
       }
@@ -110,7 +117,13 @@ export function HomeDashboardScreen() {
           activeOpacity={0.7}
           onPress={() => router.push("/user-profile")}
         >
-          <View style={styles.avatar} />
+          <View style={styles.avatar}>
+            <Text style={styles.avatarInitials}>
+              {user?.name
+                ? user.name.split(" ").slice(0, 2).map((w: string) => w[0].toUpperCase()).join("")
+                : "?"}
+            </Text>
+          </View>
           <View style={styles.greetingText}>
             <Text style={styles.greetingSmall}>{getGreeting()}</Text>
             <Text style={styles.greetingName}>{user?.name ?? "..."}</Text>
@@ -126,96 +139,75 @@ export function HomeDashboardScreen() {
 
       <View style={styles.pinCard}>
         <Text style={styles.pinLabel}>Walk-In PIN</Text>
-        {generatedPin ? (
-          <>
-            <View style={styles.pinValueRow}>
-              <Text style={styles.pinValue}>{generatedPin}</Text>
-              <TouchableOpacity
-                onPress={handleGeneratePin}
-                disabled={isGenerating}
-                style={styles.regenerateBtn}
-              >
-                {isGenerating ? (
-                  <ActivityIndicator size="small" color={Colors.icon.muted} />
-                ) : (
-                  <Text style={styles.regenerateBtnText}>Regenerate</Text>
-                )}
-              </TouchableOpacity>
-            </View>
-            {bookingUrl && (
-              <View style={styles.linkPill}>
-                <Text style={styles.linkText}>{bookingUrl}</Text>
-                <Ionicons
-                  name="copy-outline"
-                  size={14}
-                  color={Colors.text.primary}
-                  style={styles.copyIcon}
-                />
-              </View>
-            )}
-          </>
-        ) : (
+        <View style={styles.pinValueRow}>
+          <Text style={styles.pinValue}>{generatedPin ?? "* * * *"}</Text>
           <TouchableOpacity
             onPress={handleGeneratePin}
             disabled={isGenerating}
-            style={styles.generateBtn}
+            style={styles.pinRefreshBtn}
           >
             {isGenerating ? (
-              <ActivityIndicator size="small" color={Colors.text.primary} />
+              <ActivityIndicator size="small" color={Colors.brand.primaryDark} />
             ) : (
-              <Text style={styles.generateBtnText}>Generate Walk-In PIN</Text>
+              <Ionicons name="refresh-outline" size={22} color={Colors.icon.muted} />
             )}
+          </TouchableOpacity>
+        </View>
+        {bookingUrl && (
+          <TouchableOpacity onPress={handleCopyLink} activeOpacity={0.7} style={styles.linkPill}>
+            <Text style={styles.linkText} numberOfLines={1}>{bookingUrl}</Text>
+            <Ionicons
+              name="copy-outline"
+              size={15}
+              color={Colors.brand.primary}
+            />
           </TouchableOpacity>
         )}
       </View>
 
-      <View style={styles.summaryCard}>
-        <View style={styles.summaryItem}>
-          <Text style={styles.summaryValue}>{summary?.inProgress ?? 0}</Text>
-          <View style={styles.summaryLabelRow}>
-            <View style={[styles.dot, { backgroundColor: Colors.status.inProgress }]} />
-            <Text style={styles.summaryLabel}>LIVE</Text>
+      <View style={styles.scheduleCard}>
+        <Image
+          source={require("@/assets/images/cover-image.png")}
+          style={StyleSheet.absoluteFill}
+          contentFit="cover"
+        />
+        <View style={styles.scheduleCardOverlay}>
+          <View style={styles.scheduleCardHeader}>
+            <Text style={styles.scheduleCardTitle}>Today's Schedule</Text>
+            <View style={styles.scheduleTotalBadge}>
+              <Text style={styles.scheduleTotalValue}>{summary?.total ?? 0}</Text>
+            </View>
           </View>
-        </View>
-        <View style={styles.summaryDivider} />
-        <View style={styles.summaryItem}>
-          <Text style={styles.summaryValue}>{summary?.waiting ?? 0}</Text>
-          <View style={styles.summaryLabelRow}>
-            <View style={[styles.dot, { backgroundColor: Colors.status.waiting }]} />
-            <Text style={styles.summaryLabel}>WAITING</Text>
+          <View style={styles.scheduleStatsRow}>
+            {[
+              { label: "Walk-In", value: summary?.walkIn ?? 0 },
+              { label: "Appoint.", value: summary?.appointment ?? 0 },
+              { label: "In Progress", value: summary?.inProgress ?? 0 },
+              { label: "Waiting", value: summary?.waiting ?? 0 },
+            ].map((stat) => (
+              <View key={stat.label} style={styles.scheduleStat}>
+                <Text style={styles.scheduleStatValue}>{stat.value}</Text>
+                <Text style={styles.scheduleStatLabel}>{stat.label}</Text>
+              </View>
+            ))}
           </View>
-        </View>
-        <View style={styles.summaryDivider} />
-        <View style={styles.summaryItem}>
-          <Text style={styles.summaryValue}>{summary?.walkIn ?? 0}</Text>
-          <Text style={styles.summaryLabel}>WALK-IN</Text>
-        </View>
-        <View style={styles.summaryDivider} />
-        <View style={styles.summaryItem}>
-          <Text style={styles.summaryValue}>{summary?.appointment ?? 0}</Text>
-          <Text style={styles.summaryLabel}>BOOKED</Text>
-        </View>
-        <View style={styles.summaryDivider} />
-        <View style={styles.summaryItem}>
-          <Text style={[styles.summaryValue, styles.summaryValueAccent]}>{summary?.total ?? 0}</Text>
-          <Text style={[styles.summaryLabel, styles.summaryLabelAccent]}>TOTAL</Text>
         </View>
       </View>
 
       <View style={styles.shortcutsCard}>
         <ShortcutTile
           label="Barbers"
-          icon={<Ionicons name="people" size={24} color={Colors.icon.muted} />}
+          icon={<Ionicons name="people" size={24} color="#ffffff" />}
           onPress={() => router.push("/barbers-management")}
         />
         <ShortcutTile
           label="Customers"
-          icon={<Ionicons name="person" size={24} color={Colors.icon.muted} />}
+          icon={<Ionicons name="person" size={24} color="#ffffff" />}
           onPress={() => router.push("/customer-management")}
         />
         <ShortcutTile
           label="Services"
-          icon={<Ionicons name="cut" size={24} color={Colors.icon.muted} />}
+          icon={<Ionicons name="cut" size={24} color="#ffffff" />}
           onPress={() => router.push("/services-management")}
         />
       </View>
@@ -262,7 +254,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: 8,
+    marginTop: 24,
   },
   profileRow: {
     flexDirection: "row",
@@ -283,10 +275,16 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: Colors.brand.primaryDark,
     marginRight: 10,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  avatarInitials: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: "#ffffff",
+    letterSpacing: 0.5,
   },
   greetingText: {
     flexDirection: "column",
@@ -301,128 +299,110 @@ const styles = StyleSheet.create({
     color: Colors.text.primary,
   },
   pinCard: {
-    marginTop: 20,
+    marginTop: 24,
     backgroundColor: Colors.bg.surface,
     borderRadius: 16,
     padding: 16,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
   },
   pinLabel: {
     fontSize: 12,
     color: Colors.text.secondary,
-    marginBottom: 8,
+    marginBottom: 2,
   },
   pinValueRow: {
     flexDirection: "row",
     alignItems: "center",
+    gap: 8,
   },
   pinValue: {
-    fontSize: 32,
+    fontSize: 36,
     fontWeight: "700",
     color: Colors.text.primary,
     flex: 1,
-    letterSpacing: 4,
+    letterSpacing: 6,
   },
-  regenerateBtn: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
-    minWidth: 90,
-    alignItems: "center",
-  },
-  regenerateBtnText: {
-    fontSize: 12,
-    color: Colors.text.secondary,
-    fontWeight: "500",
-  },
-  generateBtn: {
-    backgroundColor: Colors.brand.primary,
-    borderRadius: 10,
-    paddingVertical: 12,
-    alignItems: "center",
-  },
-  generateBtnText: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: Colors.text.primary,
+  pinRefreshBtn: {
+    padding: 6,
   },
   linkPill: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 12,
     backgroundColor: Colors.brand.primarySurface,
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    alignSelf: "flex-start",
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
     borderWidth: 1,
-    borderColor: Colors.brand.primary,
+    borderColor: Colors.brand.primaryDark,
   },
   linkText: {
+    flex: 1,
     fontSize: 13,
     color: Colors.brand.primaryDark,
     fontWeight: "500",
   },
-  copyIcon: {
-    marginLeft: 8,
-  },
-  summaryCard: {
+  scheduleCard: {
     marginTop: 16,
-    backgroundColor: Colors.bg.surface,
     borderRadius: 16,
-    flexDirection: "row",
-    borderWidth: 1,
-    borderColor: Colors.border.light,
     overflow: "hidden",
   },
-  summaryItem: {
-    flex: 1,
-    alignItems: "center",
-    paddingVertical: 14,
-    gap: 4,
+  scheduleCardOverlay: {
+    backgroundColor: "rgba(0,0,0,0.28)",
+    padding: 16,
+    paddingBottom: 14,
+    gap: 14,
   },
-  summaryDivider: {
-    width: 1,
-    backgroundColor: Colors.border.light,
-    marginVertical: 10,
-  },
-  summaryValue: {
-    fontSize: 26,
-    fontWeight: "700",
-    color: Colors.text.primary,
-  },
-  summaryValueAccent: {
-    color: Colors.brand.primary,
-  },
-  summaryLabelRow: {
+  scheduleCardHeader: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
+    justifyContent: "space-between",
   },
-  summaryLabel: {
+  scheduleCardTitle: {
+    fontSize: 17,
+    fontWeight: "700",
+    color: "#ffffff",
+  },
+  scheduleTotalBadge: {
+    backgroundColor: Colors.brand.primaryDark,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+  },
+  scheduleTotalValue: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: Colors.text.inverse,
+  },
+  scheduleStatsRow: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  scheduleStat: {
+    flex: 1,
+    backgroundColor: "rgba(255,255,255,0.13)",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 6,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.22)",
+    gap: 3,
+  },
+  scheduleStatValue: {
+    fontSize: 22,
+    fontWeight: "700",
+    color: "#ffffff",
+  },
+  scheduleStatLabel: {
     fontSize: 9,
-    fontWeight: "600",
-    color: Colors.text.secondary,
-    letterSpacing: 0.5,
-  },
-  summaryLabelAccent: {
-    color: Colors.brand.primaryDark,
-  },
-  dot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
+    fontWeight: "500",
+    color: "rgba(255,255,255,0.75)",
+    textAlign: "center",
   },
   shortcutsCard: {
     marginTop: 16,
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 16,
     flexDirection: "row",
-    borderWidth: 1,
-    borderColor: Colors.border.light,
+    gap: 10,
   },
   recentLabel: {
     fontSize: 14,

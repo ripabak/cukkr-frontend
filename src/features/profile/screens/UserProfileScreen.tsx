@@ -63,7 +63,11 @@ export function UserProfileScreen() {
     >
       <View style={styles.avatarWrapper}>
         <View style={styles.avatar}>
-          <Ionicons name="person" size={40} color={Colors.text.secondary} />
+          <Text style={styles.avatarInitials}>
+            {profile.name
+              ? profile.name.split(" ").slice(0, 2).map((w: string) => w[0].toUpperCase()).join("")
+              : "?"}
+          </Text>
         </View>
         <TouchableOpacity style={styles.editAvatarBtn} activeOpacity={0.8}>
           <Ionicons name="camera-outline" size={14} color={Colors.text.primary} />
@@ -135,9 +139,15 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 12,
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
+  },
+  avatarInitials: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#ffffff",
+    letterSpacing: 1,
   },
   editAvatarBtn: {
     position: "absolute",
