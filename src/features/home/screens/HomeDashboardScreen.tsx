@@ -6,17 +6,19 @@ import {
 import { BarbershopSwitcherModal } from "@/src/features/home/components/BarbershopSwitcherModal";
 import { ShortcutTile } from "@/src/features/home/components/ShortcutTile";
 import {
+  HOME_QUERY_KEYS,
   useBookingSummary,
   useCurrentBarbershop,
+  useCurrentPin,
   useGenerateWalkInPin,
   useHomeActiveBookings,
 } from "@/src/features/home/hooks";
+import { useQueryClient } from "@tanstack/react-query";
 import { toISODateString } from "@/src/features/schedule/utils/booking-formatters";
 import { useAuthUser } from "@/src/hooks/useAuthUser";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
-import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -36,37 +38,51 @@ function getGreeting() {
 
 function formatTime(date: Date | string): string {
   const d = typeof date === "string" ? new Date(date) : date;
-  const h = d.getHours().toString().padStart(2, "0");
-  const m = d.getMinutes().toString().padStart(2, "0");
-  return `${h}:${m}`;
+  return `${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
+}
+
+function formatDisplayDate(date: Date): string {
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  return `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]}`;
 }
 
 export function HomeDashboardScreen() {
   const router = useRouter();
   const today = toISODateString(new Date());
 
+  const queryClient = useQueryClient();
   const { user } = useAuthUser();
   const { data: barbershop } = useCurrentBarbershop();
   const { data: summary } = useBookingSummary(today);
   const { data: activeBookings = [] } = useHomeActiveBookings(today);
+  const { data: currentPinData } = useCurrentPin();
   const { mutate: generatePin, isPending: isGenerating } = useGenerateWalkInPin();
 
-  const [generatedPin, setGeneratedPin] = useState<string | null>(null);
   const [switcherVisible, setSwitcherVisible] = useState(false);
-  const [workspaceBarHeight, setWorkspaceBarHeight] = useState(0);
+  const [topBarHeight, setTopBarHeight] = useState(0);
+
+  const activePin = currentPinData?.pin ?? null;
 
   const handleGeneratePin = () => {
     generatePin(undefined, {
-      onSuccess: (data) => {
-        setGeneratedPin(data.pin);
-      },
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: HOME_QUERY_KEYS.currentPin }),
     });
+  };
+
+  const handleCopyPin = async () => {
+    if (!activePin) return;
+    await Clipboard.setStringAsync(activePin);
   };
 
   const handleCopyLink = async () => {
     if (!bookingUrl) return;
     await Clipboard.setStringAsync(bookingUrl);
   };
+
+  const bookingUrl = barbershop?.slug
+    ? `${(process.env.EXPO_BASE_URL ?? "").replace(/\/$/, "")}/${barbershop.slug}`
+    : null;
 
   const upcomingActivities: RecentActivity[] = activeBookings
     .slice(0, 5)
@@ -75,219 +91,245 @@ export function HomeDashboardScreen() {
       time: formatTime(booking.scheduledAt ?? booking.createdAt),
       duration: booking.serviceNames.slice(0, 2).join(", ") || "-",
       name: booking.customerName,
-      type:
-        booking.status === "in_progress" ? "in_progress" : "waiting",
+      type: booking.status === "in_progress" ? "in_progress" : "waiting",
     }));
 
-  const bookingUrl = barbershop?.slug
-    ? `${(process.env.EXPO_BASE_URL ?? "").replace(/\/$/, "")}/${barbershop.slug}`
-    : null;
+  const queueStats = [
+    { label: "Walk-In", value: summary?.walkIn ?? 0, color: Colors.text.primary },
+    { label: "Appoint.", value: summary?.appointment ?? 0, color: Colors.text.primary },
+    { label: "In Progress", value: summary?.inProgress ?? 0, color: Colors.status.inProgress },
+    { label: "Waiting", value: summary?.waiting ?? 0, color: Colors.status.waiting },
+  ];
 
   return (
     <>
       <BarbershopSwitcherModal
         visible={switcherVisible}
         onClose={() => setSwitcherVisible(false)}
-        headerHeight={workspaceBarHeight}
+        headerHeight={topBarHeight}
       />
-    <ScreenShell
-      contentStyle={styles.scrollContentPadding}
-      headerSlot={
-        <TouchableOpacity
-          style={styles.workspaceBar}
-          activeOpacity={0.7}
-          onPress={() => setSwitcherVisible(true)}
-          onLayout={(e) => setWorkspaceBarHeight(e.nativeEvent.layout.height)}
-        >
-          <Ionicons name="storefront-outline" size={16} color={Colors.text.secondary} />
-          <Text style={styles.workspaceBarName} numberOfLines={1}>
-            {barbershop?.name ?? "Loading..."}
-          </Text>
-          <Ionicons
-            name={switcherVisible ? "chevron-up" : "chevron-down"}
-            size={16}
-            color={Colors.brand.primaryDark}
-          />
-        </TouchableOpacity>
-      }
-    >
-      <View style={styles.topRow}>
-        <TouchableOpacity
-          style={styles.profileRow}
-          activeOpacity={0.7}
-          onPress={() => router.push("/user-profile")}
-        >
-          <View style={styles.avatar}>
-            <Text style={styles.avatarInitials}>
-              {user?.name
-                ? user.name.split(" ").slice(0, 2).map((w: string) => w[0].toUpperCase()).join("")
-                : "?"}
-            </Text>
-          </View>
-          <View style={styles.greetingText}>
-            <Text style={styles.greetingSmall}>{getGreeting()}</Text>
-            <Text style={styles.greetingName}>{user?.name ?? "..."}</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.notifCircle}
-          onPress={() => router.push("/notifications-list")}
-        >
-          <Ionicons name="notifications-outline" size={20} color={Colors.icon.muted} />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.pinCard}>
-        <Text style={styles.pinLabel}>Walk-In PIN</Text>
-        <View style={styles.pinValueRow}>
-          <Text style={styles.pinValue}>{generatedPin ?? "* * * *"}</Text>
-          <TouchableOpacity
-            onPress={handleGeneratePin}
-            disabled={isGenerating}
-            style={styles.pinRefreshBtn}
+      <ScreenShell
+        contentStyle={styles.scrollContent}
+        headerSlot={
+          <View
+            style={styles.topBar}
+            onLayout={(e) => setTopBarHeight(e.nativeEvent.layout.height)}
           >
-            {isGenerating ? (
-              <ActivityIndicator size="small" color={Colors.brand.primaryDark} />
-            ) : (
-              <Ionicons name="refresh-outline" size={22} color={Colors.icon.muted} />
-            )}
+            <TouchableOpacity
+              style={styles.shopSwitcher}
+              activeOpacity={0.7}
+              onPress={() => setSwitcherVisible(true)}
+            >
+              <Text style={styles.shopName} numberOfLines={1}>
+                {barbershop?.name ?? "..."}
+              </Text>
+              <Ionicons
+                name={switcherVisible ? "chevron-up" : "chevron-down"}
+                size={14}
+                color={Colors.text.secondary}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.notifBtn}
+              onPress={() => router.push("/notifications-list")}
+            >
+              <Ionicons name="notifications-outline" size={18} color={Colors.text.secondary} />
+            </TouchableOpacity>
+          </View>
+        }
+      >
+        {/* Profile row */}
+        <View style={styles.profileRow}>
+          <TouchableOpacity
+            style={styles.profileLeft}
+            activeOpacity={0.7}
+            onPress={() => router.push("/user-profile")}
+          >
+            <View style={styles.avatar}>
+              <Text style={styles.avatarInitials}>
+                {user?.name
+                  ? user.name.split(" ").slice(0, 2).map((w: string) => w[0].toUpperCase()).join("")
+                  : "?"}
+              </Text>
+            </View>
+            <View>
+              <Text style={styles.greetingSmall}>{getGreeting()}</Text>
+              <Text style={styles.greetingName}>{user?.name ?? "..."}</Text>
+            </View>
           </TouchableOpacity>
-        </View>
-        {bookingUrl && (
-          <TouchableOpacity onPress={handleCopyLink} activeOpacity={0.7} style={styles.linkPill}>
-            <Text style={styles.linkText} numberOfLines={1}>{bookingUrl}</Text>
-            <Ionicons
-              name="copy-outline"
-              size={15}
-              color={Colors.brand.primary}
-            />
-          </TouchableOpacity>
-        )}
-      </View>
-
-      <View style={styles.scheduleCard}>
-        <Image
-          source={require("@/assets/images/cover-image.png")}
-          style={StyleSheet.absoluteFill}
-          contentFit="cover"
-        />
-        <View style={styles.scheduleCardOverlay}>
-          <View style={styles.scheduleCardHeader}>
-            <Text style={styles.scheduleCardTitle}>Today's Schedule</Text>
-            <View style={styles.scheduleTotalBadge}>
-              <Text style={styles.scheduleTotalValue}>{summary?.total ?? 0}</Text>
+          <View style={styles.datePill}>
+            <Ionicons name="time-outline" size={16} color={Colors.text.secondary} />
+            <View>
+              <Text style={styles.datePillLabel}>Today</Text>
+              <Text style={styles.datePillDate}>{formatDisplayDate(new Date())}</Text>
             </View>
           </View>
-          <View style={styles.scheduleStatsRow}>
-            {[
-              { label: "Walk-In", value: summary?.walkIn ?? 0 },
-              { label: "Appoint.", value: summary?.appointment ?? 0 },
-              { label: "In Progress", value: summary?.inProgress ?? 0 },
-              { label: "Waiting", value: summary?.waiting ?? 0 },
-            ].map((stat) => (
-              <View key={stat.label} style={styles.scheduleStat}>
-                <Text style={styles.scheduleStatValue}>{stat.value}</Text>
-                <Text style={styles.scheduleStatLabel}>{stat.label}</Text>
-              </View>
-            ))}
+        </View>
+
+        {/* Walk-In PIN + QR side by side */}
+        <View style={styles.checkInRow}>
+          <View style={styles.pinCard}>
+            <Text style={styles.pinLabel}>Walk-In Check-In</Text>
+            <View style={styles.pinValueRow}>
+              <Text style={styles.pinValue} numberOfLines={1}>{activePin ?? "----"}</Text>
+              <TouchableOpacity onPress={handleCopyPin} disabled={!activePin} style={styles.pinActionBtn}>
+                <Ionicons
+                  name="copy-outline"
+                  size={20}
+                  color={activePin ? Colors.text.secondary : Colors.icon.light}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleGeneratePin} disabled={isGenerating} style={styles.pinActionBtn}>
+                {isGenerating ? (
+                  <ActivityIndicator size="small" color={Colors.text.secondary} />
+                ) : (
+                  <Ionicons name="refresh-outline" size={20} color={Colors.text.secondary} />
+                )}
+              </TouchableOpacity>
+            </View>
+            {bookingUrl && (
+              <TouchableOpacity onPress={handleCopyLink} activeOpacity={0.7} style={styles.linkPill}>
+                <Text style={styles.linkText} numberOfLines={1}>{bookingUrl}</Text>
+                <Ionicons name="copy-outline" size={14} color={Colors.text.secondary} />
+              </TouchableOpacity>
+            )}
+          </View>
+
+          <View style={styles.qrCard}>
+            <View style={styles.qrPlaceholder}>
+              <Ionicons name="qr-code" size={72} color={Colors.text.primary} />
+            </View>
+            <TouchableOpacity style={styles.shareQrBtn} activeOpacity={0.8}>
+              <Text style={styles.shareQrText}>Share QR</Text>
+            </TouchableOpacity>
           </View>
         </View>
-      </View>
 
-      <View style={styles.shortcutsCard}>
-        <ShortcutTile
-          label="Barbers"
-          icon={<Ionicons name="people" size={24} color="#ffffff" />}
-          onPress={() => router.push("/barbers-management")}
-        />
-        <ShortcutTile
-          label="Customers"
-          icon={<Ionicons name="person" size={24} color="#ffffff" />}
-          onPress={() => router.push("/customer-management")}
-        />
-        <ShortcutTile
-          label="Services"
-          icon={<Ionicons name="cut" size={24} color="#ffffff" />}
-          onPress={() => router.push("/services-management")}
-        />
-      </View>
+        {/* Shortcuts */}
+        <View style={styles.shortcutsRow}>
+          <ShortcutTile
+            label="Barbers"
+            icon={<Ionicons name="people" size={22} color={Colors.text.primary} />}
+            onPress={() => router.push("/barbers-management")}
+          />
+          <ShortcutTile
+            label="Customers"
+            icon={<Ionicons name="person" size={22} color={Colors.text.primary} />}
+            onPress={() => router.push("/customer-management")}
+          />
+          <ShortcutTile
+            label="Services"
+            icon={<Ionicons name="cut" size={22} color={Colors.text.primary} />}
+            onPress={() => router.push("/services-management")}
+          />
+          <ShortcutTile
+            label="New Book"
+            icon={<Ionicons name="calendar" size={22} color={Colors.text.primary} />}
+            onPress={() => router.push("/new-walk-in")}
+          />
+        </View>
 
-      <View style={styles.upcomingRow}>
-        <Text style={styles.recentLabel}>Upcoming</Text>
-        <TouchableOpacity
-          onPress={() => router.push("/schedule")}
-        >
-          <Text style={styles.seeMore}>See more</Text>
-        </TouchableOpacity>
-      </View>
+        {/* Today's Queue */}
+        <View style={styles.sectionRow}>
+          <Text style={styles.sectionTitle}>Today's Queue</Text>
+          <TouchableOpacity onPress={() => router.push("/schedule")}>
+            <Text style={styles.seeAll}>See All</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.statsRow}>
+          {queueStats.map((stat) => (
+            <View key={stat.label} style={styles.statCard}>
+              <Text style={[styles.statValue, { color: stat.color }]}>{stat.value}</Text>
+              <Text style={styles.statLabel}>{stat.label}</Text>
+            </View>
+          ))}
+        </View>
 
-      {upcomingActivities.length > 0 ? (
-        upcomingActivities.map((item) => (
-          <ActivityCard key={item.id} item={item} />
-        ))
-      ) : (
-        <Text style={styles.emptyText}>No active bookings today</Text>
-      )}
-    </ScreenShell>
+
+
+        {/* Upcoming */}
+        <View style={styles.sectionRow}>
+          <Text style={styles.sectionTitle}>Up Coming</Text>
+          <TouchableOpacity onPress={() => router.push("/schedule")}>
+            <Text style={styles.seeAll}>See All</Text>
+          </TouchableOpacity>
+        </View>
+        {upcomingActivities.length > 0 ? (
+          upcomingActivities.map((item) => (
+            <ActivityCard key={item.id} item={item} />
+          ))
+        ) : (
+          <Text style={styles.emptyText}>No active bookings today</Text>
+        )}
+      </ScreenShell>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  workspaceBar: {
+  scrollContent: {
+    paddingBottom: 100,
+  },
+
+  // Header / top bar
+  topBar: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingVertical: 13,
-    backgroundColor: Colors.bg.surface,
+    paddingVertical: 8,
+    backgroundColor: Colors.bg.default,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border.light,
-    gap: 10,
+    gap: 12,
   },
-  workspaceBarName: {
+  shopSwitcher: {
     flex: 1,
-    fontSize: 14,
-    fontWeight: "600",
-    color: Colors.text.primary,
-  },
-  topRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 24,
+    gap: 6,
   },
+  shopName: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: Colors.text.primary,
+  },
+  notifBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1.5,
+    borderColor: Colors.border.default,
+    backgroundColor: Colors.bg.default,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  // Profile row
   profileRow: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 20,
+  },
+  profileLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
     flex: 1,
   },
-  notifCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: Colors.bg.surface,
-  },
   avatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: Colors.brand.primaryDark,
-    marginRight: 10,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: Colors.text.secondary,
     alignItems: "center",
     justifyContent: "center",
   },
   avatarInitials: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "700",
-    color: "#ffffff",
+    color: "#fff",
     letterSpacing: 0.5,
-  },
-  greetingText: {
-    flexDirection: "column",
   },
   greetingSmall: {
     fontSize: 12,
@@ -298,11 +340,39 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: Colors.text.primary,
   },
+  datePill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    backgroundColor: Colors.bg.surface,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+  },
+  datePillLabel: {
+    fontSize: 11,
+    color: Colors.text.secondary,
+  },
+  datePillDate: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: Colors.text.primary,
+  },
+
+  // Check-In row (PIN + QR)
+  checkInRow: {
+    flexDirection: "row",
+    gap: 12,
+    marginTop: 20,
+  },
   pinCard: {
-    marginTop: 24,
+    flex: 1.3,
     backgroundColor: Colors.bg.surface,
     borderRadius: 16,
-    padding: 16,
+    padding: 14,
+    gap: 4,
   },
   pinLabel: {
     fontSize: 12,
@@ -312,119 +382,121 @@ const styles = StyleSheet.create({
   pinValueRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: 6,
   },
   pinValue: {
-    fontSize: 36,
+    flex: 1,
+    fontSize: 28,
     fontWeight: "700",
     color: Colors.text.primary,
-    flex: 1,
     letterSpacing: 6,
   },
-  pinRefreshBtn: {
-    padding: 6,
+  pinActionBtn: {
+    padding: 4,
   },
   linkPill: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 12,
-    backgroundColor: Colors.brand.primarySurface,
+    marginTop: 10,
+    backgroundColor: Colors.bg.default,
     borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
     borderWidth: 1,
-    borderColor: Colors.brand.primaryDark,
+    borderColor: Colors.border.default,
+    gap: 6,
   },
   linkText: {
     flex: 1,
-    fontSize: 13,
-    color: Colors.brand.primaryDark,
+    fontSize: 11,
+    color: Colors.text.secondary,
     fontWeight: "500",
   },
-  scheduleCard: {
-    marginTop: 16,
+  qrCard: {
+    flex: 1,
+    backgroundColor: Colors.bg.surface,
     borderRadius: 16,
-    overflow: "hidden",
-  },
-  scheduleCardOverlay: {
-    backgroundColor: "rgba(0,0,0,0.28)",
-    padding: 16,
-    paddingBottom: 14,
-    gap: 14,
-  },
-  scheduleCardHeader: {
-    flexDirection: "row",
+    padding: 14,
     alignItems: "center",
     justifyContent: "space-between",
   },
-  scheduleCardTitle: {
-    fontSize: 17,
+  qrPlaceholder: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 8,
+  },
+  shareQrBtn: {
+    borderWidth: 1.5,
+    borderColor: Colors.border.default,
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    alignSelf: "stretch",
+    alignItems: "center",
+  },
+  shareQrText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: Colors.text.primary,
+  },
+
+  // Section header
+  sectionRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 24,
+    marginBottom: 10,
+    paddingHorizontal: 2,
+  },
+  sectionTitle: {
+    fontSize: 16,
     fontWeight: "700",
-    color: "#ffffff",
+    color: Colors.text.primary,
   },
-  scheduleTotalBadge: {
-    backgroundColor: Colors.brand.primaryDark,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
+  seeAll: {
+    fontSize: 13,
+    color: Colors.text.muted,
+    fontWeight: "500",
   },
-  scheduleTotalValue: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: Colors.text.inverse,
-  },
-  scheduleStatsRow: {
+
+  // Queue stats
+  statsRow: {
     flexDirection: "row",
     gap: 8,
   },
-  scheduleStat: {
+  statCard: {
     flex: 1,
-    backgroundColor: "rgba(255,255,255,0.13)",
-    borderRadius: 10,
-    paddingVertical: 10,
+    backgroundColor: Colors.bg.surface,
+    borderRadius: 12,
+    paddingVertical: 12,
     paddingHorizontal: 6,
     alignItems: "center",
+    gap: 4,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.22)",
-    gap: 3,
+    borderColor: Colors.border.light,
   },
-  scheduleStatValue: {
-    fontSize: 22,
+  statValue: {
+    fontSize: 24,
     fontWeight: "700",
-    color: "#ffffff",
   },
-  scheduleStatLabel: {
+  statLabel: {
     fontSize: 9,
     fontWeight: "500",
-    color: "rgba(255,255,255,0.75)",
+    color: Colors.text.muted,
     textAlign: "center",
   },
-  shortcutsCard: {
-    marginTop: 16,
+
+  // Shortcuts
+  shortcutsRow: {
     flexDirection: "row",
-    gap: 10,
-  },
-  recentLabel: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: Colors.text.secondary,
-  },
-  upcomingRow: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 20,
+    gap: 8,
+    marginTop: 24,
     paddingHorizontal: 4,
   },
-  scrollContentPadding: {
-    paddingBottom: 100,
-  },
-  seeMore: {
-    fontSize: 13,
-    color: Colors.brand.primaryDark,
-    fontWeight: "600",
-  },
+
+  // Empty state
   emptyText: {
     fontSize: 13,
     color: Colors.text.muted,

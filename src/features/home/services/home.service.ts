@@ -17,6 +17,12 @@ export const homeService = {
     return response.data || [];
   },
 
+  async getCurrentPin() {
+    const { data: response, error } = await app.api.pin.current.get();
+    if (error || !response) throw new Error("Failed to fetch current PIN");
+    return response.data;
+  },
+
   async generateWalkInPin() {
     const { data: response, error } = await app.api.pin.generate.post({});
     if (error || !response) throw new Error("Failed to generate PIN");

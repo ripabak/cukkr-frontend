@@ -6,6 +6,7 @@ export const HOME_QUERY_KEYS = {
   all: ["home"] as const,
   summary: (date: string) => [...HOME_QUERY_KEYS.all, "summary", date] as const,
   activeBookings: (date: string) => [...HOME_QUERY_KEYS.all, "active-bookings", date] as const,
+  currentPin: [...["home"], "current-pin"] as const,
 };
 
 export function useBookingSummary(date: string) {
@@ -21,6 +22,13 @@ export function useHomeActiveBookings(date: string) {
     queryKey: HOME_QUERY_KEYS.activeBookings(date),
     queryFn: () => homeService.getActiveBookings(date),
     enabled: !!date,
+  });
+}
+
+export function useCurrentPin() {
+  return useQuery({
+    queryKey: HOME_QUERY_KEYS.currentPin,
+    queryFn: () => homeService.getCurrentPin(),
   });
 }
 
