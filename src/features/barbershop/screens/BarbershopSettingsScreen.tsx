@@ -123,7 +123,7 @@ export function BarbershopSettingsScreen() {
           label="Book Url"
           value={
             barbershop?.slug
-              ? `${process.env.EXPO_BASE_URL}/${barbershop.slug}`
+              ? `${process.env.EXPO_PUBLIC_BASE_URL}/${barbershop.slug}`
               : undefined
           }
           placeholder="—"

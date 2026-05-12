@@ -25,6 +25,10 @@ interface Props {
   hideAppHeader?: boolean;
   /** Wrap scroll content in KeyboardAvoidingView — use for form screens */
   keyboardAvoid?: boolean;
+  /** Scroll event callback — attach for scroll-aware headers */
+  onScroll?: (event: any) => void;
+  /** Throttle for onScroll (ms) — default: 16 */
+  scrollEventThrottle?: number;
 }
 
 export function ScreenShell({
@@ -38,6 +42,8 @@ export function ScreenShell({
   edges,
   hideAppHeader = false,
   keyboardAvoid = false,
+  onScroll,
+  scrollEventThrottle = 16,
 }: Props) {
   const scrollView = (
     <ScrollView
@@ -45,6 +51,8 @@ export function ScreenShell({
       contentContainerStyle={[styles.scrollContent, contentStyle]}
       showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="handled"
+      onScroll={onScroll}
+      scrollEventThrottle={scrollEventThrottle}
     >
       {children}
     </ScrollView>

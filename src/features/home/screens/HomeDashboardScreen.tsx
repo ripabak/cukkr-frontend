@@ -13,14 +13,19 @@ import {
   useGenerateWalkInPin,
   useHomeActiveBookings,
 } from "@/src/features/home/hooks";
-import { useQueryClient } from "@tanstack/react-query";
 import { toISODateString } from "@/src/features/schedule/utils/booking-formatters";
 import { useAuthUser } from "@/src/hooks/useAuthUser";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
+import { useQueryClient } from "@tanstack/react-query";
 import * as Clipboard from "expo-clipboard";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import React, { useRef, useState } from "react";
 import {
   ActivityIndicator,
   StyleSheet,
@@ -62,6 +67,35 @@ export function HomeDashboardScreen() {
   const [switcherVisible, setSwitcherVisible] = useState(false);
   const [topBarHeight, setTopBarHeight] = useState(0);
 
+  // Animated header: hide on scroll down, show on scroll up
+  const headerNaturalHeight = useSharedValue(0);
+  const headerTranslate = useSharedValue(0);
+  const lastScrollY = useRef(0);
+  const headerHidden = useRef(false);
+
+  const animatedContainerStyle = useAnimatedStyle(() => ({
+    height: headerNaturalHeight.value + headerTranslate.value,
+    overflow: "hidden" as const,
+  }));
+
+  const animatedTopBarStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: headerTranslate.value }],
+  }));
+
+  const handleScroll = (e: any) => {
+    const y = e.nativeEvent.contentOffset.y;
+    const dy = y - lastScrollY.current;
+    lastScrollY.current = y;
+
+    if (dy > 3 && y > headerNaturalHeight.value && !headerHidden.current) {
+      headerTranslate.value = withTiming(-headerNaturalHeight.value, { duration: 200 });
+      headerHidden.current = true;
+    } else if (dy < -3 && headerHidden.current) {
+      headerTranslate.value = withTiming(0, { duration: 200 });
+      headerHidden.current = false;
+    }
+  };
+
   const activePin = currentPinData?.pin ?? null;
 
   const handleGeneratePin = () => {
@@ -81,7 +115,7 @@ export function HomeDashboardScreen() {
   };
 
   const bookingUrl = barbershop?.slug
-    ? `${(process.env.EXPO_BASE_URL ?? "").replace(/\/$/, "")}/${barbershop.slug}`
+    ? `${(process.env.EXPO_PUBLIC_BASE_URL ?? "").replace(/\/$/, "")}/${barbershop.slug}`
     : null;
 
   const upcomingActivities: RecentActivity[] = activeBookings
@@ -110,32 +144,40 @@ export function HomeDashboardScreen() {
       />
       <ScreenShell
         contentStyle={styles.scrollContent}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
         headerSlot={
-          <View
-            style={styles.topBar}
-            onLayout={(e) => setTopBarHeight(e.nativeEvent.layout.height)}
-          >
-            <TouchableOpacity
-              style={styles.shopSwitcher}
-              activeOpacity={0.7}
-              onPress={() => setSwitcherVisible(true)}
+          <Animated.View style={animatedContainerStyle}>
+            <Animated.View
+              style={[styles.topBar, animatedTopBarStyle]}
+              onLayout={(e) => {
+                const h = e.nativeEvent.layout.height;
+                setTopBarHeight(h);
+                headerNaturalHeight.value = h;
+              }}
             >
-              <Text style={styles.shopName} numberOfLines={1}>
-                {barbershop?.name ?? "..."}
-              </Text>
-              <Ionicons
-                name={switcherVisible ? "chevron-up" : "chevron-down"}
-                size={14}
-                color={Colors.text.secondary}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.notifBtn}
-              onPress={() => router.push("/notifications-list")}
-            >
-              <Ionicons name="notifications-outline" size={18} color={Colors.text.secondary} />
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity
+                style={styles.shopSwitcher}
+                activeOpacity={0.7}
+                onPress={() => setSwitcherVisible(true)}
+              >
+                <Text style={styles.shopName} numberOfLines={1}>
+                  {barbershop?.name ?? "..."}
+                </Text>
+                <Ionicons
+                  name={switcherVisible ? "chevron-up" : "chevron-down"}
+                  size={14}
+                  color={Colors.text.secondary}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.notifBtn}
+                onPress={() => router.push("/notifications-list")}
+              >
+                <Ionicons name="notifications-outline" size={18} color={Colors.text.secondary} />
+              </TouchableOpacity>
+            </Animated.View>
+          </Animated.View>
         }
       >
         {/* Profile row */}
@@ -172,13 +214,6 @@ export function HomeDashboardScreen() {
             <Text style={styles.pinLabel}>Walk-In Check-In</Text>
             <View style={styles.pinValueRow}>
               <Text style={styles.pinValue} numberOfLines={1}>{activePin ?? "----"}</Text>
-              <TouchableOpacity onPress={handleCopyPin} disabled={!activePin} style={styles.pinActionBtn}>
-                <Ionicons
-                  name="copy-outline"
-                  size={20}
-                  color={activePin ? Colors.text.secondary : Colors.icon.light}
-                />
-              </TouchableOpacity>
               <TouchableOpacity onPress={handleGeneratePin} disabled={isGenerating} style={styles.pinActionBtn}>
                 {isGenerating ? (
                   <ActivityIndicator size="small" color={Colors.text.secondary} />
@@ -199,7 +234,7 @@ export function HomeDashboardScreen() {
             <View style={styles.qrPlaceholder}>
               <Ionicons name="qr-code" size={72} color={Colors.text.primary} />
             </View>
-            <TouchableOpacity style={styles.shareQrBtn} activeOpacity={0.8}>
+            <TouchableOpacity style={styles.shareQrBtn} activeOpacity={0.8} onPress={() => router.push("/walkin-qr")}>
               <Text style={styles.shareQrText}>Share QR</Text>
             </TouchableOpacity>
           </View>
@@ -289,6 +324,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   shopName: {
+    maxWidth: 180,
     fontSize: 16,
     fontWeight: "500",
     color: Colors.text.primary,
@@ -321,7 +357,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: Colors.text.secondary,
+    backgroundColor: Colors.brand.primaryDark,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -386,7 +422,7 @@ const styles = StyleSheet.create({
   },
   pinValue: {
     flex: 1,
-    fontSize: 28,
+    fontSize: 40,
     fontWeight: "700",
     color: Colors.text.primary,
     letterSpacing: 6,
@@ -408,12 +444,11 @@ const styles = StyleSheet.create({
   },
   linkText: {
     flex: 1,
-    fontSize: 11,
+    fontSize: 14,
     color: Colors.text.secondary,
     fontWeight: "500",
   },
   qrCard: {
-    flex: 1,
     backgroundColor: Colors.bg.surface,
     borderRadius: 16,
     padding: 14,
@@ -424,14 +459,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 8,
   },
   shareQrBtn: {
     borderWidth: 1.5,
     borderColor: Colors.border.default,
     borderRadius: 10,
     paddingVertical: 8,
-    paddingHorizontal: 16,
     alignSelf: "stretch",
     alignItems: "center",
   },
