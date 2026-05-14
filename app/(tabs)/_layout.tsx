@@ -58,8 +58,8 @@ export default function TabLayout() {
             headerShown: useClientOnlyValue(false, false),
           }}>
           <Tabs.Screen name="home" />
-          <Tabs.Screen name="stats" />
           <Tabs.Screen name="schedule" />
+          <Tabs.Screen name="stats" />
           <Tabs.Screen name="barbershop" />
         </Tabs>
       </WorkspaceRoute>

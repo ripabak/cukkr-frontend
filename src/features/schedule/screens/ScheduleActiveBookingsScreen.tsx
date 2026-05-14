@@ -1,4 +1,3 @@
-import { Colors } from '@/src/theme/colors';
 import { BookingCard } from "@/src/components/BookingCard";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import {
@@ -15,6 +14,7 @@ import {
   mapApiStatusToBookingStatus,
   toISODateString,
 } from "@/src/features/schedule/utils/booking-formatters";
+import { Colors } from '@/src/theme/colors';
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
   },
   scrollContentPadding: {
-    paddingBottom: 100,
+    paddingBottom: 200,
   },
   menuOverlay: {
     position: "absolute",

@@ -13,8 +13,8 @@ interface Props {
 
 const TABS: { key: Tab; label: string; icon: React.ComponentProps<typeof Ionicons>['name'] }[] = [
   { key: 'home', label: 'Home', icon: 'home' },
-  { key: 'stats', label: 'Stats', icon: 'bar-chart' },
   { key: 'schedule', label: 'Schedule', icon: 'calendar' },
+  { key: 'stats', label: 'Stats', icon: 'bar-chart' },
   { key: 'barbershop', label: 'Barbershop', icon: 'storefront' },
 ];
 
