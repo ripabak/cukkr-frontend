@@ -10,11 +10,13 @@ export const homeService = {
   },
 
   async getActiveBookings(date: string) {
-    const { data: response, error } = await app.api.bookings.active.get({
+    const { data: response, error } = await app.api.bookings.get({
       query: { date, status: "all" },
     });
     if (error || !response) throw new Error("Failed to fetch active bookings");
-    return response.data || [];
+    return (response.data || []).filter(
+      (b: { status: string }) => b.status === "waiting" || b.status === "in_progress",
+    );
   },
 
   async getCurrentPin() {

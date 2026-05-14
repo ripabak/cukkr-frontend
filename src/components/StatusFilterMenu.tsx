@@ -21,6 +21,8 @@ export const SCHEDULE_STATUS_OPTIONS: StatusOption[] = [
   { label: 'All', value: 'all' },
   { label: 'Waiting', value: 'waiting', color: Colors.status.waiting },
   { label: 'In Progress', value: 'in_progress', color: Colors.status.inProgress },
+  { label: 'Completed', value: 'completed', color: Colors.status.success },
+  { label: 'Cancelled', value: 'cancelled', color: Colors.status.danger },
 ];
 
 export const HISTORY_STATUS_OPTIONS: StatusOption[] = [

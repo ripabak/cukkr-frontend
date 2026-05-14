@@ -1,7 +1,7 @@
 import { Colors } from '@/src/theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export interface DayChip {
   dayLabel: string;
@@ -14,9 +14,10 @@ interface Props {
   selectedKey: string;
   onSelect: (key: string) => void;
   onShowMore?: () => void;
+  highlightDates?: Set<string>;
 }
 
-export function DayChipRow({ days, selectedKey, onSelect, onShowMore }: Props) {
+export function DayChipRow({ days, selectedKey, onSelect, onShowMore, highlightDates }: Props) {
   return (
     <ScrollView
       horizontal
@@ -25,6 +26,7 @@ export function DayChipRow({ days, selectedKey, onSelect, onShowMore }: Props) {
     >
       {days.map((day) => {
         const isSelected = day.dateKey === selectedKey;
+        const hasRequest = !isSelected && highlightDates?.has(day.dateKey);
         return (
           <TouchableOpacity
             key={day.dateKey}
@@ -38,6 +40,7 @@ export function DayChipRow({ days, selectedKey, onSelect, onShowMore }: Props) {
             <Text style={[styles.dayNumber, isSelected && styles.dayNumberSelected]}>
               {day.dayNumber}
             </Text>
+            {hasRequest ? <View style={styles.requestDot} /> : <View style={styles.dotPlaceholder} />}
           </TouchableOpacity>
         );
       })}
@@ -62,7 +65,7 @@ const styles = StyleSheet.create({
   },
   chip: {
     width: 58,
-    height: 68,
+    height: 72,
     borderRadius: 16,
     backgroundColor: Colors.bg.surface,
     alignItems: 'center',
@@ -93,5 +96,15 @@ const styles = StyleSheet.create({
   },
   dayNumberSelected: {
     color: Colors.text.primary,
+  },
+  requestDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: '#E63030',
+  },
+  dotPlaceholder: {
+    width: 5,
+    height: 5,
   },
 });

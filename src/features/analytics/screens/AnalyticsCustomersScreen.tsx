@@ -205,7 +205,12 @@ export function AnalyticsCustomersScreen() {
           <Text style={styles.emptyText}>No customers found</Text>
         ) : (
           customers.map((c) => (
-            <View key={c.customerId} style={styles.customerRow}>
+            <TouchableOpacity
+              key={c.customerId}
+              style={styles.customerRow}
+              activeOpacity={0.75}
+              onPress={() => router.push({ pathname: "/customer-detail-general", params: { customerId: c.customerId } })}
+            >
               <View style={styles.customerAvatar}>
                 <Text style={styles.customerInitial}>
                   {c.customerName?.[0]?.toUpperCase() ?? "?"}
@@ -222,7 +227,7 @@ export function AnalyticsCustomersScreen() {
                 </Text>
               </View>
               <Text style={styles.customerRevenue}>{formatRupiah(c.totalRevenue)}</Text>
-            </View>
+            </TouchableOpacity>
           ))
         )}
 

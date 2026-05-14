@@ -38,7 +38,7 @@ export function BookingDetailInProgressScreen() {
     updateStatus({ id, status: "completed" }, {
       onSuccess: () => {
         toast.success("Booking completed");
-        router.push(`/booking-detail-result?id=${id}`);
+        router.replace(`/booking-detail-result?id=${id}`);
       },
       onError: (error) => {
         toast.error(getErrorMessage(error));
@@ -52,7 +52,7 @@ export function BookingDetailInProgressScreen() {
     updateStatus({ id, status: "waiting" }, {
       onSuccess: () => {
         toast.success("Booking set back to waiting");
-        router.push(`/booking-detail-waiting?id=${id}`);
+        router.replace(`/booking-detail-waiting?id=${id}`);
       },
       onError: (error) => {
         toast.error(getErrorMessage(error));

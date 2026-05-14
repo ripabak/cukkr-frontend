@@ -104,7 +104,12 @@ export function AnalyticsServicesScreen() {
           <Text style={styles.emptyText}>No services found for this period</Text>
         ) : (
           services.map((svc, i) => (
-            <View key={svc.serviceId} style={styles.serviceRow}>
+            <TouchableOpacity
+              key={svc.serviceId}
+              style={styles.serviceRow}
+              activeOpacity={0.75}
+              onPress={() => router.push({ pathname: "/service-detail", params: { serviceId: svc.serviceId } })}
+            >
               <View style={styles.serviceRank}>
                 <Text style={styles.serviceRankText}>{i + 1 + (page - 1) * 20}</Text>
               </View>
@@ -128,7 +133,7 @@ export function AnalyticsServicesScreen() {
                   {svc.percentage}% of bookings · {formatRupiah(svc.revenue)}
                 </Text>
               </View>
-            </View>
+            </TouchableOpacity>
           ))
         )}
 

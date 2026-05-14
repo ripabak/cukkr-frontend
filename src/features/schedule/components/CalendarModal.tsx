@@ -14,6 +14,7 @@ interface Props {
   selectedDate?: Date;
   openHours?: DayHourInfo[];
   disablePast?: boolean;
+  highlightDates?: Set<string>;
   onSelect: (date: Date) => void;
   onClose: () => void;
 }
@@ -32,7 +33,7 @@ function getFirstDayOfMonth(year: number, month: number) {
   return new Date(year, month, 1).getDay();
 }
 
-export function CalendarModal({ visible, selectedDate, openHours, disablePast = true, onSelect, onClose }: Props) {
+export function CalendarModal({ visible, selectedDate, openHours, disablePast = true, highlightDates, onSelect, onClose }: Props) {
   const { frameWidth } = useFrame();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -59,6 +60,10 @@ export function CalendarModal({ visible, selectedDate, openHours, disablePast = 
   const rows: (number | null)[][] = [];
   for (let i = 0; i < cells.length; i += 7) {
     rows.push(cells.slice(i, i + 7));
+  }
+
+  function toDayKey(day: number): string {
+    return `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
   }
 
   function isDayPast(day: number): boolean {
@@ -149,6 +154,7 @@ export function CalendarModal({ visible, selectedDate, openHours, disablePast = 
                 const disabled = past || closed;
                 const selected = isSelected(day);
                 const todayMark = isToday(day);
+                const hasRequest = !selected && highlightDates?.has(toDayKey(day));
 
                 return (
                   <View key={di} style={styles.dayCell}>
@@ -172,6 +178,7 @@ export function CalendarModal({ visible, selectedDate, openHours, disablePast = 
                         {day}
                       </Text>
                       {closed && !past && <View style={styles.closedDot} />}
+                      {hasRequest && <View style={styles.requestDot} />}
                     </TouchableOpacity>
                   </View>
                 );
@@ -180,12 +187,22 @@ export function CalendarModal({ visible, selectedDate, openHours, disablePast = 
           ))}
 
           {/* Legend */}
-          {hasOpenHours && closedDaySet.size > 0 && (
+          {(hasOpenHours && closedDaySet.size > 0) || highlightDates?.size ? (
             <View style={styles.legend}>
-              <View style={styles.legendDot} />
-              <Text style={styles.legendText}>Closed Day</Text>
+              {hasOpenHours && closedDaySet.size > 0 && (
+                <>
+                  <View style={styles.legendDot} />
+                  <Text style={styles.legendText}>Closed Day</Text>
+                </>
+              )}
+              {highlightDates?.size ? (
+                <>
+                  <View style={styles.legendRequestDot} />
+                  <Text style={styles.legendText}>Has Requests</Text>
+                </>
+              ) : null}
             </View>
-          )}
+          ) : null}
         </TouchableOpacity>
       </TouchableOpacity>
     </Modal>
@@ -284,6 +301,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 2,
   },
+  requestDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#E63030',
+    position: 'absolute',
+    bottom: 2,
+  },
   legend: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -298,6 +323,13 @@ const styles = StyleSheet.create({
     height: 6,
     borderRadius: 3,
     backgroundColor: '#D0CEC5',
+  },
+  legendRequestDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#E63030',
+    marginLeft: 12,
   },
   legendText: {
     fontSize: 12,

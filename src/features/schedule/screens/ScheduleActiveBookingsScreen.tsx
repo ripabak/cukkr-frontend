@@ -8,9 +8,9 @@ import {
 import { CalendarModal } from "@/src/features/schedule/components/CalendarModal";
 import { DateSelectorPill } from "@/src/features/schedule/components/DateSelectorPill";
 import { DayChip, DayChipRow } from "@/src/features/schedule/components/DayChipRow";
-import { useActiveBookings } from "@/src/features/schedule/hooks";
+import { useAcceptBooking, useBookingRequestedDates, useBookings } from "@/src/features/schedule/hooks";
 import {
-  formatTimeLabel,
+  formatScheduledTime,
   getDetailRouteForStatus,
   mapApiStatusToBookingStatus,
   toISODateString,
@@ -18,11 +18,53 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
+interface RequestCardProps {
+  id: string;
+  customerName: string;
+  barberName: string;
+  timeLabel: string;
+  bookingType?: string;
+  onPress: () => void;
+  onAccept: () => void;
+  onDecline: () => void;
+  isAccepting?: boolean;
+}
+
+function RequestCard({ customerName, barberName, timeLabel, bookingType, onPress, onAccept, onDecline, isAccepting }: RequestCardProps) {
+  const iconName = bookingType === 'walk_in' ? 'walk' : 'calendar';
+  return (
+    <TouchableOpacity onPress={onPress} activeOpacity={0.85} style={reqStyles.card}>
+      <View style={reqStyles.iconRow}>
+        <View style={reqStyles.iconCircle}>
+          <Ionicons name={iconName} size={16} color={Colors.text.secondary} />
+        </View>
+        <Text style={reqStyles.time}>{timeLabel}</Text>
+      </View>
+      <Text style={reqStyles.customerName} numberOfLines={1}>{customerName}</Text>
+      <View style={reqStyles.barberRow}>
+        <Ionicons name="cut" size={11} color={Colors.text.muted} />
+        <Text style={reqStyles.barberName} numberOfLines={1}> {barberName}</Text>
+      </View>
+      <View style={reqStyles.actions}>
+        <TouchableOpacity onPress={onDecline} activeOpacity={0.8} style={reqStyles.declineBtn}>
+          <Text style={reqStyles.declineText}>Decline</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onAccept} activeOpacity={0.8} style={reqStyles.acceptBtn} disabled={isAccepting}>
+          {isAccepting
+            ? <ActivityIndicator size="small" color={Colors.text.primary} />
+            : <Text style={reqStyles.acceptText}>Accept</Text>
+          }
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+}
 
 function generateDayChips(baseDate: Date): DayChip[] {
   const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  return Array.from({ length: 5 }, (_, i) => {
+  return Array.from({ length: 30 }, (_, i) => {
     const d = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + i);
     return {
       dayLabel: dayLabels[d.getDay()],
@@ -48,9 +90,12 @@ export function ScheduleActiveBookingsScreen() {
   const [selectedKey, setSelectedKey] = useState(toISODateString(today));
   const [filterMenuVisible, setFilterMenuVisible] = useState(false);
   const [calendarVisible, setCalendarVisible] = useState(false);
-  const [statusFilter, setStatusFilter] = useState<"all" | "waiting" | "in_progress">("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "waiting" | "in_progress" | "completed" | "cancelled">("all");
   const [menuTop, setMenuTop] = useState(0);
   const filterBtnRef = useRef<View>(null);
+  const [acceptingId, setAcceptingId] = useState<string | null>(null);
+
+  const { mutate: acceptBooking } = useAcceptBooking();
 
   const handleOpenFilterMenu = () => {
     filterBtnRef.current?.measure((_x: number, _y: number, _w: number, height: number, _px: number, pageY: number) => {
@@ -61,8 +106,25 @@ export function ScheduleActiveBookingsScreen() {
 
   const days = generateDayChips(today);
 
-  const { data: bookings = [], isLoading } = useActiveBookings(selectedKey, {
-    status: statusFilter === "all" ? "all" : (statusFilter),
+  const reqDateFrom = toISODateString(today);
+  const reqDateTo = toISODateString(new Date(today.getFullYear() + 1, today.getMonth(), today.getDate()));
+  const { data: requestedList = [] } = useBookingRequestedDates(reqDateFrom, reqDateTo);
+  const requestedDateSet = React.useMemo(() => {
+    const s = new Set<string>();
+    requestedList.forEach((b) => {
+      s.add(toISODateString(new Date(b.scheduledAt ?? b.createdAt)));
+    });
+    return s;
+  }, [requestedList]);
+
+  const { data: rawBookings = [], isLoading } = useBookings(selectedKey, {
+    status: "all",
+  });
+  const requestedBookings = rawBookings.filter((b) => b.status === "requested");
+  const bookings = rawBookings.filter((b) => {
+    if (b.status === "requested") return false;
+    if (statusFilter === "all") return true;
+    return b.status === statusFilter;
   });
 
   const handleSelectDay = (key: string) => {
@@ -85,6 +147,11 @@ export function ScheduleActiveBookingsScreen() {
     });
   };
 
+  const handleAccept = (id: string) => {
+    setAcceptingId(id);
+    acceptBooking(id, { onSettled: () => setAcceptingId(null) });
+  };
+
   return (
     <ScreenShell
       backgroundColor={Colors.bg.default}
@@ -97,13 +164,6 @@ export function ScheduleActiveBookingsScreen() {
               onPress={() => setCalendarVisible(true)}
             />
             <View style={styles.topActions}>
-              <TouchableOpacity
-                onPress={() => router.push("/history-bookings")}
-                activeOpacity={0.8}
-                style={styles.iconBtn}
-              >
-                <Ionicons name="clipboard-outline" size={20} color={Colors.text.primary} />
-              </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => router.push("/new-appointment")}
                 activeOpacity={0.8}
@@ -119,6 +179,7 @@ export function ScheduleActiveBookingsScreen() {
               selectedKey={selectedKey}
               onSelect={handleSelectDay}
               onShowMore={() => setCalendarVisible(true)}
+              highlightDates={requestedDateSet}
             />
           </View>
         </>
@@ -130,7 +191,7 @@ export function ScheduleActiveBookingsScreen() {
               visible
               options={SCHEDULE_STATUS_OPTIONS}
               selected={statusFilter}
-              onSelect={(value) => setStatusFilter(value as "all" | "waiting" | "in_progress")}
+              onSelect={(value) => setStatusFilter(value as "all" | "waiting" | "in_progress" | "completed" | "cancelled")}
               onClose={() => setFilterMenuVisible(false)}
               style={{ top: menuTop, right: 20 }}
             />
@@ -138,9 +199,43 @@ export function ScheduleActiveBookingsScreen() {
         ) : null
       }
     >
+      {requestedBookings.length > 0 && (
+        <View style={styles.requestsSection}>
+          <Text style={styles.requestsTitle}>
+            Requests{" "}
+            <Text style={styles.sectionCount}>({requestedBookings.length})</Text>
+          </Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.requestsScroll}
+          >
+            {requestedBookings.map((booking) => {
+              const timeRef = booking.type === "appointment" && booking.scheduledAt
+                ? booking.scheduledAt
+                : booking.createdAt;
+              return (
+                <RequestCard
+                  key={booking.id}
+                  id={booking.id}
+                  customerName={booking.customerName}
+                  barberName={booking.barber?.name ?? "—"}
+                  timeLabel={formatScheduledTime(timeRef)}
+                  bookingType={booking.type}
+                  onPress={() => router.push({ pathname: "/booking-detail-request", params: { id: booking.id } })}
+                  onAccept={() => handleAccept(booking.id)}
+                  onDecline={() => router.push({ pathname: "/booking-detail-request", params: { id: booking.id } })}
+                  isAccepting={acceptingId === booking.id}
+                />
+              );
+            })}
+          </ScrollView>
+        </View>
+      )}
+
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>
-          Active Booking{" "}
+          Bookings{" "}
           <Text style={styles.sectionCount}>({bookings.length})</Text>
         </Text>
         <TouchableOpacity
@@ -158,15 +253,17 @@ export function ScheduleActiveBookingsScreen() {
 
       <View style={styles.list}>
         {bookings.map((booking, i) => {
-          const totalDuration = booking.serviceNames.length > 0 ? 30 : 0;
-          const timeRef = booking.scheduledAt ?? booking.createdAt;
+          const timeRef = booking.type === "appointment" && booking.scheduledAt
+            ? booking.scheduledAt
+            : booking.createdAt;
+          const timeLabel = formatScheduledTime(timeRef);
           return (
             <BookingCard
               key={booking.id}
               customerName={booking.customerName}
               barberName={booking.barber?.name ?? "—"}
-              timeLabel={formatTimeLabel(timeRef)}
-              duration={`${totalDuration} mins`}
+              timeLabel={timeLabel}
+              duration="30 mins"
               status={mapApiStatusToBookingStatus(booking.status)}
               bookingType={booking.type}
               onPress={() => handleBookingPress(booking.id, booking.status)}
@@ -183,6 +280,7 @@ export function ScheduleActiveBookingsScreen() {
         visible={calendarVisible}
         selectedDate={selectedDate}
         disablePast={false}
+        highlightDates={requestedDateSet}
         onSelect={handleCalendarSelect}
         onClose={() => setCalendarVisible(false)}
       />
@@ -274,5 +372,95 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 50,
+  },
+  requestsSection: {
+    marginBottom: 20,
+  },
+  requestsTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: Colors.text.primary,
+    marginBottom: 10,
+    marginTop: 8,
+  },
+  requestsScroll: {
+    gap: 10,
+    paddingRight: 4,
+  },
+});
+
+const reqStyles = StyleSheet.create({
+  card: {
+    width: 190,
+    backgroundColor: Colors.bg.surface,
+    borderRadius: 16,
+    padding: 14,
+    gap: 6,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+  },
+  iconRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  iconCircle: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: Colors.bg.default,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  time: {
+    fontSize: 12,
+    fontWeight: "500",
+    color: Colors.text.secondary,
+  },
+  customerName: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: Colors.text.primary,
+  },
+  barberRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  barberName: {
+    fontSize: 12,
+    color: Colors.text.muted,
+  },
+  actions: {
+    flexDirection: "row",
+    gap: 6,
+    marginTop: 4,
+  },
+  declineBtn: {
+    flex: 1,
+    paddingVertical: 7,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
+    alignItems: "center",
+  },
+  declineText: {
+    fontSize: 12,
+    fontWeight: "500",
+    color: Colors.text.muted,
+  },
+  acceptBtn: {
+    flex: 1,
+    paddingVertical: 7,
+    borderRadius: 10,
+    backgroundColor: Colors.brand.primary,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  acceptText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: Colors.text.primary,
   },
 });

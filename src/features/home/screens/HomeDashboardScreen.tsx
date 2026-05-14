@@ -1,8 +1,5 @@
+import { BookingCard } from "@/src/components/BookingCard";
 import { ScreenShell } from "@/src/components/ScreenShell";
-import {
-  ActivityCard,
-  RecentActivity,
-} from "@/src/features/home/components/ActivityCard";
 import { BarbershopSwitcherModal } from "@/src/features/home/components/BarbershopSwitcherModal";
 import { ShortcutTile } from "@/src/features/home/components/ShortcutTile";
 import {
@@ -13,7 +10,11 @@ import {
   useGenerateWalkInPin,
   useHomeActiveBookings,
 } from "@/src/features/home/hooks";
-import { toISODateString } from "@/src/features/schedule/utils/booking-formatters";
+import {
+  formatScheduledTime,
+  mapApiStatusToBookingStatus,
+  toISODateString,
+} from "@/src/features/schedule/utils/booking-formatters";
 import { useAuthUser } from "@/src/hooks/useAuthUser";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -34,11 +35,6 @@ function getGreeting() {
   if (hour < 12) return "Good Morning,";
   if (hour < 18) return "Good Afternoon,";
   return "Good Evening,";
-}
-
-function formatTime(date: Date | string): string {
-  const d = typeof date === "string" ? new Date(date) : date;
-  return `${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
 }
 
 function formatDisplayDate(date: Date): string {
@@ -85,15 +81,14 @@ export function HomeDashboardScreen() {
     ? `${(process.env.EXPO_PUBLIC_BASE_URL ?? "").replace(/\/$/, "")}/${barbershop.slug}`
     : null;
 
-  const upcomingActivities: RecentActivity[] = activeBookings
-    .slice(0, 5)
-    .map((booking) => ({
-      id: booking.id,
-      time: formatTime(booking.scheduledAt ?? booking.createdAt),
-      duration: booking.serviceNames.slice(0, 2).join(", ") || "-",
-      name: booking.customerName,
-      type: booking.status === "in_progress" ? "in_progress" : "waiting",
-    }));
+  const todayBookings = activeBookings.slice(0, 5);
+
+  const handleBookingPress = (bookingId: string, status: string) => {
+    const route = status === "in_progress"
+      ? "/booking-detail-in-progress"
+      : "/booking-detail-waiting";
+    router.push({ pathname: route, params: { id: bookingId } });
+  };
 
   const queueStats = [
     { label: "Walk-In", value: summary?.walkIn ?? 0, color: Colors.text.primary },
@@ -241,17 +236,32 @@ export function HomeDashboardScreen() {
 
 
 
-        {/* Upcoming */}
+        {/* Today's Booking */}
         <View style={styles.sectionRow}>
-          <Text style={styles.sectionTitle}>Up Coming</Text>
+          <Text style={styles.sectionTitle}>Today's Booking</Text>
           <TouchableOpacity onPress={() => router.push("/schedule")}>
             <Text style={styles.seeAll}>See All</Text>
           </TouchableOpacity>
         </View>
-        {upcomingActivities.length > 0 ? (
-          upcomingActivities.map((item) => (
-            <ActivityCard key={item.id} item={item} />
-          ))
+        {todayBookings.length > 0 ? (
+          todayBookings.map((booking, i) => {
+            const timeRef = booking.type === "appointment" && booking.scheduledAt
+              ? booking.scheduledAt
+              : booking.createdAt;
+            return (
+              <BookingCard
+                key={booking.id}
+                customerName={booking.customerName}
+                barberName={booking.barber?.name ?? "—"}
+                timeLabel={formatScheduledTime(timeRef)}
+                duration="30 mins"
+                status={mapApiStatusToBookingStatus(booking.status)}
+                bookingType={booking.type}
+                onPress={() => handleBookingPress(booking.id, booking.status)}
+                style={i < todayBookings.length - 1 ? styles.cardMargin : undefined}
+              />
+            );
+          })
         ) : (
           <Text style={styles.emptyText}>No active bookings today</Text>
         )}
@@ -486,6 +496,10 @@ const styles = StyleSheet.create({
     gap: 8,
     marginTop: 24,
     paddingHorizontal: 4,
+  },
+
+  cardMargin: {
+    marginBottom: 12,
   },
 
   // Empty state
