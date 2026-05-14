@@ -2,7 +2,7 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
@@ -22,7 +22,8 @@ import { RangePicker } from "../components/RangePicker";
 
 export function AnalyticsBarbersScreen() {
   const router = useRouter();
-  const [range, setRange] = useState<AnalyticsRange>("month");
+  const { range: rangeParam } = useLocalSearchParams<{ range?: AnalyticsRange }>();
+  const [range, setRange] = useState<AnalyticsRange>(rangeParam ?? "month");
 
   const { data: chartData, isLoading: chartLoading } = useAnalyticsBarbers(range);
   const { data: listData, isLoading: listLoading } = useAnalyticsBarbersList(range);

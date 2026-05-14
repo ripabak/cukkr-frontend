@@ -1,5 +1,5 @@
 import { Colors } from '@/src/theme/colors';
-import { BookingStatus } from '@/src/components/BookingCard';
+import { BookingStatus, BookingType } from '@/src/components/BookingCard';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
@@ -10,6 +10,7 @@ interface Props {
   dateTimeLabel: string;
   duration: string;
   status: BookingStatus;
+  bookingType?: BookingType;
   onPress?: () => void;
   style?: ViewStyle;
 }
@@ -30,26 +31,19 @@ const STATUS_ICON_BG: Record<BookingStatus, string> = {
   requested: '#F0F0E8',
 };
 
-const STATUS_ICON: Record<BookingStatus, React.ComponentProps<typeof Ionicons>['name']> = {
-  waiting: 'people',
-  'in_progress': 'people',
-  completed: 'calendar-sharp',
-  cancelled: 'people',
-  requested: 'calendar',
-};
-
 export function HistoryBookingRow({
   customerName,
   barberName,
   dateTimeLabel,
   duration,
   status,
+  bookingType,
   onPress,
   style,
 }: Props) {
   const color = STATUS_COLOR[status];
   const iconBg = STATUS_ICON_BG[status];
-  const icon = STATUS_ICON[status];
+  const iconName = bookingType === 'walk_in' ? 'walk' : bookingType === 'appointment' ? 'calendar' : 'people';
 
   return (
     <TouchableOpacity
@@ -58,7 +52,7 @@ export function HistoryBookingRow({
       style={[styles.row, style]}
     >
       <View style={[styles.iconCircle, { backgroundColor: iconBg }]}>
-        <Ionicons name={icon} size={20} color={color} />
+        <Ionicons name={iconName} size={20} color={color} />
       </View>
       <View style={styles.info}>
         <Text style={[styles.dateTime, { color }]}>{dateTimeLabel}</Text>

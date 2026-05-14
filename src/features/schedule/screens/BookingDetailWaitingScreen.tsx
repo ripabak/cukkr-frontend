@@ -119,7 +119,7 @@ export function BookingDetailWaitingScreen() {
         <BookingDetailCard
           customerName={booking.customer.name}
           dateLabel={formatDateLabel(timeRef)}
-          metaIcon="people"
+          bookingType={booking.type}
           metaLine1={scheduledLabel}
           metaLine2={`Duration ${formatDuration(totalDuration)}`}
           status={mapApiStatusToDetailStatus(booking.status)}

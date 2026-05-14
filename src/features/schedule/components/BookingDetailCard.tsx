@@ -1,4 +1,5 @@
 import { Colors } from '@/src/theme/colors';
+import { BookingType } from '@/src/components/BookingCard';
 import { InfoRow } from '@/src/components/InfoRow';
 import { StatusBadge } from '@/src/components/StatusBadge';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,6 +22,7 @@ interface Props {
   customerName: string;
   dateLabel: string;
   metaIcon?: 'people' | 'calendar';
+  bookingType?: BookingType;
   metaLine1: string;
   metaLine2?: string;
   status: BookingDetailStatus;
@@ -55,6 +57,7 @@ export function BookingDetailCard({
   customerName,
   dateLabel,
   metaIcon = 'calendar',
+  bookingType,
   metaLine1,
   metaLine2,
   status,
@@ -66,6 +69,9 @@ export function BookingDetailCard({
   style,
   children,
 }: Props) {
+  const resolvedMetaIcon = bookingType
+    ? (bookingType === 'walk_in' ? 'walk' : 'calendar')
+    : (metaIcon === 'people' ? 'people' : 'calendar');
   return (
     <ScrollView
       style={[styles.scroll, style]}
@@ -78,11 +84,7 @@ export function BookingDetailCard({
           <Text style={styles.customerName}>{customerName}</Text>
           <Text style={styles.dateLabel}>{dateLabel}</Text>
           <View style={styles.metaRow}>
-            <Ionicons
-              name={metaIcon === 'people' ? 'people' : 'calendar'}
-              size={14}
-              color={Colors.text.secondary}
-            />
+            <Ionicons name={resolvedMetaIcon as any} size={14} color={Colors.text.secondary} />
             <View style={styles.metaText}>
               <Text style={styles.metaLine}>{metaLine1}</Text>
               {metaLine2 ? <Text style={styles.metaLine}>{metaLine2}</Text> : null}

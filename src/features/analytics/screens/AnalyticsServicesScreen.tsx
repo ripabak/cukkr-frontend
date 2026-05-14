@@ -1,7 +1,7 @@
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
@@ -24,7 +24,8 @@ const EMPTY_STAT = { current: 0, previous: 0, change: null, direction: "neutral"
 
 export function AnalyticsServicesScreen() {
   const router = useRouter();
-  const [range, setRange] = useState<AnalyticsRange>("month");
+  const { range: rangeParam } = useLocalSearchParams<{ range?: AnalyticsRange }>();
+  const [range, setRange] = useState<AnalyticsRange>(rangeParam ?? "month");
   const [page, setPage] = useState(1);
 
   const { data: svcData, isLoading: svcLoading } = useAnalyticsServices(range);

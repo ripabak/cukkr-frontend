@@ -17,7 +17,7 @@ import {
 } from "@/src/features/schedule/utils/booking-formatters";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 function generateDayChips(baseDate: Date): DayChip[] {
@@ -49,6 +49,15 @@ export function ScheduleActiveBookingsScreen() {
   const [filterMenuVisible, setFilterMenuVisible] = useState(false);
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [statusFilter, setStatusFilter] = useState<"all" | "waiting" | "in_progress">("all");
+  const [menuTop, setMenuTop] = useState(0);
+  const filterBtnRef = useRef<View>(null);
+
+  const handleOpenFilterMenu = () => {
+    filterBtnRef.current?.measure((_x: number, _y: number, _w: number, height: number, _px: number, pageY: number) => {
+      setMenuTop(pageY + height + 4);
+    });
+    setFilterMenuVisible(true);
+  };
 
   const days = generateDayChips(today);
 
@@ -123,7 +132,7 @@ export function ScheduleActiveBookingsScreen() {
               selected={statusFilter}
               onSelect={(value) => setStatusFilter(value as "all" | "waiting" | "in_progress")}
               onClose={() => setFilterMenuVisible(false)}
-              style={styles.filterMenuPosition}
+              style={{ top: menuTop, right: 20 }}
             />
           </View>
         ) : null
@@ -135,7 +144,8 @@ export function ScheduleActiveBookingsScreen() {
           <Text style={styles.sectionCount}>({bookings.length})</Text>
         </Text>
         <TouchableOpacity
-          onPress={() => setFilterMenuVisible(true)}
+          ref={filterBtnRef}
+          onPress={handleOpenFilterMenu}
           activeOpacity={0.8}
           style={styles.filterPill}
         >
@@ -158,6 +168,7 @@ export function ScheduleActiveBookingsScreen() {
               timeLabel={formatTimeLabel(timeRef)}
               duration={`${totalDuration} mins`}
               status={mapApiStatusToBookingStatus(booking.status)}
+              bookingType={booking.type}
               onPress={() => handleBookingPress(booking.id, booking.status)}
               style={i < bookings.length - 1 ? styles.cardMargin : undefined}
             />
@@ -263,9 +274,5 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 50,
-  },
-  filterMenuPosition: {
-    top: 180,
-    right: 20,
   },
 });

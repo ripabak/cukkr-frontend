@@ -15,7 +15,7 @@ import {
 } from "@/src/features/schedule/utils/booking-formatters";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const SORT_OPTIONS = [
@@ -53,6 +53,24 @@ export function HistoryBookingsScreen() {
   const [sortValue, setSortValue] = useState("recently_added");
   const [statusMenuVisible, setStatusMenuVisible] = useState(false);
   const [sortMenuVisible, setSortMenuVisible] = useState(false);
+  const [statusMenuTop, setStatusMenuTop] = useState(0);
+  const [sortMenuTop, setSortMenuTop] = useState(0);
+  const statusBtnRef = useRef<View>(null);
+  const sortBtnRef = useRef<View>(null);
+
+  const handleOpenStatusMenu = () => {
+    statusBtnRef.current?.measure((_x: number, _y: number, _w: number, height: number, _px: number, pageY: number) => {
+      setStatusMenuTop(pageY + height + 4);
+    });
+    setStatusMenuVisible(true);
+  };
+
+  const handleOpenSortMenu = () => {
+    sortBtnRef.current?.measure((_x: number, _y: number, _w: number, height: number, _px: number, pageY: number) => {
+      setSortMenuTop(pageY + height + 4);
+    });
+    setSortMenuVisible(true);
+  };
 
   const dateKey = toISODateString(selectedDate);
 
@@ -79,7 +97,8 @@ export function HistoryBookingsScreen() {
           </TouchableOpacity>
           <View style={styles.topActions}>
             <TouchableOpacity
-              onPress={() => setSortMenuVisible(true)}
+              ref={sortBtnRef}
+              onPress={handleOpenSortMenu}
               activeOpacity={0.8}
               style={styles.iconBtn}
             >
@@ -102,7 +121,7 @@ export function HistoryBookingsScreen() {
                 selected={statusFilter}
                 onSelect={setStatusFilter}
                 onClose={() => setStatusMenuVisible(false)}
-                style={styles.statusMenuPosition}
+                style={{ top: statusMenuTop, right: 20 }}
               />
             </View>
           ) : null}
@@ -114,6 +133,7 @@ export function HistoryBookingsScreen() {
                 selected={sortValue}
                 onSelect={setSortValue}
                 onClose={() => setSortMenuVisible(false)}
+                style={{ top: sortMenuTop, right: 20 }}
               />
             </View>
           ) : null}
@@ -126,7 +146,8 @@ export function HistoryBookingsScreen() {
           <Text style={styles.titleCount}>({bookings.length})</Text>
         </Text>
         <TouchableOpacity
-          onPress={() => setStatusMenuVisible(true)}
+          ref={statusBtnRef}
+          onPress={handleOpenStatusMenu}
           activeOpacity={0.8}
           style={styles.filterPill}
         >
@@ -146,6 +167,7 @@ export function HistoryBookingsScreen() {
             dateTimeLabel={formatDateTimeLabel(booking.scheduledAt ?? booking.createdAt)}
             duration="30 mins"
             status={mapApiStatusToBookingStatus(booking.status)}
+            bookingType={booking.type}
             onPress={() => handleBookingPress(booking.id)}
             style={i < bookings.length - 1 ? styles.rowMargin : undefined}
           />
@@ -252,9 +274,5 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 50,
-  },
-  statusMenuPosition: {
-    top: 80,
-    right: 20,
   },
 });

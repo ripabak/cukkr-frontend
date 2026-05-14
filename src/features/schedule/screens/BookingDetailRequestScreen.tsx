@@ -114,7 +114,7 @@ export function BookingDetailRequestScreen() {
         <BookingDetailCard
           customerName={booking.customer.name}
           dateLabel={formatDateLabel(timeRef)}
-          metaIcon="calendar"
+          bookingType={booking.type}
           metaLine1={scheduledLabel}
           metaLine2={`Duration ${formatDuration(totalDuration)}`}
           status={displayStatus}

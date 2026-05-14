@@ -4,6 +4,7 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 export type BookingStatus = 'waiting' | 'in_progress' | 'completed' | 'cancelled' | 'requested';
+export type BookingType = 'walk_in' | 'appointment';
 
 interface Props {
   customerName: string;
@@ -11,6 +12,7 @@ interface Props {
   timeLabel: string;
   duration: string;
   status: BookingStatus;
+  bookingType?: BookingType;
   onPress?: () => void;
   style?: ViewStyle;
 }
@@ -37,11 +39,13 @@ export function BookingCard({
   timeLabel,
   duration,
   status,
+  bookingType,
   onPress,
   style,
 }: Props) {
   const color = STATUS_COLOR[status];
   const iconBg = STATUS_ICON_BG[status];
+  const iconName = bookingType === 'walk_in' ? 'walk' : bookingType === 'appointment' ? 'calendar' : 'people';
 
   return (
     <TouchableOpacity
@@ -50,7 +54,7 @@ export function BookingCard({
       style={[styles.card, style]}
     >
       <View style={[styles.iconCircle, { backgroundColor: iconBg }]}>
-        <Ionicons name="people" size={22} color={color} />
+        <Ionicons name={iconName} size={22} color={color} />
       </View>
       <View style={styles.info}>
         <Text style={styles.timeLabel}>{timeLabel}</Text>

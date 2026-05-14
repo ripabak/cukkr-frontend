@@ -2,8 +2,8 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { StatusFilterMenu } from "@/src/components/StatusFilterMenu";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useRef, useState } from "react";
 import {
   ActivityIndicator,
   StyleSheet,
@@ -49,10 +49,13 @@ const bookingTypeStyles = StyleSheet.create({
 
 export function AnalyticsRevenueScreen() {
   const router = useRouter();
-  const [range, setRange] = useState<AnalyticsRange>("month");
+  const { range: rangeParam } = useLocalSearchParams<{ range?: AnalyticsRange }>();
+  const [range, setRange] = useState<AnalyticsRange>(rangeParam ?? "month");
   const [typeFilter, setTypeFilter] = useState<"all" | "walk_in" | "appointment">("all");
   const [typeMenuVisible, setTypeMenuVisible] = useState(false);
+  const [menuTop, setMenuTop] = useState(0);
   const [page, setPage] = useState(1);
+  const filterBtnRef = useRef<View>(null);
 
   const { data: revData, isLoading: revLoading } = useAnalyticsRevenue(range);
   const { data: bookingsData, isLoading: bookingsLoading } = useAnalyticsRevenueBookings(range, typeFilter, page);
@@ -70,6 +73,13 @@ export function AnalyticsRevenueScreen() {
   const handleTypeChange = (v: string) => {
     setTypeFilter(v as "all" | "walk_in" | "appointment");
     setPage(1);
+  };
+
+  const handleOpenTypeMenu = () => {
+    filterBtnRef.current?.measure((_x: number, _y: number, _w: number, height: number, _px: number, pageY: number) => {
+      setMenuTop(pageY + height + 4);
+    });
+    setTypeMenuVisible(true);
   };
 
   return (
@@ -93,7 +103,7 @@ export function AnalyticsRevenueScreen() {
               selected={typeFilter}
               onSelect={handleTypeChange}
               onClose={() => setTypeMenuVisible(false)}
-              style={styles.menuPosition}
+              style={{ top: menuTop, right: 20 }}
             />
           </View>
         ) : null
@@ -152,8 +162,9 @@ export function AnalyticsRevenueScreen() {
             Transactions{meta ? ` (${meta.totalItems})` : ""}
           </Text>
           <TouchableOpacity
+            ref={filterBtnRef}
             style={styles.filterPill}
-            onPress={() => setTypeMenuVisible(true)}
+            onPress={handleOpenTypeMenu}
             activeOpacity={0.8}
           >
             <Text style={styles.filterPillText}>
@@ -377,9 +388,5 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 50,
-  },
-  menuPosition: {
-    top: 60,
-    right: 20,
   },
 });
