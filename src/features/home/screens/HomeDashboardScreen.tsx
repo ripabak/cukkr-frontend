@@ -20,12 +20,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Clipboard from "expo-clipboard";
 import { useRouter } from "expo-router";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   ActivityIndicator,
   StyleSheet,
@@ -67,34 +62,6 @@ export function HomeDashboardScreen() {
   const [switcherVisible, setSwitcherVisible] = useState(false);
   const [topBarHeight, setTopBarHeight] = useState(0);
 
-  // Animated header: hide on scroll down, show on scroll up
-  const headerNaturalHeight = useSharedValue(0);
-  const headerTranslate = useSharedValue(0);
-  const lastScrollY = useRef(0);
-  const headerHidden = useRef(false);
-
-  const animatedContainerStyle = useAnimatedStyle(() => ({
-    height: headerNaturalHeight.value + headerTranslate.value,
-    overflow: "hidden" as const,
-  }));
-
-  const animatedTopBarStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: headerTranslate.value }],
-  }));
-
-  const handleScroll = (e: any) => {
-    const y = e.nativeEvent.contentOffset.y;
-    const dy = y - lastScrollY.current;
-    lastScrollY.current = y;
-
-    if (dy > 3 && y > headerNaturalHeight.value && !headerHidden.current) {
-      headerTranslate.value = withTiming(-headerNaturalHeight.value, { duration: 200 });
-      headerHidden.current = true;
-    } else if (dy < -3 && headerHidden.current) {
-      headerTranslate.value = withTiming(0, { duration: 200 });
-      headerHidden.current = false;
-    }
-  };
 
   const activePin = currentPinData?.pin ?? null;
 
@@ -144,18 +111,11 @@ export function HomeDashboardScreen() {
       />
       <ScreenShell
         contentStyle={styles.scrollContent}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
         headerSlot={
-          <Animated.View style={animatedContainerStyle}>
-            <Animated.View
-              style={[styles.topBar, animatedTopBarStyle]}
-              onLayout={(e) => {
-                const h = e.nativeEvent.layout.height;
-                setTopBarHeight(h);
-                headerNaturalHeight.value = h;
-              }}
-            >
+          <View
+            style={styles.topBar}
+            onLayout={(e) => setTopBarHeight(e.nativeEvent.layout.height)}
+          >
               <TouchableOpacity
                 style={styles.shopSwitcher}
                 activeOpacity={0.7}
@@ -176,8 +136,7 @@ export function HomeDashboardScreen() {
               >
                 <Ionicons name="notifications-outline" size={18} color={Colors.text.secondary} />
               </TouchableOpacity>
-            </Animated.View>
-          </Animated.View>
+          </View>
         }
       >
         {/* Profile row */}

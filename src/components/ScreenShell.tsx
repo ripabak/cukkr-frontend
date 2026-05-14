@@ -29,6 +29,10 @@ interface Props {
   onScroll?: (event: any) => void;
   /** Throttle for onScroll (ms) — default: 16 */
   scrollEventThrottle?: number;
+  /** Called when user lifts finger after dragging */
+  onScrollEndDrag?: (event: any) => void;
+  /** Called when momentum scroll finishes */
+  onMomentumScrollEnd?: (event: any) => void;
 }
 
 export function ScreenShell({
@@ -44,6 +48,8 @@ export function ScreenShell({
   keyboardAvoid = false,
   onScroll,
   scrollEventThrottle = 16,
+  onScrollEndDrag,
+  onMomentumScrollEnd,
 }: Props) {
   const scrollView = (
     <ScrollView
@@ -53,6 +59,8 @@ export function ScreenShell({
       keyboardShouldPersistTaps="handled"
       onScroll={onScroll}
       scrollEventThrottle={scrollEventThrottle}
+      onScrollEndDrag={onScrollEndDrag}
+      onMomentumScrollEnd={onMomentumScrollEnd}
     >
       {children}
     </ScrollView>
