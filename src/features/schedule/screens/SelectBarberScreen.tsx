@@ -1,9 +1,9 @@
-import { Colors } from '@/src/theme/colors';
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SearchInput } from "@/src/components/SearchInput";
 import { useNewBookingForm } from "@/src/features/schedule/context/NewBookingContext";
 import { useScheduleBarbers } from "@/src/features/schedule/hooks";
+import { Colors } from '@/src/theme/colors';
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
