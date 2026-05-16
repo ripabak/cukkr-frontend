@@ -1,8 +1,8 @@
 import { BookingCard } from "@/src/components/BookingCard";
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { useBarbershopCurrent } from "@/src/features/barbershop/hooks";
 import { BarbershopSwitcherModal } from "@/src/features/home/components/BarbershopSwitcherModal";
 import { ShortcutTile } from "@/src/features/home/components/ShortcutTile";
-import { useBarbershopCurrent } from "@/src/features/barbershop/hooks";
 import {
   HOME_QUERY_KEYS,
   useBookingSummary,
@@ -72,7 +72,7 @@ export function HomeDashboardScreen() {
   };
 
   const bookingUrl = barbershop?.slug
-    ? `${process.env.EXPO_PUBLIC_BASE_URL}/${barbershop.slug}`
+    ? `${process.env.EXPO_PUBLIC_WEB_URL}/${barbershop.slug}`
     : null;
 
   const todayBookings = activeBookings.slice(0, 5);

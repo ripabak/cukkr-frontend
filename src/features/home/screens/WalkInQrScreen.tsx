@@ -14,7 +14,7 @@ export function WalkInQrScreen() {
   const { data: pinData } = useCurrentPin();
 
   const baseUrl = barbershop?.slug
-    ? `${(process.env.EXPO_PUBLIC_BASE_URL ?? "").replace(/\/$/, "")}/${barbershop.slug}`
+    ? `${(process.env.EXPO_PUBLIC_WEB_URL ?? "").replace(/\/$/, "")}/${barbershop.slug}`
     : null;
 
   const qrUrl = baseUrl
