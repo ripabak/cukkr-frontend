@@ -89,7 +89,7 @@ export const bookingsService = {
       status,
       cancelReason,
     });
-    if (error || !response) throw new Error("Failed to update booking status");
+    if (error || !response) throw new Error(error.value.message || "Failed to update booking status");
     return response.data;
   },
 };

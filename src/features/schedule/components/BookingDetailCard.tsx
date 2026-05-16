@@ -16,6 +16,7 @@ interface ServiceLine {
 interface InfoLine {
   label: string;
   value: string;
+  valueIconName?: string;
 }
 
 interface Props {
@@ -111,6 +112,7 @@ export function BookingDetailCard({
               key={i}
               label={row.label}
               value={row.value}
+              valueIconName={row.valueIconName}
               isLast={i === infoRows.length - 1}
             />
           ))}

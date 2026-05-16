@@ -91,7 +91,7 @@ export function BookingDetailRequestScreen() {
     const infoRows = [
       { label: "Book No", value: `#${booking.referenceNumber}` },
       ...(booking.requestedBarber
-        ? [{ label: "Requested", value: `⚙ ${booking.requestedBarber.name}` }]
+        ? [{ label: "Requested", value: booking.requestedBarber.name, valueIconName: "cut" }]
         : []),
     ];
 

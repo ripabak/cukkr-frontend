@@ -1,4 +1,3 @@
-import { Colors } from '@/src/theme/colors';
 import { EditFieldHeader } from "@/src/components/EditFieldHeader";
 import { HelperCopy } from "@/src/components/HelperCopy";
 import { PrefixedInputField } from "@/src/components/PrefixedInputField";
@@ -10,6 +9,7 @@ import {
 } from "@/src/features/barbershop/hooks";
 import { useDebounce } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
+import { Colors } from '@/src/theme/colors';
 import { useRouter } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text } from "react-native";

@@ -6,6 +6,7 @@ import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-nativ
 interface Props {
   label: string;
   value?: string;
+  valueIconName?: string;
   placeholder?: string;
   onPress?: () => void;
   showChevron?: boolean;
@@ -13,7 +14,7 @@ interface Props {
   style?: ViewStyle;
 }
 
-export function InfoRow({ label, value, placeholder, onPress, showChevron, isLast, style }: Props) {
+export function InfoRow({ label, value, valueIconName, placeholder, onPress, showChevron, isLast, style }: Props) {
   const displayValue = value || null;
   const displayPlaceholder = !value && placeholder ? placeholder : null;
 
@@ -21,7 +22,10 @@ export function InfoRow({ label, value, placeholder, onPress, showChevron, isLas
     <View style={[styles.container, !isLast && styles.borderBottom, style]}>
       <Text style={styles.label}>{label}</Text>
       {displayValue ? (
-        <Text style={styles.value} numberOfLines={1} ellipsizeMode="tail">{displayValue}</Text>
+        <View style={styles.valueRow}>
+          {valueIconName ? <Ionicons name={valueIconName as any} size={13} color={Colors.text.secondary} /> : null}
+          <Text style={styles.value} numberOfLines={1} ellipsizeMode="tail">{displayValue}</Text>
+        </View>
       ) : displayPlaceholder ? (
         <Text style={styles.placeholder} numberOfLines={1}>{displayPlaceholder}</Text>
       ) : null}
@@ -58,12 +62,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.text.primary,
   },
+  valueRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginLeft: 'auto',
+    maxWidth: '50%',
+  },
   value: {
     fontSize: 14,
     color: Colors.text.secondary,
-    maxWidth: '50%',
-    marginLeft: 'auto',
     textAlign: 'right',
+    flexShrink: 1,
   },
   placeholder: {
     fontSize: 14,

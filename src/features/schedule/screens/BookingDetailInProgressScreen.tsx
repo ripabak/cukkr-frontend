@@ -86,10 +86,10 @@ export function BookingDetailInProgressScreen() {
     const infoRows = [
       { label: "Book No", value: `#${booking.referenceNumber}` },
       ...(booking.requestedBarber
-        ? [{ label: "Requested", value: `⚙ ${booking.requestedBarber.name}` }]
+        ? [{ label: "Requested", value: booking.requestedBarber.name, valueIconName: "cut" }]
         : []),
       ...(booking.handledByBarber
-        ? [{ label: "Handled By", value: `⚙ ${booking.handledByBarber.name}` }]
+        ? [{ label: "Handled By", value: booking.handledByBarber.name, valueIconName: "cut" }]
         : []),
     ];
 
