@@ -1,8 +1,8 @@
-import { Colors } from '@/src/theme/colors';
 import { ConfirmationModal } from '@/src/components/ConfirmationModal';
 import { ScreenHeader } from '@/src/components/ScreenHeader';
 import { ScreenShell } from '@/src/components/ScreenShell';
 import { NotificationCard, NotificationType } from '@/src/features/notifications/components/NotificationCard';
+import { Colors } from '@/src/theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -16,8 +16,10 @@ const API_TYPE_MAP: Record<string, NotificationType> = {
   barbershop_invitation: 'invitation',
 };
 
-function formatRelativeTime(date: Date): string {
-  const diffMs = Date.now() - new Date(date).getTime();
+function formatRelativeTime(date: Date | string): string {
+  const d = new Date(date as string);
+  // Backend returns local time (UTC+7) labeled as UTC — compensate with device offset
+  const diffMs = Date.now() - d.getTime() - d.getTimezoneOffset() * 60 * 1000;
   const diffSec = Math.floor(diffMs / 1000);
   if (diffSec < 60) return `${diffSec}s ago`;
   const diffMin = Math.floor(diffSec / 60);
