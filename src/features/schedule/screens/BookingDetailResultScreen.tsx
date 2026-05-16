@@ -9,11 +9,10 @@ import { BookingDetailCard } from "@/src/features/schedule/components/BookingDet
 import { useBookingById } from "@/src/features/schedule/hooks";
 import {
   mapApiStatusToDetailStatus,
-  formatDateLabel,
-  formatScheduledTime,
   formatDuration,
   formatPrice,
 } from "@/src/features/schedule/utils/booking-formatters";
+import { formatDateLabel, formatTime12h } from "@/src/utils/date";
 
 export function BookingDetailResultScreen() {
   const router = useRouter();
@@ -39,10 +38,12 @@ export function BookingDetailResultScreen() {
     }
 
     const totalDuration = booking.services.reduce((acc, s) => acc + s.duration, 0);
-    const timeRef = booking.scheduledAt ?? booking.createdAt;
+    const timeDate = booking.scheduledAt
+      ? new Date(booking.scheduledAt as Date)
+      : new Date(booking.createdAt as Date);
     const scheduledLabel = booking.scheduledAt
-      ? `Scheduled at ${formatScheduledTime(booking.scheduledAt)}`
-      : `Arrived at ${formatScheduledTime(booking.createdAt)}`;
+      ? `Scheduled at ${formatTime12h(timeDate)}`
+      : `Arrived at ${formatTime12h(timeDate)}`;
 
     const infoRows = [
       { label: "Book No", value: `#${booking.referenceNumber}` },
@@ -71,7 +72,7 @@ export function BookingDetailResultScreen() {
     return (
       <BookingDetailCard
         customerName={booking.customer.name}
-        dateLabel={formatDateLabel(timeRef)}
+        dateLabel={formatDateLabel(timeDate)}
         bookingType={booking.type}
         metaLine1={scheduledLabel}
         metaLine2={`Duration ${formatDuration(totalDuration)}`}

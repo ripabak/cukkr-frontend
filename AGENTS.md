@@ -98,6 +98,70 @@ import { useBarbershopCurrent } from "@/src/features/barbershop/hooks";
 - **No side effects.** Utils are pure utility functions; they never call services, APIs, or update UI state.
 - **Example**: `isValidEmail(email)` returns `boolean`; `getErrorMessage(error)` safely extracts error message string.
 
+### Date Handling (mandatory — all date operations must follow this rule)
+
+All date utilities live in `src/utils/date.ts`. Never write inline date formatting functions in screens or components.
+
+#### Architecture (industry standard)
+
+```
+Backend  ──► always store & return UTC (timestamptz) ──► "2026-05-16T11:29:38Z"
+Frontend ──► display: new Date(apiDate) → JS Date converts UTC → user local automatically
+Frontend ──► input:   toApiDateTime() → converts user local → UTC before sending
+```
+
+JavaScript's `Date` object handles UTC → local timezone conversion natively. `new Date("2026-05-16T11:29:38Z").getHours()` on a UTC+7 device returns `18` (6 PM) with zero extra code. No manual timezone correction is needed on the frontend.
+
+#### Rule: Display vs. Input
+
+| Direction | Rule | Function |
+|---|---|---|
+| API → Display (any date field) | Parse normally | `new Date(apiDate as Date)` |
+| User input → API (datetime) | Send UTC ISO string | `toApiDateTime(date, h, m, amPm)` |
+| User input → API (date-only query param) | Local date components | `toApiDate(date)` |
+
+#### Function reference
+
+```typescript
+import {
+  formatRelativeTime,  // "5m ago" / "2h ago" / "5d ago"
+  formatDateLabel,     // "Sunday, 15 Jan 2025"
+  formatDateTime,      // "15 Jan 2025, 09:30"
+  formatTime12h,       // "9:30 am" — from a Date object
+  formatDisplayDate,   // "Sun, 15 Jan"
+  toApiDate,           // "2025-01-15" — local date for query params
+  toApiDateTime,       // ISO UTC string for datetime body params
+  parseTime24,         // "09:30" → { hour24, minute }
+  toInitial12h,        // 24h → 12h for TimePicker initial state
+  formatPickerTime,    // "9:30 AM" — display label from picker state values
+} from '@/src/utils/date';
+```
+
+#### Usage examples
+
+```typescript
+// ✅ Displaying any date from API
+const date = new Date(booking.createdAt as Date);
+<Text>{formatDateTime(date)}</Text>
+
+// ✅ Choosing scheduledAt (appointment) vs createdAt (walk-in)
+const timeDate = new Date((booking.scheduledAt ?? booking.createdAt) as Date);
+<Text>{formatTime12h(timeDate)}</Text>
+
+// ✅ Notifications relative time
+<NotificationCard timestamp={formatRelativeTime(notif.createdAt)} />
+
+// ✅ Sending datetime to API (converts local → UTC automatically)
+updateFormData({ scheduledAt: toApiDateTime(selectedDate, hour, minute, amPm) });
+
+// ✅ Date-only API query param
+const today = toApiDate(new Date());
+useBookings(today);
+
+// ❌ Never write inline date formatters in screens/components
+function formatDate(d: Date) { ... }  // use src/utils/date.ts instead
+```
+
 ### Context (if multi-step forms or complex state)
 - **Centralize multi-step form state.** When a flow spans multiple screens (e.g., create barbershop over 5 steps), use Context to share state.
 - **Only for form/wizard state, not API data.** Context holds form field values and step progress; API responses are managed by individual screens.

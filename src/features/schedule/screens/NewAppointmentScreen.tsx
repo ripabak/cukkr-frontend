@@ -11,40 +11,12 @@ import { useNewBookingForm } from "@/src/features/schedule/context/NewBookingCon
 import { useCreateBooking } from "@/src/features/schedule/hooks";
 import { useToast } from "@/src/lib/providers";
 import { getErrorMessage } from "@/src/lib/utils/error-handler";
+import { formatPickerTime, parseTime24, TimePoint, toApiDateTime, toInitial12h } from "@/src/utils/date";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 type BookingType = "appointment" | "walkin";
-
-function formatTime(h: number, m: number, amPm: "AM" | "PM"): string {
-  const mm = m < 10 ? `0${m}` : String(m);
-  return `${h}:${mm} ${amPm}`;
-}
-
-function buildISODateTime(date: Date, h: number, m: number, amPm: "AM" | "PM"): string {
-  const hour24 = amPm === "AM" ? (h === 12 ? 0 : h) : h === 12 ? 12 : h + 12;
-  const d = new Date(date);
-  d.setHours(hour24, m, 0, 0);
-  return d.toISOString();
-}
-
-interface TimePoint {
-  hour24: number;
-  minute: number;
-}
-
-function parseTime24(str: string): TimePoint {
-  const [h, m] = str.split(":").map(Number);
-  return { hour24: h, minute: m };
-}
-
-function toInitial12h(hour24: number, minute: number): { hour: number; minute: number; amPm: "AM" | "PM" } {
-  if (hour24 === 0) return { hour: 12, minute, amPm: "AM" };
-  if (hour24 < 12) return { hour: hour24, minute, amPm: "AM" };
-  if (hour24 === 12) return { hour: 12, minute, amPm: "PM" };
-  return { hour: hour24 - 12, minute, amPm: "PM" };
-}
 
 export function NewAppointmentScreen() {
   const router = useRouter();
@@ -86,9 +58,9 @@ export function NewAppointmentScreen() {
     if (selectedDate) {
       const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
       const monthLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      const label = `${dayLabels[selectedDate.getDay()]}, ${selectedDate.getDate()} ${monthLabels[selectedDate.getMonth()]} ${selectedDate.getFullYear()} ${formatTime(h, m, amPm)}`;
+      const label = `${dayLabels[selectedDate.getDay()]}, ${selectedDate.getDate()} ${monthLabels[selectedDate.getMonth()]} ${selectedDate.getFullYear()} ${formatPickerTime(h, m, amPm)}`;
       setDisplayDateTime(label);
-      updateFormData({ scheduledAt: buildISODateTime(selectedDate, h, m, amPm) });
+      updateFormData({ scheduledAt: toApiDateTime(selectedDate, h, m, amPm) });
     }
     setShowTimePicker(false);
   }

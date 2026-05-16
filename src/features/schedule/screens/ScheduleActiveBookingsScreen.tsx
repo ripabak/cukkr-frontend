@@ -9,11 +9,10 @@ import { DateSelectorPill } from "@/src/features/schedule/components/DateSelecto
 import { DayChip, DayChipRow } from "@/src/features/schedule/components/DayChipRow";
 import { useBookingRequestedDates, useBookings } from "@/src/features/schedule/hooks";
 import {
-  formatScheduledTime,
   getDetailRouteForStatus,
   mapApiStatusToBookingStatus,
-  toISODateString,
 } from "@/src/features/schedule/utils/booking-formatters";
+import { formatTime12h, toApiDate } from "@/src/utils/date";
 import { Colors } from '@/src/theme/colors';
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -65,7 +64,7 @@ function generateDayChips(baseDate: Date): DayChip[] {
     return {
       dayLabel: dayLabels[d.getDay()],
       dayNumber: d.getDate(),
-      dateKey: toISODateString(d),
+      dateKey: toApiDate(d),
     };
   });
 }
@@ -83,7 +82,7 @@ export function ScheduleActiveBookingsScreen() {
   const router = useRouter();
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState(today);
-  const [selectedKey, setSelectedKey] = useState(toISODateString(today));
+  const [selectedKey, setSelectedKey] = useState(toApiDate(today));
   const [filterMenuVisible, setFilterMenuVisible] = useState(false);
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [statusFilter, setStatusFilter] = useState<"all" | "waiting" | "in_progress" | "completed" | "cancelled">("all");
@@ -98,13 +97,13 @@ export function ScheduleActiveBookingsScreen() {
 
   const days = generateDayChips(today);
 
-  const reqDateFrom = toISODateString(today);
-  const reqDateTo = toISODateString(new Date(today.getFullYear() + 1, today.getMonth(), today.getDate()));
+  const reqDateFrom = toApiDate(today);
+  const reqDateTo = toApiDate(new Date(today.getFullYear() + 1, today.getMonth(), today.getDate()));
   const { data: requestedList = [] } = useBookingRequestedDates(reqDateFrom, reqDateTo);
   const requestedDateSet = React.useMemo(() => {
     const s = new Set<string>();
     requestedList.forEach((b) => {
-      s.add(toISODateString(new Date(b.scheduledAt ?? b.createdAt)));
+      s.add(toApiDate(new Date((b.scheduledAt ?? b.createdAt) as Date)));
     });
     return s;
   }, [requestedList]);
@@ -127,7 +126,7 @@ export function ScheduleActiveBookingsScreen() {
 
   const handleCalendarSelect = (date: Date) => {
     setSelectedDate(date);
-    setSelectedKey(toISODateString(date));
+    setSelectedKey(toApiDate(date));
     setCalendarVisible(false);
   };
 
@@ -198,16 +197,16 @@ export function ScheduleActiveBookingsScreen() {
             contentContainerStyle={styles.requestsScroll}
           >
             {requestedBookings.map((booking) => {
-              const timeRef = booking.type === "appointment" && booking.scheduledAt
-                ? booking.scheduledAt
-                : booking.createdAt;
+              const timeDate = booking.type === "appointment" && booking.scheduledAt
+                ? new Date(booking.scheduledAt as Date)
+                : new Date(booking.createdAt as Date);
               return (
                 <RequestCard
                   key={booking.id}
                   id={booking.id}
                   customerName={booking.customerName}
                   barberName={booking.barber?.name ?? "—"}
-                  timeLabel={formatScheduledTime(timeRef)}
+                  timeLabel={formatTime12h(timeDate)}
                   bookingType={booking.type}
                   onPress={() => router.push({ pathname: "/booking-detail-request", params: { id: booking.id } })}
                   onAccept={() => router.push({ pathname: "/booking-detail-request", params: { id: booking.id, action: "accept" } })}
@@ -239,10 +238,10 @@ export function ScheduleActiveBookingsScreen() {
 
       <View style={styles.list}>
         {bookings.map((booking, i) => {
-          const timeRef = booking.type === "appointment" && booking.scheduledAt
-            ? booking.scheduledAt
-            : booking.createdAt;
-          const timeLabel = formatScheduledTime(timeRef);
+          const timeDate = booking.type === "appointment" && booking.scheduledAt
+            ? new Date(booking.scheduledAt as Date)
+            : new Date(booking.createdAt as Date);
+          const timeLabel = formatTime12h(timeDate);
           return (
             <BookingCard
               key={booking.id}

@@ -1,4 +1,5 @@
 import { Colors } from '@/src/theme/colors';
+import { formatTime12h } from '@/src/utils/date';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
@@ -16,7 +17,7 @@ function useElapsedTime(startedAt: Date | string | null) {
   useEffect(() => {
     const compute = () => {
       if (!startedAt) return '–';
-      const start = typeof startedAt === 'string' ? new Date(startedAt) : startedAt;
+      const start = new Date(startedAt as string);
       const diffSec = Math.max(0, Math.floor((Date.now() - start.getTime()) / 1000));
       const h = Math.floor(diffSec / 3600);
       const m = Math.floor((diffSec % 3600) / 60);
@@ -36,13 +37,7 @@ function useElapsedTime(startedAt: Date | string | null) {
 
 function formatStartTime(date: Date | string | null): string {
   if (!date) return '';
-  const d = typeof date === 'string' ? new Date(date) : date;
-  const h = d.getHours();
-  const m = d.getMinutes();
-  const amPm = h >= 12 ? 'pm' : 'am';
-  const h12 = h % 12 || 12;
-  const mm = m < 10 ? `0${m}` : String(m);
-  return `${h12}:${mm} ${amPm}`;
+  return formatTime12h(new Date(date as string));
 }
 
 export function InProgressFloatingCard({ bookingId, customerName, startedAt }: Props) {

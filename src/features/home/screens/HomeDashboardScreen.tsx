@@ -11,13 +11,12 @@ import {
   useHomeActiveBookings,
 } from "@/src/features/home/hooks";
 import {
-  formatScheduledTime,
   getDetailRouteForStatus,
   mapApiStatusToBookingStatus,
-  toISODateString,
 } from "@/src/features/schedule/utils/booking-formatters";
 import { useAuthUser } from "@/src/hooks/useAuthUser";
 import { Colors } from "@/src/theme/colors";
+import { formatDisplayDate, formatTime12h, toApiDate } from "@/src/utils/date";
 import { Ionicons } from "@expo/vector-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Clipboard from "expo-clipboard";
@@ -38,15 +37,9 @@ function getGreeting() {
   return "Good Evening,";
 }
 
-function formatDisplayDate(date: Date): string {
-  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  return `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]}`;
-}
-
 export function HomeDashboardScreen() {
   const router = useRouter();
-  const today = toISODateString(new Date());
+  const today = toApiDate(new Date());
 
   const queryClient = useQueryClient();
   const { user } = useAuthUser();
@@ -244,15 +237,15 @@ export function HomeDashboardScreen() {
         </View>
         {todayBookings.length > 0 ? (
           todayBookings.map((booking, i) => {
-            const timeRef = booking.type === "appointment" && booking.scheduledAt
-              ? booking.scheduledAt
-              : booking.createdAt;
+            const timeDate = booking.type === "appointment" && booking.scheduledAt
+              ? new Date(booking.scheduledAt as Date)
+              : new Date(booking.createdAt as Date);
             return (
               <BookingCard
                 key={booking.id}
                 customerName={booking.customerName}
                 barberName={booking.barber?.name ?? "—"}
-                timeLabel={formatScheduledTime(timeRef)}
+                timeLabel={formatTime12h(timeDate)}
                 duration="30 mins"
                 status={mapApiStatusToBookingStatus(booking.status)}
                 bookingType={booking.type}

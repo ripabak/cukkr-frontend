@@ -7,12 +7,11 @@ import { StickyCta } from "@/src/features/schedule/components/StickyCta";
 import { SwipeConfirmationModal } from "@/src/features/schedule/components/SwipeConfirmationModal";
 import { useBookingById, useUpdateBookingStatus } from "@/src/features/schedule/hooks";
 import {
-  formatDateLabel,
   formatDuration,
   formatPrice,
-  formatScheduledTime,
   mapApiStatusToDetailStatus,
 } from "@/src/features/schedule/utils/booking-formatters";
+import { formatDateLabel, formatTime12h } from "@/src/utils/date";
 import { useToast } from "@/src/lib/providers";
 import { getErrorMessage } from "@/src/lib/utils/error-handler";
 import { Ionicons } from "@expo/vector-icons";
@@ -78,10 +77,12 @@ export function BookingDetailInProgressScreen() {
     }
 
     const totalDuration = booking.services.reduce((acc, s) => acc + s.duration, 0);
-    const timeRef = booking.scheduledAt ?? booking.createdAt;
+    const timeDate = booking.scheduledAt
+      ? new Date(booking.scheduledAt as Date)
+      : new Date((booking.startedAt ?? booking.createdAt) as Date);
     const scheduledLabel = booking.scheduledAt
-      ? `Scheduled at ${formatScheduledTime(booking.scheduledAt)}`
-      : `Started at ${formatScheduledTime(booking.startedAt ?? booking.createdAt)}`;
+      ? `Scheduled at ${formatTime12h(timeDate)}`
+      : `Started at ${formatTime12h(timeDate)}`;
 
     const infoRows = [
       { label: "Book No", value: `#${booking.referenceNumber}` },
@@ -111,7 +112,7 @@ export function BookingDetailInProgressScreen() {
       <>
         <BookingDetailCard
           customerName={booking.customer.name}
-          dateLabel={formatDateLabel(timeRef)}
+          dateLabel={formatDateLabel(timeDate)}
           bookingType={booking.type}
           metaLine1={scheduledLabel}
           metaLine2={`Duration ${formatDuration(totalDuration)}`}

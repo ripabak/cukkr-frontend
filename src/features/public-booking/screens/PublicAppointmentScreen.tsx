@@ -1,6 +1,7 @@
 import { CalendarModal } from '@/src/features/schedule/components/CalendarModal';
 import { TimePickerModal } from '@/src/components/TimePickerModal';
 import { Colors } from '@/src/theme/colors';
+import { formatPickerTime, parseTime24, toApiDateTime, toInitial12h } from '@/src/utils/date';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -33,30 +34,6 @@ function formatPrice(p: number) {
 function calcFinalPrice(price: number, discountPercent?: number | null) {
   if (!discountPercent) return price;
   return Math.round(price * (1 - discountPercent / 100));
-}
-
-function formatTime(h: number, m: number, amPm: 'AM' | 'PM'): string {
-  const mm = m < 10 ? `0${m}` : String(m);
-  return `${h}:${mm} ${amPm}`;
-}
-
-function buildISODateTime(date: Date, h: number, m: number, amPm: 'AM' | 'PM'): string {
-  const hour24 = amPm === 'AM' ? (h === 12 ? 0 : h) : h === 12 ? 12 : h + 12;
-  const d = new Date(date);
-  d.setHours(hour24, m, 0, 0);
-  return d.toISOString();
-}
-
-function parseTime24(str: string): { hour24: number; minute: number } {
-  const [h, m] = str.split(':').map(Number);
-  return { hour24: h, minute: m };
-}
-
-function toInitial12h(hour24: number, minute: number) {
-  if (hour24 === 0) return { hour: 12, minute, amPm: 'AM' as const };
-  if (hour24 < 12) return { hour: hour24, minute, amPm: 'AM' as const };
-  if (hour24 === 12) return { hour: 12, minute, amPm: 'PM' as const };
-  return { hour: hour24 - 12, minute, amPm: 'PM' as const };
 }
 
 const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -204,8 +181,8 @@ export function PublicAppointmentScreen({ slug }: Props) {
 
   function handleTimeConfirm(h: number, m: number, amPm: 'AM' | 'PM') {
     if (!selectedDate) return;
-    const label = `${DAY_LABELS[selectedDate.getDay()]}, ${selectedDate.getDate()} ${MONTH_LABELS[selectedDate.getMonth()]} ${selectedDate.getFullYear()} ${formatTime(h, m, amPm)}`;
-    setScheduledAt(buildISODateTime(selectedDate, h, m, amPm), label);
+    const label = `${DAY_LABELS[selectedDate.getDay()]}, ${selectedDate.getDate()} ${MONTH_LABELS[selectedDate.getMonth()]} ${selectedDate.getFullYear()} ${formatPickerTime(h, m, amPm)}`;
+    setScheduledAt(toApiDateTime(selectedDate, h, m, amPm), label);
     setShowTimePicker(false);
   }
 

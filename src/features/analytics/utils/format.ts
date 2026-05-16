@@ -26,11 +26,9 @@ export function getRangeLabel(range: string): string {
   return RANGE_LABELS[range] ?? range;
 }
 
+import { formatDateTime } from "@/src/utils/date";
+
 export function formatDate(iso: string | null): string {
   if (!iso) return "—";
-  const d = new Date(iso);
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  const h = d.getHours().toString().padStart(2, "0");
-  const m = d.getMinutes().toString().padStart(2, "0");
-  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}, ${h}:${m}`;
+  return formatDateTime(new Date(iso));
 }

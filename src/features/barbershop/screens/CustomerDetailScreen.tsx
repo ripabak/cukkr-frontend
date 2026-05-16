@@ -168,7 +168,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
                       key={b.id}
                       customerName={b.referenceNumber}
                       barberName={customer?.name ?? ""}
-                      timeLabel={new Date(b.createdAt).toLocaleDateString("id-ID")}
+                      timeLabel={new Date(b.createdAt as Date).toLocaleDateString("id-ID")}
                       duration={formatCurrency(b.totalAmount)}
                       status={b.status as "waiting" | "in_progress" | "completed" | "cancelled" | "requested"}
                       onPress={() =>
