@@ -84,7 +84,7 @@ export function CreateBarbershopInviteBarberFilledScreen() {
   };
 
   const handleContinue = () => {
-    router.push("/create-barbershop-success");
+    router.push("/d/create-barbershop-success");
   };
 
   return (

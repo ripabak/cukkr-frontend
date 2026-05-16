@@ -23,7 +23,7 @@ export function LoginScreen() {
 
     try {
       await signIn({ email: identifier, password });
-      router.replace("/(tabs)/home");
+      router.replace("/d/(tabs)/home");
     } catch (error) {
       toast.error(getErrorMessage(error));
     }
@@ -33,7 +33,7 @@ export function LoginScreen() {
     <AuthScreenShell
       title="Login"
       description="Enter your email and password to securely access your account and manage your services."
-      footer={<AuthFooterPrompt actionLabel="Sign Up here" href="/register" prompt="Don't have an account?" />}
+      footer={<AuthFooterPrompt actionLabel="Sign Up here" href="/d/register" prompt="Don't have an account?" />}
     >
       <AuthTextField
         autoCapitalize="none"
@@ -54,7 +54,7 @@ export function LoginScreen() {
       />
 
       <View style={styles.forgotPasswordRow}>
-        <Link href="/forgot-password" asChild>
+        <Link href="/d/forgot-password" asChild>
           <Pressable>
             <Text style={styles.forgotPasswordLink}>Forgot Password</Text>
           </Pressable>

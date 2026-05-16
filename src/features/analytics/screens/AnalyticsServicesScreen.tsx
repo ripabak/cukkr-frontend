@@ -108,7 +108,7 @@ export function AnalyticsServicesScreen() {
               key={svc.serviceId}
               style={styles.serviceRow}
               activeOpacity={0.75}
-              onPress={() => router.push({ pathname: "/service-detail", params: { serviceId: svc.serviceId } })}
+              onPress={() => router.push({ pathname: "/d/service-detail", params: { serviceId: svc.serviceId } })}
             >
               <View style={styles.serviceRank}>
                 <Text style={styles.serviceRankText}>{i + 1 + (page - 1) * 20}</Text>

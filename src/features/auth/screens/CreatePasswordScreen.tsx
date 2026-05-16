@@ -46,7 +46,7 @@ export function CreatePasswordScreen() {
     try {
       await resetPassword({ email, otp, password });
       toast.success("Password reset successfully");
-      router.replace("/login");
+      router.replace("/d/login");
     } catch (error) {
       toast.error(getErrorMessage(error));
     }
@@ -61,7 +61,7 @@ export function CreatePasswordScreen() {
       footer={
         <AuthFooterPrompt
           actionLabel="Sign In here"
-          href="/login"
+          href="/d/login"
           prompt="Remember your password?"
         />
       }

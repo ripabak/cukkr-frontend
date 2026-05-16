@@ -85,7 +85,7 @@ export function BarbershopSettingsScreen() {
           placeholder="Name"
           onPress={isLoading ? undefined : () =>
             router.push({
-              pathname: "/edit-barbershop-info",
+              pathname: "/d/edit-barbershop-info",
               params: { mode: "name" },
             })
           }
@@ -96,7 +96,7 @@ export function BarbershopSettingsScreen() {
           placeholder="Description"
           onPress={isLoading ? undefined : () =>
             router.push({
-              pathname: "/edit-barbershop-info",
+              pathname: "/d/edit-barbershop-info",
               params: { mode: "description" },
             })
           }
@@ -108,7 +108,7 @@ export function BarbershopSettingsScreen() {
           isLast
           onPress={isLoading ? undefined : () =>
             router.push({
-              pathname: "/edit-barbershop-info",
+              pathname: "/d/edit-barbershop-info",
               params: { mode: "address" },
             })
           }
@@ -128,7 +128,7 @@ export function BarbershopSettingsScreen() {
           }
           placeholder="—"
           isLast
-          onPress={isLoading ? undefined : () => router.push("/edit-booking-url")}
+          onPress={isLoading ? undefined : () => router.push("/d/edit-booking-url")}
         />
       </View>
 
@@ -138,20 +138,20 @@ export function BarbershopSettingsScreen() {
       <View style={styles.card}>
         <OperationRow
           label="Barbers"
-          onPress={isLoading ? undefined : () => router.push("/barbers-management")}
+          onPress={isLoading ? undefined : () => router.push("/d/barbers-management")}
         />
         <OperationRow
           label="Customers"
-          onPress={isLoading ? undefined : () => router.push("/customer-management")}
+          onPress={isLoading ? undefined : () => router.push("/d/customer-management")}
         />
         <OperationRow
           label="Services"
-          onPress={isLoading ? undefined : () => router.push("/services-management")}
+          onPress={isLoading ? undefined : () => router.push("/d/services-management")}
         />
         <OperationRow
           label="Open Hours"
           isLast
-          onPress={isLoading ? undefined : () => router.push("/open-hours")}
+          onPress={isLoading ? undefined : () => router.push("/d/open-hours")}
         />
       </View>
 

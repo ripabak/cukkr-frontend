@@ -132,7 +132,7 @@ export function BarbersManagementScreen() {
 
       <PrimaryButton
         label="Invite Barber"
-        onPress={() => router.push("/invite-barber")}
+        onPress={() => router.push("/d/invite-barber")}
         style={styles.inviteBtn}
       />
 

@@ -53,10 +53,10 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
   );
 
   const getBookingRoute = (status: string) => {
-    if (status === "waiting") return "/booking-detail-waiting";
-    if (status === "in_progress") return "/booking-detail-in-progress";
-    if (status === "completed" || status === "cancelled") return "/booking-detail-result";
-    return "/booking-detail-request";
+    if (status === "waiting") return "/d/booking-detail-waiting";
+    if (status === "in_progress") return "/d/booking-detail-in-progress";
+    if (status === "completed" || status === "cancelled") return "/d/booking-detail-result";
+    return "/d/booking-detail-request";
   };
 
   if (isLoadingCustomer) {
@@ -79,7 +79,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
               size={36}
               onPress={() =>
                 router.push({
-                  pathname: "/send-messages-to-customers",
+                  pathname: "/d/send-messages-to-customers",
                   params: { recipientName: customer?.name, count: "1" },
                 })
               }

@@ -68,7 +68,7 @@ export function NewAppointmentScreen() {
   function handleBookingTypeChange(type: BookingType) {
     setBookingType(type);
     if (type === "walkin") {
-      router.replace("/new-walk-in");
+      router.replace("/d/new-walk-in");
     }
   }
 
@@ -139,12 +139,12 @@ export function NewAppointmentScreen() {
         contact={formData.contact}
         onContactChange={(v) => updateFormData({ contact: v })}
         selectedBarber={formData.barberName ?? undefined}
-        onBarberPress={() => router.push("/select-barber")}
+        onBarberPress={() => router.push("/d/select-barber")}
         selectedDateTime={displayDateTime}
         onDateTimePress={() => setShowCalendar(true)}
         showDateTimeSelector
         services={formData.selectedServices}
-        onServicePress={() => router.push("/select-services")}
+        onServicePress={() => router.push("/d/select-services")}
       />
 
       <CalendarModal

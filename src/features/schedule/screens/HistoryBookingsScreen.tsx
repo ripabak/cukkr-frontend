@@ -67,7 +67,7 @@ export function HistoryBookingsScreen() {
   });
 
   const handleBookingPress = (id: string) => {
-    router.push(`/booking-detail-result?id=${id}`);
+    router.push(`/d/booking-detail-result?id=${id}`);
   };
 
   return (

@@ -48,7 +48,7 @@ export function RegisterScreen() {
       await signUp({ name, email: identifier, password });
       await sendOtp({ email: identifier, type: "email-verification" });
       router.push({
-        pathname: "/verify-account",
+        pathname: "/d/verify-account",
         params: { email: identifier },
       });
     } catch (error) {
@@ -63,7 +63,7 @@ export function RegisterScreen() {
       footer={
         <AuthFooterPrompt
           actionLabel="Sign In here"
-          href="/login"
+          href="/d/login"
           prompt="Already have an account?"
         />
       }

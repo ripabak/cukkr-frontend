@@ -31,7 +31,7 @@ export function NotificationsListScreen() {
 
   const handleBookingPress = (notif: NotifItem) => {
     if (!notif.referenceId) return;
-    const route = notif.type === 'walk_in_arrival' ? '/booking-detail-waiting' : '/booking-detail-request';
+    const route = notif.type === 'walk_in_arrival' ? '/d/booking-detail-waiting' : '/d/booking-detail-request';
     router.push({ pathname: route, params: { id: notif.referenceId } });
   };
 

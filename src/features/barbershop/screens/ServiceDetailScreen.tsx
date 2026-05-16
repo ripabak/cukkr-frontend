@@ -180,7 +180,7 @@ export function ServiceDetailScreen() {
                   onPress: () => {
                     setOverflowVisible(false);
                     router.push({
-                      pathname: "/add-or-edit-service",
+                      pathname: "/d/add-or-edit-service",
                       params: { serviceId, isEdit: "true" },
                     });
                   },

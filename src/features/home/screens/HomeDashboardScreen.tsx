@@ -119,7 +119,7 @@ export function HomeDashboardScreen() {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.notifBtn}
-                onPress={() => router.push("/notifications-list")}
+                onPress={() => router.push("/d/notifications-list")}
               >
                 <Ionicons name="notifications-outline" size={18} color={Colors.text.secondary} />
               </TouchableOpacity>
@@ -131,7 +131,7 @@ export function HomeDashboardScreen() {
           <TouchableOpacity
             style={styles.profileLeft}
             activeOpacity={0.7}
-            onPress={() => router.push("/user-profile")}
+            onPress={() => router.push("/d/user-profile")}
           >
             <View style={styles.avatar}>
               <Text style={styles.avatarInitials}>
@@ -180,7 +180,7 @@ export function HomeDashboardScreen() {
             <View style={styles.qrPlaceholder}>
               <Ionicons name="qr-code" size={72} color={Colors.text.primary} />
             </View>
-            <TouchableOpacity style={styles.shareQrBtn} activeOpacity={0.8} onPress={() => router.push("/walkin-qr")}>
+            <TouchableOpacity style={styles.shareQrBtn} activeOpacity={0.8} onPress={() => router.push("/d/walkin-qr")}>
               <Text style={styles.shareQrText}>Share QR</Text>
             </TouchableOpacity>
           </View>
@@ -191,29 +191,29 @@ export function HomeDashboardScreen() {
           <ShortcutTile
             label="Barbers"
             icon={<Ionicons name="people" size={22} color={Colors.text.primary} />}
-            onPress={() => router.push("/barbers-management")}
+            onPress={() => router.push("/d/barbers-management")}
           />
           <ShortcutTile
             label="Customers"
             icon={<Ionicons name="person" size={22} color={Colors.text.primary} />}
-            onPress={() => router.push("/customer-management")}
+            onPress={() => router.push("/d/customer-management")}
           />
           <ShortcutTile
             label="Services"
             icon={<Ionicons name="cut" size={22} color={Colors.text.primary} />}
-            onPress={() => router.push("/services-management")}
+            onPress={() => router.push("/d/services-management")}
           />
           <ShortcutTile
             label="New Book"
             icon={<Ionicons name="calendar" size={22} color={Colors.text.primary} />}
-            onPress={() => router.push("/new-walk-in")}
+            onPress={() => router.push("/d/new-walk-in")}
           />
         </View>
 
         {/* Today's Queue */}
         <View style={styles.sectionRow}>
           <Text style={styles.sectionTitle}>Today's Queue</Text>
-          <TouchableOpacity onPress={() => router.push("/schedule")}>
+          <TouchableOpacity onPress={() => router.push("/d/schedule")}>
             <Text style={styles.seeAll}>See All</Text>
           </TouchableOpacity>
         </View>
@@ -231,7 +231,7 @@ export function HomeDashboardScreen() {
         {/* Today's Booking */}
         <View style={styles.sectionRow}>
           <Text style={styles.sectionTitle}>Today's Booking</Text>
-          <TouchableOpacity onPress={() => router.push("/schedule")}>
+          <TouchableOpacity onPress={() => router.push("/d/schedule")}>
             <Text style={styles.seeAll}>See All</Text>
           </TouchableOpacity>
         </View>

@@ -78,7 +78,7 @@ export function EditUserProfileFieldsScreen() {
     try {
       await changePhone(phone.trim());
       router.push({
-        pathname: '/verify-contact',
+        pathname: '/d/verify-contact',
         params: { contact: phone.trim(), type: 'phone' },
       });
     } catch (error) {

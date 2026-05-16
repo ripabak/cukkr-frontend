@@ -78,7 +78,7 @@ export function CreateBarbershopFirstServiceScreen() {
                   serviceId: serviceResponse?.id,
                 });
 
-                router.push("/create-barbershop-invite-barber-empty");
+                router.push("/d/create-barbershop-invite-barber-empty");
               } catch (error) {
                 console.log(error)
                 toast.error(getErrorMessage(error));

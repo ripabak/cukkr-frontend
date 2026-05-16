@@ -209,7 +209,7 @@ export function AnalyticsCustomersScreen() {
               key={c.customerId}
               style={styles.customerRow}
               activeOpacity={0.75}
-              onPress={() => router.push({ pathname: "/customer-detail-general", params: { customerId: c.customerId } })}
+              onPress={() => router.push({ pathname: "/d/customer-detail-general", params: { customerId: c.customerId } })}
             >
               <View style={styles.customerAvatar}>
                 <Text style={styles.customerInitial}>

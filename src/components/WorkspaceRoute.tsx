@@ -23,7 +23,7 @@ export function WorkspaceRoute({ children }: WorkspaceRouteProps) {
       .list({ query: {} })
       .then(({ data: orgs }) => {
         if (!orgs || orgs.length === 0) {
-          router.replace("/create-barbershop-name-logo");
+          router.replace("/d/create-barbershop-name-logo");
           setIsResolving(false);
           return;
         }
@@ -40,12 +40,12 @@ export function WorkspaceRoute({ children }: WorkspaceRouteProps) {
             setIsResolving(false);
           })
           .catch(() => {
-            router.replace("/create-barbershop-name-logo");
+            router.replace("/d/create-barbershop-name-logo");
             setIsResolving(false);
           });
       })
       .catch(() => {
-        router.replace("/create-barbershop-name-logo");
+        router.replace("/d/create-barbershop-name-logo");
         setIsResolving(false);
       });
   }, [hasActiveOrg, isPending]);

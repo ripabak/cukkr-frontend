@@ -125,7 +125,7 @@ export function BarbershopSwitcherModal({ visible, onClose, headerHeight }: Prop
 
   const handleCreateNew = () => {
     onClose();
-    router.push("/create-barbershop-name-logo");
+    router.push("/d/create-barbershop-name-logo");
   };
 
   const topOffset = insets.top + APP_HEADER_HEIGHT + headerHeight;

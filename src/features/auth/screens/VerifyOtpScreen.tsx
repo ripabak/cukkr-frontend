@@ -39,7 +39,7 @@ export function VerifyOtpScreen() {
     }
 
     router.push({
-      pathname: "/create-password",
+      pathname: "/d/create-password",
       params: { email, otp },
     });
   };

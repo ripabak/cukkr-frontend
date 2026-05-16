@@ -57,7 +57,7 @@ export function OnboardingCustomerHappyScreen() {
           label="Get Started"
           onPress={() => {
             markOnboardingSeen();
-            router.replace("/login");
+            router.replace("/d/login");
           }}
           variant="secondary"
           style={styles.button}

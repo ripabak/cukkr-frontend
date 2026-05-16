@@ -62,7 +62,7 @@ export function ServicesManagementScreen() {
               </TouchableOpacity>
               <IconActionButton
                 iconName="add"
-                onPress={() => router.push("/add-or-edit-service")}
+                onPress={() => router.push("/d/add-or-edit-service")}
                 size={36}
               />
             </View>
@@ -100,7 +100,7 @@ export function ServicesManagementScreen() {
               key={service.id}
               onPress={() =>
                 router.push({
-                  pathname: "/service-detail",
+                  pathname: "/d/service-detail",
                   params: { serviceId: service.id },
                 })
               }

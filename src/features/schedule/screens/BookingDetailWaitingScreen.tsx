@@ -42,7 +42,7 @@ export function BookingDetailWaitingScreen() {
     updateStatus({ id, status: "in_progress" }, {
       onSuccess: () => {
         toast.success("Booking started");
-        router.replace(`/booking-detail-in-progress?id=${id}`);
+        router.replace(`/d/booking-detail-in-progress?id=${id}`);
       },
       onError: (error) => {
         toast.error(getErrorMessage(error));

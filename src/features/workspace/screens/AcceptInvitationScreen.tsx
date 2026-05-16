@@ -82,14 +82,14 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
           label="Log In to Continue"
           onPress={() =>
             router.push({
-              pathname: "/(auth)/login",
+              pathname: "/d/(auth)/login",
               params: { redirect: `/accept-invitation/${invitationId}` },
             })
           }
           style={styles.loginButton}
         />
         <TouchableOpacity
-          onPress={() => router.push("/(auth)/register")}
+          onPress={() => router.push("/d/(auth)/register")}
           style={styles.registerLink}
           activeOpacity={0.7}
         >

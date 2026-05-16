@@ -12,8 +12,8 @@ export function useAuthGuard() {
   useEffect(() => {
     if (isPending) return;
 
-    if (!isAuthenticated && !segments[0]?.includes("auth")) {
-      router.replace("/(auth)/login");
+    if (!isAuthenticated && !segments.some(s => s?.includes("auth"))) {
+      router.replace("/d/(auth)/login");
     }
   }, [isPending, isAuthenticated, segments]);
 

@@ -73,7 +73,7 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
         setBarber("");
 
         if (newInvites.length > 0) {
-          router.push("/create-barbershop-invite-barber-filled");
+          router.push("/d/create-barbershop-invite-barber-filled");
         }
       },
       onError: (error) => {
@@ -87,7 +87,7 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
 
   const handleSkip = () => {
     updateFormData({ barberInvites: [] });
-    router.push("/create-barbershop-success");
+    router.push("/d/create-barbershop-success");
   };
 
   return (

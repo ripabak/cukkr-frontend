@@ -151,7 +151,7 @@ export function ScheduleActiveBookingsScreen() {
             />
             <View style={styles.topActions}>
               <TouchableOpacity
-                onPress={() => router.push("/new-appointment")}
+                onPress={() => router.push("/d/new-appointment")}
                 activeOpacity={0.8}
                 style={[styles.iconBtn, styles.iconBtnDark]}
               >
@@ -208,9 +208,9 @@ export function ScheduleActiveBookingsScreen() {
                   barberName={booking.barber?.name ?? "—"}
                   timeLabel={formatTime12h(timeDate)}
                   bookingType={booking.type}
-                  onPress={() => router.push({ pathname: "/booking-detail-request", params: { id: booking.id } })}
-                  onAccept={() => router.push({ pathname: "/booking-detail-request", params: { id: booking.id, action: "accept" } })}
-                  onDecline={() => router.push({ pathname: "/booking-detail-request", params: { id: booking.id, action: "decline" } })}
+                  onPress={() => router.push({ pathname: "/d/booking-detail-request", params: { id: booking.id } })}
+                  onAccept={() => router.push({ pathname: "/d/booking-detail-request", params: { id: booking.id, action: "accept" } })}
+                  onDecline={() => router.push({ pathname: "/d/booking-detail-request", params: { id: booking.id, action: "decline" } })}
                 />
               );
             })}

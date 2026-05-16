@@ -8,7 +8,7 @@ export default function AuthLayout() {
   // state, causing users mid-auth-flow (e.g. OTP screen) to lose their position
   // when they return from another app (Gmail, etc.).
   if (!isPending && session?.user) {
-    return <Redirect href="/(tabs)/home" />;
+    return <Redirect href="/d/(tabs)/home" />;
   }
 
   return <Stack screenOptions={{ headerShown: false }} />;

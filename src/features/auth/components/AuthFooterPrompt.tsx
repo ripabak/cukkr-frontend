@@ -6,7 +6,7 @@ import { authTheme } from "../auth-theme";
 type AuthFooterPromptProps = {
   prompt: string;
   actionLabel: string;
-  href: "/login" | "/register";
+  href: "/d/login" | "/d/register";
 };
 
 export function AuthFooterPrompt({

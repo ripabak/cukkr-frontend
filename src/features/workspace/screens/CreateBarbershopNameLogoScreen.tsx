@@ -42,7 +42,7 @@ export function CreateBarbershopNameLogoScreen() {
     }
 
     updateFormData({ name, slug });
-    router.push("/create-barbershop-first-service");
+    router.push("/d/create-barbershop-first-service");
   };
 
   const isValid = validation.isValid && !isTyping && isAvailable === true;

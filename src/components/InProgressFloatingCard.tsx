@@ -61,7 +61,7 @@ export function InProgressFloatingCard({ bookingId, customerName, startedAt }: P
 
   return (
     <TouchableOpacity
-      onPress={() => router.push(`/booking-detail-in-progress?id=${bookingId}`)}
+      onPress={() => router.push(`/d/booking-detail-in-progress?id=${bookingId}`)}
       activeOpacity={0.85}
       style={styles.card}
     >

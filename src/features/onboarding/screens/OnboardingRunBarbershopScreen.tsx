@@ -64,7 +64,7 @@ export function OnboardingRunBarbershopScreen() {
 
         <OnboardingButton
           label="Next"
-          onPress={() => router.push("/onboarding-customer-happy")}
+          onPress={() => router.push("/d/onboarding-customer-happy")}
           style={styles.button}
         />
       </View>

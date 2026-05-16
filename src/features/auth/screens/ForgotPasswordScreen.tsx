@@ -30,7 +30,7 @@ export function ForgotPasswordScreen() {
     try {
       await sendOtp({ email, type: "forget-password" });
       router.push({
-        pathname: "/verify-otp",
+        pathname: "/d/verify-otp",
         params: { email },
       });
     } catch (error) {

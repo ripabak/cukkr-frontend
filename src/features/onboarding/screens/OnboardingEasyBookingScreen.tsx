@@ -59,7 +59,7 @@ export function OnboardingEasyBookingScreen() {
 
         <OnboardingButton
           label="Love it"
-          onPress={() => router.push("/onboarding-run-barbershop")}
+          onPress={() => router.push("/d/onboarding-run-barbershop")}
           style={styles.button}
         />
       </View>

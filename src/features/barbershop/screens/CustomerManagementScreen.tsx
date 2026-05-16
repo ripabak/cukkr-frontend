@@ -47,7 +47,7 @@ export function CustomerManagementScreen() {
     if (selectionMode) {
       toggleSelect(customerId);
     } else {
-      router.push({ pathname: "/customer-detail-general", params: { customerId } });
+      router.push({ pathname: "/d/customer-detail-general", params: { customerId } });
     }
   }
 
@@ -78,7 +78,7 @@ export function CustomerManagementScreen() {
             <FloatingActionButton
               onPress={() =>
                 router.push({
-                  pathname: "/send-messages-to-customers",
+                  pathname: "/d/send-messages-to-customers",
                   params: { count: selectedIds.size },
                 })
               }
