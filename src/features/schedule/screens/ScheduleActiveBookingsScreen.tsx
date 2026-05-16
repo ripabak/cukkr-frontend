@@ -7,7 +7,7 @@ import {
 import { CalendarModal } from "@/src/features/schedule/components/CalendarModal";
 import { DateSelectorPill } from "@/src/features/schedule/components/DateSelectorPill";
 import { DayChip, DayChipRow } from "@/src/features/schedule/components/DayChipRow";
-import { useAcceptBooking, useBookingRequestedDates, useBookings } from "@/src/features/schedule/hooks";
+import { useBookingRequestedDates, useBookings } from "@/src/features/schedule/hooks";
 import {
   formatScheduledTime,
   getDetailRouteForStatus,
@@ -18,7 +18,7 @@ import { Colors } from '@/src/theme/colors';
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface RequestCardProps {
   id: string;
@@ -29,10 +29,9 @@ interface RequestCardProps {
   onPress: () => void;
   onAccept: () => void;
   onDecline: () => void;
-  isAccepting?: boolean;
 }
 
-function RequestCard({ customerName, barberName, timeLabel, bookingType, onPress, onAccept, onDecline, isAccepting }: RequestCardProps) {
+function RequestCard({ customerName, barberName, timeLabel, bookingType, onPress, onAccept, onDecline }: RequestCardProps) {
   const iconName = bookingType === 'walk_in' ? 'walk' : 'calendar';
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.85} style={reqStyles.card}>
@@ -51,11 +50,8 @@ function RequestCard({ customerName, barberName, timeLabel, bookingType, onPress
         <TouchableOpacity onPress={onDecline} activeOpacity={0.8} style={reqStyles.declineBtn}>
           <Text style={reqStyles.declineText}>Decline</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={onAccept} activeOpacity={0.8} style={reqStyles.acceptBtn} disabled={isAccepting}>
-          {isAccepting
-            ? <ActivityIndicator size="small" color={Colors.text.primary} />
-            : <Text style={reqStyles.acceptText}>Accept</Text>
-          }
+        <TouchableOpacity onPress={onAccept} activeOpacity={0.8} style={reqStyles.acceptBtn}>
+          <Text style={reqStyles.acceptText}>Accept</Text>
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
@@ -93,10 +89,6 @@ export function ScheduleActiveBookingsScreen() {
   const [statusFilter, setStatusFilter] = useState<"all" | "waiting" | "in_progress" | "completed" | "cancelled">("all");
   const [menuTop, setMenuTop] = useState(0);
   const filterBtnRef = useRef<View>(null);
-  const [acceptingId, setAcceptingId] = useState<string | null>(null);
-
-  const { mutate: acceptBooking } = useAcceptBooking();
-
   const handleOpenFilterMenu = () => {
     filterBtnRef.current?.measure((_x: number, _y: number, _w: number, height: number, _px: number, pageY: number) => {
       setMenuTop(pageY + height + 4);
@@ -145,11 +137,6 @@ export function ScheduleActiveBookingsScreen() {
       pathname: route,
       params: { id: bookingId },
     });
-  };
-
-  const handleAccept = (id: string) => {
-    setAcceptingId(id);
-    acceptBooking(id, { onSettled: () => setAcceptingId(null) });
   };
 
   return (
@@ -223,9 +210,8 @@ export function ScheduleActiveBookingsScreen() {
                   timeLabel={formatScheduledTime(timeRef)}
                   bookingType={booking.type}
                   onPress={() => router.push({ pathname: "/booking-detail-request", params: { id: booking.id } })}
-                  onAccept={() => handleAccept(booking.id)}
-                  onDecline={() => router.push({ pathname: "/booking-detail-request", params: { id: booking.id } })}
-                  isAccepting={acceptingId === booking.id}
+                  onAccept={() => router.push({ pathname: "/booking-detail-request", params: { id: booking.id, action: "accept" } })}
+                  onDecline={() => router.push({ pathname: "/booking-detail-request", params: { id: booking.id, action: "decline" } })}
                 />
               );
             })}

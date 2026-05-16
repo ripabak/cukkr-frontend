@@ -1,6 +1,7 @@
 import { Colors } from '@/src/theme/colors';
 import AppTheme from "@/src/app-theme";
-import React, { useState } from "react";
+import { ConfirmationModal } from "@/src/components/ConfirmationModal";
+import React, { useEffect, useState } from "react";
 import { View, TouchableOpacity, StyleSheet, ActivityIndicator, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
@@ -26,21 +27,31 @@ import { getErrorMessage } from "@/src/lib/utils/error-handler";
 
 export function BookingDetailRequestScreen() {
   const router = useRouter();
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, action } = useLocalSearchParams<{ id: string; action?: string }>();
   const toast = useToast();
 
   const { data: booking, isLoading } = useBookingById(id ?? "");
-  const { mutate: acceptBooking } = useAcceptBooking();
-  const { mutate: declineBooking } = useDeclineBooking();
+  const { mutate: acceptBooking, isPending: isAccepting } = useAcceptBooking();
+  const { mutate: declineBooking, isPending: isDeclining } = useDeclineBooking();
 
   const [overflowVisible, setOverflowVisible] = useState(false);
   const [localStatus, setLocalStatus] = useState<BookingDetailStatus | null>(null);
+  const [acceptModalVisible, setAcceptModalVisible] = useState(false);
+  const [declineModalVisible, setDeclineModalVisible] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading && booking) {
+      if (action === "accept") setAcceptModalVisible(true);
+      else if (action === "decline") setDeclineModalVisible(true);
+    }
+  }, [action, isLoading, booking]);
 
   const displayStatus = localStatus ?? (booking ? mapApiStatusToDetailStatus(booking.status) : "requested");
   const isDecided = displayStatus === "declined" || displayStatus === "completed";
 
   const handleAccept = () => {
     if (!id) return;
+    setAcceptModalVisible(false);
     acceptBooking(id, {
       onSuccess: () => {
         setLocalStatus("completed");
@@ -54,6 +65,7 @@ export function BookingDetailRequestScreen() {
 
   const handleDecline = () => {
     if (!id) return;
+    setDeclineModalVisible(false);
     declineBooking({ id, reason: "Declined by barber" }, {
       onSuccess: () => {
         setLocalStatus("declined");
@@ -127,8 +139,8 @@ export function BookingDetailRequestScreen() {
 
         {!isDecided ? (
           <DualActionFooter
-            onDecline={handleDecline}
-            onAccept={handleAccept}
+            onDecline={() => setDeclineModalVisible(true)}
+            onAccept={() => setAcceptModalVisible(true)}
           />
         ) : null}
       </>
@@ -162,6 +174,28 @@ export function BookingDetailRequestScreen() {
             />
           </View>
         ) : null}
+
+        <ConfirmationModal
+          visible={acceptModalVisible}
+          icon="checkmark-circle-outline"
+          title="Accept this booking?"
+          description="The customer will be notified and the booking will be moved to the queue."
+          confirmLabel={isAccepting ? "Accepting..." : "Accept"}
+          cancelLabel="Cancel"
+          onConfirm={handleAccept}
+          onCancel={() => setAcceptModalVisible(false)}
+        />
+
+        <ConfirmationModal
+          visible={declineModalVisible}
+          icon="close-circle-outline"
+          title="Decline this booking?"
+          description="The booking will be cancelled and the customer will be notified."
+          confirmLabel={isDeclining ? "Declining..." : "Decline"}
+          cancelLabel="Cancel"
+          onConfirm={handleDecline}
+          onCancel={() => setDeclineModalVisible(false)}
+        />
       </View>
     </SafeAreaView>
   );

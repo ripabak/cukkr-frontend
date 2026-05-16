@@ -12,6 +12,7 @@ import {
 } from "@/src/features/home/hooks";
 import {
   formatScheduledTime,
+  getDetailRouteForStatus,
   mapApiStatusToBookingStatus,
   toISODateString,
 } from "@/src/features/schedule/utils/booking-formatters";
@@ -84,9 +85,7 @@ export function HomeDashboardScreen() {
   const todayBookings = activeBookings.slice(0, 5);
 
   const handleBookingPress = (bookingId: string, status: string) => {
-    const route = status === "in_progress"
-      ? "/booking-detail-in-progress"
-      : "/booking-detail-waiting";
+    const route = getDetailRouteForStatus(status);
     router.push({ pathname: route, params: { id: bookingId } });
   };
 

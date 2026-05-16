@@ -30,7 +30,7 @@ export function BookingTypeToggle({ value, onChange }: Props) {
         style={[styles.iconBtn, value === 'walkin' && styles.iconBtnActive]}
       >
         <Ionicons
-          name="person-outline"
+          name="walk"
           size={20}
           color={value === 'walkin' ? Colors.text.primary : Colors.icon.muted}
         />
