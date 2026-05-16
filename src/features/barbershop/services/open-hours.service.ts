@@ -10,13 +10,13 @@ interface DayHours {
 export const openHoursService = {
   async getList() {
     const { data: response, error } = await app.api["open-hours"].get();
-    if (error || !response) throw new Error("Failed to fetch open hours");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to fetch open hours");
     return response.data || [];
   },
 
   async update(days: DayHours[]) {
     const { data: response, error } = await app.api["open-hours"].put({ days });
-    if (error || !response) throw new Error("Failed to update open hours");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to update open hours");
     return response.data;
   },
 };

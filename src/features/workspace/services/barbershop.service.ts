@@ -14,7 +14,7 @@ export const barbershopService = {
     const { data: response, error } = await app.api.barbershop["slug-check"].get({
       query: { slug },
     });
-    if (error || !response) throw new Error("Failed to check slug availability");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to check slug availability");
     return response.data?.available || false;
   },
 };

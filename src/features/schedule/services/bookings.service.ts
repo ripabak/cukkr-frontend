@@ -42,7 +42,7 @@ export const bookingsService = {
     const { data: response, error } = await app.api.bookings.get({
       query: { date, status: options?.status ?? "all", sort: options?.sort, barberId: options?.barberId },
     });
-    if (error || !response) throw new Error("Failed to fetch bookings");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to fetch bookings");
     return response.data || [];
   },
 
@@ -50,25 +50,25 @@ export const bookingsService = {
     const { data: response, error } = await app.api.bookings.requests.get({
       query: { dateFrom, dateTo },
     });
-    if (error || !response) throw new Error("Failed to fetch booking requests");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to fetch booking requests");
     return response.data || [];
   },
 
   async getById(id: string) {
     const { data: response, error } = await app.api.bookings({ id }).get({});
-    if (error || !response) throw new Error("Failed to fetch booking");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to fetch booking");
     return response.data;
   },
 
   async create(payload: CreateBookingPayload) {
     const { data: response, error } = await app.api.bookings.post(payload);
-    if (error || !response) throw new Error("Failed to create booking");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to create booking");
     return response.data;
   },
 
   async accept(id: string) {
     const { data: response, error } = await app.api.bookings({ id }).accept.post({});
-    if (error || !response) throw new Error("Failed to accept booking");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to accept booking");
     return response.data;
   },
 
@@ -76,7 +76,7 @@ export const bookingsService = {
     const { data: response, error } = await app.api
       .bookings({ id })
       .decline.post({ reason });
-    if (error || !response) throw new Error("Failed to decline booking");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to decline booking");
     return response.data;
   },
 
@@ -89,7 +89,7 @@ export const bookingsService = {
       status,
       cancelReason,
     });
-    if (error || !response) throw new Error(error.value.message || "Failed to update booking status");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to update booking status");
     return response.data;
   },
 };

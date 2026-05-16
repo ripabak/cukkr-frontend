@@ -5,7 +5,7 @@ export const homeService = {
     const { data: response, error } = await app.api.bookings.summary.get({
       query: { dateFrom: date, dateTo: date },
     });
-    if (error || !response) throw new Error("Failed to fetch booking summary");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to fetch booking summary");
     return response.data;
   },
 
@@ -13,7 +13,7 @@ export const homeService = {
     const { data: response, error } = await app.api.bookings.get({
       query: { date, status: "all" },
     });
-    if (error || !response) throw new Error("Failed to fetch active bookings");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to fetch active bookings");
     return (response.data || []).filter(
       (b: { status: string }) => b.status === "waiting" || b.status === "in_progress",
     );
@@ -21,13 +21,13 @@ export const homeService = {
 
   async getCurrentPin() {
     const { data: response, error } = await app.api.pin.current.get();
-    if (error || !response) throw new Error("Failed to fetch current PIN");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to fetch current PIN");
     return response.data;
   },
 
   async generateWalkInPin() {
     const { data: response, error } = await app.api.pin.generate.post({});
-    if (error || !response) throw new Error("Failed to generate PIN");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to generate PIN");
     return response.data;
   },
 };

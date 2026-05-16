@@ -5,43 +5,43 @@ export const notificationsService = {
     const { data: response, error } = await app.api.notifications.get({
       query: options,
     });
-    if (error || !response) throw new Error("Failed to fetch notifications");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to fetch notifications");
     return response;
   },
 
   async getUnreadCount() {
     const { data: response, error } = await app.api.notifications["unread-count"].get();
-    if (error || !response) throw new Error("Failed to fetch unread count");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to fetch unread count");
     return response.data.count;
   },
 
   async markAsRead(id: string) {
     const { data: response, error } = await app.api.notifications({ id }).read.patch();
-    if (error || !response) throw new Error("Failed to mark notification as read");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to mark notification as read");
     return response.data;
   },
 
   async markAllAsRead() {
     const { data: response, error } = await app.api.notifications["read-all"].patch();
-    if (error || !response) throw new Error("Failed to mark all notifications as read");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to mark all notifications as read");
     return response.data;
   },
 
   async accept(id: string) {
     const { data: response, error } = await app.api.notifications({ id }).actions.accept.post({});
-    if (error || !response) throw new Error("Failed to accept notification");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to accept notification");
     return response.data;
   },
 
   async decline(id: string, reason?: string) {
     const { data: response, error } = await app.api.notifications({ id }).actions.decline.post({ reason });
-    if (error || !response) throw new Error("Failed to decline notification");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to decline notification");
     return response.data;
   },
 
   async registerToken(token: string) {
     const { data: response, error } = await app.api.notifications["register-token"].post({ token });
-    if (error || !response) throw new Error("Failed to register push token");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to register push token");
     return response.data;
   },
 };

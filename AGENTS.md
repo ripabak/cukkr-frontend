@@ -261,7 +261,26 @@ const response = await app.api.services[":id"].get({ params: { id } });
 | `DELETE /api/barbershop/:orgId/leave` | `app.api.barbershop({ orgId }).leave.delete({})` |
 
 ### Error Handling
-- All API calls may throw errors; wrap in try-catch in services
+
+**Eden Treaty (`app`) calls — always extract the server message:**
+
+```typescript
+const { data: response, error } = await app.api.some.endpoint.get();
+if (error || !response) throw new Error(error?.value?.message || "Fallback message");
+```
+
+- `error?.value?.message` carries the actual backend error message (e.g. "Slug already taken", "Unauthorized")
+- The fallback string is used only when no server message is present
+- Use optional chaining (`?.`) because `error` may be null when `!response` is the trigger
+
+**`authClient` calls — error message is directly on `error`:**
+
+```typescript
+const { data, error } = await authClient.signIn.email({ email, password });
+if (error) throw new Error(error.message || "Fallback message");
+```
+
+- Never wrap `authClient` errors with `error.value.message` — that shape is Eden-specific
 - Services throw errors; screens catch and convert to user messages via `getErrorMessage()`
 - See `TANSTACK_QUERY_SETUP.md` for hook-level error handling
 

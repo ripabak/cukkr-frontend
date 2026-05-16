@@ -4,7 +4,7 @@ import { app } from "@/src/lib/eden-app";
 export const barbershopService = {
   async getCurrent() {
     const { data: response, error } = await app.api.barbershop.get();
-    if (error || !response) throw new Error("Failed to fetch current barbershop");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to fetch current barbershop");
     return response.data;
   },
 
@@ -16,7 +16,7 @@ export const barbershopService = {
     onboardingCompleted?: boolean;
   }) {
     const { data: response, error } = await app.api.barbershop.settings.patch(data);
-    if (error || !response) throw new Error("Failed to update settings");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to update settings");
     return response.data;
   },
 
@@ -32,7 +32,7 @@ export const barbershopService = {
     const { data: response, error } = await app.api.barbershop["slug-check"].get({
       query: { slug },
     });
-    if (error || !response) throw new Error("Failed to check slug availability");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to check slug availability");
     return response.data?.available || false;
   },
 };

@@ -5,7 +5,7 @@ export const scheduleResourcesService = {
     const { data: response, error } = await app.api.barbers.get({
       query: { search, status: "active"  },
     });
-    if (error || !response) throw new Error("Failed to fetch barbers");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to fetch barbers");
     return response.data || [];
   },
 
@@ -13,7 +13,7 @@ export const scheduleResourcesService = {
     const { data: response, error } = await app.api.services.get({
       query: { search, activeOnly: true },
     });
-    if (error || !response) throw new Error("Failed to fetch services");
+    if (error || !response) throw new Error(error?.value?.message || "Failed to fetch services");
     return response.data || [];
   },
 };

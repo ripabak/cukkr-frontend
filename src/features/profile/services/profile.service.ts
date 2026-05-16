@@ -5,7 +5,7 @@ export const profileService = {
     const { data: response, error } = await app.api.me.get();
 
     if (error || !response) {
-      throw new Error("Failed to fetch profile");
+      throw new Error(error?.value?.message || "Failed to fetch profile");
     }
     return response.data;
   },
@@ -17,7 +17,7 @@ export const profileService = {
     const { data: response, error } = await app.api.me.patch(data);
 
     if (error || !response) {
-      throw new Error("Failed to update profile");
+      throw new Error(error?.value?.message || "Failed to update profile");
     }
     return response.data;
   },
@@ -26,7 +26,7 @@ export const profileService = {
     const { data: response, error } = await app.api.me.avatar.post({ file });
 
     if (error || !response) {
-      throw new Error("Failed to upload avatar");
+      throw new Error(error?.value?.message || "Failed to upload avatar");
     }
     return response.data;
   },
@@ -37,7 +37,7 @@ export const profileService = {
     });
 
     if (error || !response) {
-      throw new Error("Failed to initiate phone change");
+      throw new Error(error?.value?.message || "Failed to initiate phone change");
     }
     return response.data;
   },
@@ -49,7 +49,7 @@ export const profileService = {
     });
 
     if (error || !response) {
-      throw new Error("Failed to verify phone change");
+      throw new Error(error?.value?.message || "Failed to verify phone change");
     }
     return response.data;
   },

@@ -11,7 +11,7 @@ export const servicesService = {
     const { data: response, error } = await app.api.services.post(data);
 
     if (error || !response) {
-      throw new Error("Failed to create service");
+      throw new Error(error?.value?.message || "Failed to create service");
     }
     return response.data;
   },
@@ -20,7 +20,7 @@ export const servicesService = {
     const { data: response, error } = await (app.api.services({ id: serviceId }).image.post({ file }));
 
     if (error || !response) {
-      throw new Error("Failed to upload service image");
+      throw new Error(error?.value?.message || "Failed to upload service image");
     }
     return response.data;
   },
@@ -33,7 +33,7 @@ export const servicesService = {
     const { data: response, error } = await app.api.services.get({ query: options });
 
     if (error || !response) {
-      throw new Error("Failed to fetch services");
+      throw new Error(error?.value?.message || "Failed to fetch services");
     }
     return response.data || [];
   },
@@ -42,7 +42,7 @@ export const servicesService = {
     const { data: response, error } = await app.api.services({ id }).get();
 
     if (error || !response) {
-      throw new Error("Failed to fetch service");
+      throw new Error(error?.value?.message || "Failed to fetch service");
     }
     return response.data;
   },
@@ -61,7 +61,7 @@ export const servicesService = {
     const { data: response, error } = await app.api.services({ id }).patch(data);
 
     if (error || !response) {
-      throw new Error("Failed to update service");
+      throw new Error(error?.value?.message || "Failed to update service");
     }
     return response.data;
   },
@@ -70,7 +70,7 @@ export const servicesService = {
     const { data: response, error } = await app.api.services({ id }).delete();
 
     if (error || !response) {
-      throw new Error("Failed to delete service");
+      throw new Error(error?.value?.message || "Failed to delete service");
     }
     return response.data;
   },
@@ -79,7 +79,7 @@ export const servicesService = {
     const { data: response, error } = await app.api.services({ id })["toggle-active"].patch({});
 
     if (error || !response) {
-      throw new Error("Failed to toggle service status");
+      throw new Error(error?.value?.message || "Failed to toggle service status");
     }
     return response.data;
   },
@@ -88,7 +88,7 @@ export const servicesService = {
     const { data: response, error } = await app.api.services({ id })["set-default"].patch({});
 
     if (error || !response) {
-      throw new Error("Failed to set default service");
+      throw new Error(error?.value?.message || "Failed to set default service");
     }
     return response.data;
   },
