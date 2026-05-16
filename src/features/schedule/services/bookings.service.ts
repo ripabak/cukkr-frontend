@@ -92,4 +92,10 @@ export const bookingsService = {
     if (error || !response) throw new Error(error?.value?.message || "Failed to update booking status");
     return response.data;
   },
+
+  async getInProgress() {
+    const { data: response, error } = await app.api.bookings["in-progress"].get({});
+    if (error || !response) throw new Error(error?.value?.message || "Failed to fetch in-progress booking");
+    return response.data;
+  },
 };

@@ -1,8 +1,11 @@
 import { BottomTabBar } from "@/src/components/BottomTabBar";
+import { InProgressFloatingCard } from "@/src/components/InProgressFloatingCard";
 import { ProtectedRoute } from "@/src/components/ProtectedRoute";
+import { useInProgressBooking } from "@/src/features/schedule/hooks";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Tabs } from 'expo-router';
 import React from 'react';
+import { View } from 'react-native';
 
 import { useClientOnlyValue } from '@/src/components/useClientOnlyValue';
 import { useColorScheme } from '@/src/components/useColorScheme';
@@ -27,12 +30,22 @@ const TAB_TO_ROUTE: Record<Tab, string> = {
 function CustomTabBar({ state, navigation }: BottomTabBarProps) {
   const activeRoute = state.routes[state.index].name;
   const activeTab = ROUTE_TO_TAB[activeRoute] ?? "home";
+  const { data: inProgressBooking } = useInProgressBooking();
 
   return (
-    <BottomTabBar
-      activeTab={activeTab}
-      onTabPress={(tab) => navigation.navigate(TAB_TO_ROUTE[tab])}
-    />
+    <View>
+      {inProgressBooking ? (
+        <InProgressFloatingCard
+          bookingId={inProgressBooking.id}
+          customerName={inProgressBooking.customer.name}
+          startedAt={inProgressBooking.startedAt}
+        />
+      ) : null}
+      <BottomTabBar
+        activeTab={activeTab}
+        onTabPress={(tab) => navigation.navigate(TAB_TO_ROUTE[tab])}
+      />
+    </View>
   );
 }
 
