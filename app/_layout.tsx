@@ -14,7 +14,6 @@ export default function RootLayout() {
   return (
     <QueryProvider>
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(public)" options={{ headerShown: false }} />
         <Stack.Screen name="d" options={{ headerShown: false }} />
       </Stack>
       <ReactQueryDevtools initialIsOpen={false} />

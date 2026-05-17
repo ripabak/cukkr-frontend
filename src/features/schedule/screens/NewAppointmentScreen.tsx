@@ -1,7 +1,6 @@
 import { Colors } from '@/src/theme/colors';
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
-import { TimePickerModal } from "@/src/components/TimePickerModal";
 import { useOpenHours } from "@/src/features/barbershop/hooks";
 import { BookingForm } from "@/src/features/schedule/components/BookingForm";
 import { BookingTypeToggle } from "@/src/features/schedule/components/BookingTypeToggle";
@@ -11,12 +10,29 @@ import { useNewBookingForm } from "@/src/features/schedule/context/NewBookingCon
 import { useCreateBooking } from "@/src/features/schedule/hooks";
 import { useToast } from "@/src/lib/providers";
 import { getErrorMessage } from "@/src/lib/utils/error-handler";
-import { formatPickerTime, parseTime24, TimePoint, toApiDateTime, toInitial12h } from "@/src/utils/date";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type BookingType = "appointment" | "walkin";
+
+const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+function generateTimeSlots(openTime: string, closeTime: string): string[] {
+  const slots: string[] = [];
+  const [oh, om] = openTime.split(':').map(Number);
+  const [ch, cm] = closeTime.split(':').map(Number);
+  let cur = oh * 60 + om;
+  const end = ch * 60 + cm;
+  while (cur < end) {
+    const hh = Math.floor(cur / 60);
+    const mm = cur % 60;
+    slots.push(`${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`);
+    cur += 30;
+  }
+  return slots;
+}
 
 export function NewAppointmentScreen() {
   const router = useRouter();
@@ -27,43 +43,46 @@ export function NewAppointmentScreen() {
 
   const [bookingType, setBookingType] = useState<BookingType>("appointment");
   const [showCalendar, setShowCalendar] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [dayAvailability, setDayAvailability] = useState<{
+    isOpen: boolean; openTime: string | null; closeTime: string | null;
+  } | null>(null);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | undefined>();
   const [displayDateTime, setDisplayDateTime] = useState<string | undefined>();
-  const [minTime, setMinTime] = useState<TimePoint | undefined>();
-  const [maxTime, setMaxTime] = useState<TimePoint | undefined>();
-  const [initialPickerTime, setInitialPickerTime] = useState<{ hour: number; minute: number; amPm: "AM" | "PM" }>({ hour: 9, minute: 0, amPm: "AM" });
 
   function handleDateSelect(date: Date) {
     setSelectedDate(date);
     setShowCalendar(false);
+    setSelectedTimeSlot(undefined);
+    setDisplayDateTime(undefined);
+    updateFormData({ scheduledAt: null });
 
     const dayOfWeek = date.getDay();
-    const dayHours = openHoursData?.find((d) => d.dayOfWeek === dayOfWeek);
-
-    if (!dayHours || !dayHours.isOpen || !dayHours.openTime || !dayHours.closeTime) {
-      toast.error("Barbershop is closed on this day");
-      return;
-    }
-
-    const open = parseTime24(dayHours.openTime);
-    const close = parseTime24(dayHours.closeTime);
-    setMinTime(open);
-    setMaxTime(close);
-    setInitialPickerTime(toInitial12h(open.hour24, open.minute));
-    setShowTimePicker(true);
+    const dayHours = openHoursData?.find((d) => d.dayOfWeek === dayOfWeek) ?? null;
+    setDayAvailability(dayHours);
   }
 
-  function handleTimeConfirm(h: number, m: number, amPm: "AM" | "PM") {
-    if (selectedDate) {
-      const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-      const monthLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      const label = `${dayLabels[selectedDate.getDay()]}, ${selectedDate.getDate()} ${monthLabels[selectedDate.getMonth()]} ${selectedDate.getFullYear()} ${formatPickerTime(h, m, amPm)}`;
-      setDisplayDateTime(label);
-      updateFormData({ scheduledAt: toApiDateTime(selectedDate, h, m, amPm) });
-    }
-    setShowTimePicker(false);
+  function handleTimeSlotSelect(slot: string) {
+    if (!selectedDate) return;
+    setSelectedTimeSlot(slot);
+    const [h, m] = slot.split(':').map(Number);
+    const d = new Date(selectedDate);
+    d.setHours(h, m, 0, 0);
+    const amPm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+    const mm = String(m).padStart(2, '0');
+    const label = `${DAY_LABELS[selectedDate.getDay()]}, ${selectedDate.getDate()} ${MONTH_LABELS[selectedDate.getMonth()]} ${selectedDate.getFullYear()} ${h12}:${mm} ${amPm}`;
+    setDisplayDateTime(label);
+    updateFormData({ scheduledAt: d.toISOString() });
   }
+
+  const timeSlots = dayAvailability?.isOpen && dayAvailability.openTime && dayAvailability.closeTime
+    ? generateTimeSlots(dayAvailability.openTime, dayAvailability.closeTime)
+    : [];
+
+  const displayDateOnly = selectedDate
+    ? `${DAY_LABELS[selectedDate.getDay()]}, ${selectedDate.getDate()} ${MONTH_LABELS[selectedDate.getMonth()]} ${selectedDate.getFullYear()}`
+    : undefined;
 
   function handleBookingTypeChange(type: BookingType) {
     setBookingType(type);
@@ -140,12 +159,42 @@ export function NewAppointmentScreen() {
         onContactChange={(v) => updateFormData({ contact: v })}
         selectedBarber={formData.barberName ?? undefined}
         onBarberPress={() => router.push("/d/select-barber")}
-        selectedDateTime={displayDateTime}
+        selectedDateTime={displayDateTime ?? displayDateOnly}
         onDateTimePress={() => setShowCalendar(true)}
         showDateTimeSelector
         services={formData.selectedServices}
         onServicePress={() => router.push("/d/select-services")}
       />
+
+      {selectedDate && (
+        <View>
+          {dayAvailability && !dayAvailability.isOpen ? (
+            <View style={styles.closedBox}>
+              <Text style={styles.closedText}>
+                Barbershop is closed on this date. Please choose another date.
+              </Text>
+            </View>
+          ) : timeSlots.length > 0 ? (
+            <View>
+              <Text style={styles.timeSectionLabel}>Select a time</Text>
+              <View style={styles.slotsGrid}>
+                {timeSlots.map(slot => (
+                  <TouchableOpacity
+                    key={slot}
+                    style={[styles.slotBtn, selectedTimeSlot === slot && styles.slotBtnSelected]}
+                    activeOpacity={0.7}
+                    onPress={() => handleTimeSlotSelect(slot)}
+                  >
+                    <Text style={[styles.slotText, selectedTimeSlot === slot && styles.slotTextSelected]}>
+                      {slot}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          ) : null}
+        </View>
+      )}
 
       <CalendarModal
         visible={showCalendar}
@@ -153,16 +202,6 @@ export function NewAppointmentScreen() {
         openHours={openHoursData ?? []}
         onSelect={handleDateSelect}
         onClose={() => setShowCalendar(false)}
-      />
-      <TimePickerModal
-        visible={showTimePicker}
-        initialHour={initialPickerTime.hour}
-        initialMinute={initialPickerTime.minute}
-        initialAmPm={initialPickerTime.amPm}
-        minTime={minTime}
-        maxTime={maxTime}
-        onConfirm={handleTimeConfirm}
-        onClose={() => setShowTimePicker(false)}
       />
     </FormShell>
   );
@@ -173,5 +212,51 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 24,
     paddingTop: 12,
+  },
+  timeSectionLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: Colors.text.secondary,
+    marginBottom: 12,
+    textTransform: 'uppercase',
+    letterSpacing: 0.4,
+  },
+  closedBox: {
+    borderWidth: 1.5,
+    borderColor: Colors.status.danger,
+    borderRadius: 12,
+    backgroundColor: '#fff5f5',
+    padding: 14,
+  },
+  closedText: {
+    fontSize: 14,
+    color: Colors.status.danger,
+    lineHeight: 20,
+  },
+  slotsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
+  slotBtn: {
+    width: '22%',
+    paddingVertical: 10,
+    borderRadius: 10,
+    borderWidth: 1.5,
+    borderColor: Colors.border.default,
+    backgroundColor: Colors.bg.surface,
+    alignItems: 'center',
+  },
+  slotBtnSelected: {
+    borderColor: Colors.brand.primary,
+    backgroundColor: Colors.brand.primary,
+  },
+  slotText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: Colors.text.primary,
+  },
+  slotTextSelected: {
+    color: Colors.text.primary,
   },
 });

@@ -9,6 +9,7 @@ import {
   useCurrentPin,
   useGenerateWalkInPin,
   useHomeActiveBookings,
+  useMyOrgRole,
 } from "@/src/features/home/hooks";
 import {
   getDetailRouteForStatus,
@@ -48,6 +49,7 @@ export function HomeDashboardScreen() {
   const { data: activeBookings = [] } = useHomeActiveBookings(today);
   const { data: currentPinData } = useCurrentPin();
   const { mutate: generatePin, isPending: isGenerating } = useGenerateWalkInPin();
+  const { data: activeMember } = useMyOrgRole();
 
   const [switcherVisible, setSwitcherVisible] = useState(false);
   const [topBarHeight, setTopBarHeight] = useState(0);
@@ -143,6 +145,9 @@ export function HomeDashboardScreen() {
             <View>
               <Text style={styles.greetingSmall}>{getGreeting()}</Text>
               <Text style={styles.greetingName}>{user?.name ?? "..."}</Text>
+              {activeMember?.role ? (
+                <Text style={styles.rolePill}>{activeMember.role}</Text>
+              ) : null}
             </View>
           </TouchableOpacity>
           <View style={styles.datePill}>
@@ -336,6 +341,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "700",
     color: Colors.text.primary,
+  },
+  rolePill: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: Colors.brand.primaryDark,
+    textTransform: "capitalize",
+    marginTop: 2,
   },
   datePill: {
     flexDirection: "row",

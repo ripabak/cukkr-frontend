@@ -37,3 +37,7 @@ export function useCurrentPin() {
 export function useCurrentBarbershop() {
   return authClient.useActiveOrganization();
 }
+
+export function useMyOrgRole() {
+  return authClient.useActiveMember();
+}
