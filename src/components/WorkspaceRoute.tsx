@@ -35,8 +35,8 @@ export function WorkspaceRoute({ children }: WorkspaceRouteProps) {
 
         organizationService
           .setActive(oldest.id)
+          .then(() => authClient.getSession())
           .then(() => {
-            authClient.getSession();
             setIsResolving(false);
           })
           .catch(() => {
