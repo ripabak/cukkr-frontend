@@ -5,7 +5,9 @@ export const authService = {
     const { data, error } = await authClient.signIn.email({ email, password });
 
     if (error) {
-      throw new Error(error.message || "Failed to sign in");
+      const err = new Error(error.message || "Failed to sign in");
+      (err as any).code = error.code;
+      throw err;
     }
 
     if (!data) {

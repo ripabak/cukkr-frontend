@@ -1,10 +1,10 @@
-import { Colors } from '@/src/theme/colors';
 import { EditFieldHeader } from '@/src/components/EditFieldHeader';
 import { HelperCopy } from '@/src/components/HelperCopy';
 import { MultilineInputField } from '@/src/components/MultilineInputField';
 import { TextInputField } from '@/src/components/TextInputField';
 import { useChangePassword } from '@/src/features/auth/hooks';
 import { useToast } from '@/src/lib/providers/toast';
+import { Colors } from '@/src/theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useGlobalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -151,7 +151,7 @@ export function EditUserProfileFieldsScreen() {
             </View>
             {newPwError ? <Text style={styles.errorText}>{newPwError}</Text> : null}
           </View>
-          <TouchableOpacity style={styles.forgotRow} onPress={() => router.push('/forgot-password')}>
+          <TouchableOpacity style={styles.forgotRow} onPress={() => router.push('/d/forgot-password')}>
             <Text style={styles.forgotText}>Forgot Password</Text>
           </TouchableOpacity>
           <HelperCopy lines={['Enter your current password, then set your new password.']} />
