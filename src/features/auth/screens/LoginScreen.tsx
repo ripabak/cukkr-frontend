@@ -1,4 +1,4 @@
-import { Link, useRouter } from "expo-router";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -14,6 +14,7 @@ import { getErrorMessage } from "../utils/error-handler";
 export function LoginScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { redirect } = useLocalSearchParams<{ redirect?: string }>();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const { mutateAsync: signIn, isPending: signingIn } = useSignIn();
@@ -25,7 +26,7 @@ export function LoginScreen() {
 
     try {
       await signIn({ email: identifier, password });
-      router.replace("/d/(tabs)/home");
+      router.replace((redirect as any) ?? "/d/(tabs)/home");
     } catch (error) {
       if (error instanceof Error && (error as any).code === "EMAIL_NOT_VERIFIED") {
         sendOtp({ email: identifier, type: "email-verification" });

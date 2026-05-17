@@ -83,7 +83,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
           onPress={() =>
             router.push({
               pathname: "/d/(auth)/login",
-              params: { redirect: `/accept-invitation/${invitationId}` },
+              params: { redirect: `/d/accept-invitation?id=${invitationId}` },
             })
           }
           style={styles.loginButton}
