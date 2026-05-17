@@ -3,41 +3,37 @@ import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { useToast } from "@/src/lib/providers";
-import { useSignIn } from "../hooks";
 import { authTheme } from "../auth-theme";
 import { AuthButton } from "../components/AuthButton";
 import { AuthFooterPrompt } from "../components/AuthFooterPrompt";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { AuthTextField } from "../components/AuthTextField";
+import { useSignIn } from "../hooks";
+import { getErrorMessage } from "../utils/error-handler";
 
 export function LoginScreen() {
   const router = useRouter();
   const toast = useToast();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const { mutate: signIn, isPending } = useSignIn();
+  const { mutateAsync: signIn, isPending } = useSignIn();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!identifier || !password) return;
 
-    signIn(
-      { email: identifier, password },
-      {
-        onSuccess: () => {
-          router.replace("/");
-        },
-        onError: (error) => {
-          toast.error(error.message || "Failed to login");
-        },
-      }
-    );
+    try {
+      await signIn({ email: identifier, password });
+      router.replace("/d/(tabs)/home");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
   };
 
   return (
     <AuthScreenShell
       title="Login"
       description="Enter your email and password to securely access your account and manage your services."
-      footer={<AuthFooterPrompt actionLabel="Sign Up here" href="/register" prompt="Don't have an account?" />}
+      footer={<AuthFooterPrompt actionLabel="Sign Up here" href="/d/register" prompt="Don't have an account?" />}
     >
       <AuthTextField
         autoCapitalize="none"
@@ -58,7 +54,7 @@ export function LoginScreen() {
       />
 
       <View style={styles.forgotPasswordRow}>
-        <Link href="/forgot-password" asChild>
+        <Link href="/d/forgot-password" asChild>
           <Pressable>
             <Text style={styles.forgotPasswordLink}>Forgot Password</Text>
           </Pressable>
@@ -80,7 +76,7 @@ const styles = StyleSheet.create({
     marginTop: -4,
   },
   forgotPasswordLink: {
-    color: authTheme.colors.mutedAccent,
+    color: authTheme.colors.accentDark,
     fontSize: 13,
     fontWeight: "600",
   },

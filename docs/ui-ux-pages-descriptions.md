@@ -1066,7 +1066,7 @@
 | `#C6ED3C` | Active tab fill |
 | `#FFFFFF` | Booking card and filter menu surface |
 | `#F0A11A` | Waiting row and badge color |
-| `#0D78FF` | In-progress row color |
+| `#0D78FF` | in_progress row color |
 | `#4CC76B` | Completed row color |
 | `#FF4A4A` | Canceled row color |
 
@@ -1342,7 +1342,7 @@
 | `#FFFFFF` | Booking cards, date pill, menus |
 | `#111111` | Selected day chip and plus button |
 | `#F0A11A` | Waiting booking color |
-| `#0D78FF` | In-progress booking color |
+| `#0D78FF` | in_progress booking color |
 | `#C6ED3C` | Active bottom-tab highlight |
 
 #### Reusable Components Used On This Page
@@ -1351,7 +1351,7 @@
 | --- | --- | --- | --- |
 | `date-selector-pill` | Current day | `Sun, 11 May 25` | Day navigation |
 | `day-chip-row` | Selected, unselected | `Sun 11` | Fast date switch |
-| `booking-card` | Waiting, in-progress | `Ethan James` | Active booking row |
+| `booking-card` | Waiting, in_progress | `Ethan James` | Active booking row |
 | `status-filter-menu` | Floating | `All` | Status filter |
 | `calendar-modal` | Date picker | `September 2021` | Date selection |
 
@@ -1384,7 +1384,7 @@
 | `#FFFFFF` | Row cards and menus |
 | `#4CC76B` | Completed booking color |
 | `#F0A11A` | Waiting booking color |
-| `#0D78FF` | In-progress booking color |
+| `#0D78FF` | in_progress booking color |
 | `#FF4A4A` | Canceled booking color |
 
 #### Reusable Components Used On This Page
@@ -1476,11 +1476,11 @@
 | `confirmation-modal` | Start, takeover | `Start this booking?` | Flow confirmation |
 | `sticky-cta` | Bottom pill | `Handle this` | Queue action |
 
-### booking-detail-in-progress-flow
+### booking-detail-in_progress-flow
 
 | Field | Value |
 | --- | --- |
-| Page Name | `booking-detail-in-progress-flow` |
+| Page Name | `booking-detail-in_progress-flow` |
 | Reference PNG | `ui-ux-pages-pngs/booking-detail/Schedule - Calendar - In Progress.png`; `ui-ux-pages-pngs/booking-detail/Schedule - Calendar - In Progress-1.png`; `ui-ux-pages-pngs/booking-detail/Schedule - Calendar - In Progress - Pop Up.png` |
 | Purpose | Show an actively handled booking and the completion flow. |
 | Primary Actions | Complete, Mark as Waiting, confirm completion |
@@ -1503,7 +1503,7 @@
 | Hex | Usage |
 | --- | --- |
 | `#F5F4E8` | Background |
-| `#0D78FF` | In-progress badge and row color |
+| `#0D78FF` | in_progress badge and row color |
 | `#55C46B` | Completion CTA and success icon |
 | `#FFFFFF` | Cards and modal surface |
 | `#111111` | Overflow menu icon |
@@ -1512,7 +1512,7 @@
 
 | Component Name | Variant or State | Example Content | Purpose |
 | --- | --- | --- | --- |
-| `booking-detail-card` | In-progress | `Ethan James` | Main detail layout |
+| `booking-detail-card` | in_progress | `Ethan James` | Main detail layout |
 | `overflow-menu` | Single option | `Mark as Waiting` | State management |
 | `swipe-confirmation-modal` | Completion | `Swipe to complete` | High-confidence finish action |
 
@@ -1882,19 +1882,19 @@
 | `image-upload-box` | Media picker | Dashed empty, filled tile | `Choose Image` | Create barbershop, add/edit service, profile, settings | Common upload affordance across the product. |
 | `info-row` | Label-value row | Single-line, multi-line, chevron | `Phone Number / +62838383833` | `barbershop-settings`, `service-detail`, `user-profile`, booking details | High-value shared component for detail-heavy screens. |
 | `operation-row` | Navigation row | Chevron | `Customers` | `barbershop-settings` | Could be a thin variant of `info-row` with navigation affordance. |
-| `status-badge` | Status indicator | Requested, waiting, in-progress, completed, canceled, active, pending | `Waiting` | Booking detail, booking history, barber management | Keep color variants tokenized, not hard-coded per screen. |
+| `status-badge` | Status indicator | Requested, waiting, in_progress, completed, canceled, active, pending | `Waiting` | Booking detail, booking history, barber management | Keep color variants tokenized, not hard-coded per screen. |
 | `toggle-switch` | Boolean control | On, off | Active / inactive | Services, open hours | A consistent switch component would remove repeated one-off styling. |
 | `confirmation-modal` | Blocking modal | Warning, destructive, success-confirm | `Confirm Log out?` | Home reset, barber removal, service default, booking flows, logout | One modal shell with icon/title/body/actions can cover most overlays. |
 | `alert-modal` | Feedback modal | Warning, success | `Url Not Available` | Booking URL validation, contact changed | Similar shell to confirmation but with a single acknowledgement action. |
 | `overflow-menu` | Floating action menu | Single action, two actions | `Cancel Book` | Booking detail, service detail, notifications | Needed for the repeated three-dot popover pattern. |
 | `search-input` | Search field | Plain, in select mode | `Search` | Customer, barber, service pickers | Shared list filtering control. |
 | `sort-menu` | Floating menu | Customer sort, service sort, history sort | `Sort by Name` | Customer management, services management, history bookings | Simple floating menu list with shadow. |
-| `status-filter-menu` | Floating filter menu | All, waiting, in-progress, completed, canceled | `All` | Schedule, history, customer detail books | Repeated across booking-heavy views. |
+| `status-filter-menu` | Floating filter menu | All, waiting, in_progress, completed, canceled | `All` | Schedule, history, customer detail books | Repeated across booking-heavy views. |
 | `customer-card` | List item card | Default, selected | `Pepe Julian` | Customer management and selection flows | Shared identity row with metrics and chevron/selection affordance. |
 | `member-card` | Staff list item | Active, pending | `Pepe Julian` | Barber management | Staff-specific variant of an identity card. |
 | `service-card` | Service list item | Default, discounted, checkbox-selectable | `Hair Cut / Rp. 40,000` | Services management, select-services, booking forms | Strong candidate for a single reusable row with slots. |
-| `booking-card` | Booking row | Waiting, in-progress, completed, canceled | `BOOK-12345` | Schedule, history, customer detail books | Use shared color/status tokens and time metadata slots. |
-| `booking-detail-card` | Detail layout | Requested, waiting, in-progress, result | `Ethan James` | Booking detail flows | Same structural shell with state-dependent CTA/footer. |
+| `booking-card` | Booking row | Waiting, in_progress, completed, canceled | `BOOK-12345` | Schedule, history, customer detail books | Use shared color/status tokens and time metadata slots. |
+| `booking-detail-card` | Detail layout | Requested, waiting, in_progress, result | `Ethan James` | Booking detail flows | Same structural shell with state-dependent CTA/footer. |
 | `message-thread` | Messaging history | Outbound bubble list | Promo copy with timestamps | `customer-detail-messages` | Shared if direct customer conversations are added later. |
 | `message-composer` | Message entry | Empty, drafted | `Messages to selected customers` | Send-message flows | Can share internals with multiline field plus helper copy. |
 | `metric-card` | KPI tile | Count, link, PIN | `Today's Schedule / 5` | Home dashboard | Repeated stat surfaces on dashboard and customer detail. |
@@ -1907,5 +1907,5 @@
 | `calendar-modal` | Date picker overlay | Month grid | `September 2021` | Schedule and new-appointment flow | Shared across booking creation and filtering. |
 | `time-picker-modal` | Time picker overlay | Wheel picker | `06 28 PM` | Open hours and new-appointment flow | Shared modal for time-only selection. |
 | `day-chip-row` | Horizontal day selector | Selected and unselected chips | `Sun 11` | Schedule active bookings | Pair with date picker for calendar navigation. |
-| `sticky-cta` | Bottom anchored CTA | Handle, complete | `Handle this` | Booking detail waiting/in-progress | Good shared pattern for action-first detail pages. |
+| `sticky-cta` | Bottom anchored CTA | Handle, complete | `Handle this` | Booking detail waiting/in_progress | Good shared pattern for action-first detail pages. |
 | `swipe-confirmation-modal` | Gesture confirmation | Swipe to complete | `Swipe to complete` | Booking completion flow | Specialized enough to track separately from standard confirmation modal. |

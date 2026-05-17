@@ -1,11 +1,12 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
-import { View, Text, StyleSheet, ViewStyle } from 'react-native';
+import { StyleSheet, Text, View, ViewStyle } from 'react-native';
 
 type StatusVariant =
   | 'active'
   | 'pending'
   | 'waiting'
-  | 'in-progress'
+  | 'in_progress'
   | 'completed'
   | 'canceled'
   | 'requested'
@@ -19,15 +20,15 @@ interface Props {
 }
 
 const STATUS_COLORS: Record<StatusVariant, string> = {
-  active: '#1A1A1A',
-  pending: '#FF9800',
-  waiting: '#F0A11A',
-  'in-progress': '#0D78FF',
-  completed: '#55C46B',
-  canceled: '#FF4A4A',
-  requested: '#B8A800',
-  declined: '#FF4A4A',
-  default: '#1A1A1A',
+  active: Colors.status.success,
+  pending: Colors.status.warning,
+  waiting: Colors.status.waiting,
+  in_progress: Colors.status.inProgress,
+  completed: Colors.status.success,
+  canceled: Colors.status.danger,
+  requested: Colors.brand.primaryDark,
+  declined: Colors.status.danger,
+  default: Colors.text.secondary,
 };
 
 export function StatusBadge({ label, variant = 'default', style }: Props) {

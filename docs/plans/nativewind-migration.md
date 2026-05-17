@@ -971,7 +971,7 @@ Migrasikan sisa screens: profile, schedule (10 screens), dan notifications.
 | `src/features/schedule/screens/ScheduleActiveBookingsScreen.tsx`  | edit   | Active bookings            |
 | `src/features/schedule/screens/BookingDetailRequestScreen.tsx`    | edit   | Booking detail request     |
 | `src/features/schedule/screens/BookingDetailWaitingScreen.tsx`    | edit   | Booking detail waiting     |
-| `src/features/schedule/screens/BookingDetailInProgressScreen.tsx` | edit   | Booking detail in-progress |
+| `src/features/schedule/screens/BookingDetailInProgressScreen.tsx` | edit   | Booking detail in_progress |
 | `src/features/schedule/screens/BookingDetailResultScreen.tsx`     | edit   | Booking detail result      |
 | `src/features/schedule/screens/HistoryBookingsScreen.tsx`         | edit   | History bookings           |
 | `src/features/schedule/screens/NewAppointmentScreen.tsx`          | edit   | New appointment            |

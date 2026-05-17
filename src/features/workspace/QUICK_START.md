@@ -212,5 +212,3 @@ A: Ensure the screen is wrapped with `CreateBarbershopProvider`
 **Q: Images not uploading?**
 A: Image picker is currently a placeholder. See "Handle Image Upload" section above.
 
-**Q: Type errors with `app.api`?**
-A: Use `(app.api.xxx as any)[dynamicId].method()` for dynamic route segments

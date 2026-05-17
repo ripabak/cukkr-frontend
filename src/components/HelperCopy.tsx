@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 
@@ -23,12 +24,12 @@ export function HelperCopy({ lines, style, errorLine }: Props) {
 const styles = StyleSheet.create({
   line: {
     fontSize: 13,
-    color: '#666666',
+    color: Colors.text.secondary,
     lineHeight: 20,
   },
   errorLine: {
     fontSize: 13,
-    color: '#E53E3E',
+    color: Colors.status.danger,
     lineHeight: 20,
   },
 });

@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import { useToast } from "@/src/lib/providers";
@@ -7,70 +7,28 @@ import { authTheme } from "../auth-theme";
 import { AuthButton } from "../components/AuthButton";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { OtpCodeInput } from "../components/OtpCodeInput";
-import { otpService } from "../services";
+import { useCountdown, useSendVerificationOtp } from "../hooks";
+import { getErrorMessage } from "../utils/error-handler";
 
-function useCountdown(initialSeconds: number) {
-  const [secondsLeft, setSecondsLeft] = useState(initialSeconds);
-  const [isActive, setIsActive] = useState(true);
-
-  useEffect(() => {
-    if (!isActive || secondsLeft === 0) {
-      setIsActive(false);
-      return;
-    }
-
-    const interval = setInterval(() => {
-      setSecondsLeft((prev) => {
-        if (prev <= 1) {
-          setIsActive(false);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [isActive, secondsLeft]);
-
-  const reset = () => {
-    setSecondsLeft(initialSeconds);
-    setIsActive(true);
-  };
-
-  const format = () => {
-    const minutes = Math.floor(secondsLeft / 60);
-    const seconds = secondsLeft % 60;
-    return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-  };
-
-  return { secondsLeft, isActive, reset, format };
-}
-
+// This screen is used exclusively in the forgot-password flow.
+// OTP is not verified here — it's passed to CreatePasswordScreen
+// and verified server-side when resetPassword is called.
 export function VerifyOtpScreen() {
   const router = useRouter();
   const toast = useToast();
-  const { email, isPasswordReset } = useLocalSearchParams<{
-    email: string;
-    isPasswordReset?: string;
-  }>();
+  const { email } = useLocalSearchParams<{ email: string }>();
   const [otp, setOtp] = useState("");
-  const [resending, setResending] = useState(false);
   const countdown = useCountdown(300);
+  const { mutateAsync: sendOtp, isPending: resending } = useSendVerificationOtp();
 
   const handleResend = async () => {
     if (!email) return;
-    setResending(true);
-    const { error } = await otpService.sendVerificationOtp(
-      email,
-      isPasswordReset === "true" ? "forget-password" : "email-verification"
-    );
-    setResending(false);
-
-    if (error) {
-      toast.error(error.message || "Failed to send OTP");
-    } else {
+    try {
+      await sendOtp({ email, type: "forget-password" });
       countdown.reset();
       toast.success("OTP sent successfully");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     }
   };
 
@@ -80,14 +38,10 @@ export function VerifyOtpScreen() {
       return;
     }
 
-    if (isPasswordReset === "true") {
-      router.push({
-        pathname: "/create-password",
-        params: { email, otp },
-      });
-    } else {
-      router.replace("/");
-    }
+    router.push({
+      pathname: "/d/create-password",
+      params: { email, otp },
+    });
   };
 
   return (

@@ -1,8 +1,9 @@
-import { Ionicons } from "@expo/vector-icons";
-import React from "react";
-import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
+import { Colors } from '@/src/theme/colors';
+import { Ionicons } from '@expo/vector-icons';
+import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-type Tab = "home" | "stats" | "schedule" | "profile";
+type Tab = 'home' | 'stats' | 'schedule' | 'barbershop';
 
 interface Props {
   activeTab: Tab;
@@ -10,21 +11,20 @@ interface Props {
   style?: ViewStyle;
 }
 
-const TABS: {
-  key: Tab;
-  icon: React.ComponentProps<typeof Ionicons>["name"];
-}[] = [
-  { key: "home", icon: "home" },
-  { key: "stats", icon: "bar-chart" },
-  { key: "schedule", icon: "calendar" },
-  { key: "profile", icon: "person" },
+const TABS: { key: Tab; label: string; icon: React.ComponentProps<typeof Ionicons>['name'] }[] = [
+  { key: 'home', label: 'Home', icon: 'home' },
+  { key: 'schedule', label: 'Schedule', icon: 'calendar' },
+  { key: 'stats', label: 'Stats', icon: 'bar-chart' },
+  { key: 'barbershop', label: 'Barbershop', icon: 'storefront' },
 ];
 
 export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
+  const insets = useSafeAreaInsets();
   return (
-    <View style={[styles.container, style]}>
+    <View style={[styles.container, { paddingBottom: insets.bottom || 12 }, style]}>
       {TABS.map((tab) => {
         const isActive = tab.key === activeTab;
+        const color = isActive ? Colors.brand.primary : Colors.icon.muted;
         return (
           <TouchableOpacity
             key={tab.key}
@@ -32,13 +32,8 @@ export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
             activeOpacity={0.7}
             style={styles.tab}
           >
-            <View style={[styles.iconCircle, isActive && styles.activeCircle]}>
-              <Ionicons
-                name={tab.icon}
-                size={22}
-                color={isActive ? "#1A1A1A" : "#666666"}
-              />
-            </View>
+            <Ionicons name={tab.icon} size={21} color={color} />
+            <Text style={[styles.label, { color }]}>{tab.label}</Text>
           </TouchableOpacity>
         );
       })}
@@ -48,31 +43,19 @@ export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 999,
-    paddingHorizontal: 8,
-    paddingVertical: 8,
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 4,
+    flexDirection: 'row',
+    backgroundColor: Colors.bg.default,
+    borderTopWidth: 1,
+    borderTopColor: Colors.border.default,
+    paddingTop: 12,
   },
   tab: {
     flex: 1,
-    alignItems: "center",
-    paddingVertical: 8,
+    alignItems: 'center',
+    gap: 2,
   },
-  iconCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: "transparent",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  activeCircle: {
-    backgroundColor: "#C6FF4D",
+  label: {
+    fontSize: 9,
+    fontWeight: '500',
   },
 });

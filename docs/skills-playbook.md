@@ -195,7 +195,7 @@ Skill yang sama nama di dua folder = fungsionalitas identik, pilih sesuai agent 
 | `docs/plans/home-dashboard-dynamic-components.md` | pending     | Home dashboard dengan data dinamis                      |
 | `docs/plans/dev-nav-float-extract.md`             | done        | DevNavFloat sudah diimplementasikan                     |
 | `docs/plans/dynamic-screen-refactor-pattern.md`   | —           | Pattern refactor layar dinamis                          |
-| `docs/plans/daily-summary-and-skills-recap.md`    | in-progress | Dokumen ini                                             |
+| `docs/plans/daily-summary-and-skills-recap.md`    | in_progress | Dokumen ini                                             |
 
 ---
 

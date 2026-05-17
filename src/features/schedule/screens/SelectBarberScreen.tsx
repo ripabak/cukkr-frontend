@@ -1,78 +1,74 @@
-import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
-import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import { ScreenHeader } from '@/src/components/ScreenHeader';
-import { SearchInput } from '@/src/components/SearchInput';
-
-interface Barber {
-  id: string;
-  name: string;
-}
-
-const MOCK_BARBERS: Barber[] = [
-  { id: '1', name: 'Pepe Julian' },
-  { id: '2', name: 'Pepe Julian' },
-];
+import { ScreenHeader } from "@/src/components/ScreenHeader";
+import { ScreenShell } from "@/src/components/ScreenShell";
+import { SearchInput } from "@/src/components/SearchInput";
+import { useNewBookingForm } from "@/src/features/schedule/context/NewBookingContext";
+import { useScheduleBarbers } from "@/src/features/schedule/hooks";
+import { Colors } from '@/src/theme/colors';
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export function SelectBarberScreen() {
   const router = useRouter();
-  const [query, setQuery] = useState('');
+  const { setBarber } = useNewBookingForm();
+  const [query, setQuery] = useState("");
 
-  const filtered = MOCK_BARBERS.filter((b) =>
-    b.name.toLowerCase().includes(query.toLowerCase())
+  const { data: barbers = [], isLoading } = useScheduleBarbers(query || undefined);
+
+  const filtered = barbers.filter((b) =>
+    b.name.toLowerCase().includes(query.toLowerCase()),
   );
 
+  const handleSelect = (id: string, name: string) => {
+    setBarber(id, name);
+    router.back();
+  };
+
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScreenHeader title="Select Barber" onBack={() => router.back()} />
-      <View style={styles.content}>
-        <SearchInput
-          value={query}
-          onChangeText={setQuery}
-          placeholder="Search"
-        />
-        <FlatList
-          data={filtered}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
-          renderItem={({ item }) => (
+    <ScreenShell
+      headerSlot={<ScreenHeader title="Select Barber" onBack={() => router.back()} />}
+      contentStyle={styles.content}
+    >
+      <SearchInput value={query} onChangeText={setQuery} placeholder="Search" />
+
+      {!isLoading && filtered.length === 0 ? (
+        <Text style={styles.emptyText}>No barbers found.</Text>
+      ) : (
+        <View style={styles.list}>
+          {filtered.map((item) => (
             <TouchableOpacity
+              key={item.id}
               activeOpacity={0.7}
               style={styles.barberRow}
-              onPress={() => router.back()}
+              onPress={() => handleSelect(item.id, item.name)}
             >
               <View style={styles.avatar}>
-                <Ionicons name="person" size={22} color="#1A1A1A" />
+                <Ionicons name="person" size={22} color={Colors.text.primary} />
               </View>
               <Text style={styles.barberName}>{item.name}</Text>
-              <Ionicons name="chevron-forward" size={18} color="#1A1A1A" />
+              <Ionicons name="chevron-forward" size={18} color={Colors.text.primary} />
             </TouchableOpacity>
-          )}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-        />
-      </View>
-    </SafeAreaView>
+          ))}
+        </View>
+      )}
+    </ScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: '#F5F4E8',
-  },
   content: {
-    flex: 1,
-    padding: 20,
+    paddingTop: 16,
     gap: 16,
+    paddingBottom: 40,
   },
   list: {
     gap: 10,
   },
   barberRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#CFE57C',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Colors.brand.primary,
     borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 14,
@@ -82,18 +78,21 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#B0ADA0',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
+    backgroundColor: Colors.bg.surface,
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
   },
   barberName: {
     flex: 1,
     fontSize: 15,
-    fontWeight: '600',
-    color: '#1A1A1A',
+    fontWeight: "600",
+    color: Colors.text.primary,
   },
-  separator: {
-    height: 0,
+  emptyText: {
+    textAlign: "center",
+    marginTop: 40,
+    fontSize: 14,
+    color: Colors.text.secondary,
   },
 });

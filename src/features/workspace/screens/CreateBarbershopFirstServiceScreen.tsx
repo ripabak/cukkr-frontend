@@ -1,18 +1,19 @@
+import { Colors } from '@/src/theme/colors';
 import { MultilineInputField } from "@/src/components/MultilineInputField";
 import { PrefixedInputField } from "@/src/components/PrefixedInputField";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { TextInputField } from "@/src/components/TextInputField";
-import { WizardProgress } from "@/src/components/WizardProgress";
+import { WizardProgress } from "@/src/features/workspace/components/WizardProgress";
 import { useToast } from "@/src/lib/providers";
-import { servicesService } from "../services";
-import { useCreateOrganization, useSetActiveOrganization } from "../hooks";
-import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
-import { validateServiceName, validatePrice, validateDuration } from "../utils/form-validators";
-import { getErrorMessage } from "../utils/error-handler";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
+import { useCreateOrganization, useSetActiveOrganization } from "../hooks";
+import { servicesService } from "../services";
+import { getErrorMessage } from "../utils/error-handler";
+import { validateDuration, validatePrice, validateServiceName } from "../utils/form-validators";
 
 export function CreateBarbershopFirstServiceScreen() {
   const router = useRouter();
@@ -77,8 +78,9 @@ export function CreateBarbershopFirstServiceScreen() {
                   serviceId: serviceResponse?.id,
                 });
 
-                router.push("/create-barbershop-invite-barber-empty");
+                router.push("/d/create-barbershop-invite-barber-empty");
               } catch (error) {
+                console.log(error)
                 toast.error(getErrorMessage(error));
               }
             },
@@ -150,11 +152,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
   subtitle: {
     fontSize: 13,
-    color: "#666666",
+    color: Colors.text.secondary,
     marginTop: 8,
     marginBottom: 24,
     textAlign: "center",
@@ -164,7 +166,7 @@ const styles = StyleSheet.create({
   },
   fieldLabel: {
     fontSize: 13,
-    color: "#666666",
+    color: Colors.text.secondary,
     marginBottom: 6,
     marginTop: 16,
   },

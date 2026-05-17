@@ -1,31 +1,32 @@
+import { useFrame } from "@/src/components/FrameContext";
 import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
   Animated,
-  Dimensions,
+  Platform,
+  StyleSheet,
+  Text,
   TouchableOpacity,
+  View,
 } from "react-native";
 import { useToastContext } from "./ToastContext";
 
 const TOAST_HEIGHT = 60;
-const SCREEN_WIDTH = Dimensions.get("window").width;
 
 interface AnimatedToastProps {
   message: string;
   type: "success" | "error" | "info" | "warning";
   onDismiss: () => void;
+  frameWidth: number;
 }
 
-function AnimatedToast({ message, type, onDismiss }: AnimatedToastProps) {
+function AnimatedToast({ message, type, onDismiss, frameWidth }: AnimatedToastProps) {
   const slideAnim = React.useRef(new Animated.Value(-TOAST_HEIGHT - 20)).current;
 
   useEffect(() => {
     Animated.timing(slideAnim, {
       toValue: 0,
       duration: 300,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== "web",
     }).start();
   }, [slideAnim]);
 
@@ -33,7 +34,7 @@ function AnimatedToast({ message, type, onDismiss }: AnimatedToastProps) {
     Animated.timing(slideAnim, {
       toValue: -TOAST_HEIGHT - 20,
       duration: 300,
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== "web",
     }).start(onDismiss);
   };
 
@@ -69,9 +70,7 @@ function AnimatedToast({ message, type, onDismiss }: AnimatedToastProps) {
     <Animated.View
       style={[
         styles.container,
-        {
-          transform: [{ translateY: slideAnim }],
-        },
+        { transform: [{ translateY: slideAnim }], maxWidth: frameWidth },
       ]}
     >
       <TouchableOpacity
@@ -90,6 +89,7 @@ function AnimatedToast({ message, type, onDismiss }: AnimatedToastProps) {
 
 export function ToastContainer() {
   const { toasts, hideToast } = useToastContext();
+  const { frameWidth } = useFrame();
   const [displayedToasts, setDisplayedToasts] = useState(toasts.slice(-1));
 
   useEffect(() => {
@@ -97,13 +97,14 @@ export function ToastContainer() {
   }, [toasts]);
 
   return (
-    <View style={styles.root} pointerEvents="box-none">
+    <View style={[styles.root, { pointerEvents: "box-none" }]} >
       {displayedToasts.map((toast) => (
         <AnimatedToast
           key={toast.id}
           message={toast.message}
           type={toast.type}
           onDismiss={() => hideToast(toast.id)}
+          frameWidth={frameWidth}
         />
       ))}
     </View>
@@ -112,17 +113,18 @@ export function ToastContainer() {
 
 const styles = StyleSheet.create({
   root: {
-    position: "absolute",
+    position: Platform.OS === "web" ? ("fixed") : "absolute",
     top: 0,
     left: 0,
     right: 0,
     zIndex: 9999,
-    paddingHorizontal: 16,
-    paddingTop: 8,
+    alignItems: "center",
   },
   container: {
     height: TOAST_HEIGHT,
     marginBottom: 8,
+    width: "100%",
+    paddingHorizontal: 16,
   },
   toast: {
     flex: 1,

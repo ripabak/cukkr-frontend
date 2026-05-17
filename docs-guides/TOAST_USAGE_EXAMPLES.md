@@ -19,29 +19,25 @@ export function MyComponent() {
 
 ## 📲 Real-world Examples
 
-### Example 1: API Error Handling
+### Example 1: Error Handling in screen with hooks
 ```tsx
-import { useToast } from "@/src/lib/providers";
-import { barbershopService } from "@/src/features/workspace";
-import { getErrorMessage } from "@/src/lib/utils";
-
-export function UpdateBarbershop() {
+export function LoginScreen() {
   const toast = useToast();
-  const [loading, setLoading] = useState(false);
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const { mutateAsync: signIn, isPending } = useSignIn();
 
-  const handleUpdate = async (name: string) => {
-    setLoading(true);
+  const handleLogin = async () => {
+    if (!identifier || !password) return;
+
     try {
-      await barbershopService.updateSettings({ name });
-      toast.success("Barbershop updated!");
+      await signIn({ email: identifier, password });
+      router.replace("/");
     } catch (error) {
       toast.error(getErrorMessage(error));
-    } finally {
-      setLoading(false);
     }
   };
 
-  return <Button onPress={() => handleUpdate("New Name")} disabled={loading} />;
 }
 ```
 

@@ -1,83 +1,100 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import { SegmentedTabs } from '@/src/components/SegmentedTabs';
-import { StatCard } from '@/src/components/StatCard';
-import { ChartCard } from '@/src/components/ChartCard';
-import { BookingCard, BookingStatus } from '@/src/components/BookingCard';
-import { StatusFilterMenu, SCHEDULE_STATUS_OPTIONS } from '@/src/components/StatusFilterMenu';
-import { MessageThread, MessageItem } from '@/src/components/MessageThread';
+import { Colors } from '@/src/theme/colors';
+import AppTheme from "@/src/app-theme";
+import { BookingCard } from "@/src/components/BookingCard";
+import { ScreenHeader } from "@/src/components/ScreenHeader";
+import { SCHEDULE_STATUS_OPTIONS, StatusFilterMenu } from "@/src/components/StatusFilterMenu";
+import { ChartCard } from "@/src/features/barbershop/components/ChartCard";
+import { IconActionButton } from "@/src/features/barbershop/components/IconActionButton";
+import { MessageItem, MessageThread } from "@/src/features/barbershop/components/MessageThread";
+import { SegmentedTabs } from "@/src/features/barbershop/components/SegmentedTabs";
+import { StatCard } from "@/src/features/barbershop/components/StatCard";
+import {
+  useCustomerBookings,
+  useCustomerById,
+} from "@/src/features/barbershop/hooks";
+import { formatCurrency } from "@/src/features/barbershop/utils/form-validators";
+import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const DETAIL_TABS = [
-  { key: 'general', label: 'General' },
-  { key: 'books', label: 'Books' },
-  { key: 'messages', label: 'Messages' },
+  { key: "general", label: "General" },
+  { key: "books", label: "Books" },
+  { key: "messages", label: "Messages" },
 ];
 
-interface Booking {
-  id: string;
-  bookingCode: string;
-  dateLabel: string;
-  amount: string;
-  barberName: string;
-  status: BookingStatus;
-}
-
-const MOCK_BOOKINGS: Booking[] = [
-  { id: '1', bookingCode: 'BOOK-12345', dateLabel: 'Sunday, 11 May 2025 8:30', amount: 'Rp. 40,000', barberName: 'Pepe Julian', status: 'waiting' },
-  { id: '2', bookingCode: 'BOOK-12345', dateLabel: 'Sunday, 11 May 2025 8:30', amount: 'Rp. 40,000', barberName: 'Pepe Julian', status: 'in-progress' },
-  { id: '3', bookingCode: 'BOOK-12345', dateLabel: 'Sunday, 11 May 2025 8:30', amount: 'Rp. 40,000', barberName: 'Pepe Julian', status: 'completed' },
-  { id: '4', bookingCode: 'BOOK-12345', dateLabel: 'Sunday, 11 May 2025 8:30', amount: 'Rp. 40,000', barberName: 'Pepe Julian', status: 'canceled' },
-  { id: '5', bookingCode: 'BOOK-12345', dateLabel: 'Sunday, 11 May 2025 8:30', amount: 'Rp. 40,000', barberName: 'Pepe Julian', status: 'requested' },
-];
-
-const MOCK_MESSAGES: MessageItem[] = [
-  { id: '1', text: 'Sudah 30 Hari Dari Terakhir Kamu Pangkas, Rambutmu Sudah Panjang Tuh, Mumpung Hari Ini Sepu Buruan Booking', timestamp: '30 Dec 2025, 16.47' },
-  { id: '2', text: 'Datang Besok, Lagi Diskon', timestamp: '29 Dec 2025, 10.47' },
-  { id: '3', text: 'Promo Besok Pagi Hair Cut Basic Discount Sebesar 30%', timestamp: '15 Dec 2025, 12.47' },
-];
+const EMPTY_MESSAGES: MessageItem[] = [];
 
 interface Props {
-  defaultTab?: 'general' | 'books' | 'messages';
+  defaultTab?: "general" | "books" | "messages";
 }
 
-export function CustomerDetailScreen({ defaultTab = 'general' }: Props) {
+export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
   const router = useRouter();
+  const { customerId = "" } = useLocalSearchParams<{ customerId?: string }>();
   const [activeTab, setActiveTab] = useState<string>(defaultTab);
   const [filterVisible, setFilterVisible] = useState(false);
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState("all");
 
-  const isVerified = activeTab === 'general';
+  const { data: customer, isLoading: isLoadingCustomer } = useCustomerById(customerId);
+  const { data: bookings = [], isLoading: isLoadingBookings } = useCustomerBookings(customerId);
 
-  const filteredBookings = MOCK_BOOKINGS.filter((b) =>
-    statusFilter === 'all' ? true : b.status === statusFilter
+  const filteredBookings = (bookings as Array<{ id: string; referenceNumber: string; status: string; createdAt: Date; totalAmount: number }>).filter(
+    (b) => statusFilter === "all" || b.status === statusFilter,
   );
 
+  const getBookingRoute = (status: string) => {
+    if (status === "waiting") return "/d/booking-detail-waiting";
+    if (status === "in_progress") return "/d/booking-detail-in-progress";
+    if (status === "completed" || status === "cancelled") return "/d/booking-detail-result";
+    return "/d/booking-detail-request";
+  };
+
+  if (isLoadingCustomer) {
+    return (
+      <SafeAreaView style={styles.safe} edges={["top"]}>
+        <ActivityIndicator size="large" color={Colors.brand.primary} style={styles.loader} />
+      </SafeAreaView>
+    );
+  }
+
   return (
-    <SafeAreaView style={styles.safe} edges={['top']}>
+    <SafeAreaView style={styles.safe} edges={["top"]}>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-            <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Customer Details</Text>
-          <TouchableOpacity
-            style={styles.sendBtn}
-            onPress={() => router.push('/send-messages-to-customers' as never)}
-          >
-            <Ionicons name="send" size={18} color="#FFFFFF" />
-          </TouchableOpacity>
-        </View>
+        <ScreenHeader
+          title="Customer Details"
+          onBack={() => router.back()}
+          rightAction={
+            <IconActionButton
+              iconName="send"
+              size={36}
+              onPress={() =>
+                router.push({
+                  pathname: "/d/send-messages-to-customers",
+                  params: { recipientName: customer?.name, count: "1" },
+                })
+              }
+            />
+          }
+        />
 
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.content}
         >
-          <Text style={styles.customerName}>Ethan James</Text>
+          <Text style={styles.customerName}>{customer?.name ?? "—"}</Text>
           <Text style={styles.customerPhone}>
-            +6289283746464{isVerified ? ' (verified)' : ''}
+            {customer?.phone ?? customer?.email ?? "No contact"}
+            {customer?.isVerified ? " (verified)" : ""}
           </Text>
 
           <SegmentedTabs
@@ -87,20 +104,102 @@ export function CustomerDetailScreen({ defaultTab = 'general' }: Props) {
             style={styles.tabs}
           />
 
-          {activeTab === 'general' && <GeneralTab />}
-          {activeTab === 'books' && (
-            <BooksTab
-              bookings={filteredBookings}
-              totalCount={MOCK_BOOKINGS.length}
-              filterVisible={filterVisible}
-              onFilterPress={() => setFilterVisible(true)}
-              onFilterClose={() => setFilterVisible(false)}
-              statusFilter={statusFilter}
-              onStatusSelect={(s) => { setStatusFilter(s); setFilterVisible(false); }}
-            />
+          {activeTab === "general" && customer && (
+            <View style={styles.tabContent}>
+              <View style={styles.statRow}>
+                <StatCard
+                  label="Book Value"
+                  value={formatCurrency(customer.totalSpend)}
+                  style={styles.statCard}
+                />
+                <StatCard
+                  label="Books"
+                  value={String(customer.totalBookings)}
+                  style={styles.statCard}
+                />
+              </View>
+              <View style={styles.statRow}>
+                <StatCard
+                  label="Walk-In"
+                  value={String(customer.walkInCount)}
+                  iconName="people"
+                  iconColor={Colors.brand.primary}
+                  style={styles.statCard}
+                />
+                <StatCard
+                  label="Appoint."
+                  value={String(customer.appointmentCount)}
+                  iconName="calendar"
+                  iconColor={Colors.brand.primary}
+                  style={styles.statCard}
+                />
+              </View>
+              <ChartCard
+                title="Book Stats"
+                subtitle={`${customer.completedCount} completed · ${customer.cancelledCount} cancelled`}
+                style={styles.chartCard}
+              />
+            </View>
           )}
-          {activeTab === 'messages' && (
-            <MessagesTab messages={MOCK_MESSAGES} />
+
+          {activeTab === "books" && (
+            <View style={styles.tabContent}>
+              <View style={styles.bookingHeader}>
+                <Text style={styles.bookingTitle}>
+                  Booking{" "}
+                  <Text style={styles.bookingCount}>({bookings.length})</Text>
+                </Text>
+                <TouchableOpacity
+                  style={styles.filterBtn}
+                  onPress={() => setFilterVisible(true)}
+                >
+                  <Text style={styles.filterBtnText}>
+                    {statusFilter === "all" ? "All" : statusFilter}
+                  </Text>
+                  <Ionicons name="chevron-down" size={14} color={Colors.text.primary} />
+                </TouchableOpacity>
+              </View>
+              {isLoadingBookings ? (
+                <ActivityIndicator size="small" color={Colors.brand.primary} />
+              ) : (
+                <View style={styles.bookingList}>
+                  {filteredBookings.map((b) => (
+                    <BookingCard
+                      key={b.id}
+                      customerName={b.referenceNumber}
+                      barberName={customer?.name ?? ""}
+                      timeLabel={new Date(b.createdAt as Date).toLocaleDateString("id-ID")}
+                      duration={formatCurrency(b.totalAmount)}
+                      status={b.status as "waiting" | "in_progress" | "completed" | "cancelled" | "requested"}
+                      onPress={() =>
+                        router.push({
+                          pathname: getBookingRoute(b.status),
+                          params: { id: b.id },
+                        })
+                      }
+                    />
+                  ))}
+                </View>
+              )}
+              <StatusFilterMenu
+                visible={filterVisible}
+                options={SCHEDULE_STATUS_OPTIONS}
+                selected={statusFilter}
+                onSelect={(s) => {
+                  setStatusFilter(s);
+                  setFilterVisible(false);
+                }}
+                onClose={() => setFilterVisible(false)}
+                style={styles.statusMenu}
+              />
+            </View>
+          )}
+
+          {activeTab === "messages" && (
+            <View style={styles.tabContent}>
+              <MessageThread messages={EMPTY_MESSAGES} />
+              <Text style={styles.noMessages}>No messages sent yet.</Text>
+            </View>
           )}
         </ScrollView>
       </View>
@@ -108,198 +207,47 @@ export function CustomerDetailScreen({ defaultTab = 'general' }: Props) {
   );
 }
 
-function GeneralTab() {
-  return (
-    <View style={styles.tabContent}>
-      <View style={styles.statRow}>
-        <StatCard label="Book Value" value="Rp. 500,000" style={styles.statCard} />
-        <StatCard label="Books" value="5" style={styles.statCard} />
-      </View>
-      <View style={styles.statRow}>
-        <StatCard
-          label="Walk-In"
-          value="2"
-          iconName="people"
-          iconColor="#C6ED3C"
-          style={styles.statCard}
-        />
-        <StatCard
-          label="Appoint."
-          value="2"
-          iconName="calendar"
-          iconColor="#C6ED3C"
-          style={styles.statCard}
-        />
-      </View>
-      <ChartCard
-        title="Book Stats"
-        subtitle="avg comeback every 2 month"
-        style={styles.chartCard}
-      />
-    </View>
-  );
-}
-
-interface BooksTabProps {
-  bookings: Booking[];
-  totalCount: number;
-  filterVisible: boolean;
-  onFilterPress: () => void;
-  onFilterClose: () => void;
-  statusFilter: string;
-  onStatusSelect: (s: string) => void;
-}
-
-function BooksTab({ bookings, totalCount, filterVisible, onFilterPress, onFilterClose, statusFilter, onStatusSelect }: BooksTabProps) {
-  return (
-    <View style={styles.tabContent}>
-      <View style={styles.bookingHeader}>
-        <Text style={styles.bookingTitle}>
-          Booking <Text style={styles.bookingCount}>({totalCount})</Text>
-        </Text>
-        <TouchableOpacity style={styles.filterBtn} onPress={onFilterPress}>
-          <Text style={styles.filterBtnText}>
-            {statusFilter === 'all' ? 'All' : statusFilter}
-          </Text>
-          <Ionicons name="chevron-down" size={14} color="#1A1A1A" />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.bookingList}>
-        {bookings.map((b) => (
-          <BookingCard
-            key={b.id}
-            customerName={b.bookingCode}
-            barberName={b.barberName}
-            timeLabel={b.dateLabel}
-            duration={b.amount}
-            status={b.status}
-          />
-        ))}
-      </View>
-      <StatusFilterMenu
-        visible={filterVisible}
-        options={SCHEDULE_STATUS_OPTIONS}
-        selected={statusFilter}
-        onSelect={onStatusSelect}
-        onClose={onFilterClose}
-        style={styles.statusMenu}
-      />
-    </View>
-  );
-}
-
-function MessagesTab({ messages }: { messages: MessageItem[] }) {
-  return (
-    <View style={styles.tabContent}>
-      <MessageThread messages={messages} />
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: '#F5F4E8',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#F5F4E8',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    gap: 12,
-  },
-  backBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    flex: 1,
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#1A1A1A',
-    textAlign: 'center',
-  },
-  sendBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#1A1A1A',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  content: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-  },
+  safe: { flex: 1, backgroundColor: Colors.bg.default, paddingTop: AppTheme.spacing.lg },
+  container: { flex: 1, backgroundColor: Colors.bg.default },
+  loader: { marginTop: 80 },
+  content: { paddingHorizontal: 20, paddingBottom: 40 },
   customerName: {
     fontSize: 30,
-    fontWeight: '800',
-    color: '#1A1A1A',
+    fontWeight: "800",
+    color: Colors.text.primary,
     marginTop: 8,
   },
-  customerPhone: {
-    fontSize: 14,
-    color: '#555555',
-    marginTop: 4,
-    marginBottom: 16,
-  },
-  tabs: {
-    marginBottom: 20,
-  },
-  tabContent: {
-    gap: 12,
-  },
-  statRow: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  statCard: {
-    flex: 1,
-  },
+  customerPhone: { fontSize: 14, color: Colors.text.secondary, marginTop: 4, marginBottom: 16 },
+  tabs: { marginBottom: 20 },
+  tabContent: { gap: 12 },
+  statRow: { flexDirection: "row", gap: 12 },
+  statCard: { flex: 1 },
   chartCard: {},
   bookingHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 8,
   },
-  bookingTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#1A1A1A',
-  },
-  bookingCount: {
-    color: '#888888',
-    fontWeight: '500',
-  },
+  bookingTitle: { fontSize: 20, fontWeight: "700", color: Colors.text.primary },
+  bookingCount: { color: Colors.icon.muted, fontWeight: "500" },
   filterBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
   },
   filterBtnText: {
     fontSize: 13,
-    fontWeight: '500',
-    color: '#1A1A1A',
-    textTransform: 'capitalize',
+    fontWeight: "500",
+    color: Colors.text.primary,
+    textTransform: "capitalize",
   },
-  bookingList: {
-    gap: 10,
-  },
-  statusMenu: {
-    top: 36,
-    right: 0,
-  },
+  bookingList: { gap: 10 },
+  statusMenu: { top: 36, right: 0 },
+  noMessages: { fontSize: 14, color: Colors.text.secondary, textAlign: "center", marginTop: 24 },
 });

@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
 
@@ -24,14 +25,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderRadius: 999,
     borderWidth: 1.5,
-    borderColor: '#1A1A1A',
+    borderColor: Colors.border.default,
     height: 52,
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
   },
   label: {
-    color: '#1A1A1A',
+    color: Colors.text.primary,
     fontSize: 16,
     fontWeight: '600',
   },

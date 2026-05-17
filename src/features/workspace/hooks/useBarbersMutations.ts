@@ -1,58 +1,30 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { barbersService } from '../services/barbers.service';
-import { BARBERS_QUERY_KEYS } from './useBarbersQueries';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { barbersService } from "../services/barbers.service";
+import { BARBERSHOP_QUERY_KEYS } from "./useBarbershopQueries";
 
 export function useInviteBarber() {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (data: { email: string }) => barbersService.inviteSingle(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: BARBERS_QUERY_KEYS.list() });
+      queryClient.invalidateQueries({ queryKey: BARBERSHOP_QUERY_KEYS.all });
     },
   });
 }
 
-export function useCancelBarberInvitation() {
+
+export function useAcceptInvitation() {
   const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (invitationId: string) => barbersService.cancelInvitation(invitationId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: BARBERS_QUERY_KEYS.list() });
-    },
-  });
-}
-
-export function useRemoveBarber() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (memberId: string) => barbersService.removeMember(memberId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: BARBERS_QUERY_KEYS.list() });
-    },
-  });
-}
-
-export function useAcceptBarberInvitation() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (invitationId: string) => barbersService.acceptInvitation(invitationId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: BARBERS_QUERY_KEYS.list() });
+      queryClient.invalidateQueries({ queryKey: BARBERSHOP_QUERY_KEYS.all });
     },
   });
 }
 
-export function useDeclineBarberInvitation() {
-  const queryClient = useQueryClient();
-
+export function useRejectInvitation() {
   return useMutation({
-    mutationFn: (invitationId: string) => barbersService.declineInvitation(invitationId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: BARBERS_QUERY_KEYS.list() });
-    },
+    mutationFn: (invitationId: string) => barbersService.rejectInvitation(invitationId),
   });
 }

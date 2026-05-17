@@ -1,65 +1,49 @@
-import { IconActionButton } from "@/src/components/IconActionButton";
+import { Colors } from '@/src/theme/colors';
+import { IconActionButton } from "@/src/features/barbershop/components/IconActionButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SearchInput } from "@/src/components/SearchInput";
 import { ServiceCard } from "@/src/components/ServiceCard";
 import { SortMenu } from "@/src/components/SortMenu";
+import { useServicesList, useToggleServiceActive } from "@/src/features/barbershop/hooks";
+import { useToast } from "@/src/lib/providers";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-interface Service {
-  id: string;
-  name: string;
-  price: number;
-  discountPercent?: number;
-  isDefault?: boolean;
-  isActive: boolean;
-}
+type SortOption = "name_asc" | "name_desc" | "price_asc" | "price_desc" | "recent";
 
-const MOCK_SERVICES: Service[] = [
-  {
-    id: "1",
-    name: "Classic Haircut",
-    price: 50000,
-    isDefault: true,
-    isActive: true,
-  },
-  {
-    id: "2",
-    name: "Fade Cut",
-    price: 75000,
-    discountPercent: 20,
-    isActive: true,
-  },
-  { id: "3", name: "Beard Trim", price: 35000, isActive: false },
-  { id: "4", name: "Hair Coloring", price: 150000, isActive: true },
-];
-
-const MOCK_SORT_OPTIONS = [
-  { label: "Sort by Name", value: "name" },
-  { label: "Sort by Lowest", value: "lowest" },
-  { label: "Sort by Highest", value: "highest" },
-  { label: "Sort by Recently Added", value: "recent" },
-  { label: "Sort by Oldest First", value: "oldest" },
+const SORT_OPTIONS = [
+  { label: "Sort by Name (A-Z)", value: "name_asc" },
+  { label: "Sort by Name (Z-A)", value: "name_desc" },
+  { label: "Sort by Lowest Price", value: "price_asc" },
+  { label: "Sort by Highest Price", value: "price_desc" },
+  { label: "Recently Added", value: "recent" },
 ];
 
 export function ServicesManagementScreen() {
   const router = useRouter();
+  const toast = useToast();
   const [search, setSearch] = useState("");
   const [sortMenuVisible, setSortMenuVisible] = useState(false);
-  const [selectedSort, setSelectedSort] = useState("name");
-  const [services, setServices] = useState<Service[]>(MOCK_SERVICES);
+  const [selectedSort, setSelectedSort] = useState<SortOption>("name_asc");
 
-  const filteredServices = services.filter((s) =>
-    s.name.toLowerCase().includes(search.toLowerCase()),
-  );
+  const { data: services = [], isLoading } = useServicesList({
+    search: search || undefined,
+    sort: selectedSort,
+  });
+  const { mutate: toggleActive } = useToggleServiceActive();
 
-  const handleToggleActive = (id: string, value: boolean) => {
-    setServices((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, isActive: value } : s)),
-    );
+  const handleToggle = (id: string) => {
+    toggleActive(id, {
+      onError: (e) => toast.error(e.message || "Failed to toggle service"),
+    });
   };
 
   return (
@@ -74,11 +58,11 @@ export function ServicesManagementScreen() {
                 activeOpacity={0.7}
                 style={styles.headerIcon}
               >
-                <Ionicons name="filter-outline" size={18} color="#1A1A1A" />
+                <Ionicons name="filter-outline" size={18} color={Colors.text.primary} />
               </TouchableOpacity>
               <IconActionButton
                 iconName="add"
-                onPress={() => router.push("/add-or-edit-service")}
+                onPress={() => router.push("/d/add-or-edit-service")}
                 size={36}
               />
             </View>
@@ -91,9 +75,9 @@ export function ServicesManagementScreen() {
             <SortMenu
               visible
               selected={selectedSort}
-              onSelect={setSelectedSort}
+              onSelect={(v) => setSelectedSort(v as SortOption)}
               onClose={() => setSortMenuVisible(false)}
-              options={MOCK_SORT_OPTIONS}
+              options={SORT_OPTIONS}
             />
           </View>
         ) : null
@@ -102,30 +86,39 @@ export function ServicesManagementScreen() {
       <Text style={styles.title}>Services Management</Text>
       <Text style={styles.subtitle}>Manage your barbershop services</Text>
 
-      <SearchInput
-        value={search}
-        onChangeText={setSearch}
-        style={styles.search}
-      />
+      <SearchInput value={search} onChangeText={setSearch} style={styles.search} />
 
-      <View style={styles.list}>
-        {filteredServices.map((service, index) => (
-          <ServiceCard
-            key={service.id}
-            name={service.name}
-            price={service.price}
-            discountPercent={service.discountPercent}
-            isDefault={service.isDefault}
-            isActive={service.isActive}
-            onToggleActive={(v) => handleToggleActive(service.id, v)}
-            style={
-              index < filteredServices.length - 1
-                ? styles.cardMargin
-                : undefined
-            }
-          />
-        ))}
-      </View>
+      {!isLoading && services.length === 0 ? (
+        <Text style={styles.empty}>
+          {search ? "No services match your search." : "No services yet. Add one."}
+        </Text>
+      ) : null}
+      {services.length > 0 ? (
+        <View style={styles.list}>
+          {services.map((service, index) => (
+            <TouchableOpacity
+              key={service.id}
+              onPress={() =>
+                router.push({
+                  pathname: "/d/service-detail",
+                  params: { serviceId: service.id },
+                })
+              }
+              activeOpacity={0.85}
+            >
+              <ServiceCard
+                name={service.name}
+                price={service.price}
+                discountPercent={service.discount > 0 ? service.discount : undefined}
+                isDefault={service.isDefault}
+                isActive={service.isActive}
+                onToggleActive={() => handleToggle(service.id)}
+                style={index < services.length - 1 ? styles.cardMargin : undefined}
+              />
+            </TouchableOpacity>
+          ))}
+        </View>
+      ) : null}
     </ScreenShell>
   );
 }
@@ -134,17 +127,23 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
     marginTop: 8,
   },
   subtitle: {
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
     marginTop: 4,
     marginBottom: 16,
   },
   search: {
     marginBottom: 16,
+  },
+  empty: {
+    fontSize: 14,
+    color: Colors.text.secondary,
+    textAlign: "center",
+    marginTop: 40,
   },
   list: {},
   cardMargin: {
@@ -160,10 +159,10 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: "#E0DDD0",
+    borderColor: Colors.border.default,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.bg.default,
   },
   menuOverlay: {
     position: "absolute",

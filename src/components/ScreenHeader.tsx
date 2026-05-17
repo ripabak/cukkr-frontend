@@ -1,29 +1,35 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from '@/src/theme/colors';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 interface Props {
   title?: string;
+  titleSlot?: React.ReactNode;
   onBack?: () => void;
   rightAction?: React.ReactNode;
   style?: ViewStyle;
 }
 
-export function ScreenHeader({ title, onBack, rightAction, style }: Props) {
+export function ScreenHeader({ title, titleSlot, onBack, rightAction, style }: Props) {
   return (
     <View style={[styles.container, style]}>
       {onBack ? (
-        <TouchableOpacity onPress={onBack} style={styles.iconButton} activeOpacity={0.7}>
-          <Ionicons name="chevron-back" size={18} color="#1A1A1A" />
+        <TouchableOpacity onPress={onBack} style={styles.backButton} activeOpacity={0.7}>
+          <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
         </TouchableOpacity>
       ) : (
-        <View style={styles.iconButton} />
+        <View style={styles.placeholder} />
       )}
-      {title ? <Text style={styles.title}>{title}</Text> : <View style={styles.titleSpacer} />}
+      {titleSlot
+        ? <View style={styles.titleSpacer}>{titleSlot}</View>
+        : title
+        ? <Text style={styles.title}>{title}</Text>
+        : <View style={styles.titleSpacer} />}
       {rightAction ? (
         <View style={styles.rightSlot}>{rightAction}</View>
       ) : (
-        <View style={styles.iconButton} />
+        <View style={styles.placeholder} />
       )}
     </View>
   );
@@ -35,29 +41,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 12,
+    gap: 12,
   },
-  iconButton: {
+  backButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    borderWidth: 1,
-    borderColor: '#E0DDD0',
+    backgroundColor: Colors.bg.surface,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  placeholder: {
+    width: 36,
+    height: 36,
   },
   title: {
     flex: 1,
     textAlign: 'center',
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   titleSpacer: {
     flex: 1,
   },
   rightSlot: {
-    width: 36,
-    height: 36,
     alignItems: 'center',
     justifyContent: 'center',
   },

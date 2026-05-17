@@ -1,6 +1,7 @@
+import { Colors } from '@/src/theme/colors';
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { TouchableOpacity, View, Text, Image, StyleSheet, ViewStyle } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
   onPress?: () => void;
@@ -16,7 +17,7 @@ export function ImageUploadBox({ onPress, imageUri, label, style }: Props) {
         <Image source={{ uri: imageUri }} style={styles.image} />
       ) : (
         <View style={styles.row}>
-          <Ionicons name="image-outline" size={20} color="#B0ADA0" />
+          <Ionicons name="image-outline" size={20} color={Colors.icon.muted} />
           <Text style={styles.label}>{label ?? 'Choose Image'}</Text>
         </View>
       )}
@@ -31,8 +32,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1.5,
     borderStyle: 'dashed',
-    borderColor: '#B0ADA0',
-    backgroundColor: '#FFFFFF',
+    borderColor: Colors.border.default,
+    backgroundColor: Colors.bg.surface,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: '#B0ADA0',
+    color: Colors.text.muted,
     marginLeft: 10,
   },
   image: {

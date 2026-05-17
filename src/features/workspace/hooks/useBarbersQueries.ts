@@ -1,17 +1,16 @@
-import { useQuery } from '@tanstack/react-query';
-import { barbersService } from '../services/barbers.service';
+import { useQuery } from "@tanstack/react-query";
+import { barbersService } from "../services/barbers.service";
 
-const BARBERS_QUERY_KEYS = {
-  all: ['barbers'] as const,
-  list: () => [...BARBERS_QUERY_KEYS.all, 'list'] as const,
-  search: (search: string) => [...BARBERS_QUERY_KEYS.list(), search] as const,
+export const BARBERS_QUERY_KEYS = {
+  all: ["barbershop-barbers"] as const,
+  list: (search?: string) => [...BARBERS_QUERY_KEYS.all, "list", search ?? ""] as const,
 };
 
-export function useBarbersList(search?: string) {
+export function useGetInvitation(invitationId: string) {
   return useQuery({
-    queryKey: search ? BARBERS_QUERY_KEYS.search(search) : BARBERS_QUERY_KEYS.list(),
-    queryFn: () => barbersService.getList(search),
+    queryKey: [...BARBERS_QUERY_KEYS.all, "invitation", invitationId] as const,
+    queryFn: () => barbersService.getInvitation(invitationId),
+    enabled: !!invitationId,
+    retry: false,
   });
 }
-
-export { BARBERS_QUERY_KEYS };

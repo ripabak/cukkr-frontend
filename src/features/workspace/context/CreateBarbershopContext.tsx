@@ -10,7 +10,7 @@ export interface CreateBarbershopFormData {
   servicePrice: number;
   serviceDuration: number;
   serviceId?: string;
-  barberInvites: Array<{ email?: string; phone?: string }>;
+  barberInvites: { email?: string; phone?: string }[];
 }
 
 interface CreateBarbershopContextType {

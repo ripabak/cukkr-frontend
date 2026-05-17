@@ -1,8 +1,10 @@
-import React from 'react';
-import { TouchableOpacity, View, Text, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from '@/src/theme/colors';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 
-export type BookingStatus = 'waiting' | 'in-progress' | 'completed' | 'canceled' | 'requested';
+export type BookingStatus = 'waiting' | 'in_progress' | 'completed' | 'cancelled' | 'requested';
+export type BookingType = 'walk_in' | 'appointment';
 
 interface Props {
   customerName: string;
@@ -10,24 +12,25 @@ interface Props {
   timeLabel: string;
   duration: string;
   status: BookingStatus;
+  bookingType?: BookingType;
   onPress?: () => void;
   style?: ViewStyle;
 }
 
 const STATUS_COLOR: Record<BookingStatus, string> = {
-  waiting: '#F0A11A',
-  'in-progress': '#0D78FF',
-  completed: '#4CC76B',
-  canceled: '#FF4A4A',
-  requested: '#1A1A1A',
+  waiting: Colors.status.waiting,
+  'in_progress': Colors.status.inProgress,
+  completed: Colors.status.success,
+  cancelled: Colors.status.danger,
+  requested: Colors.brand.primaryDark,
 };
 
 const STATUS_ICON_BG: Record<BookingStatus, string> = {
-  waiting: '#FFF3E0',
-  'in-progress': '#E3EFFF',
-  completed: '#E8F8EE',
-  canceled: '#FFE8E8',
-  requested: '#F0F0E8',
+  waiting: Colors.status.waitingSurface,
+  'in_progress': Colors.status.inProgressSurface,
+  completed: Colors.status.successSurface,
+  cancelled: Colors.status.dangerSurface,
+  requested: Colors.brand.primarySurface,
 };
 
 export function BookingCard({
@@ -36,11 +39,13 @@ export function BookingCard({
   timeLabel,
   duration,
   status,
+  bookingType,
   onPress,
   style,
 }: Props) {
   const color = STATUS_COLOR[status];
   const iconBg = STATUS_ICON_BG[status];
+  const iconName = bookingType === 'walk_in' ? 'walk' : bookingType === 'appointment' ? 'calendar' : 'people';
 
   return (
     <TouchableOpacity
@@ -49,12 +54,12 @@ export function BookingCard({
       style={[styles.card, style]}
     >
       <View style={[styles.iconCircle, { backgroundColor: iconBg }]}>
-        <Ionicons name="people" size={22} color={color} />
+        <Ionicons name={iconName} size={22} color={color} />
       </View>
       <View style={styles.info}>
         <Text style={styles.timeLabel}>{timeLabel}</Text>
         <View style={styles.barberRow}>
-          <Ionicons name="cut" size={12} color="#888888" />
+          <Ionicons name="cut" size={12} color={Colors.icon.muted} />
           <Text style={styles.barberName}> {barberName}</Text>
         </View>
       </View>
@@ -70,14 +75,11 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     borderRadius: 16,
     padding: 14,
     gap: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
+    boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.05)',
     elevation: 1,
   },
   iconCircle: {
@@ -94,7 +96,7 @@ const styles = StyleSheet.create({
   timeLabel: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   barberRow: {
     flexDirection: 'row',
@@ -102,7 +104,7 @@ const styles = StyleSheet.create({
   },
   barberName: {
     fontSize: 12,
-    color: '#888888',
+    color: Colors.icon.muted,
   },
   right: {
     alignItems: 'flex-end',
@@ -114,6 +116,6 @@ const styles = StyleSheet.create({
   },
   duration: {
     fontSize: 12,
-    color: '#888888',
+    color: Colors.icon.muted,
   },
 });

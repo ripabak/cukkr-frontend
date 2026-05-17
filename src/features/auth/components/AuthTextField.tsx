@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     color: authTheme.colors.textPrimary,
-    fontSize: 15,
+    fontSize: 16,
     paddingVertical: authTheme.spacing.sm,
   },
   iconButton: {

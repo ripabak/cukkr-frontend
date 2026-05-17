@@ -1,8 +1,9 @@
+import { Colors } from '@/src/theme/colors';
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SecondaryButton } from "@/src/components/SecondaryButton";
 import { TextInputField } from "@/src/components/TextInputField";
-import { WizardProgress } from "@/src/components/WizardProgress";
+import { WizardProgress } from "@/src/features/workspace/components/WizardProgress";
 import { useInviteBarber } from "../hooks";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
 import { validateEmail, validatePhoneNumber } from "../utils/form-validators";
@@ -72,7 +73,7 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
         setBarber("");
 
         if (newInvites.length > 0) {
-          router.push("/create-barbershop-invite-barber-filled");
+          router.push("/d/create-barbershop-invite-barber-filled");
         }
       },
       onError: (error) => {
@@ -86,7 +87,7 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
 
   const handleSkip = () => {
     updateFormData({ barberInvites: [] });
-    router.push("/create-barbershop-success");
+    router.push("/d/create-barbershop-success");
   };
 
   return (
@@ -122,11 +123,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
   subtitle: {
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
     marginTop: 8,
     marginBottom: 32,
   },

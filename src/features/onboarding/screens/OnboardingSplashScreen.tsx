@@ -7,7 +7,7 @@ export function OnboardingSplashScreen() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.replace("/onboarding-easy-booking");
+      router.replace("/d/onboarding-easy-booking");
     }, 2000);
     return () => clearTimeout(timer);
   }, [router]);

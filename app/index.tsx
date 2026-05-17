@@ -1,7 +1,18 @@
 import { useOnboardingStore } from "@/src/features/onboarding/stores/onboardingStore";
-import { Redirect } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
+import { useEffect } from "react";
 
 export default function Index() {
+  const router = useRouter();
+  const pathname = usePathname();
   const hasSeenOnboarding = useOnboardingStore((s) => s.hasSeenOnboarding);
-  return <Redirect href={hasSeenOnboarding ? "/home" : "/onboarding-splash"} />;
+  const hasHydrated = useOnboardingStore((s) => s.hasHydrated);
+
+  useEffect(() => {
+    if (!hasHydrated) return;
+    if (pathname !== '/') return;
+    router.replace(hasSeenOnboarding ? "/d/(tabs)/home" : "/d/onboarding-splash");
+  }, [hasHydrated, hasSeenOnboarding, pathname]);
+
+  return null;
 }

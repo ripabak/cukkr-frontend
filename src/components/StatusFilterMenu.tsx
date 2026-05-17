@@ -1,5 +1,6 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 interface StatusOption {
   label: string;
@@ -18,16 +19,18 @@ interface Props {
 
 export const SCHEDULE_STATUS_OPTIONS: StatusOption[] = [
   { label: 'All', value: 'all' },
-  { label: 'Waiting', value: 'waiting', color: '#F0A11A' },
-  { label: 'In Progress', value: 'in-progress', color: '#0D78FF' },
+  { label: 'Waiting', value: 'waiting', color: Colors.status.waiting },
+  { label: 'In Progress', value: 'in_progress', color: Colors.status.inProgress },
+  { label: 'Completed', value: 'completed', color: Colors.status.success },
+  { label: 'Cancelled', value: 'cancelled', color: Colors.status.danger },
 ];
 
 export const HISTORY_STATUS_OPTIONS: StatusOption[] = [
   { label: 'All', value: 'all' },
-  { label: 'Completed', value: 'completed', color: '#4CC76B' },
-  { label: 'Waiting', value: 'waiting', color: '#F0A11A' },
-  { label: 'In Progress', value: 'in-progress', color: '#0D78FF' },
-  { label: 'Canceled', value: 'canceled', color: '#FF4A4A' },
+  { label: 'Completed', value: 'completed', color: Colors.status.success },
+  { label: 'Waiting', value: 'waiting', color: Colors.status.waiting },
+  { label: 'In Progress', value: 'in_progress', color: Colors.status.inProgress },
+  { label: 'Canceled', value: 'canceled', color: Colors.status.danger },
 ];
 
 export function StatusFilterMenu({ visible, options, selected, onSelect, onClose, style }: Props) {
@@ -75,12 +78,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 56,
     right: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.bg.default,
     borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.08)',
     elevation: 8,
     minWidth: 160,
     zIndex: 100,
@@ -91,12 +93,12 @@ const styles = StyleSheet.create({
   },
   itemBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: '#E0DDD0',
+    borderBottomColor: Colors.border.light,
   },
   itemText: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   itemTextBold: {
     fontWeight: '700',

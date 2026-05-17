@@ -1,302 +1,505 @@
-import { ConfirmationModal } from "@/src/components/ConfirmationModal";
-import { MetricCard } from "@/src/components/MetricCard";
+import { BookingCard } from "@/src/components/BookingCard";
 import { ScreenShell } from "@/src/components/ScreenShell";
-import { ShortcutTile } from "@/src/components/ShortcutTile";
-import { WorkspacePill } from "@/src/components/WorkspacePill";
+import { useBarbershopCurrent } from "@/src/features/barbershop/hooks";
+import { BarbershopSwitcherModal } from "@/src/features/home/components/BarbershopSwitcherModal";
+import { ShortcutTile } from "@/src/features/home/components/ShortcutTile";
 import {
-  ActivityCard,
-  RecentActivity,
-} from "@/src/features/home/components/ActivityCard";
+  HOME_QUERY_KEYS,
+  useBookingSummary,
+  useCurrentPin,
+  useGenerateWalkInPin,
+  useHomeActiveBookings,
+} from "@/src/features/home/hooks";
+import {
+  getDetailRouteForStatus,
+  mapApiStatusToBookingStatus,
+} from "@/src/features/schedule/utils/booking-formatters";
+import { useAuthUser } from "@/src/hooks/useAuthUser";
+import { Colors } from "@/src/theme/colors";
+import { formatDisplayDate, formatTime12h, toApiDate } from "@/src/utils/date";
 import { Ionicons } from "@expo/vector-icons";
+import { useQueryClient } from "@tanstack/react-query";
+import * as Clipboard from "expo-clipboard";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-// --- MOCK DATA ---
-const MOCK_WORKSPACE_NAME = "Hendra Barbershop";
-const MOCK_USER_NAME = "James Comberan";
-const MOCK_PIN = "345678";
-const MOCK_BOOKING_URL = "cukrr.com/hendra-barbershop";
-const MOCK_METRICS = {
-  todaySchedule: "5",
-  walkIn: "2",
-  appointment: "2",
-  inProgress: "2",
-  waiting: "3",
-};
-
-const MOCK_RECENT_ACTIVITIES: RecentActivity[] = [
-  {
-    id: "1",
-    time: "12m ago",
-    duration: "30 mins",
-    type: "in-progress",
-    name: "Ethan James",
-  },
-  {
-    id: "2",
-    time: "12m ago",
-    duration: "30 mins",
-    name: "Ethan James",
-    type: "waiting",
-  },
-  {
-    id: "3",
-    time: "12m ago",
-    duration: "30 mins",
-    name: "Ethan James",
-    type: "waiting",
-  },
-  {
-    id: "4",
-    time: "12m ago",
-    duration: "30 mins",
-    name: "Ethan James",
-    type: "in-progress",
-  },
-];
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good Morning,";
+  if (hour < 18) return "Good Afternoon,";
+  return "Good Evening,";
+}
 
 export function HomeDashboardScreen() {
-  const [showPinModal, setShowPinModal] = useState(false);
+  const router = useRouter();
+  const today = toApiDate(new Date());
+
+  const queryClient = useQueryClient();
+  const { user } = useAuthUser();
+  const { data: barbershop } = useBarbershopCurrent();
+  const { data: summary } = useBookingSummary(today);
+  const { data: activeBookings = [] } = useHomeActiveBookings(today);
+  const { data: currentPinData } = useCurrentPin();
+  const { mutate: generatePin, isPending: isGenerating } = useGenerateWalkInPin();
+
+  const [switcherVisible, setSwitcherVisible] = useState(false);
+  const [topBarHeight, setTopBarHeight] = useState(0);
+
+
+  const activePin = currentPinData?.pin ?? null;
+
+  const handleGeneratePin = () => {
+    generatePin(undefined, {
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: HOME_QUERY_KEYS.currentPin }),
+    });
+  };
+
+  const handleCopyPin = async () => {
+    if (!activePin) return;
+    await Clipboard.setStringAsync(activePin);
+  };
+
+  const handleCopyLink = async () => {
+    if (!bookingUrl) return;
+    await Clipboard.setStringAsync(bookingUrl);
+  };
+
+  const bookingUrl = barbershop?.slug
+    ? `${process.env.EXPO_PUBLIC_WEB_URL}/${barbershop.slug}`
+    : null;
+
+  const todayBookings = activeBookings.slice(0, 5);
+
+  const handleBookingPress = (bookingId: string, status: string) => {
+    const route = getDetailRouteForStatus(status);
+    router.push({ pathname: route, params: { id: bookingId } });
+  };
+
+  const queueStats = [
+    { label: "Walk-In", value: summary?.walkIn ?? 0, color: Colors.text.primary },
+    { label: "Appoint.", value: summary?.appointment ?? 0, color: Colors.text.primary },
+    { label: "In Progress", value: summary?.inProgress ?? 0, color: Colors.status.inProgress },
+    { label: "Waiting", value: summary?.waiting ?? 0, color: Colors.status.waiting },
+  ];
 
   return (
-    <ScreenShell contentStyle={styles.scrollContentPadding}>
-      <View style={styles.topRow}>
-        <WorkspacePill name={MOCK_WORKSPACE_NAME} />
-        <View style={styles.notifCircle}>
-          <Ionicons name="notifications-outline" size={20} color="#1A1A1A" />
-        </View>
-      </View>
-
-      <View style={styles.greetingRow}>
-        <View style={styles.avatar} />
-        <View style={styles.greetingText}>
-          <Text style={styles.greetingSmall}>Good Morning,</Text>
-          <Text style={styles.greetingName}>{MOCK_USER_NAME}</Text>
-        </View>
-      </View>
-
-      <View style={styles.pinCard}>
-        <View style={styles.pinTopRow}>
-          <Text style={styles.pinLabel}>Walk-In PIN</Text>
-          <Ionicons name="server-outline" size={16} color="#666666" />
-        </View>
-        <View style={styles.pinValueRow}>
-          <Text style={styles.pinValue}>{MOCK_PIN}</Text>
-          <TouchableOpacity
-            onPress={() => setShowPinModal(true)}
-            style={styles.refreshBtn}
+    <>
+      <BarbershopSwitcherModal
+        visible={switcherVisible}
+        onClose={() => setSwitcherVisible(false)}
+        headerHeight={topBarHeight}
+      />
+      <ScreenShell
+        contentStyle={styles.scrollContent}
+        headerSlot={
+          <View
+            style={styles.topBar}
+            onLayout={(e) => setTopBarHeight(e.nativeEvent.layout.height)}
           >
-            <Ionicons name="refresh-outline" size={20} color="#666666" />
+              <TouchableOpacity
+                style={styles.shopSwitcher}
+                activeOpacity={0.7}
+                onPress={() => setSwitcherVisible(true)}
+              >
+                <Text style={styles.shopName} numberOfLines={1}>
+                  {barbershop?.name ?? "..."}
+                </Text>
+                <Ionicons
+                  name={switcherVisible ? "chevron-up" : "chevron-down"}
+                  size={14}
+                  color={Colors.text.secondary}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.notifBtn}
+                onPress={() => router.push("/d/notifications-list")}
+              >
+                <Ionicons name="notifications-outline" size={18} color={Colors.text.secondary} />
+              </TouchableOpacity>
+          </View>
+        }
+      >
+        {/* Profile row */}
+        <View style={styles.profileRow}>
+          <TouchableOpacity
+            style={styles.profileLeft}
+            activeOpacity={0.7}
+            onPress={() => router.push("/d/user-profile")}
+          >
+            <View style={styles.avatar}>
+              <Text style={styles.avatarInitials}>
+                {user?.name
+                  ? user.name.split(" ").slice(0, 2).map((w: string) => w[0].toUpperCase()).join("")
+                  : "?"}
+              </Text>
+            </View>
+            <View>
+              <Text style={styles.greetingSmall}>{getGreeting()}</Text>
+              <Text style={styles.greetingName}>{user?.name ?? "..."}</Text>
+            </View>
+          </TouchableOpacity>
+          <View style={styles.datePill}>
+            <Ionicons name="time-outline" size={16} color={Colors.text.secondary} />
+            <View>
+              <Text style={styles.datePillLabel}>Today</Text>
+              <Text style={styles.datePillDate}>{formatDisplayDate(new Date())}</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Walk-In PIN + QR side by side */}
+        <View style={styles.checkInRow}>
+          <View style={styles.pinCard}>
+            <Text style={styles.pinLabel}>Walk-In Check-In</Text>
+            <View style={styles.pinValueRow}>
+              <Text style={styles.pinValue} numberOfLines={1}>{activePin ?? "----"}</Text>
+              <TouchableOpacity onPress={handleGeneratePin} disabled={isGenerating} style={styles.pinActionBtn}>
+                {isGenerating ? (
+                  <ActivityIndicator size="small" color={Colors.text.secondary} />
+                ) : (
+                  <Ionicons name="refresh-outline" size={20} color={Colors.text.secondary} />
+                )}
+              </TouchableOpacity>
+            </View>
+            {bookingUrl && (
+              <TouchableOpacity onPress={handleCopyLink} activeOpacity={0.7} style={styles.linkPill}>
+                <Text style={styles.linkText} numberOfLines={1}>{bookingUrl}</Text>
+                <Ionicons name="copy-outline" size={14} color={Colors.text.secondary} />
+              </TouchableOpacity>
+            )}
+          </View>
+
+          <View style={styles.qrCard}>
+            <View style={styles.qrPlaceholder}>
+              <Ionicons name="qr-code" size={72} color={Colors.text.primary} />
+            </View>
+            <TouchableOpacity style={styles.shareQrBtn} activeOpacity={0.8} onPress={() => router.push("/d/walkin-qr")}>
+              <Text style={styles.shareQrText}>Share QR</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Shortcuts */}
+        <View style={styles.shortcutsRow}>
+          <ShortcutTile
+            label="Barbers"
+            icon={<Ionicons name="people" size={22} color={Colors.text.primary} />}
+            onPress={() => router.push("/d/barbers-management")}
+          />
+          <ShortcutTile
+            label="Customers"
+            icon={<Ionicons name="person" size={22} color={Colors.text.primary} />}
+            onPress={() => router.push("/d/customer-management")}
+          />
+          <ShortcutTile
+            label="Services"
+            icon={<Ionicons name="cut" size={22} color={Colors.text.primary} />}
+            onPress={() => router.push("/d/services-management")}
+          />
+          <ShortcutTile
+            label="New Book"
+            icon={<Ionicons name="calendar" size={22} color={Colors.text.primary} />}
+            onPress={() => router.push("/d/new-walk-in")}
+          />
+        </View>
+
+        {/* Today's Queue */}
+        <View style={styles.sectionRow}>
+          <Text style={styles.sectionTitle}>Today's Queue</Text>
+          <TouchableOpacity onPress={() => router.push("/d/schedule")}>
+            <Text style={styles.seeAll}>See All</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.linkPill}>
-          <Text style={styles.linkText}>{MOCK_BOOKING_URL}</Text>
-          <Ionicons
-            name="copy-outline"
-            size={14}
-            color="#1A1A1A"
-            style={styles.copyIcon}
-          />
+        <View style={styles.statsRow}>
+          {queueStats.map((stat) => (
+            <View key={stat.label} style={styles.statCard}>
+              <Text style={[styles.statValue, { color: stat.color }]}>{stat.value}</Text>
+              <Text style={styles.statLabel}>{stat.label}</Text>
+            </View>
+          ))}
         </View>
-      </View>
 
-      <View style={styles.metricsSection}>
-        <View style={styles.metricsRow}>
-          <MetricCard
-            label="Today's Schedule"
-            value={MOCK_METRICS.todaySchedule}
-            style={styles.metricFlex}
-          />
-          <MetricCard
-            label="Walk-In"
-            value={MOCK_METRICS.walkIn}
-            icon={<Ionicons name="people" size={18} color="#1A1A1A" />}
-            style={styles.metricFlex}
-          />
-          <MetricCard
-            label="Appoint."
-            value={MOCK_METRICS.appointment}
-            icon={<Ionicons name="calendar" size={18} color="#1A1A1A" />}
-            style={styles.metricFlex}
-          />
+
+
+        {/* Today's Booking */}
+        <View style={styles.sectionRow}>
+          <Text style={styles.sectionTitle}>Today's Booking</Text>
+          <TouchableOpacity onPress={() => router.push("/d/schedule")}>
+            <Text style={styles.seeAll}>See All</Text>
+          </TouchableOpacity>
         </View>
-        <View style={[styles.metricsRow, styles.metricsRowTop]}>
-          <MetricCard
-            label="In Progress"
-            value={MOCK_METRICS.inProgress}
-            accentColor="#2196F3"
-            style={styles.metricFlex}
-          />
-          <MetricCard
-            label="Waiting"
-            value={MOCK_METRICS.waiting}
-            accentColor="#FF9800"
-            style={styles.metricFlex}
-          />
-        </View>
-      </View>
-
-      <View style={styles.shortcutsCard}>
-        <ShortcutTile
-          label="Barbers"
-          icon={<Ionicons name="people" size={24} color="#1A1A1A" />}
-        />
-        <ShortcutTile
-          label="Customers"
-          icon={<Ionicons name="person" size={24} color="#1A1A1A" />}
-        />
-        <ShortcutTile
-          label="Services"
-          icon={<Ionicons name="cut" size={24} color="#1A1A1A" />}
-        />
-      </View>
-
-      <View style={styles.upcomingRow}>
-        <Text style={styles.recentLabel}>Upcoming</Text>
-        {/* buat jadi button */}
-        <Text style={styles.seeMore}>See more</Text>
-      </View>
-      {MOCK_RECENT_ACTIVITIES.map((item) => (
-        <ActivityCard key={item.id} item={item} />
-      ))}
-      <ConfirmationModal
-        visible={showPinModal}
-        title="Reset Walk-In PIN?"
-        description="Reset your walk-in PIN to continue creating walk-in bookings securely."
-        icon="refresh-outline"
-        cancelLabel="No, Not Yet"
-        confirmLabel="Yes"
-        onCancel={() => setShowPinModal(false)}
-        onConfirm={() => setShowPinModal(false)}
-      />
-    </ScreenShell>
+        {todayBookings.length > 0 ? (
+          todayBookings.map((booking, i) => {
+            const timeDate = booking.type === "appointment" && booking.scheduledAt
+              ? new Date(booking.scheduledAt as Date)
+              : new Date(booking.createdAt as Date);
+            return (
+              <BookingCard
+                key={booking.id}
+                customerName={booking.customerName}
+                barberName={booking.barber?.name ?? "—"}
+                timeLabel={formatTime12h(timeDate)}
+                duration="30 mins"
+                status={mapApiStatusToBookingStatus(booking.status)}
+                bookingType={booking.type}
+                onPress={() => handleBookingPress(booking.id, booking.status)}
+                style={i < todayBookings.length - 1 ? styles.cardMargin : undefined}
+              />
+            );
+          })
+        ) : (
+          <Text style={styles.emptyText}>No active bookings today</Text>
+        )}
+      </ScreenShell>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  topRow: {
+  scrollContent: {
+    paddingBottom: 100,
+  },
+
+  // Header / top bar
+  topBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    backgroundColor: Colors.bg.default,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border.light,
+    gap: 12,
+  },
+  shopSwitcher: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  shopName: {
+    maxWidth: 180,
+    fontSize: 16,
+    fontWeight: "500",
+    color: Colors.text.primary,
+  },
+  notifBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1.5,
+    borderColor: Colors.border.default,
+    backgroundColor: Colors.bg.default,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  // Profile row
+  profileRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: 8,
+    marginTop: 20,
   },
-  notifCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#E0DDD0",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#FFFFFF",
-  },
-  greetingRow: {
+  profileLeft: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 16,
+    gap: 10,
+    flex: 1,
   },
   avatar: {
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: "#D9D9D9",
-    marginRight: 12,
+    backgroundColor: Colors.brand.primaryDark,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  greetingText: {
-    flexDirection: "column",
+  avatarInitials: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#fff",
+    letterSpacing: 0.5,
   },
   greetingSmall: {
-    fontSize: 13,
-    color: "#666666",
+    fontSize: 12,
+    color: Colors.text.secondary,
   },
   greetingName: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
-  pinCard: {
-    marginTop: 20,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
-    padding: 16,
-  },
-  pinTopRow: {
+  datePill: {
     flexDirection: "row",
     alignItems: "center",
+    gap: 8,
+    backgroundColor: Colors.bg.surface,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+  },
+  datePillLabel: {
+    fontSize: 11,
+    color: Colors.text.secondary,
+  },
+  datePillDate: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: Colors.text.primary,
+  },
+
+  // Check-In row (PIN + QR)
+  checkInRow: {
+    flexDirection: "row",
+    gap: 12,
+    marginTop: 20,
+  },
+  pinCard: {
+    flex: 1.3,
+    backgroundColor: Colors.bg.surface,
+    borderRadius: 16,
+    padding: 14,
+    gap: 4,
   },
   pinLabel: {
     fontSize: 12,
-    color: "#666666",
-    flex: 1,
+    color: Colors.text.secondary,
+    marginBottom: 2,
   },
   pinValueRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 4,
+    gap: 6,
   },
   pinValue: {
-    fontSize: 32,
-    fontWeight: "700",
-    color: "#1A1A1A",
     flex: 1,
+    fontSize: 40,
+    fontWeight: "700",
+    color: Colors.text.primary,
+    letterSpacing: 6,
   },
-  refreshBtn: {
-    marginLeft: 8,
+  pinActionBtn: {
+    padding: 4,
   },
   linkPill: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: 10,
-    backgroundColor: "#C6FF4D",
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    alignSelf: "flex-start",
+    backgroundColor: Colors.bg.default,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
+    gap: 6,
   },
   linkText: {
+    flex: 1,
+    fontSize: 14,
+    color: Colors.text.secondary,
+    fontWeight: "500",
+  },
+  qrCard: {
+    backgroundColor: Colors.bg.surface,
+    borderRadius: 16,
+    padding: 14,
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  qrPlaceholder: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  shareQrBtn: {
+    borderWidth: 1.5,
+    borderColor: Colors.border.default,
+    borderRadius: 10,
+    paddingVertical: 8,
+    alignSelf: "stretch",
+    alignItems: "center",
+  },
+  shareQrText: {
     fontSize: 13,
-    color: "#1A1A1A",
+    fontWeight: "600",
+    color: Colors.text.primary,
   },
-  copyIcon: {
-    marginLeft: 8,
+
+  // Section header
+  sectionRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 24,
+    marginBottom: 10,
+    paddingHorizontal: 2,
   },
-  metricsSection: {
-    marginTop: 16,
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: Colors.text.primary,
   },
-  metricsRow: {
+  seeAll: {
+    fontSize: 13,
+    color: Colors.text.muted,
+    fontWeight: "500",
+  },
+
+  // Queue stats
+  statsRow: {
     flexDirection: "row",
     gap: 8,
   },
-  metricsRowTop: {
-    marginTop: 8,
-  },
-  metricFlex: {
+  statCard: {
     flex: 1,
-  },
-  shortcutsCard: {
-    marginTop: 16,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
-    flexDirection: "row",
-  },
-  recentLabel: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#7D7D7D",
-  },
-  upcomingRow: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    backgroundColor: Colors.bg.surface,
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 6,
     alignItems: "center",
-    marginTop: 20,
+    gap: 4,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+  },
+  statValue: {
+    fontSize: 24,
+    fontWeight: "700",
+  },
+  statLabel: {
+    fontSize: 9,
+    fontWeight: "500",
+    color: Colors.text.muted,
+    textAlign: "center",
+  },
+
+  // Shortcuts
+  shortcutsRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 24,
     paddingHorizontal: 4,
   },
-  scrollContentPadding: {
-    paddingBottom: 100,
+
+  cardMargin: {
+    marginBottom: 12,
   },
-  seeMore: {
+
+  // Empty state
+  emptyText: {
     fontSize: 13,
-    color: "#1A1A1A",
+    color: Colors.text.muted,
+    textAlign: "center",
+    marginTop: 16,
+    paddingHorizontal: 16,
   },
 });

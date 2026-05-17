@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 
@@ -25,11 +26,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   subtitle: {
     fontSize: 14,
-    color: '#666666',
+    color: Colors.text.secondary,
     marginTop: 12,
     textAlign: 'center',
   },

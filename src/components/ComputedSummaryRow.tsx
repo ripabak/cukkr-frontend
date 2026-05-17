@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle } from 'react-native';
 
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
   container: {},
   divider: {
     height: 1,
-    backgroundColor: '#E0DDD0',
+    backgroundColor: Colors.border.light,
     marginHorizontal: 16,
   },
   row: {
@@ -36,11 +37,11 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
   value: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: Colors.text.primary,
   },
 });

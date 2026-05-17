@@ -7,9 +7,14 @@ export const organizationService = {
     metadata?: {
       description?: string | null;
       address?: string | null;
+      timezone?: string | null;
     };
   }) {
-    const { data: response, error } = await authClient.organization.create(data);
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const { data: response, error } = await authClient.organization.create({
+      ...data,
+      metadata: { ...data.metadata, timezone },
+    });
 
     if (error || !response) {
       throw new Error(error?.message || "Failed to create organization");
@@ -22,8 +27,8 @@ export const organizationService = {
       organizationId,
     });
 
-    if (error) {
-      throw new Error(error.message || "Failed to set active organization");
+    if (error || !response) {
+      throw new Error(error?.message || "Failed to set active organization");
     }
     return response;
   },

@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import { useRouter } from "expo-router";
 import React from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
@@ -63,7 +64,7 @@ export function OnboardingRunBarbershopScreen() {
 
         <OnboardingButton
           label="Next"
-          onPress={() => router.push("/onboarding-customer-happy")}
+          onPress={() => router.push("/d/onboarding-customer-happy")}
           style={styles.button}
         />
       </View>
@@ -73,7 +74,7 @@ export function OnboardingRunBarbershopScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F5F4E8",
+    backgroundColor: Colors.bg.default,
     justifyContent: "flex-start",
     alignItems: "flex-start",
   },
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
   tabletRow: {
     height: 6,
     borderRadius: 3,
-    backgroundColor: "#E0E0E0",
+    backgroundColor: Colors.bg.surface,
   },
   tabletRowAccent: {
     backgroundColor: OnboardingTheme.colors.dark,

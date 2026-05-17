@@ -1,165 +1,160 @@
-import React, { useState } from 'react';
-import { View, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { ConfirmationModal } from '@/src/components/ConfirmationModal';
+import { ScreenHeader } from '@/src/components/ScreenHeader';
+import { ScreenShell } from '@/src/components/ScreenShell';
+import { NotificationCard, NotificationType } from '@/src/features/notifications/components/NotificationCard';
+import { Colors } from '@/src/theme/colors';
+import { formatRelativeTime } from '@/src/utils/date';
 import { Ionicons } from '@expo/vector-icons';
-import { NotificationCard, NotificationType } from '@/src/components/NotificationCard';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useAcceptNotification, useDeclineNotification, useMarkAllAsRead } from '../hooks/useNotificationsMutations';
+import { useNotificationsList } from '../hooks/useNotificationsQueries';
 
-interface NotificationItem {
-  id: string;
-  type: NotificationType;
-  title: string;
-  name: string;
-  detail?: string;
-  timestamp: string;
-  status: 'pending' | 'declined' | 'accepted';
-  showActions: boolean;
-}
-
-const INITIAL_NOTIFICATIONS: NotificationItem[] = [
-  {
-    id: '1',
-    type: 'appointment-request',
-    title: 'Appointment Requested',
-    name: 'James Comberan',
-    detail: 'Scheduled at Sunday, 11 May 2025 8:15 am\nDuration 30m',
-    timestamp: '50s ago',
-    status: 'pending',
-    showActions: true,
-  },
-  {
-    id: '2',
-    type: 'appointment-request',
-    title: 'Appointment Requested',
-    name: 'James Comberan',
-    detail: 'Scheduled at Sunday, 11 May 2025 8:15 am\nDuration 30m',
-    timestamp: '50s ago',
-    status: 'declined',
-    showActions: false,
-  },
-  {
-    id: '3',
-    type: 'walk-in',
-    title: 'Walk-in Arrival',
-    name: 'James Comberan',
-    detail: 'Arrived at Sunday, 11 May 2025 8:15 am\nDuration 30m',
-    timestamp: '30m ago',
-    status: 'accepted',
-    showActions: false,
-  },
-  {
-    id: '4',
-    type: 'invitation',
-    title: 'Barbershop Invitation',
-    name: 'Pepe Julian',
-    detail: 'Invite you to\nHendra Barbershop',
-    timestamp: '30m ago',
-    status: 'pending',
-    showActions: true,
-  },
-];
+const API_TYPE_MAP: Record<string, NotificationType> = {
+  appointment_requested: 'appointment-request',
+  walk_in_arrival: 'walk-in',
+  barbershop_invitation: 'invitation',
+};
+type NotifItem = NonNullable<ReturnType<typeof useNotificationsList>['data']>['data'][number];
 
 export function NotificationsListScreen() {
   const router = useRouter();
-  const [notifications, setNotifications] = useState<NotificationItem[]>(INITIAL_NOTIFICATIONS);
+  const { data, isLoading, isError } = useNotificationsList();
+  const acceptMutation = useAcceptNotification();
+  const declineMutation = useDeclineNotification();
+  const markAllRead = useMarkAllAsRead();
 
-  const handleAccept = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, status: 'accepted', showActions: false } : n))
-    );
+  const [invitationModal, setInvitationModal] = useState<NotifItem | null>(null);
+
+  const notifications = data?.data ?? [];
+
+  const handleBookingPress = (notif: NotifItem) => {
+    if (!notif.referenceId) return;
+    const route = notif.type === 'walk_in_arrival' ? '/d/booking-detail-waiting' : '/d/booking-detail-request';
+    router.push({ pathname: route, params: { id: notif.referenceId } });
   };
 
-  const handleDecline = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, status: 'declined', showActions: false } : n))
-    );
+  const handleAcceptInvitation = () => {
+    if (!invitationModal) return;
+    acceptMutation.mutate(invitationModal.id, { onSuccess: () => setInvitationModal(null) });
+  };
+
+  const handleDeclineInvitation = () => {
+    if (!invitationModal) return;
+    declineMutation.mutate({ id: invitationModal.id }, { onSuccess: () => setInvitationModal(null) });
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.outer}>
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.7} style={styles.moreBtn}>
-            <Ionicons name="ellipsis-horizontal" size={20} color="#1A1A1A" />
-          </TouchableOpacity>
+    <ScreenShell
+      headerSlot={
+        <ScreenHeader
+          onBack={() => router.back()}
+          rightAction={
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.moreBtn}
+              onPress={() => markAllRead.mutate()}
+            >
+              <Ionicons name="checkmark-done" size={20} color={Colors.text.primary} />
+            </TouchableOpacity>
+          }
+        />
+      }
+      contentStyle={styles.content}
+    >
+      {!isLoading && isError ? (
+        <View style={styles.centered}>
+          <Text style={styles.errorText}>Failed to load notifications</Text>
         </View>
+      ) : null}
 
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
+      {!isLoading && !isError && notifications.length === 0 ? (
+        <View style={styles.centered}>
+          <Ionicons name="notifications-off-outline" size={48} color={Colors.icon.muted} />
+          <Text style={styles.emptyTitle}>No Notifications</Text>
+          <Text style={styles.emptySubtitle}>You're all caught up!</Text>
+        </View>
+      ) : null}
+
+      {!isLoading && !isError && notifications.length > 0 ? (
+        <View style={styles.list}>
           {notifications.map((notif, i) => (
             <NotificationCard
               key={notif.id}
-              type={notif.type}
+              type={API_TYPE_MAP[notif.type] ?? 'general'}
               title={notif.title}
-              name={notif.name}
-              detail={notif.detail}
-              timestamp={notif.timestamp}
-              status={notif.status}
-              showActions={notif.showActions}
-              onAccept={() => handleAccept(notif.id)}
-              onDecline={() => handleDecline(notif.id)}
+              name={notif.body}
+              timestamp={formatRelativeTime(notif.createdAt)}
+              status={notif.actionType !== null ? 'pending' : 'accepted'}
+              showActions={notif.actionType === 'accept_decline_appointment'}
+              onAccept={() => acceptMutation.mutate(notif.id)}
+              onDecline={() => declineMutation.mutate({ id: notif.id })}
               onPress={
-                notif.type === 'appointment-request'
-                  ? () => router.push('/booking-detail-request' as any)
+                notif.referenceType === 'booking'
+                  ? () => handleBookingPress(notif)
+                  : notif.referenceType === 'invitation'
+                  ? () => setInvitationModal(notif)
                   : undefined
               }
               style={i < notifications.length - 1 ? styles.cardMargin : undefined}
             />
           ))}
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+        </View>
+      ) : null}
+
+      <ConfirmationModal
+        visible={invitationModal !== null}
+        icon="person-add"
+        title={invitationModal?.title ?? ''}
+        description={invitationModal?.body}
+        cancelLabel="Accept"
+        confirmLabel="Decline"
+        onCancel={handleAcceptInvitation}
+        onConfirm={handleDeclineInvitation}
+      />
+    </ScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#F5F4E8',
-  },
-  outer: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 12,
-    paddingBottom: 8,
-  },
-  backBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F0F0E8',
-    alignItems: 'center',
-    justifyContent: 'center',
+  content: {
+    flexGrow: 1,
+    paddingTop: 8,
+    paddingBottom: 40,
   },
   moreBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#1A1A1A',
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: Colors.brand.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-    paddingTop: 8,
+  list: {
+    gap: 12,
   },
   cardMargin: {
-    marginBottom: 12,
+    marginBottom: 0,
+  },
+  centered: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 80,
+    gap: 8,
+  },
+  errorText: {
+    color: Colors.text.secondary,
+    fontSize: 14,
+  },
+  emptyTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Colors.text.primary,
+  },
+  emptySubtitle: {
+    fontSize: 13,
+    color: Colors.text.muted,
   },
 });

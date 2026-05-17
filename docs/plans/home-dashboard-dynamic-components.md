@@ -69,7 +69,7 @@ export type RecentActivity = {
   time: string;
   duration: string;
   name?: string;
-  type: "in-progress" | "waiting";
+  type: "in_progress" | "waiting";
 };
 
 interface Props {
@@ -203,7 +203,7 @@ const MOCK_SHORTCUTS: ShortcutItem[] = [
 ];
 
 const MOCK_ACTIVITIES: RecentActivity[] = [
-  { id: "1", time: "12m ago", duration: "30 mins", type: "in-progress", name: "Ethan James" },
+  { id: "1", time: "12m ago", duration: "30 mins", type: "in_progress", name: "Ethan James" },
   { id: "2", time: "12m ago", duration: "30 mins", name: "Ethan James", type: "waiting" },
 ];
 ```

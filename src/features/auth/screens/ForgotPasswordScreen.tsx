@@ -5,14 +5,15 @@ import { useToast } from "@/src/lib/providers";
 import { AuthButton } from "../components/AuthButton";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { AuthTextField } from "../components/AuthTextField";
-import { otpService } from "../services";
-import { isValidEmail } from "../utils/validation";
+import { useSendVerificationOtp } from "../hooks";
+import { getErrorMessage } from "../utils/error-handler";
+import { validateEmail } from "../utils/validation";
 
 export function ForgotPasswordScreen() {
   const router = useRouter();
   const toast = useToast();
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { mutateAsync: sendOtp, isPending } = useSendVerificationOtp();
 
   const handleContinue = async () => {
     if (!email.trim()) {
@@ -20,24 +21,21 @@ export function ForgotPasswordScreen() {
       return;
     }
 
-    if (!isValidEmail(email)) {
-      toast.error("Please enter a valid email address");
+    const emailResult = validateEmail(email);
+    if (!emailResult.isValid) {
+      toast.error(emailResult.message);
       return;
     }
 
-    setLoading(true);
-    const { error } = await otpService.sendVerificationOtp(email, "forget-password");
-    setLoading(false);
-
-    if (error) {
-      toast.error(error.message || "Failed to send reset OTP");
-      return;
+    try {
+      await sendOtp({ email, type: "forget-password" });
+      router.push({
+        pathname: "/d/verify-otp",
+        params: { email },
+      });
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     }
-
-    router.push({
-      pathname: "/verify-otp",
-      params: { email, isPasswordReset: "true" },
-    });
   };
 
   return (
@@ -55,9 +53,9 @@ export function ForgotPasswordScreen() {
       />
 
       <AuthButton
-        label={loading ? "Sending..." : "Continue"}
+        label={isPending ? "Sending..." : "Continue"}
         onPress={handleContinue}
-        disabled={loading || !email.trim()}
+        disabled={isPending || !email.trim()}
       />
     </AuthScreenShell>
   );

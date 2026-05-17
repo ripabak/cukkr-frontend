@@ -1,3 +1,4 @@
+import { Colors } from '@/src/theme/colors';
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
 
@@ -23,7 +24,7 @@ export function PrimaryButton({ label, onPress, disabled, style }: Props) {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#1A1A1A',
+    backgroundColor: Colors.brand.primary,
     borderRadius: 999,
     height: 52,
     alignItems: 'center',
@@ -34,8 +35,8 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   label: {
-    color: '#FFFFFF',
+    color: Colors.text.primary,
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '700',
   },
 });

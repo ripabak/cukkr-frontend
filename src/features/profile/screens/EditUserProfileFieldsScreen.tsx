@@ -1,110 +1,219 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { Colors } from '@/src/theme/colors';
 import { EditFieldHeader } from '@/src/components/EditFieldHeader';
-import { TextInputField } from '@/src/components/TextInputField';
-import { MultilineInputField } from '@/src/components/MultilineInputField';
 import { HelperCopy } from '@/src/components/HelperCopy';
-import { PrimaryButton } from '@/src/components/PrimaryButton';
+import { MultilineInputField } from '@/src/components/MultilineInputField';
+import { TextInputField } from '@/src/components/TextInputField';
+import { useChangePassword } from '@/src/features/auth/hooks';
+import { useToast } from '@/src/lib/providers/toast';
+import { Ionicons } from '@expo/vector-icons';
+import { useGlobalSearchParams, useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useChangePhone, useProfile, useUpdateProfile } from '../hooks';
+import { getErrorMessage } from '../utils/error-handler';
+import { profileValidators } from '../utils/form-validators';
 
-type EditMode = 'name' | 'bio' | 'password';
+type EditMode = 'name' | 'bio' | 'password' | 'phone';
 
 export function EditUserProfileFieldsScreen() {
   const router = useRouter();
-  const [mode] = useState<EditMode>('name');
+  const toast = useToast();
+  const insets = useSafeAreaInsets();
+  const rawMode = useGlobalSearchParams().mode;
+  const modeStr = Array.isArray(rawMode) ? rawMode[0] : rawMode;
+  const mode: EditMode = (modeStr as EditMode) ?? 'name';
+
+  const { data: profile, isLoading } = useProfile();
+  const { mutateAsync: updateProfile, isPending: savingProfile } = useUpdateProfile();
+  const { mutateAsync: changePassword, isPending: changingPassword } = useChangePassword();
+  const { mutateAsync: changePhone, isPending: changingPhone } = useChangePhone();
+
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [bioError, setBioError] = useState('');
+
+  const [phone, setPhone] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [showCurrentPw, setShowCurrentPw] = useState(false);
   const [showNewPw, setShowNewPw] = useState(false);
+  const [currentPwError, setCurrentPwError] = useState('');
+  const [newPwError, setNewPwError] = useState('');
+
+  useEffect(() => {
+    if (profile) {
+      setName(profile.name);
+      setBio(profile.bio || '');
+      setPhone(profile.phone || '');
+    }
+  }, [profile]);
+
+  const handleSaveNameBio = async () => {
+    const nameResult = profileValidators.validateName(name);
+    const bioResult = profileValidators.validateBio(bio);
+
+    setNameError(nameResult.isValid ? '' : nameResult.message);
+    setBioError(bioResult.isValid ? '' : bioResult.message);
+
+    if (!nameResult.isValid || !bioResult.isValid) return;
+
+    try {
+      await updateProfile({ name: name.trim(), bio: bio.trim() || null });
+      toast.success('Profile updated successfully');
+      router.back();
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
+  };
+
+  const handleSavePhone = async () => {
+    const phoneResult = profileValidators.validatePhone(phone);
+    setPhoneError(phoneResult.isValid ? '' : phoneResult.message);
+    if (!phoneResult.isValid) return;
+
+    try {
+      await changePhone(phone.trim());
+      router.push({
+        pathname: '/d/verify-contact',
+        params: { contact: phone.trim(), type: 'phone' },
+      });
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
+  };
+
+  const handleChangePassword = async () => {
+    const currentResult = profileValidators.validatePassword(currentPassword);
+    const newResult = profileValidators.validatePassword(newPassword);
+
+    setCurrentPwError(currentResult.isValid ? '' : currentResult.message);
+    setNewPwError(newResult.isValid ? '' : newResult.message);
+
+    if (!currentResult.isValid || !newResult.isValid) return;
+
+    try {
+      await changePassword({ currentPassword, newPassword });
+      toast.success('Password changed successfully');
+      router.back();
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <View style={[styles.safe, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={Colors.text.primary} />
+        </View>
+      </View>
+    );
+  }
 
   if (mode === 'password') {
     return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.passwordContent}>
-          <Text style={styles.passwordTitle}>Change Password</Text>
-          <Text style={styles.passwordSubtitle}>Enter your current and new password</Text>
-          <View style={styles.passwordFields}>
-            <View>
-              <Text style={styles.fieldLabel}>Current Password</Text>
-              <View style={styles.passwordInputRow}>
-                <TextInputField
-                  value={currentPassword}
-                  onChangeText={setCurrentPassword}
-                  placeholder="Current Password"
-                  secureTextEntry={!showCurrentPw}
-                  style={styles.passwordInput}
-                />
-                <TouchableOpacity
-                  onPress={() => setShowCurrentPw((v) => !v)}
-                  style={styles.eyeBtn}
-                >
-                  <Ionicons
-                    name={showCurrentPw ? 'eye-off-outline' : 'eye-outline'}
-                    size={20}
-                    color="#9D9DA5"
-                  />
-                </TouchableOpacity>
-              </View>
+      <View style={[styles.safe, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+        <EditFieldHeader title="Change Password" onBack={() => router.back()} onSave={handleChangePassword} />
+        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+          <View>
+            <Text style={styles.fieldLabel}>Current Password</Text>
+            <View style={styles.passwordInputRow}>
+              <TextInputField
+                value={currentPassword}
+                onChangeText={(text) => { setCurrentPassword(text); setCurrentPwError(''); }}
+                placeholder="Current Password"
+                secureTextEntry={!showCurrentPw}
+                inputStyle={{ paddingRight: 40 }}
+              />
+              <TouchableOpacity onPress={() => setShowCurrentPw((v) => !v)} style={styles.eyeBtn}>
+                <Ionicons name={showCurrentPw ? 'eye-off-outline' : 'eye-outline'} size={20} color={Colors.icon.muted} />
+              </TouchableOpacity>
             </View>
-            <View>
-              <Text style={styles.fieldLabel}>New Password</Text>
-              <View style={styles.passwordInputRow}>
-                <TextInputField
-                  value={newPassword}
-                  onChangeText={setNewPassword}
-                  placeholder="New Password"
-                  secureTextEntry={!showNewPw}
-                  style={styles.passwordInput}
-                />
-                <TouchableOpacity
-                  onPress={() => setShowNewPw((v) => !v)}
-                  style={styles.eyeBtn}
-                >
-                  <Ionicons
-                    name={showNewPw ? 'eye-off-outline' : 'eye-outline'}
-                    size={20}
-                    color="#9D9DA5"
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <TouchableOpacity style={styles.forgotRow} onPress={() => router.push('/forgot-password')}>
-              <Text style={styles.forgotText}>Forgot Password</Text>
-            </TouchableOpacity>
+            {currentPwError ? <Text style={styles.errorText}>{currentPwError}</Text> : null}
           </View>
-          <PrimaryButton
-            label="Change Password"
-            onPress={() => {}}
-            style={styles.passwordBtn}
+          <View>
+            <Text style={styles.fieldLabel}>New Password</Text>
+            <View style={styles.passwordInputRow}>
+              <TextInputField
+                value={newPassword}
+                onChangeText={(text) => { setNewPassword(text); setNewPwError(''); }}
+                placeholder="New Password"
+                secureTextEntry={!showNewPw}
+                inputStyle={{ paddingRight: 40 }}
+              />
+              <TouchableOpacity onPress={() => setShowNewPw((v) => !v)} style={styles.eyeBtn}>
+                <Ionicons name={showNewPw ? 'eye-off-outline' : 'eye-outline'} size={20} color={Colors.icon.muted} />
+              </TouchableOpacity>
+            </View>
+            {newPwError ? <Text style={styles.errorText}>{newPwError}</Text> : null}
+          </View>
+          <TouchableOpacity style={styles.forgotRow} onPress={() => router.push('/forgot-password')}>
+            <Text style={styles.forgotText}>Forgot Password</Text>
+          </TouchableOpacity>
+          <HelperCopy lines={['Enter your current password, then set your new password.']} />
+        </ScrollView>
+        {changingPassword && (
+          <View style={styles.savingOverlay}>
+            <ActivityIndicator size="small" color={Colors.text.primary} />
+          </View>
+        )}
+      </View>
+    );
+  }
+
+  if (mode === 'phone') {
+    return (
+      <View style={[styles.safe, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+        <EditFieldHeader title="Phone Number" onBack={() => router.back()} onSave={handleSavePhone} />
+        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+          <TextInputField
+            value={phone}
+            onChangeText={(text) => { setPhone(text); setPhoneError(''); }}
+            placeholder="+628xxxxxxxxxx"
+            keyboardType="phone-pad"
           />
-        </View>
-      </SafeAreaView>
+          {phoneError ? <Text style={styles.errorText}>{phoneError}</Text> : null}
+          <HelperCopy lines={['Enter your new phone number. We will send a verification code to confirm the change.']} />
+        </ScrollView>
+        {changingPhone && (
+          <View style={styles.savingOverlay}>
+            <ActivityIndicator size="small" color={Colors.text.primary} />
+          </View>
+        )}
+      </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <View style={[styles.safe, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
       <EditFieldHeader
         title={mode === 'bio' ? 'Bio' : 'Your Name'}
         onBack={() => router.back()}
-        onSave={() => router.back()}
+        onSave={handleSaveNameBio}
       />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         {mode === 'bio' ? (
-          <MultilineInputField
-            value={bio}
-            onChangeText={setBio}
-            placeholder="Bio"
-          />
+          <>
+            <MultilineInputField
+              value={bio}
+              onChangeText={(text) => { setBio(text); setBioError(''); }}
+              placeholder="Bio"
+            />
+            {bioError ? <Text style={styles.errorText}>{bioError}</Text> : null}
+          </>
         ) : (
-          <TextInputField
-            value={name}
-            onChangeText={setName}
-            placeholder="Your Name"
-          />
+          <>
+            <TextInputField
+              value={name}
+              onChangeText={(text) => { setName(text); setNameError(''); }}
+              placeholder="Your Name"
+            />
+            {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
+          </>
         )}
         <HelperCopy
           lines={[
@@ -114,50 +223,45 @@ export function EditUserProfileFieldsScreen() {
           ]}
         />
       </ScrollView>
-    </SafeAreaView>
+      {savingProfile && (
+        <View style={styles.savingOverlay}>
+          <ActivityIndicator size="small" color={Colors.text.primary} />
+        </View>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#F5F4E8',
+    backgroundColor: Colors.bg.default,
   },
   content: {
     padding: 20,
     gap: 16,
   },
-  passwordContent: {
+  loadingContainer: {
     flex: 1,
-    padding: 24,
     justifyContent: 'center',
-    gap: 32,
+    alignItems: 'center',
   },
-  passwordTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#1A1A1A',
-    textAlign: 'center',
-  },
-  passwordSubtitle: {
-    fontSize: 14,
-    color: '#666',
-    textAlign: 'center',
-    marginTop: -24,
-  },
-  passwordFields: {
-    gap: 12,
+  savingOverlay: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    padding: 12,
+    backgroundColor: Colors.brand.primary,
+    borderRadius: 8,
+    opacity: 0.8,
   },
   fieldLabel: {
     fontSize: 13,
-    color: '#666',
+    color: Colors.text.secondary,
     marginBottom: 6,
   },
   passwordInputRow: {
     position: 'relative',
-  },
-  passwordInput: {
-    flex: 1,
   },
   eyeBtn: {
     position: 'absolute',
@@ -171,10 +275,12 @@ const styles = StyleSheet.create({
   },
   forgotText: {
     fontSize: 13,
-    color: '#C6ED3C',
+    color: Colors.brand.primary,
     fontWeight: '600',
   },
-  passwordBtn: {
-    backgroundColor: '#C6ED3C',
+  errorText: {
+    fontSize: 12,
+    color: Colors.status.danger,
+    marginTop: 6,
   },
 });

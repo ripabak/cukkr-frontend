@@ -1,8 +1,10 @@
+import { Colors } from '@/src/theme/colors';
 import { ImageUploadBox } from "@/src/components/ImageUploadBox";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { TextInputField } from "@/src/components/TextInputField";
-import { WizardProgress } from "@/src/components/WizardProgress";
+import { WizardProgress } from "@/src/features/workspace/components/WizardProgress";
+import { useDebounce } from "@/src/hooks";
 import { useRouter } from "expo-router";
 import React, { useCallback, useState, useMemo } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
@@ -20,7 +22,9 @@ export function CreateBarbershopNameLogoScreen() {
 
   const validation = validateBarbershopName(name);
   const slug = useMemo(() => generateSlug(name), [name]);
-  const { data: isAvailable, isLoading: isCheckingSlug, error } = useBarbershopSlugCheck(slug);
+  const debouncedSlug = useDebounce(slug);
+  const isTyping = slug !== debouncedSlug;
+  const { data: isAvailable, isLoading: isCheckingSlug, error } = useBarbershopSlugCheck(debouncedSlug);
 
   const handleNameChange = useCallback((text: string) => {
     setName(text);
@@ -38,14 +42,14 @@ export function CreateBarbershopNameLogoScreen() {
     }
 
     updateFormData({ name, slug });
-    router.push("/create-barbershop-first-service");
+    router.push("/d/create-barbershop-first-service");
   };
 
-  const isValid = validation.isValid && isAvailable === true;
+  const isValid = validation.isValid && !isTyping && isAvailable === true;
 
   let slugMessage = "";
   let messageColor = "#FF9500";
-  if (isCheckingSlug) {
+  if (isTyping || isCheckingSlug) {
     slugMessage = "Checking availability...";
   } else if (error) {
     slugMessage = "Error checking availability";
@@ -71,16 +75,16 @@ export function CreateBarbershopNameLogoScreen() {
         onChangeText={handleNameChange}
       />
 
-      {name && (
+      {name ? (
         <View style={styles.slugInfo}>
           <Text style={styles.slugLabel}>URL: {slug}</Text>
-          {slugMessage && (
+          {slugMessage ? (
             <Text style={[styles.slugMessage, { color: messageColor }]}>
               {slugMessage}
             </Text>
-          )}
+          ) : null}
         </View>
-      )}
+      ) : null}
 
       <Text style={styles.logoLabel}>Logo</Text>
       <ImageUploadBox
@@ -96,7 +100,7 @@ export function CreateBarbershopNameLogoScreen() {
         label="Next"
         style={styles.button}
         onPress={handleCreate}
-        disabled={!isValid || isCheckingSlug}
+        disabled={!isValid || isTyping || isCheckingSlug}
       />
     </ScreenShell>
   );
@@ -109,11 +113,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
   subtitle: {
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
     marginTop: 8,
     marginBottom: 24,
   },
@@ -123,7 +127,7 @@ const styles = StyleSheet.create({
   },
   slugLabel: {
     fontSize: 12,
-    color: "#666666",
+    color: Colors.text.secondary,
   },
   slugMessage: {
     fontSize: 12,
@@ -131,7 +135,7 @@ const styles = StyleSheet.create({
   },
   logoLabel: {
     fontSize: 13,
-    color: "#666666",
+    color: Colors.text.secondary,
     marginBottom: 6,
     marginTop: 16,
   },

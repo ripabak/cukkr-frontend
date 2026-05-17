@@ -6,7 +6,7 @@ import { authTheme } from "../auth-theme";
 type AuthFooterPromptProps = {
   prompt: string;
   actionLabel: string;
-  href: "/login" | "/register";
+  href: "/d/login" | "/d/register";
 };
 
 export function AuthFooterPrompt({
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   link: {
-    color: authTheme.colors.mutedAccent,
+    color: authTheme.colors.accentDark,
     fontSize: 14,
     fontWeight: "700",
   },

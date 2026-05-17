@@ -2,13 +2,15 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 
 import { useToast } from "@/src/lib/providers";
-import { useSignUp } from "../hooks";
 import { AuthButton } from "../components/AuthButton";
 import { AuthFooterPrompt } from "../components/AuthFooterPrompt";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { AuthTextField } from "../components/AuthTextField";
-import { otpService } from "../services";
-import { passwordsMatch } from "../utils/validation";
+import { useSignUp, useSendVerificationOtp } from "../hooks";
+import { getErrorMessage } from "../utils/error-handler";
+import { validateEmail, validatePassword, validatePasswordsMatch } from "../utils/validation";
+
+const MIN_PASSWORD_LENGTH = 8;
 
 export function RegisterScreen() {
   const router = useRouter();
@@ -17,47 +19,41 @@ export function RegisterScreen() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [sendingOtp, setSendingOtp] = useState(false);
-  const { mutate: signUp, isPending } = useSignUp();
+  const { mutateAsync: signUp, isPending: signingUp } = useSignUp();
+  const { mutateAsync: sendOtp, isPending: sendingOtp } = useSendVerificationOtp();
+  const isPending = signingUp || sendingOtp;
 
   const handleRegister = async () => {
     if (!name || !identifier || !password || !confirmPassword) return;
-    if (!passwordsMatch(password, confirmPassword)) {
-      toast.error("Passwords do not match");
+
+    const emailResult = validateEmail(identifier);
+    if (!emailResult.isValid) {
+      toast.error(emailResult.message);
       return;
     }
 
-    signUp(
-      { name, email: identifier, password },
-      {
-        onSuccess: async () => {
-          setSendingOtp(true);
-          try {
-            const { error: sendError } = await otpService.sendVerificationOtp(
-              identifier,
-              "email-verification"
-            );
-            setSendingOtp(false);
+    const passwordResult = validatePassword(password, MIN_PASSWORD_LENGTH);
+    if (!passwordResult.isValid) {
+      toast.error(passwordResult.message);
+      return;
+    }
 
-            if (sendError) {
-              toast.error(sendError.message || "Failed to send OTP");
-              return;
-            }
+    const matchResult = validatePasswordsMatch(password, confirmPassword);
+    if (!matchResult.isValid) {
+      toast.error(matchResult.message);
+      return;
+    }
 
-            router.push({
-              pathname: "/verify-account",
-              params: { email: identifier },
-            });
-          } catch (error) {
-            setSendingOtp(false);
-            toast.error("Failed to send OTP");
-          }
-        },
-        onError: (error) => {
-          toast.error(error.message || "Failed to register");
-        },
-      }
-    );
+    try {
+      await signUp({ name, email: identifier, password });
+      await sendOtp({ email: identifier, type: "email-verification" });
+      router.push({
+        pathname: "/d/verify-account",
+        params: { email: identifier },
+      });
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
   };
 
   return (
@@ -67,7 +63,7 @@ export function RegisterScreen() {
       footer={
         <AuthFooterPrompt
           actionLabel="Sign In here"
-          href="/login"
+          href="/d/login"
           prompt="Already have an account?"
         />
       }
@@ -108,9 +104,9 @@ export function RegisterScreen() {
       />
 
       <AuthButton
-        label={isPending || sendingOtp ? "Creating Account..." : "Create Account"}
+        label={isPending ? "Creating Account..." : "Create Account"}
         onPress={handleRegister}
-        disabled={isPending || sendingOtp}
+        disabled={isPending}
       />
     </AuthScreenShell>
   );

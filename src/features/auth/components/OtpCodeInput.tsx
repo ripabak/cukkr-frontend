@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   activeCell: {
-    borderColor: authTheme.colors.mutedAccent,
+    borderColor: authTheme.colors.accentDark,
   },
   cellText: {
     color: authTheme.colors.textPrimary,
