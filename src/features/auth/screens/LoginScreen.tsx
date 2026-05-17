@@ -8,7 +8,7 @@ import { AuthButton } from "../components/AuthButton";
 import { AuthFooterPrompt } from "../components/AuthFooterPrompt";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { AuthTextField } from "../components/AuthTextField";
-import { useSignIn } from "../hooks";
+import { useSignIn, useSendVerificationOtp } from "../hooks";
 import { getErrorMessage } from "../utils/error-handler";
 
 export function LoginScreen() {
@@ -16,7 +16,9 @@ export function LoginScreen() {
   const toast = useToast();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const { mutateAsync: signIn, isPending } = useSignIn();
+  const { mutateAsync: signIn, isPending: signingIn } = useSignIn();
+  const { mutateAsync: sendOtp, isPending: sendingOtp } = useSendVerificationOtp();
+  const isPending = signingIn || sendingOtp;
 
   const handleLogin = async () => {
     if (!identifier || !password) return;
@@ -25,6 +27,11 @@ export function LoginScreen() {
       await signIn({ email: identifier, password });
       router.replace("/d/(tabs)/home");
     } catch (error) {
+      if (error instanceof Error && (error as any).code === "EMAIL_NOT_VERIFIED") {
+        sendOtp({ email: identifier, type: "email-verification" });
+        router.replace({ pathname: "/d/verify-account", params: { email: identifier } });
+        return;
+      }
       toast.error(getErrorMessage(error));
     }
   };
