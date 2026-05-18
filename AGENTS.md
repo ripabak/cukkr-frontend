@@ -237,6 +237,35 @@ Screen shows toast feedback & updates UI
 - **Services remain lightweight.** They only wrap API clients; no business logic beyond API calls.
 - **Cache is smart and selective.** Only cache data that multiple screens share (queries). Skip caching for one-off operations (authClient).
 
+## Routing with Dynamic IDs
+
+Web output is `single` (SPA). Never use `[id].tsx` for runtime-generated IDs — IDs are unknown at build time and can't be statically generated.
+
+**Use a static route with query params instead:**
+
+```
+app/d/booking-detail/index.tsx   ✓
+app/d/booking-detail/[id].tsx    ✗
+```
+
+Navigate:
+```ts
+router.push({ pathname: "/d/booking-detail", params: { id: bookingId } });
+```
+
+Read in route file:
+```ts
+// app/d/booking-detail/index.tsx
+import { useLocalSearchParams } from "expo-router";
+
+export default function BookingDetailPage() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  return <BookingDetailScreen bookingId={id} />;
+}
+```
+
+Reference implementations: `app/d/accept-invitation/index.tsx`, `app/d/(schedule)/booking-detail-waiting.tsx`.
+
 ## Common Issues & Solutions
 
 **TypeScript errors**: Always run `npx tsc --noEmit` after changes. Fix any TS errors immediately—don't leave type issues for later.
