@@ -13,7 +13,7 @@ import { getErrorMessage } from "../utils/error-handler";
 export function VerifyAccountScreen() {
   const router = useRouter();
   const toast = useToast();
-  const { email } = useLocalSearchParams<{ email: string }>();
+  const { email, redirect } = useLocalSearchParams<{ email: string; redirect?: string }>();
   const [otp, setOtp] = useState("");
   const countdown = useCountdown(300);
   const { mutateAsync: verifyEmail, isPending: verifying } = useVerifyEmail();
@@ -23,7 +23,7 @@ export function VerifyAccountScreen() {
     if (!otp) return;
     try {
       await verifyEmail({ email, otp });
-      router.replace("/d/(tabs)/home");
+      router.replace((redirect as any) ?? "/d/(tabs)/home");
     } catch (error) {
       toast.error(getErrorMessage(error));
     }

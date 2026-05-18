@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -17,6 +17,7 @@ export function ForgotPasswordScreen() {
   const router = useRouter();
   const toast = useToast();
   const insets = useSafeAreaInsets();
+  const { redirect } = useLocalSearchParams<{ redirect?: string }>();
   const [email, setEmail] = useState("");
   const { mutateAsync: sendOtp, isPending } = useSendVerificationOtp();
 
@@ -36,7 +37,7 @@ export function ForgotPasswordScreen() {
       await sendOtp({ email, type: "forget-password" });
       router.push({
         pathname: "/d/verify-otp",
-        params: { email },
+        params: { email, ...(redirect ? { redirect } : {}) },
       });
     } catch (error) {
       toast.error(getErrorMessage(error));

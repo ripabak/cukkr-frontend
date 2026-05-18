@@ -1,5 +1,5 @@
-# Build and serve React Native Web (Expo) without Nginx
-FROM node:22-alpine
+# Stage 1: build
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
@@ -17,8 +17,15 @@ COPY . .
 # Build static web output
 RUN npx expo export --platform web
 
-# Expose port used by expo serve
+# Stage 2: serve
+FROM node:22-alpine AS runner
+
+WORKDIR /app
+
+RUN npm install -g serve
+
+COPY --from=builder /app/dist ./dist
+
 EXPOSE 8080
 
-# Serve the exported web build
-CMD ["npx", "expo", "serve", "--port", "8080"]
+CMD ["serve", "dist", "--single", "--listen", "8080"]

@@ -1,25 +1,20 @@
-import { Link } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { authTheme } from "../auth-theme";
 
 type AuthFooterPromptProps = {
   prompt: string;
   actionLabel: string;
-  href: "/d/login" | "/d/register";
+  onPress: () => void;
 };
 
-export function AuthFooterPrompt({
-  actionLabel,
-  href,
-  prompt,
-}: AuthFooterPromptProps) {
+export function AuthFooterPrompt({ prompt, actionLabel, onPress }: AuthFooterPromptProps) {
   return (
     <View style={styles.row}>
       <Text style={styles.prompt}>{prompt}</Text>
-      <Link href={href} style={styles.link}>
-        {actionLabel}
-      </Link>
+      <Pressable onPress={onPress}>
+        <Text style={styles.link}>{actionLabel}</Text>
+      </Pressable>
     </View>
   );
 }

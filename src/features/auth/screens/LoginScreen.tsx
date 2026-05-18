@@ -1,4 +1,4 @@
-import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -41,7 +41,7 @@ export function LoginScreen() {
     <AuthScreenShell
       title="Login"
       description="Enter your email and password to securely access your account and manage your services."
-      footer={<AuthFooterPrompt actionLabel="Sign Up here" href="/d/register" prompt="Don't have an account?" />}
+      footer={<AuthFooterPrompt prompt="Don't have an account?" actionLabel="Sign Up here" onPress={() => router.push({ pathname: "/d/register", params: redirect ? { redirect } : {} })} />}
     >
       <AuthTextField
         autoCapitalize="none"
@@ -62,11 +62,9 @@ export function LoginScreen() {
       />
 
       <View style={styles.forgotPasswordRow}>
-        <Link href="/d/forgot-password" asChild>
-          <Pressable>
-            <Text style={styles.forgotPasswordLink}>Forgot Password</Text>
-          </Pressable>
-        </Link>
+        <Pressable onPress={() => router.push({ pathname: "/d/forgot-password", params: redirect ? { redirect } : {} })}>
+          <Text style={styles.forgotPasswordLink}>Forgot Password</Text>
+        </Pressable>
       </View>
 
       <AuthButton

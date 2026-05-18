@@ -12,10 +12,11 @@ export function WorkspaceRoute({ children }: WorkspaceRouteProps) {
   const { data: session, isPending } = authClient.useSession();
   const [isResolving, setIsResolving] = useState(false);
 
+  const isAuthenticated = !!session?.user;
   const hasActiveOrg = !!session?.session?.activeOrganizationId;
 
   useEffect(() => {
-    if (isPending || hasActiveOrg || isResolving) return;
+    if (isPending || !isAuthenticated || hasActiveOrg || isResolving) return;
 
     setIsResolving(true);
 
@@ -48,7 +49,7 @@ export function WorkspaceRoute({ children }: WorkspaceRouteProps) {
         router.replace("/d/create-barbershop-name-logo");
         setIsResolving(false);
       });
-  }, [hasActiveOrg, isPending]);
+  }, [hasActiveOrg, isPending, isAuthenticated]);
 
   if (isPending || isResolving || !hasActiveOrg) return null;
 
