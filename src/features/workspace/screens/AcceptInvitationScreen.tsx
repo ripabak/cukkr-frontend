@@ -1,11 +1,13 @@
 import { Colors } from '@/src/theme/colors';
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { useSignOut } from "@/src/features/auth/hooks";
 import {
   useAcceptInvitation,
   useRejectInvitation,
 } from "@/src/features/workspace/hooks/useBarbersMutations";
 import { useGetInvitation } from "@/src/features/workspace/hooks/useBarbersQueries";
+import { ApiError } from "@/src/features/workspace/services/barbers.service";
 import { authClient } from "@/src/lib/auth-client";
 import { useToast } from "@/src/lib/providers";
 import { Ionicons } from "@expo/vector-icons";
@@ -28,11 +30,16 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
   const toast = useToast();
   const { data: session, isPending: sessionLoading } = authClient.useSession();
 
-  const { data: invitation, isLoading, error } = useGetInvitation(invitationId);
+  const { data: invitation, isLoading, error } = useGetInvitation(invitationId, !!session);
   const { mutate: accept, isPending: isAccepting } = useAcceptInvitation();
   const { mutate: reject, isPending: isRejecting } = useRejectInvitation();
+  const { mutateAsync: signOut } = useSignOut();
 
   const isPending = isAccepting || isRejecting;
+
+  const handleSwitchAccount = async () => {
+    await signOut();
+  };
 
   const handleAccept = () => {
     accept(invitationId, {
@@ -119,15 +126,32 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
   }
 
   if (error || !invitation) {
+    const isEmailMismatchError = error instanceof ApiError && error.status === 403;
     return (
       <ScreenShell>
         <View style={styles.center}>
-          <Ionicons name="alert-circle-outline" size={56} color="#666666" />
-          <Text style={styles.errorTitle}>Invitation Not Found</Text>
-          <Text style={styles.errorSubtitle}>
-            This invitation may have expired, already been used, or is not
-            intended for your account.
+          <Ionicons
+            name={isEmailMismatchError ? "person-circle-outline" : "alert-circle-outline"}
+            size={56}
+            color="#666666"
+          />
+          <Text style={styles.errorTitle}>
+            {isEmailMismatchError ? "Wrong Account" : "Invitation Not Found"}
           </Text>
+          <Text style={styles.errorSubtitle}>
+            {isEmailMismatchError
+              ? "This invitation was sent to a different email address. Please sign in with the correct account to accept it."
+              : "This invitation may have expired, already been used, or is not intended for your account."}
+          </Text>
+          {isEmailMismatchError ? (
+            <TouchableOpacity
+              style={styles.backLink}
+              onPress={handleSwitchAccount}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.backLinkText}>Sign in with different account</Text>
+            </TouchableOpacity>
+          ) : (
           <TouchableOpacity
             style={styles.backLink}
             onPress={() => router.replace("/")}
@@ -135,6 +159,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
           >
             <Text style={styles.backLinkText}>Go to Home</Text>
           </TouchableOpacity>
+          )}
         </View>
       </ScreenShell>
     );

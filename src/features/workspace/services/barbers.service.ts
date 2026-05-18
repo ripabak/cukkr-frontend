@@ -1,5 +1,11 @@
 import { authClient } from "@/src/lib/auth-client";
 
+export class ApiError extends Error {
+  constructor(message: string, public readonly status: number) {
+    super(message);
+  }
+}
+
 export const barbersService = {
   async inviteSingle(data: { email: string }) {
     const { data: response, error } = await authClient.organization.inviteMember({
@@ -14,7 +20,9 @@ export const barbersService = {
     const { data: response, error } = await authClient.organization.getInvitation({
       query: { id: invitationId },
     });
-    if (error || !response) throw new Error("Invitation not found");
+    if (error || !response) {
+      throw new ApiError(error?.message || "Invitation not found", (error as any)?.status ?? 400);
+    }
     return response;
   },
 

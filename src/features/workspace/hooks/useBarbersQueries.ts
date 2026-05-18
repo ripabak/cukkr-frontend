@@ -6,11 +6,11 @@ export const BARBERS_QUERY_KEYS = {
   list: (search?: string) => [...BARBERS_QUERY_KEYS.all, "list", search ?? ""] as const,
 };
 
-export function useGetInvitation(invitationId: string) {
+export function useGetInvitation(invitationId: string, isAuthenticated = false) {
   return useQuery({
     queryKey: [...BARBERS_QUERY_KEYS.all, "invitation", invitationId] as const,
     queryFn: () => barbersService.getInvitation(invitationId),
-    enabled: !!invitationId,
+    enabled: !!invitationId && isAuthenticated,
     retry: false,
   });
 }

@@ -63,9 +63,9 @@ export function RegisterScreen() {
       description="Create a new account to get started and enjoy accessing our features."
       footer={
         <AuthFooterPrompt
-          actionLabel="Sign In here"
-          href="/d/login"
           prompt="Already have an account?"
+          actionLabel="Sign In here"
+          onPress={() => router.push({ pathname: "/d/login", params: redirect ? { redirect } : {} })}
         />
       }
     >

@@ -15,7 +15,7 @@ const MIN_PASSWORD_LENGTH = 8;
 export function CreatePasswordScreen() {
   const router = useRouter();
   const toast = useToast();
-  const { email, otp } = useLocalSearchParams<{ email: string; otp: string }>();
+  const { email, otp, redirect } = useLocalSearchParams<{ email: string; otp: string; redirect?: string }>();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const { mutateAsync: resetPassword, isPending } = useResetPassword();
@@ -46,7 +46,7 @@ export function CreatePasswordScreen() {
     try {
       await resetPassword({ email, otp, password });
       toast.success("Password reset successfully");
-      router.replace("/d/login");
+      router.replace({ pathname: "/d/login", params: redirect ? { redirect } : {} });
     } catch (error) {
       toast.error(getErrorMessage(error));
     }
@@ -60,9 +60,9 @@ export function CreatePasswordScreen() {
       description="Enter a strong password to secure your account."
       footer={
         <AuthFooterPrompt
-          actionLabel="Sign In here"
-          href="/d/login"
           prompt="Remember your password?"
+          actionLabel="Sign In here"
+          onPress={() => router.replace({ pathname: "/d/login", params: redirect ? { redirect } : {} })}
         />
       }
     >
