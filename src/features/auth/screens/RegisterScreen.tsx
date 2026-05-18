@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 
 import { useToast } from "@/src/lib/providers";
@@ -15,6 +15,7 @@ const MIN_PASSWORD_LENGTH = 8;
 export function RegisterScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { redirect } = useLocalSearchParams<{ redirect?: string }>();
   const [name, setName] = useState("");
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -49,7 +50,7 @@ export function RegisterScreen() {
       await sendOtp({ email: identifier, type: "email-verification" });
       router.push({
         pathname: "/d/verify-account",
-        params: { email: identifier },
+        params: { email: identifier, ...(redirect ? { redirect } : {}) },
       });
     } catch (error) {
       toast.error(getErrorMessage(error));
