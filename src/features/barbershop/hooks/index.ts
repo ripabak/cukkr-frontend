@@ -1,6 +1,6 @@
 // Barbershop
 export { useBarbershopCurrent, useBarbershopSlugCheck } from "./useBarbershopQueries";
-export { useUpdateBarbershopSettings, useLeaveBarbershop } from "./useBarbershopMutations";
+export { useUpdateBarbershopSettings, useLeaveBarbershop, useDeleteBarbershop } from "./useBarbershopMutations";
 
 // Barbers
 export { useBarbersList, useBarbersInvitations } from "./useBarbersQueries";

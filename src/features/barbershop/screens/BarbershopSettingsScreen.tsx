@@ -5,8 +5,10 @@ import { DangerButton } from "@/src/features/barbershop/components/DangerButton"
 import { OperationRow } from "@/src/features/barbershop/components/OperationRow";
 import {
   useBarbershopCurrent,
+  useDeleteBarbershop,
   useLeaveBarbershop,
 } from "@/src/features/barbershop/hooks";
+import { useMyOrgRole } from "@/src/features/home/hooks/useHomeDashboardQueries";
 import { useToast } from "@/src/lib/providers";
 import { Colors } from '@/src/theme/colors';
 import { Ionicons } from "@expo/vector-icons";
@@ -25,22 +27,40 @@ export function BarbershopSettingsScreen() {
   const router = useRouter();
   const toast = useToast();
   const { data: barbershop, isLoading } = useBarbershopCurrent();
+  const { data: activeMember } = useMyOrgRole();
+  const isOwner = activeMember?.role === "owner";
   const { mutate: leave, isPending: isLeaving } = useLeaveBarbershop();
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const { mutate: deleteBarbershop, isPending: isDeleting } = useDeleteBarbershop();
+  const isPending = isLeaving || isDeleting;
+  const [showActionModal, setShowActionModal] = useState(false);
 
-  const handleDeleteConfirm = () => {
+  const handleActionConfirm = () => {
     if (!barbershop?.id) return;
-    leave(barbershop.id, {
-      onSuccess: () => {
-        setShowDeleteModal(false);
-        toast.success("Barbershop deleted");
-        router.replace("/");
-      },
-      onError: (error) => {
-        setShowDeleteModal(false);
-        toast.error(error.message || "Failed to delete barbershop");
-      },
-    });
+    if (isOwner) {
+      deleteBarbershop(barbershop.id, {
+        onSuccess: () => {
+          setShowActionModal(false);
+          toast.success("Barbershop deleted");
+          router.replace("/");
+        },
+        onError: (error) => {
+          setShowActionModal(false);
+          toast.error(error.message || "Failed to delete barbershop");
+        },
+      });
+    } else {
+      leave(barbershop.id, {
+        onSuccess: () => {
+          setShowActionModal(false);
+          toast.success("Left barbershop");
+          router.replace("/");
+        },
+        onError: (error) => {
+          setShowActionModal(false);
+          toast.error(error.message || "Failed to leave barbershop");
+        },
+      });
+    }
   };
 
   const handleCameraBadge = () => {
@@ -156,22 +176,26 @@ export function BarbershopSettingsScreen() {
       </View>
 
       <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
-        Delete Barbershop
+        {isOwner ? "Delete Barbershop" : "Leave Barbershop"}
       </Text>
       <DangerButton
-        label="Delete This Barbershop"
-        onPress={isLoading ? undefined : () => setShowDeleteModal(true)}
+        label={isOwner ? "Delete This Barbershop" : "Leave This Barbershop"}
+        onPress={isLoading ? undefined : () => setShowActionModal(true)}
         style={styles.dangerBtn}
       />
 
       <ConfirmationModal
-        visible={showDeleteModal}
-        title="Delete Barbershop"
-        description="Are you sure you want to delete this barbershop? This action cannot be undone."
-        confirmLabel={isLeaving ? "Deleting..." : "Delete"}
+        visible={showActionModal}
+        title={isOwner ? "Delete Barbershop" : "Leave Barbershop"}
+        description={
+          isOwner
+            ? "Are you sure you want to delete this barbershop? This action cannot be undone."
+            : "Are you sure you want to leave this barbershop?"
+        }
+        confirmLabel={isPending ? (isOwner ? "Deleting..." : "Leaving...") : (isOwner ? "Delete" : "Leave")}
         cancelLabel="Cancel"
-        onConfirm={handleDeleteConfirm}
-        onCancel={() => setShowDeleteModal(false)}
+        onConfirm={handleActionConfirm}
+        onCancel={() => setShowActionModal(false)}
       />
     </ScreenShell>
   );

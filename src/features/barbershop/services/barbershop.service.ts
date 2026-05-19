@@ -24,6 +24,14 @@ export const barbershopService = {
     const { data: response, error } = await authClient.organization.leave({
       organizationId: orgId,
     });
+    if (error || !response) throw new Error("Failed to leave barbershop");
+    return response;
+  },
+
+  async delete(orgId: string) {
+    const { data: response, error } = await (authClient.organization as any).delete({
+      organizationId: orgId,
+    });
     if (error || !response) throw new Error("Failed to delete barbershop");
     return response;
   },
