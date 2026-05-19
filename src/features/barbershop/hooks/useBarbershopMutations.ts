@@ -26,7 +26,19 @@ export function useLeaveBarbershop() {
   return useMutation({
     mutationFn: (orgId: string) => barbershopService.leave(orgId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: BARBERSHOP_QUERY_KEYS.current() });
+      queryClient.invalidateQueries({ queryKey: BARBERSHOP_QUERY_KEYS.all });
+      queryClient.invalidateQueries({ queryKey: HOME_QUERY_KEYS.all });
+    },
+  });
+}
+
+export function useDeleteBarbershop() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (orgId: string) => barbershopService.delete(orgId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: BARBERSHOP_QUERY_KEYS.all });
       queryClient.invalidateQueries({ queryKey: HOME_QUERY_KEYS.all });
     },
   });
