@@ -1,3 +1,5 @@
+import '../global.css';
+
 import { QueryProvider } from "@/src/lib/providers";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Stack } from 'expo-router';
