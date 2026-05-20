@@ -9,8 +9,10 @@ import { DateSelectorPill } from "@/src/features/schedule/components/DateSelecto
 import { DayChip, DayChipRow } from "@/src/features/schedule/components/DayChipRow";
 import { useBookingRequestedDates, useBookings } from "@/src/features/schedule/hooks";
 import {
+  formatDuration,
   getDetailRouteForStatus,
   mapApiStatusToBookingStatus,
+  sortBookingsQueue,
 } from "@/src/features/schedule/utils/booking-formatters";
 import { formatTime12h, toApiDate } from "@/src/utils/date";
 import { Colors } from '@/src/theme/colors';
@@ -112,11 +114,14 @@ export function ScheduleActiveBookingsScreen() {
     status: "all",
   });
   const requestedBookings = rawBookings.filter((b) => b.status === "requested");
-  const bookings = rawBookings.filter((b) => {
-    if (b.status === "requested") return false;
-    if (statusFilter === "all") return true;
-    return b.status === statusFilter;
-  });
+  const bookings = React.useMemo(() => {
+    const filtered = rawBookings.filter((b) => {
+      if (b.status === "requested") return false;
+      if (statusFilter === "all") return true;
+      return b.status === statusFilter;
+    });
+    return sortBookingsQueue(filtered);
+  }, [rawBookings, statusFilter]);
 
   const handleSelectDay = (key: string) => {
     setSelectedKey(key);
@@ -248,7 +253,7 @@ export function ScheduleActiveBookingsScreen() {
               customerName={booking.customerName}
               barberName={booking.barber?.name ?? "—"}
               timeLabel={timeLabel}
-              duration="30 mins"
+              duration={formatDuration(booking.totalDuration)}
               status={mapApiStatusToBookingStatus(booking.status)}
               bookingType={booking.type}
               onPress={() => handleBookingPress(booking.id, booking.status)}
