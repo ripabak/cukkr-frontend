@@ -27,16 +27,14 @@ export function AuthScreenShell({
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.card}>
-            <View style={styles.header}>
-              <Text style={styles.title}>{title}</Text>
-              <Text style={styles.description}>{description}</Text>
-            </View>
-
-            <View style={styles.content}>{children}</View>
-
-            {footer ? <View style={styles.footer}>{footer}</View> : null}
+          <View style={styles.header}>
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.description}>{description}</Text>
           </View>
+
+          <View style={styles.content}>{children}</View>
+
+          {footer ? <View style={styles.footer}>{footer}</View> : null}
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
@@ -46,7 +44,7 @@ export function AuthScreenShell({
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    backgroundColor: authTheme.colors.pageBackground,
+    backgroundColor: authTheme.colors.cardBackground,
   },
   keyboardAvoidingView: {
     flex: 1,
@@ -54,22 +52,8 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     justifyContent: 'center',
-    paddingHorizontal: authTheme.spacing.lg,
-    paddingVertical: authTheme.spacing.xl,
-  },
-  card: {
-    width: '100%',
-    maxWidth: 420,
-    alignSelf: 'center',
-    backgroundColor: authTheme.colors.cardBackground,
-    borderRadius: authTheme.radius.card,
     paddingHorizontal: authTheme.spacing.xl,
-    paddingVertical: 40,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 12,
-    elevation: 3,
+    paddingVertical: authTheme.spacing.xl,
   },
   header: {
     gap: authTheme.spacing.sm,
@@ -79,13 +63,11 @@ const styles = StyleSheet.create({
     color: authTheme.colors.textPrimary,
     fontSize: 34,
     fontWeight: '800',
-    textAlign: 'center',
   },
   description: {
     color: authTheme.colors.textSecondary,
     fontSize: 14,
     lineHeight: 20,
-    textAlign: 'center',
   },
   content: {
     gap: authTheme.spacing.md,
