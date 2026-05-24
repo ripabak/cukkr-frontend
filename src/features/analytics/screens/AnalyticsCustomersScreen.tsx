@@ -87,15 +87,6 @@ export function AnalyticsCustomersScreen() {
   return (
     <ScreenShell
       contentStyle={styles.scrollContent}
-      headerSlot={
-        <View style={styles.topBar}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} activeOpacity={0.7}>
-            <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
-          </TouchableOpacity>
-          <Text style={styles.pageTitle}>Customers</Text>
-          <View style={styles.topBarRight} />
-        </View>
-      }
       overlaySlot={
         statusMenuVisible ? (
           <View style={styles.menuOverlay}>
@@ -111,6 +102,14 @@ export function AnalyticsCustomersScreen() {
         ) : null
       }
     >
+      <View style={styles.topBar}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} activeOpacity={0.7}>
+          <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
+        </TouchableOpacity>
+        <Text style={styles.pageTitle}>Customers</Text>
+        <View style={styles.topBarRight} />
+      </View>
+
       <RangePicker value={range} onChange={handleRangeChange} />
 
       {custLoading && !custData ? (
@@ -262,11 +261,7 @@ const styles = StyleSheet.create({
   topBar: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: Colors.bg.default,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border.light,
     gap: 12,
   },
   backBtn: {

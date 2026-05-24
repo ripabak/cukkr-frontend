@@ -31,17 +31,12 @@ export function AnalyticsOverviewScreen() {
   const highlights = data?.highlights;
 
   return (
-    <ScreenShell
-      contentStyle={styles.scrollContent}
-      headerSlot={
-        <View style={styles.topBar}>
-          <View style={styles.topBarTitle}>
-            <Text style={styles.pageTitle}>Overview</Text>
-            <Text style={styles.pageSubtitle}>See your barbershop's performance</Text>
-          </View>
-        </View>
-      }
-    >
+    <ScreenShell contentStyle={styles.scrollContent}>
+      <View style={styles.topBar}>
+        <Text style={styles.pageTitle}>Overview</Text>
+        <Text style={styles.pageSubtitle}>See your barbershop's performance</Text>
+      </View>
+
       <RangePicker value={range} onChange={setRange} />
 
       {isLoading && !data ? (
@@ -179,14 +174,9 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   topBar: {
-    paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 8,
-    backgroundColor: Colors.bg.default,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border.light,
   },
-  topBarTitle: {},
   pageTitle: {
     fontSize: 26,
     fontWeight: "700",

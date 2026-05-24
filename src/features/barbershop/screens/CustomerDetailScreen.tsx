@@ -1,7 +1,6 @@
 import { Colors } from '@/src/theme/colors';
-import AppTheme from "@/src/app-theme";
 import { BookingCard } from "@/src/components/BookingCard";
-import { ScreenHeader } from "@/src/components/ScreenHeader";
+import { ScreenShell } from "@/src/components/ScreenShell";
 import { SCHEDULE_STATUS_OPTIONS, StatusFilterMenu } from "@/src/components/StatusFilterMenu";
 import { ChartCard } from "@/src/features/barbershop/components/ChartCard";
 import { IconActionButton } from "@/src/features/barbershop/components/IconActionButton";
@@ -18,13 +17,11 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const DETAIL_TABS = [
   { key: "general", label: "General" },
@@ -61,37 +58,32 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
 
   if (isLoadingCustomer) {
     return (
-      <SafeAreaView style={styles.safe} edges={["top"]}>
+      <ScreenShell>
         <ActivityIndicator size="large" color={Colors.brand.primary} style={styles.loader} />
-      </SafeAreaView>
+      </ScreenShell>
     );
   }
 
   return (
-    <SafeAreaView style={styles.safe} edges={["top"]}>
-      <View style={styles.container}>
-        <ScreenHeader
-          title="Customer Details"
-          onBack={() => router.back()}
-          rightAction={
-            <IconActionButton
-              iconName="send"
-              size={36}
-              onPress={() =>
-                router.push({
-                  pathname: "/d/send-messages-to-customers",
-                  params: { recipientName: customer?.name, count: "1" },
-                })
-              }
-            />
+    <ScreenShell contentStyle={styles.content}>
+      <View style={styles.topBar}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} activeOpacity={0.7}>
+          <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
+        </TouchableOpacity>
+        <View style={styles.topBarSpacer} />
+        <IconActionButton
+          iconName="send"
+          size={36}
+          onPress={() =>
+            router.push({
+              pathname: "/d/send-messages-to-customers",
+              params: { recipientName: customer?.name, count: "1" },
+            })
           }
         />
+      </View>
 
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.content}
-        >
-          <Text style={styles.customerName}>{customer?.name ?? "—"}</Text>
+      <Text style={styles.customerName}>{customer?.name ?? "—"}</Text>
           <Text style={styles.customerPhone}>
             {customer?.phone ?? customer?.email ?? "No contact"}
             {customer?.isVerified ? " (verified)" : ""}
@@ -201,17 +193,30 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
               <Text style={styles.noMessages}>No messages sent yet.</Text>
             </View>
           )}
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+    </ScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: Colors.bg.default, paddingTop: AppTheme.spacing.lg },
-  container: { flex: 1, backgroundColor: Colors.bg.default },
   loader: { marginTop: 80 },
-  content: { paddingHorizontal: 20, paddingBottom: 40 },
+  content: { paddingBottom: 40 },
+  topBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+    marginBottom: 4,
+  },
+  backBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: Colors.bg.surface,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: Colors.border.default,
+  },
+  topBarSpacer: { flex: 1 },
   customerName: {
     fontSize: 30,
     fontWeight: "800",
