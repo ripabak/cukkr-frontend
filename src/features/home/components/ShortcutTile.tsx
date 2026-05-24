@@ -8,12 +8,15 @@ interface Props {
   icon: React.ReactNode;
   onPress?: () => void;
   style?: ViewStyle;
+  iconBg?: string;
 }
 
-export function ShortcutTile({ label, icon, onPress, style }: Props) {
+export function ShortcutTile({ label, icon, onPress, style, iconBg }: Props) {
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={[styles.container, style]}>
-      <View style={styles.iconCircle}>{icon}</View>
+      <View style={[styles.iconCircle, iconBg ? { backgroundColor: iconBg, borderWidth: 0 } : undefined]}>
+        {icon}
+      </View>
       <Text style={styles.label}>{label}</Text>
     </TouchableOpacity>
   );

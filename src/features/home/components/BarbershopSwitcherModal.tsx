@@ -7,7 +7,6 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Animated,
-  Easing,
   Modal,
   ScrollView,
   StyleSheet,
@@ -27,15 +26,12 @@ import {
 import { WORKSPACE_SCOPED_KEYS } from "@/src/features/workspace/hooks/useOrganizationMutations";
 import { useQueryClient } from "@tanstack/react-query";
 
-const APP_HEADER_HEIGHT = 48;
-
 interface Props {
   visible: boolean;
   onClose: () => void;
-  headerHeight: number;
 }
 
-export function BarbershopSwitcherModal({ visible, onClose, headerHeight }: Props) {
+export function BarbershopSwitcherModal({ visible, onClose }: Props) {
   const router = useRouter();
   const toast = useToast();
   const insets = useSafeAreaInsets();
@@ -49,12 +45,9 @@ export function BarbershopSwitcherModal({ visible, onClose, headerHeight }: Prop
   const { mutate: setActive } = useSetActiveOrganization();
   const { data: sessionData } = authClient.useSession();
 
-  // Controlled manually so the loading modal stays up until session + cache reset finish.
-  // isPending from useMutation turns false before onSuccess callbacks complete, which
-  // would cause the UI to flash old data before invalidation runs.
   const [isSwitchingWorkspace, setIsSwitchingWorkspace] = useState(false);
 
-  const slideAnim = useRef(new Animated.Value(-400)).current;
+  const slideAnim = useRef(new Animated.Value(-16)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -63,13 +56,13 @@ export function BarbershopSwitcherModal({ visible, onClose, headerHeight }: Prop
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 1,
-          duration: 220,
+          duration: 200,
           useNativeDriver: true,
         }),
-        Animated.timing(slideAnim, {
+        Animated.spring(slideAnim, {
           toValue: 0,
-          duration: 260,
-          easing: Easing.out(Easing.cubic),
+          tension: 110,
+          friction: 13,
           useNativeDriver: true,
         }),
       ]).start();
@@ -77,16 +70,15 @@ export function BarbershopSwitcherModal({ visible, onClose, headerHeight }: Prop
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 0,
-          duration: 180,
+          duration: 150,
           useNativeDriver: true,
         }),
         Animated.timing(slideAnim, {
-          toValue: -400,
-          duration: 200,
-          easing: Easing.in(Easing.cubic),
+          toValue: -10,
+          duration: 150,
           useNativeDriver: true,
         }),
-      ]).start();
+      ]).start(() => slideAnim.setValue(-16));
     }
   }, [visible]);
 
@@ -100,16 +92,12 @@ export function BarbershopSwitcherModal({ visible, onClose, headerHeight }: Prop
       return;
     }
 
-    // Close the picker first, then after the close animation (200ms), start switching.
     onClose();
     setTimeout(() => {
       setIsSwitchingWorkspace(true);
       setActive(id, {
         onSuccess: async () => {
-          // Refresh the session first so subsequent queries see the new active org.
           await authClient.getSession();
-          // Reset all workspace-scoped caches — removes stale data and triggers
-          // immediate refetch for any mounted screens.
           WORKSPACE_SCOPED_KEYS.forEach((key) => {
             queryClient.resetQueries({ queryKey: key });
           });
@@ -120,7 +108,7 @@ export function BarbershopSwitcherModal({ visible, onClose, headerHeight }: Prop
           toast.error("Failed to switch barbershop: " + error.message);
         },
       });
-    }, 220);
+    }, 200);
   };
 
   const handleCreateNew = () => {
@@ -128,162 +116,148 @@ export function BarbershopSwitcherModal({ visible, onClose, headerHeight }: Prop
     router.push("/d/create-barbershop-name-logo");
   };
 
-  const topOffset = insets.top + APP_HEADER_HEIGHT + headerHeight;
-
   return (
     <>
-    <Modal visible={isSwitchingWorkspace} transparent animationType="fade" statusBarTranslucent>
-      <View style={styles.switchingOverlay}>
-        <View style={[styles.switchingCard, { width: frameWidth * 0.72 }]}>
-          <ActivityIndicator size="large" color={Colors.brand.primary} />
-          <Text style={styles.switchingTitle}>Switching workspace</Text>
-          <Text style={styles.switchingSubText}>Please wait a moment...</Text>
+      <Modal visible={isSwitchingWorkspace} transparent animationType="fade" statusBarTranslucent>
+        <View style={styles.switchingOverlay}>
+          <View style={[styles.switchingCard, { width: frameWidth * 0.72 }]}>
+            <ActivityIndicator size="large" color={Colors.brand.primary} />
+            <Text style={styles.switchingTitle}>Switching workspace</Text>
+            <Text style={styles.switchingSubText}>Please wait a moment...</Text>
+          </View>
         </View>
-      </View>
-    </Modal>
-    <Modal visible={visible && !isSwitchingWorkspace} transparent animationType="none" statusBarTranslucent>
-      {/* Full-screen tap target to close — no visual dim above the workspaceBar */}
-      <TouchableWithoutFeedback onPress={onClose}>
-        <View style={StyleSheet.absoluteFill} />
-      </TouchableWithoutFeedback>
+      </Modal>
 
-      {/* Dim only the area below AppHeader + workspaceBar */}
-      <Animated.View
-        pointerEvents="none"
-        style={[styles.overlay, { top: topOffset, left: frameOffset, right: frameOffset, opacity: fadeAnim }]}
-      />
+      <Modal visible={visible && !isSwitchingWorkspace} transparent animationType="none" statusBarTranslucent>
+        {/* Full-screen tap-to-close backdrop */}
+        <TouchableWithoutFeedback onPress={onClose}>
+          <Animated.View style={[StyleSheet.absoluteFill, styles.backdrop, { opacity: fadeAnim }]} />
+        </TouchableWithoutFeedback>
 
-      <Animated.View
-        style={[
-          styles.panel,
-          { top: topOffset, left: frameOffset, right: frameOffset, transform: [{ translateY: slideAnim }] },
-        ]}
-      >
-        <View style={styles.searchRow}>
-          <Ionicons name="search-outline" size={16} color={Colors.icon.muted} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search barbershop..."
-            placeholderTextColor={Colors.text.muted}
-            value={search}
-            onChangeText={setSearch}
-            autoCorrect={false}
-          />
-          {search.length > 0 && (
-            <TouchableOpacity onPress={() => setSearch("")}>
-              <Ionicons name="close-circle" size={16} color={Colors.icon.muted} />
-            </TouchableOpacity>
-          )}
-        </View>
-
-        <ScrollView
-          style={styles.list}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
+        {/* Dropdown panel — slides down from top, covers the sticky header */}
+        <Animated.View
+          style={[
+            styles.panel,
+            {
+              top: insets.top,
+              left: frameOffset,
+              right: frameOffset,
+              transform: [{ translateY: slideAnim }],
+              opacity: fadeAnim,
+            },
+          ]}
         >
-          {isLoading ? (
-            <ActivityIndicator
-              size="small"
-              color={Colors.brand.primary}
-              style={styles.loader}
-            />
-          ) : filtered.length === 0 ? (
-            <Text style={styles.emptyText}>No barbershop found</Text>
-          ) : (
-            filtered.map((shop) => {
-              const isActive =
-                sessionData?.session?.activeOrganizationId === shop.id;
-              const initials = shop.name
-                .split(" ")
-                .slice(0, 2)
-                .map((w: string) => w[0])
-                .join("")
-                .toUpperCase();
-              return (
-                <TouchableOpacity
-                  key={shop.id}
-                  style={styles.item}
-                  onPress={() => handleSelect(shop.id)}
-                  activeOpacity={0.7}
-                  disabled={isSwitchingWorkspace}
-                >
-                  <View
-                    style={[
-                      styles.avatar,
-                      isActive && styles.avatarActive,
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        styles.avatarText,
-                        isActive && styles.avatarTextActive,
-                      ]}
-                    >
-                      {initials}
-                    </Text>
-                  </View>
-                  <Text style={styles.itemName} numberOfLines={1}>
-                    {shop.name}
-                  </Text>
-                  {isActive && (
-                    <Ionicons
-                      name="checkmark-circle"
-                      size={18}
-                      color={Colors.brand.primaryDark}
-                    />
-                  )}
-                </TouchableOpacity>
-              );
-            })
-          )}
-        </ScrollView>
+          {/* Drag handle */}
+          <View style={styles.handle} />
 
-        <TouchableOpacity style={styles.createRow} onPress={handleCreateNew} activeOpacity={0.7}>
-          <View style={styles.createIcon}>
-            <Ionicons name="add" size={20} color={Colors.text.secondary} />
+          {/* Search */}
+          <View style={styles.searchRow}>
+            <Ionicons name="search-outline" size={16} color={Colors.icon.muted} />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search barbershop..."
+              placeholderTextColor={Colors.text.muted}
+              value={search}
+              onChangeText={setSearch}
+              autoCorrect={false}
+            />
+            {search.length > 0 && (
+              <TouchableOpacity onPress={() => setSearch("")}>
+                <Ionicons name="close-circle" size={16} color={Colors.icon.muted} />
+              </TouchableOpacity>
+            )}
           </View>
-          <View>
-            <Text style={styles.createLabel}>Add Barbershop</Text>
-            <Text style={styles.createSub}>Create a new workspace</Text>
-          </View>
-        </TouchableOpacity>
-      </Animated.View>
-    </Modal>
+
+          <ScrollView
+            style={styles.list}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            {isLoading ? (
+              <ActivityIndicator size="small" color={Colors.brand.primary} style={styles.loader} />
+            ) : filtered.length === 0 ? (
+              <Text style={styles.emptyText}>No barbershop found</Text>
+            ) : (
+              filtered.map((shop) => {
+                const isActive = sessionData?.session?.activeOrganizationId === shop.id;
+                const initials = shop.name
+                  .split(" ")
+                  .slice(0, 2)
+                  .map((w: string) => w[0])
+                  .join("")
+                  .toUpperCase();
+                return (
+                  <TouchableOpacity
+                    key={shop.id}
+                    style={styles.item}
+                    onPress={() => handleSelect(shop.id)}
+                    activeOpacity={0.7}
+                    disabled={isSwitchingWorkspace}
+                  >
+                    <View style={[styles.avatar, isActive && styles.avatarActive]}>
+                      <Text style={[styles.avatarText, isActive && styles.avatarTextActive]}>
+                        {initials}
+                      </Text>
+                    </View>
+                    <Text style={styles.itemName} numberOfLines={1}>{shop.name}</Text>
+                    {isActive && (
+                      <Ionicons name="checkmark-circle" size={18} color={Colors.brand.primaryDark} />
+                    )}
+                  </TouchableOpacity>
+                );
+              })
+            )}
+          </ScrollView>
+
+          <TouchableOpacity style={styles.createRow} onPress={handleCreateNew} activeOpacity={0.7}>
+            <View style={styles.createIcon}>
+              <Ionicons name="add" size={20} color={Colors.text.secondary} />
+            </View>
+            <View>
+              <Text style={styles.createLabel}>Add Barbershop</Text>
+              <Text style={styles.createSub}>Create a new workspace</Text>
+            </View>
+          </TouchableOpacity>
+        </Animated.View>
+      </Modal>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
+  backdrop: {
     backgroundColor: Colors.bg.overlay,
   },
   panel: {
     position: "absolute",
-    left: 0,
-    right: 0,
     backgroundColor: Colors.bg.default,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
-    maxHeight: 420,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+    maxHeight: 440,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
-    elevation: 12,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.14,
+    shadowRadius: 20,
+    elevation: 14,
+  },
+  handle: {
+    width: 36,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: Colors.border.default,
+    alignSelf: "center",
+    marginTop: 10,
+    marginBottom: 4,
   },
   searchRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
     marginHorizontal: 16,
-    marginTop: 14,
+    marginTop: 10,
     marginBottom: 8,
     backgroundColor: Colors.bg.surface,
-    borderRadius: 10,
+    borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 9,
     borderWidth: 1,
