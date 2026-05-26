@@ -18,7 +18,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Clipboard from "expo-clipboard";
 import { useRouter } from "expo-router";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Animated,
@@ -73,6 +73,7 @@ export function HomeDashboardScreen() {
   const { data: activeMember } = useMyOrgRole();
 
   const [switcherVisible, setSwitcherVisible] = useState(false);
+  const [greetingInteractive, setGreetingInteractive] = useState(true);
   const [bannerSource, setBannerSource] = useState<number>(
     require("@/assets/images/welcome-banner.avif")
   );
@@ -112,6 +113,13 @@ export function HomeDashboardScreen() {
     outputRange: [1, 0],
     extrapolate: "clamp",
   });
+
+  useEffect(() => {
+    const id = greetingOpacity.addListener(({ value }) => {
+      setGreetingInteractive(value > 0.01);
+    });
+    return () => greetingOpacity.removeListener(id);
+  }, [greetingOpacity]);
 
   const handleGeneratePin = () => {
     generatePin(undefined, {
@@ -307,7 +315,7 @@ export function HomeDashboardScreen() {
       ── */}
       <Animated.View
         style={[styles.greetingLayer, { top: stickyHeaderHeight + 16, opacity: greetingOpacity }]}
-        pointerEvents="box-none"
+        pointerEvents={greetingInteractive ? "box-none" : "none"}
       >
         <TouchableOpacity
           activeOpacity={0.85}
