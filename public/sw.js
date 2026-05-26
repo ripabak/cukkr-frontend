@@ -39,7 +39,15 @@ self.addEventListener('push', (event) => {
     const data = event.data?.json() ?? {};
     const options = getNotifOptions(data);
     const { title, ...rest } = options;
-    event.waitUntil(self.registration.showNotification(title, rest));
+    event.waitUntil(
+        self.registration.showNotification(title, rest).then(() => {
+            // Increment OS badge when notification arrives (works even when app is closed).
+            // useUnreadNotificationsCount will sync the exact count once the app is opened.
+            if ('setAppBadge' in navigator) {
+                navigator.setAppBadge(1).catch(() => null);
+            }
+        })
+    );
 });
 
 self.addEventListener('notificationclick', (event) => {
