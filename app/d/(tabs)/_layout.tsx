@@ -1,6 +1,7 @@
 import { BottomTabBar } from "@/src/components/BottomTabBar";
 import { InProgressFloatingCard } from "@/src/components/InProgressFloatingCard";
 import { ProtectedRoute } from "@/src/components/ProtectedRoute";
+import { useBookingRealtimeSync } from "@/src/hooks";
 import { useInProgressBooking } from "@/src/features/schedule/hooks";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Tabs } from 'expo-router';
@@ -59,6 +60,7 @@ function CustomTabBar({ state, navigation }: BottomTabBarProps) {
 
 export default function TabLayout() {
   useColorScheme();
+  useBookingRealtimeSync();
 
   return (
     <ProtectedRoute>

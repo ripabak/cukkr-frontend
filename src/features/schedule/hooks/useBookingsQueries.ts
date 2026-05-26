@@ -56,7 +56,5 @@ export function useInProgressBooking() {
   return useQuery({
     queryKey: BOOKINGS_QUERY_KEYS.inProgress,
     queryFn: () => bookingsService.getInProgress(),
-    refetchInterval: 30 * 1000,
-    refetchOnWindowFocus: true,
   });
 }
