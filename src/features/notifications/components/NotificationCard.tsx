@@ -15,6 +15,7 @@ interface Props {
   timestamp: string;
   status?: 'pending' | 'declined' | 'accepted';
   showActions?: boolean;
+  isClickable?: boolean;
   onAccept?: () => void;
   onDecline?: () => void;
   onPress?: () => void;
@@ -23,7 +24,7 @@ interface Props {
 
 const TYPE_ICON: Record<NotificationType, React.ComponentProps<typeof Ionicons>['name']> = {
   'appointment-request': 'calendar',
-  'walk-in': 'people',
+  'walk-in': 'walk',
   invitation: 'person-add',
   general: 'notifications',
 };
@@ -36,6 +37,7 @@ export function NotificationCard({
   timestamp,
   status,
   showActions,
+  isClickable,
   onAccept,
   onDecline,
   onPress,
@@ -44,12 +46,17 @@ export function NotificationCard({
   return (
     <TouchableOpacity
       onPress={onPress}
-      activeOpacity={onPress ? 0.85 : 1}
+      activeOpacity={isClickable ? 0.85 : 1}
       style={[styles.card, style]}
     >
       <View style={styles.topRow}>
         <Text style={styles.typeLabel}>{title}</Text>
-        <Text style={styles.timestamp}>{timestamp}</Text>
+        <View style={styles.topRight}>
+          <Text style={styles.timestamp}>{timestamp}</Text>
+          {isClickable ? (
+            <Ionicons name="chevron-forward" size={13} color={Colors.text.muted} style={styles.chevron} />
+          ) : null}
+        </View>
       </View>
       <View style={styles.bodyRow}>
         <View style={styles.bodyLeft}>
@@ -88,6 +95,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 8,
+  },
+  topRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+  },
+  chevron: {
+    opacity: 0.5,
   },
   typeLabel: {
     fontSize: 12,

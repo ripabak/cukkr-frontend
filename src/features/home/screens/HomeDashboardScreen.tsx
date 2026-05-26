@@ -1,4 +1,5 @@
 import { BookingCard } from "@/src/components/BookingCard";
+import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { useBarbershopCurrent } from "@/src/features/barbershop/hooks";
 import { BarbershopSwitcherModal } from "@/src/features/home/components/BarbershopSwitcherModal";
 import { ShortcutTile } from "@/src/features/home/components/ShortcutTile";
@@ -10,6 +11,9 @@ import {
   useHomeActiveBookings,
   useMyOrgRole,
 } from "@/src/features/home/hooks";
+import { useUnreadNotificationsCount } from "@/src/features/notifications/hooks";
+import { notificationsService } from "@/src/features/notifications/services/notifications.service";
+import { pwaNotificationService } from "@/src/services/pwa-notification.service";
 import { mapApiStatusToBookingStatus } from "@/src/features/schedule/utils/booking-formatters";
 import { useAuthUser } from "@/src/hooks/useAuthUser";
 import { Colors } from "@/src/theme/colors";
@@ -71,8 +75,10 @@ export function HomeDashboardScreen() {
   const { data: currentPinData } = useCurrentPin();
   const { mutate: generatePin, isPending: isGenerating } = useGenerateWalkInPin();
   const { data: activeMember } = useMyOrgRole();
+  const { data: unreadCount } = useUnreadNotificationsCount();
 
   const [switcherVisible, setSwitcherVisible] = useState(false);
+  const [notifConsentVisible, setNotifConsentVisible] = useState(false);
   const [greetingInteractive, setGreetingInteractive] = useState(true);
   const [bannerSource, setBannerSource] = useState<number>(
     require("@/assets/images/welcome-banner.avif")
@@ -379,9 +385,18 @@ export function HomeDashboardScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.notifBtn}
-            onPress={() => router.push("/d/notifications-list")}
+            onPress={() => {
+              if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "default") {
+                setNotifConsentVisible(true);
+                return;
+              }
+              router.push("/d/notifications-list");
+            }}
           >
             <Ionicons name="notifications-outline" size={18} color={Colors.text.primary} />
+            {(unreadCount ?? 0) > 0 ? (
+              <View style={styles.notifDot} />
+            ) : null}
           </TouchableOpacity>
         </View>
       </View>
@@ -390,6 +405,26 @@ export function HomeDashboardScreen() {
       <BarbershopSwitcherModal
         visible={switcherVisible}
         onClose={() => setSwitcherVisible(false)}
+      />
+      <ConfirmationModal
+        visible={notifConsentVisible}
+        icon="notifications"
+        title="Stay Updated"
+        description="Get notified about new booking requests and walk-in arrivals in real time."
+        cancelLabel="Enable"
+        confirmLabel="Not Now"
+        onCancel={async () => {
+          setNotifConsentVisible(false);
+          const { subscription } = await pwaNotificationService.requestPermission();
+          if (subscription) {
+            notificationsService.registerWebPush(subscription as { endpoint: string; keys: { p256dh: string; auth: string } }).catch(() => {});
+          }
+          router.push("/d/notifications-list");
+        }}
+        onConfirm={() => {
+          setNotifConsentVisible(false);
+          router.push("/d/notifications-list");
+        }}
       />
     </View>
   );
@@ -535,6 +570,15 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.35)",
     alignItems: "center",
     justifyContent: "center",
+  },
+  notifDot: {
+    position: "absolute",
+    top: 4,
+    right: 4,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: Colors.status.danger,
   },
 
   // Check-in
