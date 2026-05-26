@@ -49,12 +49,6 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
     (b) => statusFilter === "all" || b.status === statusFilter,
   );
 
-  const getBookingRoute = (status: string) => {
-    if (status === "waiting") return "/d/booking-detail-waiting";
-    if (status === "in_progress") return "/d/booking-detail-in-progress";
-    if (status === "completed" || status === "cancelled") return "/d/booking-detail-result";
-    return "/d/booking-detail-request";
-  };
 
   if (isLoadingCustomer) {
     return (
@@ -165,7 +159,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
                       status={b.status as "waiting" | "in_progress" | "completed" | "cancelled" | "requested"}
                       onPress={() =>
                         router.push({
-                          pathname: getBookingRoute(b.status),
+                          pathname: "/d/booking-detail",
                           params: { id: b.id },
                         })
                       }

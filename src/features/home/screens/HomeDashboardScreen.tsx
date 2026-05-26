@@ -10,10 +10,7 @@ import {
   useHomeActiveBookings,
   useMyOrgRole,
 } from "@/src/features/home/hooks";
-import {
-  getDetailRouteForStatus,
-  mapApiStatusToBookingStatus,
-} from "@/src/features/schedule/utils/booking-formatters";
+import { mapApiStatusToBookingStatus } from "@/src/features/schedule/utils/booking-formatters";
 import { useAuthUser } from "@/src/hooks/useAuthUser";
 import { Colors } from "@/src/theme/colors";
 import { formatTime12h, toApiDate } from "@/src/utils/date";
@@ -133,9 +130,8 @@ export function HomeDashboardScreen() {
 
   const todayBookings = activeBookings.slice(0, 5);
 
-  const handleBookingPress = (bookingId: string, status: string) => {
-    const route = getDetailRouteForStatus(status);
-    router.push({ pathname: route, params: { id: bookingId } });
+  const handleBookingPress = (bookingId: string) => {
+    router.push({ pathname: "/d/booking-detail", params: { id: bookingId } });
   };
 
   const statValues: Record<string, number> = {
@@ -293,7 +289,7 @@ export function HomeDashboardScreen() {
                   duration="30 mins"
                   status={mapApiStatusToBookingStatus(booking.status)}
                   bookingType={booking.type}
-                  onPress={() => handleBookingPress(booking.id, booking.status)}
+                  onPress={() => handleBookingPress(booking.id)}
                   style={i < todayBookings.length - 1 ? styles.cardMargin : undefined}
                 />
               );
