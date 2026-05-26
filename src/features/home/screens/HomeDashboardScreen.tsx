@@ -16,6 +16,7 @@ import { notificationsService } from "@/src/features/notifications/services/noti
 import { pwaNotificationService } from "@/src/services/pwa-notification.service";
 import { mapApiStatusToBookingStatus } from "@/src/features/schedule/utils/booking-formatters";
 import { useAuthUser } from "@/src/hooks/useAuthUser";
+import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
 import { formatTime12h, toApiDate } from "@/src/utils/date";
 import { Ionicons } from "@expo/vector-icons";
@@ -66,6 +67,7 @@ export function HomeDashboardScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const today = toApiDate(new Date());
+  const toast = useToast();
 
   const queryClient = useQueryClient();
   const { user } = useAuthUser();
@@ -78,6 +80,24 @@ export function HomeDashboardScreen() {
   const { data: unreadCount } = useUnreadNotificationsCount();
 
   const [switcherVisible, setSwitcherVisible] = useState(false);
+
+  // Silently renew push subscription on mount if permission was already granted
+  useEffect(() => {
+    if (
+      typeof window === 'undefined' ||
+      !('Notification' in window) ||
+      Notification.permission !== 'granted'
+    ) return;
+    pwaNotificationService.requestPermission()
+      .then(({ subscription }) => {
+        if (subscription) {
+          notificationsService.registerWebPush(
+            subscription as { endpoint: string; keys: { p256dh: string; auth: string } }
+          ).catch(() => {});
+        }
+      })
+      .catch(() => {});
+  }, []);
   const [notifConsentVisible, setNotifConsentVisible] = useState(false);
   const [greetingInteractive, setGreetingInteractive] = useState(true);
   const [bannerSource, setBannerSource] = useState<number>(
@@ -385,12 +405,33 @@ export function HomeDashboardScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.notifBtn}
-            onPress={() => {
-              if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "default") {
+            onPress={async () => {
+              if (typeof window === "undefined" || !("Notification" in window)) {
+                router.push("/d/notifications-list");
+                return;
+              }
+              if (Notification.permission === "denied") {
+                router.push("/d/notifications-list");
+                return;
+              }
+              if (Notification.permission === "default") {
                 setNotifConsentVisible(true);
                 return;
               }
-              router.push("/d/notifications-list");
+              // Permission already granted — silently renew subscription then navigate
+              try {
+                const { subscription } = await pwaNotificationService.requestPermission();
+                if (subscription) {
+                  notificationsService.registerWebPush(
+                    subscription as { endpoint: string; keys: { p256dh: string; auth: string } }
+                  ).catch(() => {});
+                }
+                router.push("/d/notifications-list");
+              } catch (err) {
+                const msg = err instanceof Error ? err.message : "Failed to set up notifications";
+                toast.error(msg);
+                setTimeout(() => router.push("/d/notifications-list"), 1500);
+              }
             }}
           >
             <Ionicons name="notifications-outline" size={18} color={Colors.text.primary} />
@@ -413,13 +454,26 @@ export function HomeDashboardScreen() {
         description="Get notified about new booking requests and walk-in arrivals in real time."
         cancelLabel="Enable"
         confirmLabel="Not Now"
-        onCancel={async () => {
+        onCancel={() => {
           setNotifConsentVisible(false);
-          const { subscription } = await pwaNotificationService.requestPermission();
-          if (subscription) {
-            notificationsService.registerWebPush(subscription as { endpoint: string; keys: { p256dh: string; auth: string } }).catch(() => {});
-          }
-          router.push("/d/notifications-list");
+          // Defer until after the modal overlay is fully removed from DOM,
+          // otherwise some browsers block the native permission dialog.
+          setTimeout(async () => {
+            try {
+              const { subscription } = await pwaNotificationService.requestPermission();
+              if (subscription) {
+                notificationsService.registerWebPush(
+                  subscription as { endpoint: string; keys: { p256dh: string; auth: string } }
+                ).catch(() => {});
+              }
+              router.push("/d/notifications-list");
+            } catch (err) {
+              const msg = err instanceof Error ? err.message : "Failed to set up notifications";
+              toast.error(msg);
+              // Delay navigation so the toast is visible before screen change
+              setTimeout(() => router.push("/d/notifications-list"), 1500);
+            }
+          }, 300);
         }}
         onConfirm={() => {
           setNotifConsentVisible(false);
