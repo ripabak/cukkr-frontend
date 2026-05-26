@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { bookingsService, CreateBookingPayload } from "../services/bookings.service";
 import { BOOKINGS_QUERY_KEYS } from "./useBookingsQueries";
 import { HOME_QUERY_KEYS } from "../../home/hooks/useHomeDashboardQueries";
+import { NOTIFICATIONS_QUERY_KEYS } from "../../notifications/hooks/useNotificationsQueries";
 
 export function useCreateBooking() {
   const queryClient = useQueryClient();
@@ -10,6 +11,7 @@ export function useCreateBooking() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: BOOKINGS_QUERY_KEYS.all });
       queryClient.invalidateQueries({ queryKey: HOME_QUERY_KEYS.all });
+      queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_QUERY_KEYS.all });
     },
   });
 }

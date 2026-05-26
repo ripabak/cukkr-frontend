@@ -74,11 +74,13 @@ export const notificationsService = {
   },
 
   async getVapidPublicKey(): Promise<string> {
-    const response = await apiFetch("/api/notifications/vapid-public-key");
-    return (response.data as { publicKey: string }).publicKey;
+    const { data: response, error } = await app.api.notifications["vapid-public-key"].get();
+    if (error || !response) throw new Error(error?.value?.message || "Failed to fetch VAPID public key"); 
+    return response.data.publicKey;
   },
 
   async registerWebPush(subscription: { endpoint: string; keys: { p256dh: string; auth: string } }): Promise<void> {
+    // Eden Treaty intercepts `.subscribe` as a WebSocket method — use apiFetch directly.
     await apiFetch("/api/notifications/web-push/subscribe", {
       method: "POST",
       body: JSON.stringify({
