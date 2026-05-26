@@ -1,4 +1,32 @@
 import { app } from "@/src/lib/eden-app";
+import { authClient } from "@/src/lib/auth-client";
+import { Platform } from "react-native";
+
+const apiBaseUrl = process.env.EXPO_PUBLIC_ENV_API_URL ?? "";
+
+async function apiFetch(path: string, options?: RequestInit) {
+  const baseOptions: RequestInit =
+    Platform.OS === "web"
+      ? { credentials: "include" }
+      : { headers: { Cookie: authClient.getCookie() }, credentials: "omit" };
+
+  const response = await fetch(`${apiBaseUrl}${path}`, {
+    ...baseOptions,
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(baseOptions.headers as Record<string, string> | undefined),
+      ...(options?.headers as Record<string, string> | undefined),
+    },
+  });
+
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({}));
+    throw new Error((body as { message?: string }).message || "Request failed");
+  }
+
+  return response.json() as Promise<{ data: unknown }>;
+}
 
 export const notificationsService = {
   async getList(options?: { page?: number; pageSize?: number; unreadOnly?: boolean }) {
@@ -43,5 +71,21 @@ export const notificationsService = {
     const { data: response, error } = await app.api.notifications["register-token"].post({ token });
     if (error || !response) throw new Error(error?.value?.message || "Failed to register push token");
     return response.data;
+  },
+
+  async getVapidPublicKey(): Promise<string> {
+    const response = await apiFetch("/api/notifications/vapid-public-key");
+    return (response.data as { publicKey: string }).publicKey;
+  },
+
+  async registerWebPush(subscription: { endpoint: string; keys: { p256dh: string; auth: string } }): Promise<void> {
+    await apiFetch("/api/notifications/web-push/subscribe", {
+      method: "POST",
+      body: JSON.stringify({
+        endpoint: subscription.endpoint,
+        p256dh: subscription.keys.p256dh,
+        auth: subscription.keys.auth,
+      }),
+    });
   },
 };

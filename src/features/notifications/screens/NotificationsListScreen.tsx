@@ -2,12 +2,13 @@ import { ConfirmationModal } from '@/src/components/ConfirmationModal';
 import { ScreenHeader } from '@/src/components/ScreenHeader';
 import { ScreenShell } from '@/src/components/ScreenShell';
 import { NotificationCard, NotificationType } from '@/src/features/notifications/components/NotificationCard';
+import { pwaNotificationService } from '@/src/services/pwa-notification.service';
 import { Colors } from '@/src/theme/colors';
 import { formatRelativeTime } from '@/src/utils/date';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { useAcceptNotification, useDeclineNotification, useMarkAllAsRead } from '../hooks/useNotificationsMutations';
 import { useNotificationsList } from '../hooks/useNotificationsQueries';
 
@@ -29,6 +30,15 @@ export function NotificationsListScreen() {
 
   const notifications = data?.data ?? [];
 
+  useEffect(() => {
+    markAllRead.mutate(undefined, {
+      onSuccess: () => {
+        pwaNotificationService.clearBadge();
+      },
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleBookingPress = (notif: NotifItem) => {
     if (!notif.referenceId) return;
     router.push({ pathname: "/d/booking-detail", params: { id: notif.referenceId } });
@@ -49,15 +59,6 @@ export function NotificationsListScreen() {
       headerSlot={
         <ScreenHeader
           onBack={() => router.back()}
-          rightAction={
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.moreBtn}
-              onPress={() => markAllRead.mutate()}
-            >
-              <Ionicons name="checkmark-done" size={20} color={Colors.text.primary} />
-            </TouchableOpacity>
-          }
         />
       }
       contentStyle={styles.content}
@@ -87,10 +88,11 @@ export function NotificationsListScreen() {
               timestamp={formatRelativeTime(notif.createdAt)}
               status={notif.actionType !== null ? 'pending' : 'accepted'}
               showActions={notif.actionType === 'accept_decline_appointment'}
+              isClickable={notif.referenceType === 'booking' && !!notif.referenceId}
               onAccept={() => acceptMutation.mutate(notif.id)}
               onDecline={() => declineMutation.mutate({ id: notif.id })}
               onPress={
-                notif.referenceType === 'booking'
+                notif.referenceType === 'booking' && notif.referenceId
                   ? () => handleBookingPress(notif)
                   : notif.referenceType === 'invitation'
                   ? () => setInvitationModal(notif)
@@ -121,14 +123,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingTop: 8,
     paddingBottom: 40,
-  },
-  moreBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: Colors.brand.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   list: {
     gap: 12,

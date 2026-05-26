@@ -1,4 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { pwaNotificationService } from "@/src/services/pwa-notification.service";
 import { notificationsService } from "../services/notifications.service";
 
 export const NOTIFICATIONS_QUERY_KEYS = {
@@ -20,8 +22,16 @@ export function useNotificationsList(options?: {
 }
 
 export function useUnreadNotificationsCount() {
-  return useQuery({
+  const query = useQuery({
     queryKey: NOTIFICATIONS_QUERY_KEYS.unreadCount(),
     queryFn: () => notificationsService.getUnreadCount(),
   });
+
+  useEffect(() => {
+    if (query.data != null) {
+      pwaNotificationService.setBadge(query.data);
+    }
+  }, [query.data]);
+
+  return query;
 }
