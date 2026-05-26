@@ -1,0 +1,377 @@
+import AppTheme from "@/src/app-theme";
+import { ConfirmationModal } from "@/src/components/ConfirmationModal";
+import { OverflowMenu } from "@/src/components/OverflowMenu";
+import { ScreenHeader } from "@/src/components/ScreenHeader";
+import { BookingDetailCard } from "@/src/features/schedule/components/BookingDetailCard";
+import { DualActionFooter } from "@/src/features/schedule/components/DualActionFooter";
+import { StickyCta } from "@/src/features/schedule/components/StickyCta";
+import { SwipeConfirmationModal } from "@/src/features/schedule/components/SwipeConfirmationModal";
+import {
+  useAcceptBooking,
+  useBookingById,
+  useDeclineBooking,
+  useUpdateBookingStatus,
+} from "@/src/features/schedule/hooks";
+import {
+  formatDuration,
+  formatPrice,
+  mapApiStatusToDetailStatus,
+} from "@/src/features/schedule/utils/booking-formatters";
+import { getErrorMessage } from "@/src/lib/utils/error-handler";
+import { useToast } from "@/src/lib/providers";
+import { Colors } from "@/src/theme/colors";
+import { formatDateLabel, formatTime12h } from "@/src/utils/date";
+import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+type ModalType = "accept" | "decline" | "start" | "takeover" | "cancel" | null;
+
+export function BookingDetailScreen() {
+  const router = useRouter();
+  const { id, action } = useLocalSearchParams<{ id: string; action?: string }>();
+  const toast = useToast();
+
+  const { data: booking, isLoading } = useBookingById(id ?? "");
+  const { mutate: acceptBooking, isPending: isAccepting } = useAcceptBooking();
+  const { mutate: declineBooking, isPending: isDeclining } = useDeclineBooking();
+  const { mutate: updateStatus } = useUpdateBookingStatus();
+
+  const [overflowVisible, setOverflowVisible] = useState(false);
+  const [modalType, setModalType] = useState<ModalType>(null);
+  const [swipeModalVisible, setSwipeModalVisible] = useState(false);
+  const actionModalShown = useRef(false);
+
+  useEffect(() => {
+    if (!isLoading && booking && booking.status === "requested" && !actionModalShown.current) {
+      actionModalShown.current = true;
+      if (action === "accept") setModalType("accept");
+      else if (action === "decline") setModalType("decline");
+    }
+  }, [action, isLoading, booking]);
+
+  const handleAccept = () => {
+    if (!id) return;
+    setModalType(null);
+    acceptBooking(id, {
+      onSuccess: () => toast.success("Booking accepted"),
+      onError: (error) => toast.error(getErrorMessage(error)),
+    });
+  };
+
+  const handleDecline = () => {
+    if (!id) return;
+    setModalType(null);
+    declineBooking({ id, reason: "Declined by barber" }, {
+      onSuccess: () => toast.success("Booking declined"),
+      onError: (error) => toast.error(getErrorMessage(error)),
+    });
+  };
+
+  const handleStart = () => {
+    if (!id) return;
+    setModalType(null);
+    updateStatus({ id, status: "in_progress" }, {
+      onSuccess: () => toast.success("Booking started"),
+      onError: (error) => toast.error(getErrorMessage(error)),
+    });
+  };
+
+  const handleComplete = () => {
+    if (!id) return;
+    setSwipeModalVisible(false);
+    updateStatus({ id, status: "completed" }, {
+      onSuccess: () => toast.success("Booking completed"),
+      onError: (error) => toast.error(getErrorMessage(error)),
+    });
+  };
+
+  const handleMarkWaiting = () => {
+    if (!id) return;
+    setOverflowVisible(false);
+    updateStatus({ id, status: "waiting" }, {
+      onSuccess: () => toast.success("Booking set back to waiting"),
+      onError: (error) => toast.error(getErrorMessage(error)),
+    });
+  };
+
+  const handleCancel = () => {
+    if (!id) return;
+    setModalType(null);
+    updateStatus({ id, status: "cancelled", cancelReason: "Cancelled by barber" }, {
+      onSuccess: () => {
+        toast.success("Booking cancelled");
+        router.back();
+      },
+      onError: (error) => toast.error(getErrorMessage(error)),
+    });
+  };
+
+  const overflowItems = (() => {
+    if (booking?.status === "waiting") {
+      return [{
+        label: "Cancel Book",
+        danger: true,
+        onPress: () => { setOverflowVisible(false); setModalType("cancel"); },
+      }];
+    }
+    if (booking?.status === "in_progress") {
+      return [{ label: "Mark as Waiting", onPress: handleMarkWaiting }];
+    }
+    return [];
+  })();
+
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <View style={styles.centered}>
+          <ActivityIndicator size="large" color={Colors.text.primary} />
+        </View>
+      );
+    }
+
+    if (!booking) {
+      return (
+        <View style={styles.centered}>
+          <Text style={styles.errorText}>Booking not found.</Text>
+        </View>
+      );
+    }
+
+    const totalDuration = booking.services.reduce((acc, s) => acc + s.duration, 0);
+
+    const timeDate =
+      booking.status === "in_progress" && !booking.scheduledAt
+        ? new Date((booking.startedAt ?? booking.createdAt) as Date)
+        : booking.scheduledAt
+          ? new Date(booking.scheduledAt as Date)
+          : new Date(booking.createdAt as Date);
+
+    const scheduledLabel = booking.scheduledAt
+      ? `Scheduled at ${formatTime12h(timeDate)}`
+      : booking.status === "in_progress"
+        ? `Started at ${formatTime12h(timeDate)}`
+        : `Arrived at ${formatTime12h(timeDate)}`;
+
+    const showHandledBy =
+      booking.status === "in_progress" ||
+      booking.status === "completed" ||
+      booking.status === "cancelled";
+
+    const isMismatchedBarber =
+      booking.requestedBarber &&
+      booking.handledByBarber &&
+      booking.requestedBarber.memberId !== booking.handledByBarber.memberId;
+
+    const infoRows = [
+      { label: "Book No", value: `#${booking.referenceNumber}` },
+      ...(booking.requestedBarber
+        ? [{ label: "Requested", value: booking.requestedBarber.name, valueIconName: "cut" }]
+        : []),
+      ...(showHandledBy && booking.handledByBarber
+        ? [{ label: "Handled By", value: booking.handledByBarber.name, valueIconName: "cut" }]
+        : []),
+    ];
+
+    const services = booking.services.map((s) => ({
+      name: `${s.serviceName} (${s.duration}m)`,
+      price: formatPrice(s.price),
+    }));
+
+    const totalOriginal = booking.services.reduce((acc, s) => acc + s.originalPrice, 0);
+    const totalAmount = booking.services.reduce((acc, s) => acc + s.price, 0);
+    const discount = totalOriginal - totalAmount;
+
+    const paymentSummary = [
+      { label: `Services (${booking.services.length})`, value: formatPrice(totalOriginal) },
+      ...(discount > 0 ? [{ label: "Discount", value: `-${formatPrice(discount)}` }] : []),
+    ];
+
+    const footer = (() => {
+      if (booking.status === "requested") {
+        return (
+          <DualActionFooter
+            onDecline={() => setModalType("decline")}
+            onAccept={() => setModalType("accept")}
+          />
+        );
+      }
+      if (booking.status === "waiting") {
+        return (
+          <StickyCta
+            label={isMismatchedBarber ? "Take Over" : "Handle this"}
+            onPress={() => setModalType(isMismatchedBarber ? "takeover" : "start")}
+          />
+        );
+      }
+      if (booking.status === "in_progress") {
+        return (
+          <StickyCta
+            label="Complete"
+            onPress={() => setSwipeModalVisible(true)}
+            color={Colors.status.success}
+            textColor={Colors.text.primary}
+          />
+        );
+      }
+      return null;
+    })();
+
+    return (
+      <>
+        <BookingDetailCard
+          customerName={booking.customer.name}
+          dateLabel={formatDateLabel(timeDate)}
+          bookingType={booking.type}
+          metaLine1={scheduledLabel}
+          metaLine2={`Duration ${formatDuration(totalDuration)}`}
+          status={mapApiStatusToDetailStatus(booking.status)}
+          infoRows={infoRows}
+          services={services}
+          notes={booking.notes ?? undefined}
+          paymentSummary={paymentSummary}
+          onWhatsApp={() => {}}
+        />
+        {footer}
+      </>
+    );
+  };
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.outer}>
+        <ScreenHeader
+          onBack={() => router.back()}
+          rightAction={
+            overflowItems.length > 0 ? (
+              <TouchableOpacity
+                onPress={isLoading ? undefined : () => setOverflowVisible(true)}
+                activeOpacity={0.7}
+                style={styles.overflowBtn}
+              >
+                <Ionicons name="ellipsis-horizontal" size={20} color={Colors.text.primary} />
+              </TouchableOpacity>
+            ) : undefined
+          }
+        />
+
+        {renderContent()}
+
+        {overflowVisible ? (
+          <View style={styles.menuOverlay}>
+            <OverflowMenu
+              visible
+              items={overflowItems}
+              onClose={() => setOverflowVisible(false)}
+            />
+          </View>
+        ) : null}
+
+        <ConfirmationModal
+          visible={modalType === "accept"}
+          icon="checkmark-circle-outline"
+          title="Accept this booking?"
+          description="The customer will be notified and the booking will be moved to the queue."
+          confirmLabel={isAccepting ? "Accepting..." : "Accept"}
+          cancelLabel="Cancel"
+          onConfirm={handleAccept}
+          onCancel={() => setModalType(null)}
+        />
+        <ConfirmationModal
+          visible={modalType === "decline"}
+          icon="close-circle-outline"
+          title="Decline this booking?"
+          description="The booking will be cancelled and the customer will be notified."
+          confirmLabel={isDeclining ? "Declining..." : "Decline"}
+          cancelLabel="Cancel"
+          onConfirm={handleDecline}
+          onCancel={() => setModalType(null)}
+        />
+        <ConfirmationModal
+          visible={modalType === "start"}
+          icon="cut"
+          title="Start this booking?"
+          description="This will mark the booking as In Progress. Please make sure you are ready to serve the customer before continuing."
+          confirmLabel="Yes"
+          cancelLabel="No, Not Yet"
+          onConfirm={handleStart}
+          onCancel={() => setModalType(null)}
+        />
+        <ConfirmationModal
+          visible={modalType === "takeover"}
+          icon="warning"
+          title="Take Over This Booking?"
+          description="The preferred barber differs. Do you want to take over this booking?"
+          confirmLabel="Yes, Take Over"
+          cancelLabel="No"
+          onConfirm={handleStart}
+          onCancel={() => setModalType(null)}
+        />
+        <ConfirmationModal
+          visible={modalType === "cancel"}
+          icon="close-circle"
+          title="Cancel this booking?"
+          description="This action cannot be undone. The customer will be notified."
+          confirmLabel="Yes, Cancel"
+          cancelLabel="No"
+          onConfirm={handleCancel}
+          onCancel={() => setModalType(null)}
+        />
+        <SwipeConfirmationModal
+          visible={swipeModalVisible}
+          title="Complete Booking?"
+          description={
+            "This action will finalize the booking and cannot be undone.\n\nPlease make sure the service and details are correct before continuing."
+          }
+          swipeLabel="Swipe to complete"
+          onComplete={handleComplete}
+          onCancel={() => setSwipeModalVisible(false)}
+        />
+      </View>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: Colors.bg.default,
+    paddingTop: AppTheme.spacing.lg,
+  },
+  outer: {
+    flex: 1,
+  },
+  centered: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  errorText: {
+    fontSize: 14,
+    color: Colors.text.secondary,
+  },
+  overflowBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: Colors.brand.primary,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  menuOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 50,
+  },
+});

@@ -10,7 +10,6 @@ import { DayChip, DayChipRow } from "@/src/features/schedule/components/DayChipR
 import { useBookingRequestedDates, useBookings } from "@/src/features/schedule/hooks";
 import {
   formatDuration,
-  getDetailRouteForStatus,
   mapApiStatusToBookingStatus,
   sortBookingsQueue,
 } from "@/src/features/schedule/utils/booking-formatters";
@@ -135,12 +134,8 @@ export function ScheduleActiveBookingsScreen() {
     setCalendarVisible(false);
   };
 
-  const handleBookingPress = (bookingId: string, status: string) => {
-    const route = getDetailRouteForStatus(status);
-    router.push({
-      pathname: route,
-      params: { id: bookingId },
-    });
+  const handleBookingPress = (bookingId: string) => {
+    router.push({ pathname: "/d/booking-detail", params: { id: bookingId } });
   };
 
   return (
@@ -213,9 +208,9 @@ export function ScheduleActiveBookingsScreen() {
                   barberName={booking.barber?.name ?? "—"}
                   timeLabel={formatTime12h(timeDate)}
                   bookingType={booking.type}
-                  onPress={() => router.push({ pathname: "/d/booking-detail-request", params: { id: booking.id } })}
-                  onAccept={() => router.push({ pathname: "/d/booking-detail-request", params: { id: booking.id, action: "accept" } })}
-                  onDecline={() => router.push({ pathname: "/d/booking-detail-request", params: { id: booking.id, action: "decline" } })}
+                  onPress={() => router.push({ pathname: "/d/booking-detail", params: { id: booking.id } })}
+                  onAccept={() => router.push({ pathname: "/d/booking-detail", params: { id: booking.id, action: "accept" } })}
+                  onDecline={() => router.push({ pathname: "/d/booking-detail", params: { id: booking.id, action: "decline" } })}
                 />
               );
             })}
@@ -256,7 +251,7 @@ export function ScheduleActiveBookingsScreen() {
               duration={formatDuration(booking.totalDuration)}
               status={mapApiStatusToBookingStatus(booking.status)}
               bookingType={booking.type}
-              onPress={() => handleBookingPress(booking.id, booking.status)}
+              onPress={() => handleBookingPress(booking.id)}
               style={i < bookings.length - 1 ? styles.cardMargin : undefined}
             />
           );
