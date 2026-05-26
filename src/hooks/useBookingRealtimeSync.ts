@@ -35,11 +35,20 @@ export function useBookingRealtimeSync() {
             continue;
           }
 
-          for await (const chunk of data as unknown as AsyncIterable<string>) {
-            if (chunk === "booking_updated") {
-              BOOKING_QUERY_KEYS.forEach((queryKey) => {
-                queryClient.invalidateQueries({ queryKey });
-              });
+          const decoder = new TextDecoder();
+          for await (const chunk of data as unknown as AsyncIterable<unknown>) {
+            const text = chunk instanceof Uint8Array
+              ? decoder.decode(chunk)
+              : String(chunk);
+
+            // Raw SSE lines: "data: booking_updated\n" — extract the data value
+            for (const line of text.split("\n")) {
+              const value = line.startsWith("data:") ? line.slice(5).trim() : null;
+              if (value === "booking_updated") {
+                BOOKING_QUERY_KEYS.forEach((queryKey) => {
+                  queryClient.invalidateQueries({ queryKey });
+                });
+              }
             }
           }
         } catch (e) {
