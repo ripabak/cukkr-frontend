@@ -72,7 +72,7 @@ export const bookingsService = {
     return response.data;
   },
 
-  async decline(id: string, reason: string) {
+  async decline(id: string, reason?: string) {
     const { data: response, error } = await app.api
       .bookings({ id })
       .decline.post({ reason });

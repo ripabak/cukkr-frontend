@@ -2,7 +2,6 @@ import React, { createContext, useState, useContext } from "react";
 
 export interface CreateBarbershopFormData {
   name: string;
-  slug: string;
   logo?: File;
   description?: string;
   address?: string;

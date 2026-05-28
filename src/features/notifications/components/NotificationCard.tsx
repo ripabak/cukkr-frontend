@@ -66,6 +66,9 @@ export function NotificationCard({
           <View style={styles.bodyText}>
             <Text style={styles.name}>{name}</Text>
             {detail ? <Text style={styles.detail}>{detail}</Text> : null}
+            {status === 'accepted' ? (
+              <StatusBadge label="Accepted" variant="active" style={styles.declinedBadge} />
+            ) : null}
             {status === 'declined' ? (
               <StatusBadge label="Declined" variant="declined" style={styles.declinedBadge} />
             ) : null}

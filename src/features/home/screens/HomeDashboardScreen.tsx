@@ -2,6 +2,7 @@ import { BookingCard } from "@/src/components/BookingCard";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { useBarbershopCurrent } from "@/src/features/barbershop/hooks";
 import { BarbershopSwitcherModal } from "@/src/features/home/components/BarbershopSwitcherModal";
+import { NewBookBottomSheet } from "@/src/features/home/components/NewBookBottomSheet";
 import { ShortcutTile } from "@/src/features/home/components/ShortcutTile";
 import {
   HOME_QUERY_KEYS,
@@ -28,6 +29,7 @@ import {
   ActivityIndicator,
   Animated,
   Image,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -53,6 +55,7 @@ const SHORTCUT_COLORS = {
   barbers:   { bg: "#fff3e0", icon: "#f59e0b" },
   customers: { bg: "#dbeafe", icon: "#2563eb" },
   services:  { bg: "#ede9fe", icon: "#7c3aed" },
+  openHours: { bg: "#fce7f3", icon: "#db2777" },
   newBook:   { bg: "#dcfce7", icon: "#16a34a" },
 };
 
@@ -80,6 +83,7 @@ export function HomeDashboardScreen() {
   const { data: unreadCount } = useUnreadNotificationsCount();
 
   const [switcherVisible, setSwitcherVisible] = useState(false);
+  const [newBookVisible, setNewBookVisible] = useState(false);
 
   // Silently renew push subscription on mount if permission was already granted
   useEffect(() => {
@@ -258,32 +262,48 @@ export function HomeDashboardScreen() {
           </View>
 
           {/* Shortcuts */}
-          <View style={styles.shortcutsRow}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.shortcutsRow}
+            contentContainerStyle={styles.shortcutsContent}
+          >
+            <ShortcutTile
+              label="New Book"
+              iconBg={SHORTCUT_COLORS.newBook.bg}
+              icon={<Ionicons name="calendar" size={22} color={SHORTCUT_COLORS.newBook.icon} />}
+              onPress={() => setNewBookVisible(true)}
+              style={styles.shortcutItem}
+            />
             <ShortcutTile
               label="Barbers"
               iconBg={SHORTCUT_COLORS.barbers.bg}
               icon={<Ionicons name="people" size={22} color={SHORTCUT_COLORS.barbers.icon} />}
               onPress={() => router.push("/d/barbers-management")}
+              style={styles.shortcutItem}
             />
             <ShortcutTile
               label="Customers"
               iconBg={SHORTCUT_COLORS.customers.bg}
               icon={<Ionicons name="person" size={22} color={SHORTCUT_COLORS.customers.icon} />}
               onPress={() => router.push("/d/customer-management")}
+              style={styles.shortcutItem}
             />
             <ShortcutTile
               label="Services"
               iconBg={SHORTCUT_COLORS.services.bg}
               icon={<Ionicons name="cut" size={22} color={SHORTCUT_COLORS.services.icon} />}
               onPress={() => router.push("/d/services-management")}
+              style={styles.shortcutItem}
             />
             <ShortcutTile
-              label="New Book"
-              iconBg={SHORTCUT_COLORS.newBook.bg}
-              icon={<Ionicons name="calendar" size={22} color={SHORTCUT_COLORS.newBook.icon} />}
-              onPress={() => router.push("/d/new-walk-in")}
+              label="Open Hours"
+              iconBg={SHORTCUT_COLORS.openHours.bg}
+              icon={<Ionicons name="time-outline" size={22} color={SHORTCUT_COLORS.openHours.icon} />}
+              onPress={() => router.push("/d/open-hours")}
+              style={styles.shortcutItem}
             />
-          </View>
+          </ScrollView>
 
           {/* Today's Queue */}
           <View style={styles.sectionRow}>
@@ -446,6 +466,10 @@ export function HomeDashboardScreen() {
       <BarbershopSwitcherModal
         visible={switcherVisible}
         onClose={() => setSwitcherVisible(false)}
+      />
+      <NewBookBottomSheet
+        visible={newBookVisible}
+        onClose={() => setNewBookVisible(false)}
       />
       <ConfirmationModal
         visible={notifConsentVisible}
@@ -716,10 +740,15 @@ const styles = StyleSheet.create({
 
   // Shortcuts
   shortcutsRow: {
-    flexDirection: "row",
-    gap: 8,
     marginBottom: 28,
+    marginHorizontal: -2,
+  },
+  shortcutsContent: {
+    gap: 4,
     paddingHorizontal: 2,
+  },
+  shortcutItem: {
+    width: 76,
   },
 
   // Section
