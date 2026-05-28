@@ -6,6 +6,7 @@ import { BookingDetailCard } from "@/src/features/schedule/components/BookingDet
 import { DualActionFooter } from "@/src/features/schedule/components/DualActionFooter";
 import { StickyCta } from "@/src/features/schedule/components/StickyCta";
 import { SwipeConfirmationModal } from "@/src/features/schedule/components/SwipeConfirmationModal";
+import { DeclineReasonModal } from "@/src/features/schedule/components/DeclineReasonModal";
 import {
   useAcceptBooking,
   useBookingById,
@@ -67,10 +68,10 @@ export function BookingDetailScreen() {
     });
   };
 
-  const handleDecline = () => {
+  const handleDecline = (reason?: string) => {
     if (!id) return;
     setModalType(null);
-    declineBooking({ id, reason: "Declined by barber" }, {
+    declineBooking({ id, reason }, {
       onSuccess: () => toast.success("Booking declined"),
       onError: (error) => toast.error(getErrorMessage(error)),
     });
@@ -285,15 +286,11 @@ export function BookingDetailScreen() {
           onConfirm={handleAccept}
           onCancel={() => setModalType(null)}
         />
-        <ConfirmationModal
+        <DeclineReasonModal
           visible={modalType === "decline"}
-          icon="close-circle-outline"
-          title="Decline this booking?"
-          description="The booking will be cancelled and the customer will be notified."
-          confirmLabel={isDeclining ? "Declining..." : "Decline"}
-          cancelLabel="Cancel"
-          onConfirm={handleDecline}
+          onSend={handleDecline}
           onCancel={() => setModalType(null)}
+          isSending={isDeclining}
         />
         <ConfirmationModal
           visible={modalType === "start"}

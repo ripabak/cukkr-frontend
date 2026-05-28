@@ -31,7 +31,7 @@ export function useAcceptBooking() {
 export function useDeclineBooking() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, reason }: { id: string; reason: string }) =>
+    mutationFn: ({ id, reason }: { id: string; reason?: string }) =>
       bookingsService.decline(id, reason),
     onSuccess: (_result, { id }) => {
       queryClient.invalidateQueries({ queryKey: BOOKINGS_QUERY_KEYS.all });

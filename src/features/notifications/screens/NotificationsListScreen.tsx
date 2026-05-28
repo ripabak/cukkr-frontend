@@ -86,11 +86,11 @@ export function NotificationsListScreen() {
               title={notif.title}
               name={notif.body}
               timestamp={formatRelativeTime(notif.createdAt)}
-              status={notif.actionType !== null ? 'pending' : 'accepted'}
-              showActions={notif.actionType === 'accept_decline_appointment'}
+              status={notif.actionedAs === 'accepted' ? 'accepted' : notif.actionedAs === 'declined' ? 'declined' : 'pending'}
+              showActions={notif.actionType === 'accept_decline_appointment' && notif.actionedAs === null}
               isClickable={notif.referenceType === 'booking' && !!notif.referenceId}
-              onAccept={() => acceptMutation.mutate(notif.id)}
-              onDecline={() => declineMutation.mutate({ id: notif.id })}
+              onAccept={() => router.push({ pathname: '/d/booking-detail', params: { id: notif.referenceId!, action: 'accept' } })}
+              onDecline={() => router.push({ pathname: '/d/booking-detail', params: { id: notif.referenceId!, action: 'decline' } })}
               onPress={
                 notif.referenceType === 'booking' && notif.referenceId
                   ? () => handleBookingPress(notif)
