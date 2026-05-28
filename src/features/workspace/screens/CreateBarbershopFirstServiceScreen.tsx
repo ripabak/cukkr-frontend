@@ -14,6 +14,7 @@ import { useCreateOrganization, useSetActiveOrganization } from "../hooks";
 import { servicesService } from "../services";
 import { getErrorMessage } from "../utils/error-handler";
 import { validateDuration, validatePrice, validateServiceName } from "../utils/form-validators";
+import { generateSlug } from "../utils/slug-generator";
 
 export function CreateBarbershopFirstServiceScreen() {
   const router = useRouter();
@@ -51,7 +52,7 @@ export function CreateBarbershopFirstServiceScreen() {
     createOrg(
       {
         name: formData.name!,
-        slug: formData.slug!,
+        slug: generateSlug(formData.name!),
         metadata: {
           description: formData.description,
           address: formData.address,

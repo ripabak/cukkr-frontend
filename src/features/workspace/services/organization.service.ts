@@ -3,6 +3,8 @@ import { authClient } from "@/src/lib/auth-client";
 export const organizationService = {
   async create(data: {
     name: string;
+    // slug is required by Better Auth's TypeScript type; the backend
+    // beforeCreateOrganization hook always overrides it with a unique slug.
     slug: string;
     metadata?: {
       description?: string | null;
