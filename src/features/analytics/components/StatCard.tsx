@@ -1,7 +1,13 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 
 interface StatCardData {
   current: number;
@@ -33,7 +39,16 @@ export function TrendBadge({
   const label = `${Math.abs(change).toFixed(change % 1 === 0 ? 0 : 1)}%`;
 
   return (
-    <View style={[trendStyles.badge, { backgroundColor: isUp ? Colors.brand.primarySurface : Colors.status.dangerSurface }]}>
+    <View
+      style={[
+        trendStyles.badge,
+        {
+          backgroundColor: isUp
+            ? Colors.brand.primarySurface
+            : Colors.status.dangerSurface,
+        },
+      ]}
+    >
       <Ionicons name={icon} size={11} color={color} />
       <Text style={[trendStyles.text, { color }]}>{label}</Text>
     </View>

@@ -27,20 +27,23 @@ export const authClient = createAuthClient({
 
 ✅ **expoClient** - Expo integration  
 ✅ **emailOTPClient** - Email OTP authentication  
-✅ **organizationClient** - Organization management  
+✅ **organizationClient** - Organization management
 
 ## 🏢 Organization Implementation
 
 ### Setup Reference
+
 File: `@src/lib/auth-client.ts` - Organization plugin sudah initialized
 
 ### Documentation
+
 Full organization implementation guide:  
 👉 https://better-auth.com/docs/plugins/organization#create-an-organization
 
 ### Quick Start
 
 #### Create Organization
+
 ```tsx
 import { authClient } from "@/src/lib/auth-client";
 
@@ -49,13 +52,14 @@ const createOrg = async (name: string, description?: string) => {
     name,
     slug: name.toLowerCase().replace(/\s+/g, "-"),
     description,
-    metadata: {}
+    metadata: {},
   });
   return result;
 };
 ```
 
 #### List Organizations
+
 ```tsx
 const listOrgs = async () => {
   const { data } = await authClient.organization.list();
@@ -64,12 +68,13 @@ const listOrgs = async () => {
 ```
 
 #### Invite Member
+
 ```tsx
 const inviteMember = async (orgId: string, email: string, role: string) => {
   const result = await authClient.organization.inviteMember({
     organizationId: orgId,
     email,
-    role // "admin", "member", etc
+    role, // "admin", "member", etc
   });
   return result;
 };
@@ -78,15 +83,18 @@ const inviteMember = async (orgId: string, email: string, role: string) => {
 ## 🔐 Auth Implementation
 
 ### Setup Reference
+
 File: `@src/lib/auth-client.ts` - Auth client sudah initialized dengan plugins: expoClient, emailOtpClient, organizationClient
 
 ### Documentation
+
 Full auth implementation guide:  
 👉 https://better-auth.com/docs (main documentation)
 
 ### Actual Auth Flow
 
 **Current Implementation** (@src/features/auth/):
+
 - Email + Password untuk Login/Signup
 - OTP untuk Email Verification (setelah signup)
 - OTP untuk Password Reset Flow
@@ -94,6 +102,7 @@ Full auth implementation guide:
 ### Quick Start
 
 #### Sign Up (Email + Password)
+
 ```tsx
 import { authClient } from "@/src/lib/auth-client";
 import { Alert } from "react-native";
@@ -102,7 +111,7 @@ const handleSignUp = async (name: string, email: string, password: string) => {
   const { data, error } = await authClient.signUp.email({
     name,
     email,
-    password
+    password,
   });
 
   if (error) {
@@ -113,7 +122,7 @@ const handleSignUp = async (name: string, email: string, password: string) => {
   // Send verification OTP ke email
   const { error: sendError } = await authClient.emailOtp.sendVerificationOtp({
     email,
-    type: "email-verification"
+    type: "email-verification",
   });
 
   if (sendError) {
@@ -124,17 +133,18 @@ const handleSignUp = async (name: string, email: string, password: string) => {
   // Navigate ke verify account screen dengan email param
   router.push({
     pathname: "/verify-account",
-    params: { email }
+    params: { email },
   });
 };
 ```
 
 #### Sign In (Email + Password)
+
 ```tsx
 const handleSignIn = async (email: string, password: string) => {
   const { data, error } = await authClient.signIn.email({
     email,
-    password
+    password,
   });
 
   if (error) {
@@ -147,11 +157,12 @@ const handleSignIn = async (email: string, password: string) => {
 ```
 
 #### Verify Email OTP
+
 ```tsx
 const handleVerifyEmail = async (email: string, otp: string) => {
   const { error } = await authClient.emailOtp.verifyEmail({
     email,
-    otp
+    otp,
   });
 
   if (error) {
@@ -164,11 +175,12 @@ const handleVerifyEmail = async (email: string, otp: string) => {
 ```
 
 #### Password Reset - Send OTP
+
 ```tsx
 const handleForgotPassword = async (email: string) => {
   const { error } = await authClient.emailOtp.sendVerificationOtp({
     email,
-    type: "forget-password"
+    type: "forget-password",
   });
 
   if (error) {
@@ -179,20 +191,26 @@ const handleForgotPassword = async (email: string) => {
   // Navigate ke OTP verification screen
   router.push({
     pathname: "/verify-otp",
-    params: { email, isPasswordReset: "true" }
+    params: { email, isPasswordReset: "true" },
   });
 };
 ```
 
 #### Password Reset - Verify OTP & Create New Password
+
 ```tsx
-const handleResetPassword = async (email: string, otp: string, newPassword: string) => {
+const handleResetPassword = async (
+  email: string,
+  otp: string,
+  newPassword: string,
+) => {
   // After OTP verified, user can create new password
   // Navigate ke create-password screen with email & otp params
 };
 ```
 
 #### Get Current User
+
 ```tsx
 const getCurrentUser = async () => {
   const { data: user } = await authClient.getSession();
@@ -201,6 +219,7 @@ const getCurrentUser = async () => {
 ```
 
 #### Logout
+
 ```tsx
 const logout = async () => {
   await authClient.signOut();
@@ -210,6 +229,7 @@ const logout = async () => {
 ## 🎯 Common Patterns
 
 ### Pattern 1: Complete Sign Up Flow
+
 ```tsx
 // src/features/auth/screens/RegisterScreen.tsx (existing)
 export function RegisterScreen() {
@@ -221,12 +241,12 @@ export function RegisterScreen() {
 
   const handleRegister = async () => {
     setLoading(true);
-    
+
     // Step 1: Create account
     const { data, error } = await authClient.signUp.email({
       name,
       email,
-      password
+      password,
     });
 
     if (error) {
@@ -238,7 +258,7 @@ export function RegisterScreen() {
     // Step 2: Send verification OTP
     const { error: sendError } = await authClient.emailOtp.sendVerificationOtp({
       email,
-      type: "email-verification"
+      type: "email-verification",
     });
 
     setLoading(false);
@@ -251,14 +271,14 @@ export function RegisterScreen() {
     // Step 3: Navigate to OTP verification
     router.push({
       pathname: "/verify-account",
-      params: { email }
+      params: { email },
     });
   };
 
   return (
     <AuthScreenShell>
       {/* Form fields */}
-      <AuthButton 
+      <AuthButton
         onPress={handleRegister}
         label={loading ? "Creating..." : "Create Account"}
         disabled={loading}
@@ -269,6 +289,7 @@ export function RegisterScreen() {
 ```
 
 ### Pattern 2: Create Organization with Current User
+
 ```tsx
 import { authClient } from "@/src/lib/auth-client";
 
@@ -279,7 +300,7 @@ export function CreateOrganization() {
     setLoading(true);
     const { data, error } = await authClient.organization.create({
       name,
-      slug: name.toLowerCase().replace(/\s+/g, "-")
+      slug: name.toLowerCase().replace(/\s+/g, "-"),
     });
     setLoading(false);
 
@@ -293,7 +314,7 @@ export function CreateOrganization() {
   };
 
   return (
-    <Button 
+    <Button
       onPress={() => handleCreate("My Org")}
       disabled={loading}
       title={loading ? "Creating..." : "Create Organization"}
@@ -303,6 +324,7 @@ export function CreateOrganization() {
 ```
 
 ### Pattern 3: Invite Members to Organization
+
 ```tsx
 export function InviteMembers() {
   const [loading, setLoading] = useState(false);
@@ -314,9 +336,9 @@ export function InviteMembers() {
         const { error } = await authClient.organization.inviteMember({
           organizationId: orgId,
           email,
-          role: "member"
+          role: "member",
         });
-        
+
         if (error) {
           Alert.alert("Error", error.message || `Failed to invite ${email}`);
           return;
@@ -329,7 +351,7 @@ export function InviteMembers() {
   };
 
   return (
-    <Button 
+    <Button
       onPress={() => handleInvite("org123", ["user@email.com"])}
       disabled={loading}
       title={loading ? "Inviting..." : "Invite Members"}
@@ -339,12 +361,13 @@ export function InviteMembers() {
 ```
 
 ### Pattern 4: Password Reset Flow
+
 ```tsx
 // Step 1: Send OTP
 const handleForgotPassword = async (email: string) => {
   const { error } = await authClient.emailOtp.sendVerificationOtp({
     email,
-    type: "forget-password"
+    type: "forget-password",
   });
 
   if (error) {
@@ -354,38 +377,44 @@ const handleForgotPassword = async (email: string) => {
 
   router.push({
     pathname: "/verify-otp",
-    params: { email, isPasswordReset: "true" }
+    params: { email, isPasswordReset: "true" },
   });
 };
 
 // Step 2: Verify OTP & set new password
-const handleResetPassword = async (email: string, otp: string, newPassword: string) => {
+const handleResetPassword = async (
+  email: string,
+  otp: string,
+  newPassword: string,
+) => {
   // Navigate ke create-password screen with otp & email
   router.push({
     pathname: "/create-password",
-    params: { email, otp }
+    params: { email, otp },
   });
 };
 ```
 
 ## 📚 Reference Links
 
-| Resource | Link |
-|----------|------|
-| **Better Auth Docs** | https://better-auth.com/docs |
-| **Organization Plugin** | https://better-auth.com/docs/plugins/organization |
-| **Organization API** | https://better-auth.com/docs/plugins/organization#create-an-organization |
-| **Email OTP** | https://better-auth.com/docs/plugins/email-otp |
-| **Expo Client** | https://better-auth.com/docs/client/expo |
+| Resource                | Link                                                                     |
+| ----------------------- | ------------------------------------------------------------------------ |
+| **Better Auth Docs**    | https://better-auth.com/docs                                             |
+| **Organization Plugin** | https://better-auth.com/docs/plugins/organization                        |
+| **Organization API**    | https://better-auth.com/docs/plugins/organization#create-an-organization |
+| **Email OTP**           | https://better-auth.com/docs/plugins/email-otp                           |
+| **Expo Client**         | https://better-auth.com/docs/client/expo                                 |
 
 ## 🔧 Configuration
 
 ### Environment Variables Required
+
 ```env
 EXPO_PUBLIC_ENV_AUTH_URL=https://your-auth-server.com
 ```
 
 ### Plugins Configured
+
 - ✅ Expo client with SecureStore
 - ✅ Email OTP for authentication
 - ✅ Organization management
@@ -393,6 +422,7 @@ EXPO_PUBLIC_ENV_AUTH_URL=https://your-auth-server.com
 ## 🎯 Auth Screens Reference
 
 Already Implemented in `@src/features/auth/screens/`:
+
 - ✅ **LoginScreen** - Email + Password login
 - ✅ **RegisterScreen** - Email + Password signup + OTP verification
 - ✅ **VerifyAccountScreen** - Email OTP verification (post-signup)
@@ -401,6 +431,7 @@ Already Implemented in `@src/features/auth/screens/`:
 - ✅ **CreatePasswordScreen** - Set new password after OTP verification
 
 ### When to Use Which Screen
+
 - **LoginScreen**: User exists, wants to sign in
 - **RegisterScreen**: New user, wants to create account
 - **VerifyAccountScreen**: After signup, verify email with OTP
@@ -436,6 +467,7 @@ Already Implemented in `@src/features/auth/screens/`:
 ## 🚀 Best Practices
 
 1. **Always handle errors** for auth operations
+
    ```tsx
    const { data, error } = await authClient.signIn.email({...});
    if (error) {
@@ -469,6 +501,7 @@ Already Implemented in `@src/features/auth/screens/`:
 ## 📋 Recommendation: Migrate to Global Toast
 
 Current implementation uses `Alert.alert()`. Consider migrating to global toast system:
+
 ```tsx
 import { useToast } from "@/src/lib/providers";
 

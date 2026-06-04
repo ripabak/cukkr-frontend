@@ -1,6 +1,13 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, Text, TextInput, StyleSheet, ViewStyle, KeyboardTypeOptions } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  ViewStyle,
+  KeyboardTypeOptions,
+} from "react-native";
 
 interface Props {
   label?: string;
@@ -10,7 +17,7 @@ interface Props {
   keyboardType?: KeyboardTypeOptions;
   secureTextEntry?: boolean;
   style?: ViewStyle;
-  inputStyle?: import('react-native').TextStyle;
+  inputStyle?: import("react-native").TextStyle;
 }
 
 export function TextInputField({

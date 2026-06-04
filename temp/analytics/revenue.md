@@ -15,9 +15,9 @@ Authorization: session cookie
 
 ### Query Parameters
 
-| Parameter | Type | Required | Values |
-|-----------|------|----------|--------|
-| `range` | string | Yes | `24h` `week` `month` `6m` `1y` |
+| Parameter | Type   | Required | Values                         |
+| --------- | ------ | -------- | ------------------------------ |
+| `range`   | string | Yes      | `24h` `week` `month` `6m` `1y` |
 
 ### Response
 
@@ -66,9 +66,24 @@ Cookie: <session>
   "data": {
     "range": "week",
     "stats": {
-      "totalBookings":        { "current": 10, "previous": 8,  "change": 25,   "direction": "up" },
-      "avgRevenuePerBooking": { "current": 65000, "previous": 62500, "change": 4, "direction": "up" },
-      "avgTime":              { "current": 40, "previous": 38, "change": 5.3, "direction": "up" }
+      "totalBookings": {
+        "current": 10,
+        "previous": 8,
+        "change": 25,
+        "direction": "up"
+      },
+      "avgRevenuePerBooking": {
+        "current": 65000,
+        "previous": 62500,
+        "change": 4,
+        "direction": "up"
+      },
+      "avgTime": {
+        "current": 40,
+        "previous": 38,
+        "change": 5.3,
+        "direction": "up"
+      }
     },
     "chart": [
       { "label": "Mon", "value": 80000 },
@@ -86,11 +101,11 @@ Cookie: <session>
 
 ### Error Responses
 
-| Status | Condition |
-|--------|-----------|
-| `401` | No active session |
-| `403` | No active organisation |
-| `422` | Invalid `range` value |
+| Status | Condition              |
+| ------ | ---------------------- |
+| `401`  | No active session      |
+| `403`  | No active organisation |
+| `422`  | Invalid `range` value  |
 
 ---
 
@@ -105,20 +120,20 @@ Authorization: session cookie
 
 ### Query Parameters
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `range` | string | Yes | — | `24h` `week` `month` `6m` `1y` |
-| `type` | string | No | `all` | `all` `walk_in` `appointment` |
-| `page` | number | No | `1` | Page number (1-indexed) |
-| `limit` | number | No | `10` | Items per page (max 100) |
+| Parameter | Type   | Required | Default | Description                    |
+| --------- | ------ | -------- | ------- | ------------------------------ |
+| `range`   | string | Yes      | —       | `24h` `week` `month` `6m` `1y` |
+| `type`    | string | No       | `all`   | `all` `walk_in` `appointment`  |
+| `page`    | number | No       | `1`     | Page number (1-indexed)        |
+| `limit`   | number | No       | `10`    | Items per page (max 100)       |
 
 #### Type filter
 
-| Value | Shows |
-|-------|-------|
-| `all` | All completed bookings in the period |
-| `walk_in` | Only walk-in bookings |
-| `appointment` | Only appointment bookings |
+| Value         | Shows                                |
+| ------------- | ------------------------------------ |
+| `all`         | All completed bookings in the period |
+| `walk_in`     | Only walk-in bookings                |
+| `appointment` | Only appointment bookings            |
 
 ### Response
 
@@ -161,22 +176,22 @@ Cookie: <session>
   "status": 200,
   "data": [
     {
-      "bookingId":    "bk_abc123",
-      "customerId":   "cust_xyz",
+      "bookingId": "bk_abc123",
+      "customerId": "cust_xyz",
       "customerName": "Budi Santoso",
-      "completedAt":  "2026-05-12T08:30:00.000Z",
-      "type":         "walk_in",
-      "services":     ["Hair Cut", "Beard Trim"],
-      "revenue":      120000
+      "completedAt": "2026-05-12T08:30:00.000Z",
+      "type": "walk_in",
+      "services": ["Hair Cut", "Beard Trim"],
+      "revenue": 120000
     },
     {
-      "bookingId":    "bk_def456",
-      "customerId":   "cust_uvw",
+      "bookingId": "bk_def456",
+      "customerId": "cust_uvw",
       "customerName": "Andi Wijaya",
-      "completedAt":  "2026-05-12T09:15:00.000Z",
-      "type":         "walk_in",
-      "services":     ["Hair Cut"],
-      "revenue":      80000
+      "completedAt": "2026-05-12T09:15:00.000Z",
+      "type": "walk_in",
+      "services": ["Hair Cut"],
+      "revenue": 80000
     }
   ],
   "meta": {
@@ -201,8 +216,8 @@ Cookie: <session>
 
 ### Error Responses
 
-| Status | Condition |
-|--------|-----------|
-| `401` | No active session |
-| `403` | No active organisation |
-| `422` | Invalid `range` value |
+| Status | Condition              |
+| ------ | ---------------------- |
+| `401`  | No active session      |
+| `403`  | No active organisation |
+| `422`  | Invalid `range` value  |

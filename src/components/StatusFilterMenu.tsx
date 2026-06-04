@@ -1,6 +1,12 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 
 interface StatusOption {
   label: string;
@@ -18,27 +24,46 @@ interface Props {
 }
 
 export const SCHEDULE_STATUS_OPTIONS: StatusOption[] = [
-  { label: 'All', value: 'all' },
-  { label: 'Waiting', value: 'waiting', color: Colors.status.waiting },
-  { label: 'In Progress', value: 'in_progress', color: Colors.status.inProgress },
-  { label: 'Completed', value: 'completed', color: Colors.status.success },
-  { label: 'Cancelled', value: 'cancelled', color: Colors.status.danger },
+  { label: "All", value: "all" },
+  { label: "Waiting", value: "waiting", color: Colors.status.waiting },
+  {
+    label: "In Progress",
+    value: "in_progress",
+    color: Colors.status.inProgress,
+  },
+  { label: "Completed", value: "completed", color: Colors.status.success },
+  { label: "Cancelled", value: "cancelled", color: Colors.status.danger },
 ];
 
 export const HISTORY_STATUS_OPTIONS: StatusOption[] = [
-  { label: 'All', value: 'all' },
-  { label: 'Completed', value: 'completed', color: Colors.status.success },
-  { label: 'Waiting', value: 'waiting', color: Colors.status.waiting },
-  { label: 'In Progress', value: 'in_progress', color: Colors.status.inProgress },
-  { label: 'Canceled', value: 'canceled', color: Colors.status.danger },
+  { label: "All", value: "all" },
+  { label: "Completed", value: "completed", color: Colors.status.success },
+  { label: "Waiting", value: "waiting", color: Colors.status.waiting },
+  {
+    label: "In Progress",
+    value: "in_progress",
+    color: Colors.status.inProgress,
+  },
+  { label: "Canceled", value: "canceled", color: Colors.status.danger },
 ];
 
-export function StatusFilterMenu({ visible, options, selected, onSelect, onClose, style }: Props) {
+export function StatusFilterMenu({
+  visible,
+  options,
+  selected,
+  onSelect,
+  onClose,
+  style,
+}: Props) {
   if (!visible) return null;
 
   return (
     <>
-      <TouchableOpacity style={styles.backdrop} onPress={onClose} activeOpacity={1} />
+      <TouchableOpacity
+        style={styles.backdrop}
+        onPress={onClose}
+        activeOpacity={1}
+      />
       <View style={[styles.menu, style]}>
         {options.map((opt, index) => (
           <TouchableOpacity
@@ -48,7 +73,10 @@ export function StatusFilterMenu({ visible, options, selected, onSelect, onClose
               onClose?.();
             }}
             activeOpacity={0.7}
-            style={[styles.item, index < options.length - 1 && styles.itemBorder]}
+            style={[
+              styles.item,
+              index < options.length - 1 && styles.itemBorder,
+            ]}
           >
             <Text
               style={[
@@ -68,21 +96,21 @@ export function StatusFilterMenu({ visible, options, selected, onSelect, onClose
 
 const styles = StyleSheet.create({
   backdrop: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
   },
   menu: {
-    position: 'absolute',
+    position: "absolute",
     top: 56,
     right: 20,
     backgroundColor: Colors.bg.default,
     borderRadius: 12,
     borderWidth: 1,
     borderColor: Colors.border.light,
-    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.08)',
+    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.08)",
     elevation: 8,
     minWidth: 160,
     zIndex: 100,
@@ -97,10 +125,10 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   itemTextBold: {
-    fontWeight: '700',
+    fontWeight: "700",
   },
 });

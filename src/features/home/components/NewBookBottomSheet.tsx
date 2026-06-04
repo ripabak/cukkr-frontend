@@ -65,10 +65,19 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
   }, [visible]);
 
   return (
-    <Modal visible={visible} transparent statusBarTranslucent animationType="none">
+    <Modal
+      visible={visible}
+      transparent
+      statusBarTranslucent
+      animationType="none"
+    >
       <TouchableWithoutFeedback onPress={onClose}>
         <Animated.View
-          style={[StyleSheet.absoluteFill, styles.backdrop, { opacity: backdropOpacity }]}
+          style={[
+            StyleSheet.absoluteFill,
+            styles.backdrop,
+            { opacity: backdropOpacity },
+          ]}
         />
       </TouchableWithoutFeedback>
 
@@ -104,7 +113,11 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
               router.push("/d/new-walk-in");
             }}
           >
-            <Ionicons name="walk-outline" size={36} color={Colors.text.primary} />
+            <Ionicons
+              name="walk-outline"
+              size={36}
+              color={Colors.text.primary}
+            />
             <Text style={styles.btnLabel}>Walk-In</Text>
           </TouchableOpacity>
 
@@ -116,7 +129,11 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
               router.push("/d/new-appointment");
             }}
           >
-            <Ionicons name="calendar-outline" size={36} color={Colors.text.primary} />
+            <Ionicons
+              name="calendar-outline"
+              size={36}
+              color={Colors.text.primary}
+            />
             <Text style={styles.btnLabel}>Appointment</Text>
           </TouchableOpacity>
         </View>

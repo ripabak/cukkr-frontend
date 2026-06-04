@@ -32,6 +32,7 @@ Determine:
 - **Risk**: possible breaking changes?
 
 **When to use phases:**
+
 - Work spans multiple feature areas (auth, home, schedule, etc.)
 - Later phases depend on earlier ones (e.g. components must exist before screens use them)
 - The full plan is too large to execute safely in one run (>10 files)
@@ -112,11 +113,11 @@ Use this format:
 
 ## Phases Overview
 
-| Phase | Name | Type | Scope summary | Status |
-|-------|------|------|---------------|--------|
-| 1 | <name> | <slicing/ui-functional/...> | <brief> | pending |
-| 2 | <name> | <type> | <brief> | pending |
-| 3 | <name> | <type> | <brief> | pending |
+| Phase | Name   | Type                        | Scope summary | Status  |
+| ----- | ------ | --------------------------- | ------------- | ------- |
+| 1     | <name> | <slicing/ui-functional/...> | <brief>       | pending |
+| 2     | <name> | <type>                      | <brief>       | pending |
+| 3     | <name> | <type>                      | <brief>       | pending |
 
 > Execute with `/eksekusi-plan-by-phase docs/plans/<name>.md`
 > To run a specific phase: `/eksekusi-plan-by-phase docs/plans/<name>.md phase:2`
@@ -126,12 +127,13 @@ Use this format:
 ## Phase 1 — <Phase Name>
 
 ### Goal
+
 <What this phase achieves>
 
 ### Affected files
 
-| File | Action | Notes |
-|------|--------|-------|
+| File             | Action        | Notes |
+| ---------------- | ------------- | ----- |
 | path/to/file.tsx | create / edit | brief |
 
 ### Steps
@@ -141,16 +143,19 @@ Use this format:
 **File:** `path/to/file.tsx`  
 **Action:** edit / create  
 **Details:**
+
 - <concrete bullet>
 
 #### Step 1.2 — ...
 
 ### Verification
+
 - [ ] <phase-specific check>
 - [ ] No TypeScript errors (`npx tsc --noEmit`)
 - [ ] No lint warnings (`npx expo lint`)
 
 ### Tracking update
+
 - Section: <Phase X>
 - Rows to update: <which rows, which columns>
 
@@ -159,18 +164,23 @@ Use this format:
 ## Phase 2 — <Phase Name>
 
 ### Goal
+
 <What this phase achieves — note any dependency on Phase 1>
 
 ### Affected files
+
 ...
 
 ### Steps
+
 ...
 
 ### Verification
+
 ...
 
 ### Tracking update
+
 ...
 
 ---

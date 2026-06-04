@@ -6,19 +6,31 @@ import {
 } from "@/src/components/StatusFilterMenu";
 import { CalendarModal } from "@/src/features/schedule/components/CalendarModal";
 import { DateSelectorPill } from "@/src/features/schedule/components/DateSelectorPill";
-import { DayChip, DayChipRow } from "@/src/features/schedule/components/DayChipRow";
-import { useBookingRequestedDates, useBookings } from "@/src/features/schedule/hooks";
+import {
+  DayChip,
+  DayChipRow,
+} from "@/src/features/schedule/components/DayChipRow";
+import {
+  useBookingRequestedDates,
+  useBookings,
+} from "@/src/features/schedule/hooks";
 import {
   formatDuration,
   mapApiStatusToBookingStatus,
   sortBookingsQueue,
 } from "@/src/features/schedule/utils/booking-formatters";
 import { formatTime12h, toApiDate } from "@/src/utils/date";
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 interface RequestCardProps {
   id: string;
@@ -31,26 +43,51 @@ interface RequestCardProps {
   onDecline: () => void;
 }
 
-function RequestCard({ customerName, barberName, timeLabel, bookingType, onPress, onAccept, onDecline }: RequestCardProps) {
-  const iconName = bookingType === 'walk_in' ? 'walk' : 'calendar';
+function RequestCard({
+  customerName,
+  barberName,
+  timeLabel,
+  bookingType,
+  onPress,
+  onAccept,
+  onDecline,
+}: RequestCardProps) {
+  const iconName = bookingType === "walk_in" ? "walk" : "calendar";
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.85} style={reqStyles.card}>
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.85}
+      style={reqStyles.card}
+    >
       <View style={reqStyles.iconRow}>
         <View style={reqStyles.iconCircle}>
           <Ionicons name={iconName} size={16} color={Colors.text.secondary} />
         </View>
         <Text style={reqStyles.time}>{timeLabel}</Text>
       </View>
-      <Text style={reqStyles.customerName} numberOfLines={1}>{customerName}</Text>
+      <Text style={reqStyles.customerName} numberOfLines={1}>
+        {customerName}
+      </Text>
       <View style={reqStyles.barberRow}>
         <Ionicons name="cut" size={11} color={Colors.text.muted} />
-        <Text style={reqStyles.barberName} numberOfLines={1}> {barberName}</Text>
+        <Text style={reqStyles.barberName} numberOfLines={1}>
+          {" "}
+          {barberName}
+        </Text>
       </View>
       <View style={reqStyles.actions}>
-        <TouchableOpacity onPress={onDecline} activeOpacity={0.8} style={reqStyles.declineBtn}>
+        <TouchableOpacity
+          onPress={onDecline}
+          activeOpacity={0.8}
+          style={reqStyles.declineBtn}
+        >
           <Text style={reqStyles.declineText}>Decline</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={onAccept} activeOpacity={0.8} style={reqStyles.acceptBtn}>
+        <TouchableOpacity
+          onPress={onAccept}
+          activeOpacity={0.8}
+          style={reqStyles.acceptBtn}
+        >
           <Text style={reqStyles.acceptText}>Accept</Text>
         </TouchableOpacity>
       </View>
@@ -61,7 +98,11 @@ function RequestCard({ customerName, barberName, timeLabel, bookingType, onPress
 function generateDayChips(baseDate: Date): DayChip[] {
   const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   return Array.from({ length: 30 }, (_, i) => {
-    const d = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + i);
+    const d = new Date(
+      baseDate.getFullYear(),
+      baseDate.getMonth(),
+      baseDate.getDate() + i,
+    );
     return {
       dayLabel: dayLabels[d.getDay()],
       dayNumber: d.getDate(),
@@ -73,8 +114,18 @@ function generateDayChips(baseDate: Date): DayChip[] {
 function formatDatePill(date: Date): string {
   const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const monthShort = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
   ];
   return `${dayLabels[date.getDay()]}, ${date.getDate()} ${monthShort[date.getMonth()]} ${String(date.getFullYear()).slice(2)}`;
 }
@@ -86,21 +137,37 @@ export function ScheduleActiveBookingsScreen() {
   const [selectedKey, setSelectedKey] = useState(toApiDate(today));
   const [filterMenuVisible, setFilterMenuVisible] = useState(false);
   const [calendarVisible, setCalendarVisible] = useState(false);
-  const [statusFilter, setStatusFilter] = useState<"all" | "waiting" | "in_progress" | "completed" | "cancelled">("all");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "waiting" | "in_progress" | "completed" | "cancelled"
+  >("all");
   const [menuTop, setMenuTop] = useState(0);
   const filterBtnRef = useRef<View>(null);
   const handleOpenFilterMenu = () => {
-    filterBtnRef.current?.measure((_x: number, _y: number, _w: number, height: number, _px: number, pageY: number) => {
-      setMenuTop(pageY + height + 4);
-    });
+    filterBtnRef.current?.measure(
+      (
+        _x: number,
+        _y: number,
+        _w: number,
+        height: number,
+        _px: number,
+        pageY: number,
+      ) => {
+        setMenuTop(pageY + height + 4);
+      },
+    );
     setFilterMenuVisible(true);
   };
 
   const days = generateDayChips(today);
 
   const reqDateFrom = toApiDate(today);
-  const reqDateTo = toApiDate(new Date(today.getFullYear() + 1, today.getMonth(), today.getDate()));
-  const { data: requestedList = [] } = useBookingRequestedDates(reqDateFrom, reqDateTo);
+  const reqDateTo = toApiDate(
+    new Date(today.getFullYear() + 1, today.getMonth(), today.getDate()),
+  );
+  const { data: requestedList = [] } = useBookingRequestedDates(
+    reqDateFrom,
+    reqDateTo,
+  );
   const requestedDateSet = React.useMemo(() => {
     const s = new Set<string>();
     requestedList.forEach((b) => {
@@ -177,7 +244,16 @@ export function ScheduleActiveBookingsScreen() {
               visible
               options={SCHEDULE_STATUS_OPTIONS}
               selected={statusFilter}
-              onSelect={(value) => setStatusFilter(value as "all" | "waiting" | "in_progress" | "completed" | "cancelled")}
+              onSelect={(value) =>
+                setStatusFilter(
+                  value as
+                    | "all"
+                    | "waiting"
+                    | "in_progress"
+                    | "completed"
+                    | "cancelled",
+                )
+              }
               onClose={() => setFilterMenuVisible(false)}
               style={{ top: menuTop, right: 20 }}
             />
@@ -189,7 +265,9 @@ export function ScheduleActiveBookingsScreen() {
         <View style={styles.requestsSection}>
           <Text style={styles.requestsTitle}>
             Requests{" "}
-            <Text style={styles.sectionCount}>({requestedBookings.length})</Text>
+            <Text style={styles.sectionCount}>
+              ({requestedBookings.length})
+            </Text>
           </Text>
           <ScrollView
             horizontal
@@ -197,9 +275,10 @@ export function ScheduleActiveBookingsScreen() {
             contentContainerStyle={styles.requestsScroll}
           >
             {requestedBookings.map((booking) => {
-              const timeDate = booking.type === "appointment" && booking.scheduledAt
-                ? new Date(booking.scheduledAt as Date)
-                : new Date(booking.createdAt as Date);
+              const timeDate =
+                booking.type === "appointment" && booking.scheduledAt
+                  ? new Date(booking.scheduledAt as Date)
+                  : new Date(booking.createdAt as Date);
               return (
                 <RequestCard
                   key={booking.id}
@@ -208,9 +287,24 @@ export function ScheduleActiveBookingsScreen() {
                   barberName={booking.barber?.name ?? "—"}
                   timeLabel={formatTime12h(timeDate)}
                   bookingType={booking.type}
-                  onPress={() => router.push({ pathname: "/d/booking-detail", params: { id: booking.id } })}
-                  onAccept={() => router.push({ pathname: "/d/booking-detail", params: { id: booking.id, action: "accept" } })}
-                  onDecline={() => router.push({ pathname: "/d/booking-detail", params: { id: booking.id, action: "decline" } })}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/d/booking-detail",
+                      params: { id: booking.id },
+                    })
+                  }
+                  onAccept={() =>
+                    router.push({
+                      pathname: "/d/booking-detail",
+                      params: { id: booking.id, action: "accept" },
+                    })
+                  }
+                  onDecline={() =>
+                    router.push({
+                      pathname: "/d/booking-detail",
+                      params: { id: booking.id, action: "decline" },
+                    })
+                  }
                 />
               );
             })}
@@ -220,8 +314,7 @@ export function ScheduleActiveBookingsScreen() {
 
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>
-          Bookings{" "}
-          <Text style={styles.sectionCount}>({bookings.length})</Text>
+          Bookings <Text style={styles.sectionCount}>({bookings.length})</Text>
         </Text>
         <TouchableOpacity
           ref={filterBtnRef}
@@ -230,7 +323,8 @@ export function ScheduleActiveBookingsScreen() {
           style={styles.filterPill}
         >
           <Text style={styles.filterLabel}>
-            {SCHEDULE_STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ?? "All"}
+            {SCHEDULE_STATUS_OPTIONS.find((o) => o.value === statusFilter)
+              ?.label ?? "All"}
           </Text>
           <Ionicons name="chevron-down" size={14} color={Colors.text.primary} />
         </TouchableOpacity>
@@ -238,9 +332,10 @@ export function ScheduleActiveBookingsScreen() {
 
       <View style={styles.list}>
         {bookings.map((booking, i) => {
-          const timeDate = booking.type === "appointment" && booking.scheduledAt
-            ? new Date(booking.scheduledAt as Date)
-            : new Date(booking.createdAt as Date);
+          const timeDate =
+            booking.type === "appointment" && booking.scheduledAt
+              ? new Date(booking.scheduledAt as Date)
+              : new Date(booking.createdAt as Date);
           const timeLabel = formatTime12h(timeDate);
           return (
             <BookingCard
@@ -293,7 +388,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.bg.default,
     alignItems: "center",
     justifyContent: "center",
-    boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.06)',
+    boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.06)",
     elevation: 2,
   },
   iconBtnDark: {
@@ -327,7 +422,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     gap: 4,
-    boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.05)',
+    boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.05)",
     elevation: 1,
   },
   filterLabel: {

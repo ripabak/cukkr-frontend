@@ -21,36 +21,37 @@ Semua nilai hardcoded di `HomeDashboardScreen` diangkat menjadi data/props yang 
 
 Data hardcoded saat ini di `HomeDashboardScreen`:
 
-| Nilai Hardcoded | Lokasi | Akan Dijadikan |
-|---|---|---|
-| `"Hendra Barbershop"` | `<WorkspacePill name=...>` | prop `workspaceName` |
-| `"Good Morning,"` | teks greeting | dihitung dari `Date()` di screen |
-| `"James Comberan"` | teks nama user | prop `userName` |
-| `"345678"` | PIN value | prop `pin` |
-| `"cukrr.com/hendra-barbershop"` | booking link | prop `bookingUrl` |
-| `"5"`, `"2"`, `"2"`, `"2"`, `"3"` | metric values | prop `metrics` (object) |
-| `RECENT_ACTIVITIES` mock array | hardcoded di file | prop `activities` |
-| `ShortcutTile` list (Barbers/Customers/Services) | hardcoded inline | prop `shortcuts` array |
+| Nilai Hardcoded                                  | Lokasi                     | Akan Dijadikan                   |
+| ------------------------------------------------ | -------------------------- | -------------------------------- |
+| `"Hendra Barbershop"`                            | `<WorkspacePill name=...>` | prop `workspaceName`             |
+| `"Good Morning,"`                                | teks greeting              | dihitung dari `Date()` di screen |
+| `"James Comberan"`                               | teks nama user             | prop `userName`                  |
+| `"345678"`                                       | PIN value                  | prop `pin`                       |
+| `"cukrr.com/hendra-barbershop"`                  | booking link               | prop `bookingUrl`                |
+| `"5"`, `"2"`, `"2"`, `"2"`, `"3"`                | metric values              | prop `metrics` (object)          |
+| `RECENT_ACTIVITIES` mock array                   | hardcoded di file          | prop `activities`                |
+| `ShortcutTile` list (Barbers/Customers/Services) | hardcoded inline           | prop `shortcuts` array           |
 
 Komponen `ActivityCard` sudah ada di screen tapi belum dipindah ke file sendiri.
 
 Pola project:
+
 - Komponen feature-local → `src/features/home/components/`
 - Selalu named export, `interface Props`, `StyleSheet.create`
 - Dynamic inline style hanya untuk nilai dari props (warna, dll)
 
 ## Files to create / edit
 
-| File | Action | Notes |
-|---|---|---|
-| `src/features/home/components/DashboardHeader.tsx` | create | WorkspacePill + notif bell |
-| `src/features/home/components/DashboardGreeting.tsx` | create | Avatar placeholder + nama + greeting |
-| `src/features/home/components/WalkInPinCard.tsx` | create | PIN, refresh button, booking URL pill |
-| `src/features/home/components/DashboardMetrics.tsx` | create | Dua baris MetricCard |
-| `src/features/home/components/DashboardShortcuts.tsx` | create | Row ShortcutTile dari array |
-| `src/features/home/components/ActivityCard.tsx` | create | Dipindah dari screen |
-| `src/features/home/components/SectionHeader.tsx` | create | Label kiri + "See more" button kanan |
-| `src/features/home/screens/HomeDashboardScreen.tsx` | edit | Ganti semua inline UI dengan komponen baru + mock data terpusat |
+| File                                                  | Action | Notes                                                           |
+| ----------------------------------------------------- | ------ | --------------------------------------------------------------- |
+| `src/features/home/components/DashboardHeader.tsx`    | create | WorkspacePill + notif bell                                      |
+| `src/features/home/components/DashboardGreeting.tsx`  | create | Avatar placeholder + nama + greeting                            |
+| `src/features/home/components/WalkInPinCard.tsx`      | create | PIN, refresh button, booking URL pill                           |
+| `src/features/home/components/DashboardMetrics.tsx`   | create | Dua baris MetricCard                                            |
+| `src/features/home/components/DashboardShortcuts.tsx` | create | Row ShortcutTile dari array                                     |
+| `src/features/home/components/ActivityCard.tsx`       | create | Dipindah dari screen                                            |
+| `src/features/home/components/SectionHeader.tsx`      | create | Label kiri + "See more" button kanan                            |
+| `src/features/home/screens/HomeDashboardScreen.tsx`   | edit   | Ganti semua inline UI dengan komponen baru + mock data terpusat |
 
 ## Execution steps
 
@@ -197,14 +198,35 @@ const MOCK_METRICS: DashboardMetricsData = {
 };
 
 const MOCK_SHORTCUTS: ShortcutItem[] = [
-  { label: "Barbers", icon: <Ionicons name="people" size={24} color="#1A1A1A" /> },
-  { label: "Customers", icon: <Ionicons name="person" size={24} color="#1A1A1A" /> },
-  { label: "Services", icon: <Ionicons name="cut" size={24} color="#1A1A1A" /> },
+  {
+    label: "Barbers",
+    icon: <Ionicons name="people" size={24} color="#1A1A1A" />,
+  },
+  {
+    label: "Customers",
+    icon: <Ionicons name="person" size={24} color="#1A1A1A" />,
+  },
+  {
+    label: "Services",
+    icon: <Ionicons name="cut" size={24} color="#1A1A1A" />,
+  },
 ];
 
 const MOCK_ACTIVITIES: RecentActivity[] = [
-  { id: "1", time: "12m ago", duration: "30 mins", type: "in_progress", name: "Ethan James" },
-  { id: "2", time: "12m ago", duration: "30 mins", name: "Ethan James", type: "waiting" },
+  {
+    id: "1",
+    time: "12m ago",
+    duration: "30 mins",
+    type: "in_progress",
+    name: "Ethan James",
+  },
+  {
+    id: "2",
+    time: "12m ago",
+    duration: "30 mins",
+    name: "Ethan James",
+    type: "waiting",
+  },
 ];
 ```
 

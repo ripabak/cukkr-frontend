@@ -1,4 +1,4 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import AppTheme from "@/src/app-theme";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { InfoRow } from "@/src/components/InfoRow";
@@ -38,7 +38,8 @@ export function ServiceDetailScreen() {
 
   const { data: service, isLoading } = useServiceById(serviceId);
   const { mutate: toggleActive } = useToggleServiceActive();
-  const { mutate: setDefault, isPending: isSettingDefault } = useSetServiceDefault();
+  const { mutate: setDefault, isPending: isSettingDefault } =
+    useSetServiceDefault();
   const { mutate: deleteService, isPending: isDeleting } = useDeleteService();
 
   const [overflowVisible, setOverflowVisible] = useState(false);
@@ -80,7 +81,11 @@ export function ServiceDetailScreen() {
   if (isLoading) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <ActivityIndicator size="large" color={Colors.brand.primary} style={styles.loader} />
+        <ActivityIndicator
+          size="large"
+          color={Colors.brand.primary}
+          style={styles.loader}
+        />
       </SafeAreaView>
     );
   }
@@ -96,7 +101,11 @@ export function ServiceDetailScreen() {
               activeOpacity={0.7}
               style={styles.overflowBtn}
             >
-              <Ionicons name="ellipsis-horizontal" size={18} color={Colors.text.primary} />
+              <Ionicons
+                name="ellipsis-horizontal"
+                size={18}
+                color={Colors.text.primary}
+              />
             </TouchableOpacity>
           }
         />

@@ -6,7 +6,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const toastIdRef = useRef(0);
   const timeoutsRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(
-    new Map()
+    new Map(),
   );
 
   const hideToast = useCallback((id: string) => {
@@ -32,7 +32,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
       return id;
     },
-    [hideToast]
+    [hideToast],
   );
 
   const clearAll = useCallback(() => {

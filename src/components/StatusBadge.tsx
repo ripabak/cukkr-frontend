@@ -1,17 +1,17 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { StyleSheet, Text, View, ViewStyle } from "react-native";
 
 type StatusVariant =
-  | 'active'
-  | 'pending'
-  | 'waiting'
-  | 'in_progress'
-  | 'completed'
-  | 'canceled'
-  | 'requested'
-  | 'declined'
-  | 'default';
+  | "active"
+  | "pending"
+  | "waiting"
+  | "in_progress"
+  | "completed"
+  | "canceled"
+  | "requested"
+  | "declined"
+  | "default";
 
 interface Props {
   label: string;
@@ -31,7 +31,7 @@ const STATUS_COLORS: Record<StatusVariant, string> = {
   default: Colors.text.secondary,
 };
 
-export function StatusBadge({ label, variant = 'default', style }: Props) {
+export function StatusBadge({ label, variant = "default", style }: Props) {
   const color = STATUS_COLORS[variant];
 
   return (
@@ -47,10 +47,10 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 4,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   text: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
   },
 });

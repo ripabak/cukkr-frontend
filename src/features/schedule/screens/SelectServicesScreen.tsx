@@ -1,9 +1,12 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SearchInput } from "@/src/components/SearchInput";
 import { ServiceCard } from "@/src/components/ServiceCard";
-import { useNewBookingForm, SelectedService } from "@/src/features/schedule/context/NewBookingContext";
+import {
+  useNewBookingForm,
+  SelectedService,
+} from "@/src/features/schedule/context/NewBookingContext";
 import { useScheduleServices } from "@/src/features/schedule/hooks";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -15,7 +18,9 @@ export function SelectServicesScreen() {
   const { formData, setServices } = useNewBookingForm();
   const [query, setQuery] = useState("");
 
-  const { data: services = [], isLoading } = useScheduleServices(query || undefined);
+  const { data: services = [], isLoading } = useScheduleServices(
+    query || undefined,
+  );
 
   const [selected, setSelected] = useState<Set<string>>(
     new Set(formData.serviceIds),
@@ -59,7 +64,11 @@ export function SelectServicesScreen() {
               activeOpacity={0.8}
               style={styles.confirmBtn}
             >
-              <Ionicons name="checkmark" size={20} color={Colors.text.primary} />
+              <Ionicons
+                name="checkmark"
+                size={20}
+                color={Colors.text.primary}
+              />
             </TouchableOpacity>
           }
         />
@@ -85,9 +94,18 @@ export function SelectServicesScreen() {
                 discountPercent={item.discount > 0 ? item.discount : undefined}
                 isDefault={item.isDefault}
               />
-              <View style={[styles.checkbox, selected.has(item.id) && styles.checkboxSelected]}>
+              <View
+                style={[
+                  styles.checkbox,
+                  selected.has(item.id) && styles.checkboxSelected,
+                ]}
+              >
                 {selected.has(item.id) ? (
-                  <Ionicons name="checkmark" size={14} color={Colors.text.primary} />
+                  <Ionicons
+                    name="checkmark"
+                    size={14}
+                    color={Colors.text.primary}
+                  />
                 ) : null}
               </View>
             </TouchableOpacity>

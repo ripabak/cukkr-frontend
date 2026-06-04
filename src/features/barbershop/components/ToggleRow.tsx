@@ -1,7 +1,7 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, Text, StyleSheet, ViewStyle } from 'react-native';
-import { ToggleSwitch } from '@/src/components/ToggleSwitch';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { View, Text, StyleSheet, ViewStyle } from "react-native";
+import { ToggleSwitch } from "@/src/components/ToggleSwitch";
 
 interface Props {
   label: string;
@@ -11,7 +11,13 @@ interface Props {
   style?: ViewStyle;
 }
 
-export function ToggleRow({ label, value, onValueChange, isLast, style }: Props) {
+export function ToggleRow({
+  label,
+  value,
+  onValueChange,
+  isLast,
+  style,
+}: Props) {
   return (
     <View style={[styles.container, !isLast && styles.borderBottom, style]}>
       <Text style={styles.label}>{label}</Text>
@@ -22,8 +28,8 @@ export function ToggleRow({ label, value, onValueChange, isLast, style }: Props)
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
@@ -33,7 +39,7 @@ const styles = StyleSheet.create({
   },
   label: {
     flex: 1,
-    fontWeight: '700',
+    fontWeight: "700",
     fontSize: 14,
     color: Colors.text.primary,
   },

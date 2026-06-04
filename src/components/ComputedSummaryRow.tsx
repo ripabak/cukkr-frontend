@@ -1,6 +1,6 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, Text, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { View, Text, StyleSheet, ViewStyle } from "react-native";
 
 interface Props {
   label: string;
@@ -28,20 +28,20 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   row: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
   label: {
     flex: 1,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   value: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: "700",
     color: Colors.text.primary,
   },
 });

@@ -5,8 +5,11 @@ import { notificationsService } from "../services/notifications.service";
 
 export const NOTIFICATIONS_QUERY_KEYS = {
   all: ["notifications"] as const,
-  list: (options?: { page?: number; pageSize?: number; unreadOnly?: boolean }) =>
-    [...NOTIFICATIONS_QUERY_KEYS.all, "list", options ?? {}] as const,
+  list: (options?: {
+    page?: number;
+    pageSize?: number;
+    unreadOnly?: boolean;
+  }) => [...NOTIFICATIONS_QUERY_KEYS.all, "list", options ?? {}] as const,
   unreadCount: () => [...NOTIFICATIONS_QUERY_KEYS.all, "unread-count"] as const,
 };
 

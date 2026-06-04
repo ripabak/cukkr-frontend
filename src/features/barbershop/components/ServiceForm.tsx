@@ -1,11 +1,11 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, Text, StyleSheet, ViewStyle } from 'react-native';
-import { ImageUploadBox } from '@/src/components/ImageUploadBox';
-import { TextInputField } from '@/src/components/TextInputField';
-import { MultilineInputField } from '@/src/components/MultilineInputField';
-import { PrefixedInputField } from '@/src/components/PrefixedInputField';
-import { ToggleRow } from '@/src/features/barbershop/components/ToggleRow';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { View, Text, StyleSheet, ViewStyle } from "react-native";
+import { ImageUploadBox } from "@/src/components/ImageUploadBox";
+import { TextInputField } from "@/src/components/TextInputField";
+import { MultilineInputField } from "@/src/components/MultilineInputField";
+import { PrefixedInputField } from "@/src/components/PrefixedInputField";
+import { ToggleRow } from "@/src/features/barbershop/components/ToggleRow";
 
 interface Props {
   name: string;
@@ -101,7 +101,7 @@ export function ServiceForm({
           <PrefixedInputField
             prefix="%"
             placeholder="0"
-            value={discount ?? ''}
+            value={discount ?? ""}
             onChangeText={onDiscountChange}
             style={styles.prefixField}
           />

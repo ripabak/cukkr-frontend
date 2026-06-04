@@ -1,4 +1,4 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -29,14 +29,18 @@ export function BarbersManagementScreen() {
   const { user: currentUser } = useAuthUser();
 
   const { data: members = [], isLoading: loadingMembers } = useBarbersList();
-  const { data: invitations = [], isLoading: loadingInvitations } = useBarbersInvitations();
+  const { data: invitations = [], isLoading: loadingInvitations } =
+    useBarbersInvitations();
   const { mutate: removeBarber, isPending: isRemoving } = useRemoveBarber();
-  const { mutate: cancelInvite, isPending: isCanceling } = useCancelBarberInvitation();
+  const { mutate: cancelInvite, isPending: isCanceling } =
+    useCancelBarberInvitation();
 
   const [removeTarget, setRemoveTarget] = useState<RemoveTarget | null>(null);
 
   const isPending = isRemoving || isCanceling;
-  const pendingInvitations = invitations.filter((inv) => inv.status === "pending");
+  const pendingInvitations = invitations.filter(
+    (inv) => inv.status === "pending",
+  );
 
   const handleConfirmRemove = () => {
     if (!removeTarget) return;
@@ -71,7 +75,7 @@ export function BarbersManagementScreen() {
   return (
     <ScreenShell headerSlot={<ScreenHeader onBack={() => router.back()} />}>
       <Text style={styles.title}>Barbers Management</Text>
-      <Text style={styles.subtitle}>Manage your barbershop team members</Text> 
+      <Text style={styles.subtitle}>Manage your barbershop team members</Text>
 
       {!isLoading && pendingInvitations.length > 0 ? (
         <>
@@ -86,9 +90,17 @@ export function BarbersManagementScreen() {
                 status="Pending"
                 statusVariant="pending"
                 onRemove={() =>
-                  setRemoveTarget({ id: inv.id, name: inv.email, type: "invitation" })
+                  setRemoveTarget({
+                    id: inv.id,
+                    name: inv.email,
+                    type: "invitation",
+                  })
                 }
-                style={index < pendingInvitations.length - 1 ? styles.cardMargin : undefined}
+                style={
+                  index < pendingInvitations.length - 1
+                    ? styles.cardMargin
+                    : undefined
+                }
               />
             ))}
           </View>
@@ -110,15 +122,20 @@ export function BarbersManagementScreen() {
                   isYou={isYou}
                   status="Active"
                   statusVariant="active"
-                  onRemove={isOwner ? undefined : () =>
-                    setRemoveTarget({
-                      id: member.id,
-                      name: member.user.name,
-                      type: "member",
-                      memberIdOrEmail: member.userId ?? member.user.email,
-                    })
+                  onRemove={
+                    isOwner
+                      ? undefined
+                      : () =>
+                          setRemoveTarget({
+                            id: member.id,
+                            name: member.user.name,
+                            type: "member",
+                            memberIdOrEmail: member.userId ?? member.user.email,
+                          })
                   }
-                  style={index < members.length - 1 ? styles.cardMargin : undefined}
+                  style={
+                    index < members.length - 1 ? styles.cardMargin : undefined
+                  }
                 />
               );
             })}
@@ -139,13 +156,23 @@ export function BarbersManagementScreen() {
       <ConfirmationModal
         visible={!!removeTarget}
         icon="person-remove-outline"
-        title={removeTarget?.type === "invitation" ? "Cancel Invitation" : "Remove Barber"}
+        title={
+          removeTarget?.type === "invitation"
+            ? "Cancel Invitation"
+            : "Remove Barber"
+        }
         description={
           removeTarget?.type === "invitation"
             ? `Cancel the invitation for ${removeTarget?.name}?`
             : `Are you sure you want to remove ${removeTarget?.name} from your barbershop?`
         }
-        confirmLabel={isPending ? "Processing..." : removeTarget?.type === "invitation" ? "Cancel Invite" : "Remove"}
+        confirmLabel={
+          isPending
+            ? "Processing..."
+            : removeTarget?.type === "invitation"
+              ? "Cancel Invite"
+              : "Remove"
+        }
         cancelLabel="Back"
         onConfirm={handleConfirmRemove}
         onCancel={() => setRemoveTarget(null)}

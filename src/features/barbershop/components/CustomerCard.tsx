@@ -1,7 +1,13 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ViewStyle,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Props {
   name: string;
@@ -13,7 +19,15 @@ interface Props {
   style?: ViewStyle;
 }
 
-export function CustomerCard({ name, totalBook, bookValue, selected, selectionMode, onPress, style }: Props) {
+export function CustomerCard({
+  name,
+  totalBook,
+  bookValue,
+  selected,
+  selectionMode,
+  onPress,
+  style,
+}: Props) {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -27,7 +41,7 @@ export function CustomerCard({ name, totalBook, bookValue, selected, selectionMo
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.meta}>
           Total Book <Text style={styles.metaBold}>{totalBook}</Text>
-          {'  ·  '}Book Value <Text style={styles.metaBold}>{bookValue}</Text>
+          {"  ·  "}Book Value <Text style={styles.metaBold}>{bookValue}</Text>
         </Text>
       </View>
       <Ionicons name="chevron-forward" size={18} color={Colors.icon.muted} />
@@ -37,8 +51,8 @@ export function CustomerCard({ name, totalBook, bookValue, selected, selectionMo
 
 const styles = StyleSheet.create({
   card: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: Colors.brand.primarySurface,
     borderRadius: 16,
     paddingVertical: 14,
@@ -55,8 +69,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     backgroundColor: Colors.brand.primaryDark,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   info: {
     flex: 1,
@@ -64,7 +78,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: "700",
     color: Colors.text.primary,
   },
   meta: {
@@ -72,7 +86,7 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
   },
   metaBold: {
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.text.primary,
   },
 });

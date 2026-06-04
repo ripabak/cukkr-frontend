@@ -1,4 +1,4 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { CustomerCard } from "@/src/features/barbershop/components/CustomerCard";
 import { FloatingActionButton } from "@/src/features/barbershop/components/FloatingActionButton";
 import { SearchInput } from "@/src/components/SearchInput";
@@ -47,7 +47,10 @@ export function CustomerManagementScreen() {
     if (selectionMode) {
       toggleSelect(customerId);
     } else {
-      router.push({ pathname: "/d/customer-detail-general", params: { customerId } });
+      router.push({
+        pathname: "/d/customer-detail-general",
+        params: { customerId },
+      });
     }
   }
 
@@ -99,7 +102,9 @@ export function CustomerManagementScreen() {
       contentStyle={styles.content}
     >
       <Text style={styles.title}>Customer{"\n"}Management</Text>
-      <Text style={styles.subtitle}>Manage all your customers in one place.</Text>
+      <Text style={styles.subtitle}>
+        Manage all your customers in one place.
+      </Text>
       {!selectionMode && (
         <Text style={styles.hint}>
           Only customers with valid contact information will appear here.
@@ -107,7 +112,11 @@ export function CustomerManagementScreen() {
       )}
 
       <View style={styles.searchWrapper}>
-        <SearchInput value={search} onChangeText={setSearch} placeholder="Search" />
+        <SearchInput
+          value={search}
+          onChangeText={setSearch}
+          placeholder="Search"
+        />
       </View>
 
       {!isLoading && customers.length === 0 ? (
@@ -149,7 +158,12 @@ const styles = StyleSheet.create({
   subtitle: { fontSize: 14, color: Colors.text.secondary, marginTop: 8 },
   hint: { fontSize: 14, color: Colors.text.secondary, marginTop: 4 },
   searchWrapper: { marginTop: 24, marginBottom: 16 },
-  empty: { fontSize: 14, color: Colors.text.secondary, textAlign: "center", marginTop: 40 },
+  empty: {
+    fontSize: 14,
+    color: Colors.text.secondary,
+    textAlign: "center",
+    marginTop: 40,
+  },
   list: { gap: 10 },
   sortMenu: { top: 100, right: 20, left: 20 },
 });

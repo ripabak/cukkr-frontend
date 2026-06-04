@@ -1,4 +1,4 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
@@ -38,7 +38,10 @@ export function OnboardingRunBarbershopScreen() {
               {[true, false, true].map((checked, i) => (
                 <View key={i} style={styles.checkRow}>
                   <View
-                    style={[styles.checkIcon, checked && styles.checkIconActive]}
+                    style={[
+                      styles.checkIcon,
+                      checked && styles.checkIconActive,
+                    ]}
                   />
                   <View style={styles.checkBar} />
                 </View>

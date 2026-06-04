@@ -1,8 +1,8 @@
-import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
-import { TextInputField } from '@/src/components/TextInputField';
-import { SelectorInput } from '@/src/features/schedule/components/SelectorInput';
-import { ServiceSelectionCard } from '@/src/features/schedule/components/ServiceSelectionCard';
+import React from "react";
+import { View, StyleSheet, ViewStyle } from "react-native";
+import { TextInputField } from "@/src/components/TextInputField";
+import { SelectorInput } from "@/src/features/schedule/components/SelectorInput";
+import { ServiceSelectionCard } from "@/src/features/schedule/components/ServiceSelectionCard";
 
 interface ServiceItem {
   name: string;

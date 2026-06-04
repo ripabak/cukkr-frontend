@@ -13,7 +13,7 @@ const API_TO_BOOKING_STATUS: Record<string, BookingStatus> = {
   pending: "waiting",
   requested: "requested",
   waiting: "waiting",
-  "in_progress": "in_progress",
+  in_progress: "in_progress",
   completed: "completed",
   cancelled: "cancelled",
 };
@@ -22,19 +22,22 @@ const API_TO_DETAIL_STATUS: Record<string, BookingDetailStatus> = {
   pending: "waiting",
   requested: "requested",
   waiting: "waiting",
-  "in_progress": "in_progress",
+  in_progress: "in_progress",
   completed: "completed",
   cancelled: "cancelled",
 };
 
-export function mapApiStatusToBookingStatus(status: ApiStatus | string): BookingStatus {
+export function mapApiStatusToBookingStatus(
+  status: ApiStatus | string,
+): BookingStatus {
   return (API_TO_BOOKING_STATUS[status] as BookingStatus) ?? "waiting";
 }
 
-export function mapApiStatusToDetailStatus(status: ApiStatus | string): BookingDetailStatus {
+export function mapApiStatusToDetailStatus(
+  status: ApiStatus | string,
+): BookingDetailStatus {
   return (API_TO_DETAIL_STATUS[status] as BookingDetailStatus) ?? "waiting";
 }
-
 
 export function formatDuration(totalMinutes: number): string {
   if (totalMinutes < 60) return `${totalMinutes} mins`;
@@ -57,25 +60,44 @@ type QueueBooking = {
 
 export function sortBookingsQueue<T extends QueueBooking>(bookings: T[]): T[] {
   const inProgress = bookings.filter((b) => b.status === "in_progress");
-  const waiting = bookings.filter((b) => b.status === "waiting" || b.status === "pending");
+  const waiting = bookings.filter(
+    (b) => b.status === "waiting" || b.status === "pending",
+  );
   const completed = bookings
     .filter((b) => b.status === "completed")
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
   const cancelled = bookings
     .filter((b) => b.status === "cancelled")
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
 
-  return [...inProgress, ...mergeWaitingQueue(waiting), ...completed, ...cancelled];
+  return [
+    ...inProgress,
+    ...mergeWaitingQueue(waiting),
+    ...completed,
+    ...cancelled,
+  ];
 }
 
 function mergeWaitingQueue<T extends QueueBooking>(bookings: T[]): T[] {
   const appointments = bookings
     .filter((b) => b.type === "appointment" && b.scheduledAt)
-    .sort((a, b) => new Date(a.scheduledAt!).getTime() - new Date(b.scheduledAt!).getTime());
+    .sort(
+      (a, b) =>
+        new Date(a.scheduledAt!).getTime() - new Date(b.scheduledAt!).getTime(),
+    );
 
   const walkIns = bookings
     .filter((b) => b.type === "walk_in" || !b.scheduledAt)
-    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    .sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+    );
 
   const merged: T[] = [];
   let apptIdx = 0;
@@ -115,4 +137,3 @@ function mergeWaitingQueue<T extends QueueBooking>(bookings: T[]): T[] {
 
   return merged;
 }
-

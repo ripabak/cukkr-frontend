@@ -1,6 +1,12 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 
 interface SortOption {
   label: string;
@@ -17,19 +23,30 @@ interface Props {
 }
 
 const DEFAULT_OPTIONS: SortOption[] = [
-  { label: 'Sort by Name', value: 'name' },
-  { label: 'Sort by Lowest', value: 'lowest' },
-  { label: 'Sort by Highest', value: 'highest' },
-  { label: 'Sort by Recently Added', value: 'recent' },
-  { label: 'Sort by Oldest First', value: 'oldest' },
+  { label: "Sort by Name", value: "name" },
+  { label: "Sort by Lowest", value: "lowest" },
+  { label: "Sort by Highest", value: "highest" },
+  { label: "Sort by Recently Added", value: "recent" },
+  { label: "Sort by Oldest First", value: "oldest" },
 ];
 
-export function SortMenu({ visible, options = DEFAULT_OPTIONS, selected, onSelect, onClose, style }: Props) {
+export function SortMenu({
+  visible,
+  options = DEFAULT_OPTIONS,
+  selected,
+  onSelect,
+  onClose,
+  style,
+}: Props) {
   if (!visible) return null;
 
   return (
     <>
-      <TouchableOpacity style={styles.backdrop} onPress={onClose} activeOpacity={1} />
+      <TouchableOpacity
+        style={styles.backdrop}
+        onPress={onClose}
+        activeOpacity={1}
+      />
       <View style={[styles.menu, style]}>
         {options.map((opt, index) => (
           <TouchableOpacity
@@ -39,9 +56,17 @@ export function SortMenu({ visible, options = DEFAULT_OPTIONS, selected, onSelec
               onClose?.();
             }}
             activeOpacity={0.7}
-            style={[styles.item, index < options.length - 1 && styles.itemBorder]}
+            style={[
+              styles.item,
+              index < options.length - 1 && styles.itemBorder,
+            ]}
           >
-            <Text style={[styles.itemText, selected === opt.value && styles.itemTextSelected]}>
+            <Text
+              style={[
+                styles.itemText,
+                selected === opt.value && styles.itemTextSelected,
+              ]}
+            >
               {opt.label}
             </Text>
           </TouchableOpacity>
@@ -53,21 +78,21 @@ export function SortMenu({ visible, options = DEFAULT_OPTIONS, selected, onSelec
 
 const styles = StyleSheet.create({
   backdrop: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
   },
   menu: {
-    position: 'absolute',
+    position: "absolute",
     top: 56,
     right: 20,
     backgroundColor: Colors.bg.default,
     borderRadius: 12,
     borderWidth: 1,
     borderColor: Colors.border.light,
-    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.08)',
+    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.08)",
     elevation: 8,
     minWidth: 200,
     zIndex: 100,
@@ -82,11 +107,11 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   itemTextSelected: {
-    fontWeight: '700',
+    fontWeight: "700",
     color: Colors.brand.primaryDark,
   },
 });

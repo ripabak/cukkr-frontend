@@ -1,6 +1,6 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, Text, TextInput, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { View, Text, TextInput, StyleSheet, ViewStyle } from "react-native";
 
 interface Props {
   label?: string;
@@ -57,6 +57,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.text.primary,
     padding: 0,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
 });

@@ -8,7 +8,11 @@ import { AuthScreenShell } from "../components/AuthScreenShell";
 import { AuthTextField } from "../components/AuthTextField";
 import { useSignUp, useSendVerificationOtp } from "../hooks";
 import { getErrorMessage } from "../utils/error-handler";
-import { validateEmail, validatePassword, validatePasswordsMatch } from "../utils/validation";
+import {
+  validateEmail,
+  validatePassword,
+  validatePasswordsMatch,
+} from "../utils/validation";
 
 const MIN_PASSWORD_LENGTH = 8;
 
@@ -21,7 +25,8 @@ export function RegisterScreen() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const { mutateAsync: signUp, isPending: signingUp } = useSignUp();
-  const { mutateAsync: sendOtp, isPending: sendingOtp } = useSendVerificationOtp();
+  const { mutateAsync: sendOtp, isPending: sendingOtp } =
+    useSendVerificationOtp();
   const isPending = signingUp || sendingOtp;
 
   const handleRegister = async () => {
@@ -65,7 +70,12 @@ export function RegisterScreen() {
         <AuthFooterPrompt
           prompt="Already have an account?"
           actionLabel="Sign In here"
-          onPress={() => router.push({ pathname: "/d/login", params: redirect ? { redirect } : {} })}
+          onPress={() =>
+            router.push({
+              pathname: "/d/login",
+              params: redirect ? { redirect } : {},
+            })
+          }
         />
       }
     >

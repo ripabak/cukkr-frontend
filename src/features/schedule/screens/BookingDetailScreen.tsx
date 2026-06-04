@@ -38,12 +38,16 @@ type ModalType = "accept" | "decline" | "start" | "takeover" | "cancel" | null;
 
 export function BookingDetailScreen() {
   const router = useRouter();
-  const { id, action } = useLocalSearchParams<{ id: string; action?: string }>();
+  const { id, action } = useLocalSearchParams<{
+    id: string;
+    action?: string;
+  }>();
   const toast = useToast();
 
   const { data: booking, isLoading } = useBookingById(id ?? "");
   const { mutate: acceptBooking, isPending: isAccepting } = useAcceptBooking();
-  const { mutate: declineBooking, isPending: isDeclining } = useDeclineBooking();
+  const { mutate: declineBooking, isPending: isDeclining } =
+    useDeclineBooking();
   const { mutate: updateStatus } = useUpdateBookingStatus();
 
   const [overflowVisible, setOverflowVisible] = useState(false);
@@ -52,7 +56,12 @@ export function BookingDetailScreen() {
   const actionModalShown = useRef(false);
 
   useEffect(() => {
-    if (!isLoading && booking && booking.status === "requested" && !actionModalShown.current) {
+    if (
+      !isLoading &&
+      booking &&
+      booking.status === "requested" &&
+      !actionModalShown.current
+    ) {
       actionModalShown.current = true;
       if (action === "accept") setModalType("accept");
       else if (action === "decline") setModalType("decline");
@@ -71,58 +80,78 @@ export function BookingDetailScreen() {
   const handleDecline = (reason?: string) => {
     if (!id) return;
     setModalType(null);
-    declineBooking({ id, reason }, {
-      onSuccess: () => toast.success("Booking declined"),
-      onError: (error) => toast.error(getErrorMessage(error)),
-    });
+    declineBooking(
+      { id, reason },
+      {
+        onSuccess: () => toast.success("Booking declined"),
+        onError: (error) => toast.error(getErrorMessage(error)),
+      },
+    );
   };
 
   const handleStart = () => {
     if (!id) return;
     setModalType(null);
-    updateStatus({ id, status: "in_progress" }, {
-      onSuccess: () => toast.success("Booking started"),
-      onError: (error) => toast.error(getErrorMessage(error)),
-    });
+    updateStatus(
+      { id, status: "in_progress" },
+      {
+        onSuccess: () => toast.success("Booking started"),
+        onError: (error) => toast.error(getErrorMessage(error)),
+      },
+    );
   };
 
   const handleComplete = () => {
     if (!id) return;
     setSwipeModalVisible(false);
-    updateStatus({ id, status: "completed" }, {
-      onSuccess: () => toast.success("Booking completed"),
-      onError: (error) => toast.error(getErrorMessage(error)),
-    });
+    updateStatus(
+      { id, status: "completed" },
+      {
+        onSuccess: () => toast.success("Booking completed"),
+        onError: (error) => toast.error(getErrorMessage(error)),
+      },
+    );
   };
 
   const handleMarkWaiting = () => {
     if (!id) return;
     setOverflowVisible(false);
-    updateStatus({ id, status: "waiting" }, {
-      onSuccess: () => toast.success("Booking set back to waiting"),
-      onError: (error) => toast.error(getErrorMessage(error)),
-    });
+    updateStatus(
+      { id, status: "waiting" },
+      {
+        onSuccess: () => toast.success("Booking set back to waiting"),
+        onError: (error) => toast.error(getErrorMessage(error)),
+      },
+    );
   };
 
   const handleCancel = () => {
     if (!id) return;
     setModalType(null);
-    updateStatus({ id, status: "cancelled", cancelReason: "Cancelled by barber" }, {
-      onSuccess: () => {
-        toast.success("Booking cancelled");
-        router.back();
+    updateStatus(
+      { id, status: "cancelled", cancelReason: "Cancelled by barber" },
+      {
+        onSuccess: () => {
+          toast.success("Booking cancelled");
+          router.back();
+        },
+        onError: (error) => toast.error(getErrorMessage(error)),
       },
-      onError: (error) => toast.error(getErrorMessage(error)),
-    });
+    );
   };
 
   const overflowItems = (() => {
     if (booking?.status === "waiting") {
-      return [{
-        label: "Cancel Book",
-        danger: true,
-        onPress: () => { setOverflowVisible(false); setModalType("cancel"); },
-      }];
+      return [
+        {
+          label: "Cancel Book",
+          danger: true,
+          onPress: () => {
+            setOverflowVisible(false);
+            setModalType("cancel");
+          },
+        },
+      ];
     }
     if (booking?.status === "in_progress") {
       return [{ label: "Mark as Waiting", onPress: handleMarkWaiting }];
@@ -147,7 +176,10 @@ export function BookingDetailScreen() {
       );
     }
 
-    const totalDuration = booking.services.reduce((acc, s) => acc + s.duration, 0);
+    const totalDuration = booking.services.reduce(
+      (acc, s) => acc + s.duration,
+      0,
+    );
 
     const timeDate =
       booking.status === "in_progress" && !booking.scheduledAt
@@ -175,10 +207,22 @@ export function BookingDetailScreen() {
     const infoRows = [
       { label: "Book No", value: `#${booking.referenceNumber}` },
       ...(booking.requestedBarber
-        ? [{ label: "Requested", value: booking.requestedBarber.name, valueIconName: "cut" }]
+        ? [
+            {
+              label: "Requested",
+              value: booking.requestedBarber.name,
+              valueIconName: "cut",
+            },
+          ]
         : []),
       ...(showHandledBy && booking.handledByBarber
-        ? [{ label: "Handled By", value: booking.handledByBarber.name, valueIconName: "cut" }]
+        ? [
+            {
+              label: "Handled By",
+              value: booking.handledByBarber.name,
+              valueIconName: "cut",
+            },
+          ]
         : []),
     ];
 
@@ -187,13 +231,21 @@ export function BookingDetailScreen() {
       price: formatPrice(s.price),
     }));
 
-    const totalOriginal = booking.services.reduce((acc, s) => acc + s.originalPrice, 0);
+    const totalOriginal = booking.services.reduce(
+      (acc, s) => acc + s.originalPrice,
+      0,
+    );
     const totalAmount = booking.services.reduce((acc, s) => acc + s.price, 0);
     const discount = totalOriginal - totalAmount;
 
     const paymentSummary = [
-      { label: `Services (${booking.services.length})`, value: formatPrice(totalOriginal) },
-      ...(discount > 0 ? [{ label: "Discount", value: `-${formatPrice(discount)}` }] : []),
+      {
+        label: `Services (${booking.services.length})`,
+        value: formatPrice(totalOriginal),
+      },
+      ...(discount > 0
+        ? [{ label: "Discount", value: `-${formatPrice(discount)}` }]
+        : []),
     ];
 
     const footer = (() => {
@@ -209,7 +261,9 @@ export function BookingDetailScreen() {
         return (
           <StickyCta
             label={isMismatchedBarber ? "Take Over" : "Handle this"}
-            onPress={() => setModalType(isMismatchedBarber ? "takeover" : "start")}
+            onPress={() =>
+              setModalType(isMismatchedBarber ? "takeover" : "start")
+            }
           />
         );
       }
@@ -258,7 +312,11 @@ export function BookingDetailScreen() {
                 activeOpacity={0.7}
                 style={styles.overflowBtn}
               >
-                <Ionicons name="ellipsis-horizontal" size={20} color={Colors.text.primary} />
+                <Ionicons
+                  name="ellipsis-horizontal"
+                  size={20}
+                  color={Colors.text.primary}
+                />
               </TouchableOpacity>
             ) : undefined
           }

@@ -1,4 +1,4 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { BookingForm } from "@/src/features/schedule/components/BookingForm";
@@ -69,7 +69,10 @@ export function NewWalkInScreen() {
           title="New Walk-In"
           onBack={() => router.back()}
           rightAction={
-            <BookingTypeToggle value={bookingType} onChange={handleBookingTypeChange} />
+            <BookingTypeToggle
+              value={bookingType}
+              onChange={handleBookingTypeChange}
+            />
           }
         />
       }

@@ -1,23 +1,32 @@
-import { ConfirmationModal } from '@/src/components/ConfirmationModal';
-import { ScreenHeader } from '@/src/components/ScreenHeader';
-import { ScreenShell } from '@/src/components/ScreenShell';
-import { NotificationCard, NotificationType } from '@/src/features/notifications/components/NotificationCard';
-import { pwaNotificationService } from '@/src/services/pwa-notification.service';
-import { Colors } from '@/src/theme/colors';
-import { formatRelativeTime } from '@/src/utils/date';
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { useAcceptNotification, useDeclineNotification, useMarkAllAsRead } from '../hooks/useNotificationsMutations';
-import { useNotificationsList } from '../hooks/useNotificationsQueries';
+import { ConfirmationModal } from "@/src/components/ConfirmationModal";
+import { ScreenHeader } from "@/src/components/ScreenHeader";
+import { ScreenShell } from "@/src/components/ScreenShell";
+import {
+  NotificationCard,
+  NotificationType,
+} from "@/src/features/notifications/components/NotificationCard";
+import { pwaNotificationService } from "@/src/services/pwa-notification.service";
+import { Colors } from "@/src/theme/colors";
+import { formatRelativeTime } from "@/src/utils/date";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import {
+  useAcceptNotification,
+  useDeclineNotification,
+  useMarkAllAsRead,
+} from "../hooks/useNotificationsMutations";
+import { useNotificationsList } from "../hooks/useNotificationsQueries";
 
 const API_TYPE_MAP: Record<string, NotificationType> = {
-  appointment_requested: 'appointment-request',
-  walk_in_arrival: 'walk-in',
-  barbershop_invitation: 'invitation',
+  appointment_requested: "appointment-request",
+  walk_in_arrival: "walk-in",
+  barbershop_invitation: "invitation",
 };
-type NotifItem = NonNullable<ReturnType<typeof useNotificationsList>['data']>['data'][number];
+type NotifItem = NonNullable<
+  ReturnType<typeof useNotificationsList>["data"]
+>["data"][number];
 
 export function NotificationsListScreen() {
   const router = useRouter();
@@ -26,7 +35,9 @@ export function NotificationsListScreen() {
   const declineMutation = useDeclineNotification();
   const markAllRead = useMarkAllAsRead();
 
-  const [invitationModal, setInvitationModal] = useState<NotifItem | null>(null);
+  const [invitationModal, setInvitationModal] = useState<NotifItem | null>(
+    null,
+  );
 
   const notifications = data?.data ?? [];
 
@@ -36,31 +47,35 @@ export function NotificationsListScreen() {
         pwaNotificationService.clearBadge();
       },
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleBookingPress = (notif: NotifItem) => {
     if (!notif.referenceId) return;
-    router.push({ pathname: "/d/booking-detail", params: { id: notif.referenceId } });
+    router.push({
+      pathname: "/d/booking-detail",
+      params: { id: notif.referenceId },
+    });
   };
 
   const handleAcceptInvitation = () => {
     if (!invitationModal) return;
-    acceptMutation.mutate(invitationModal.id, { onSuccess: () => setInvitationModal(null) });
+    acceptMutation.mutate(invitationModal.id, {
+      onSuccess: () => setInvitationModal(null),
+    });
   };
 
   const handleDeclineInvitation = () => {
     if (!invitationModal) return;
-    declineMutation.mutate({ id: invitationModal.id }, { onSuccess: () => setInvitationModal(null) });
+    declineMutation.mutate(
+      { id: invitationModal.id },
+      { onSuccess: () => setInvitationModal(null) },
+    );
   };
 
   return (
     <ScreenShell
-      headerSlot={
-        <ScreenHeader
-          onBack={() => router.back()}
-        />
-      }
+      headerSlot={<ScreenHeader onBack={() => router.back()} />}
       contentStyle={styles.content}
     >
       {!isLoading && isError ? (
@@ -71,7 +86,11 @@ export function NotificationsListScreen() {
 
       {!isLoading && !isError && notifications.length === 0 ? (
         <View style={styles.centered}>
-          <Ionicons name="notifications-off-outline" size={48} color={Colors.icon.muted} />
+          <Ionicons
+            name="notifications-off-outline"
+            size={48}
+            color={Colors.icon.muted}
+          />
           <Text style={styles.emptyTitle}>No Notifications</Text>
           <Text style={styles.emptySubtitle}>You're all caught up!</Text>
         </View>
@@ -82,23 +101,46 @@ export function NotificationsListScreen() {
           {notifications.map((notif, i) => (
             <NotificationCard
               key={notif.id}
-              type={API_TYPE_MAP[notif.type] ?? 'general'}
+              type={API_TYPE_MAP[notif.type] ?? "general"}
               title={notif.title}
               name={notif.body}
               timestamp={formatRelativeTime(notif.createdAt)}
-              status={notif.actionedAs === 'accepted' ? 'accepted' : notif.actionedAs === 'declined' ? 'declined' : 'pending'}
-              showActions={notif.actionType === 'accept_decline_appointment' && notif.actionedAs === null}
-              isClickable={notif.referenceType === 'booking' && !!notif.referenceId}
-              onAccept={() => router.push({ pathname: '/d/booking-detail', params: { id: notif.referenceId!, action: 'accept' } })}
-              onDecline={() => router.push({ pathname: '/d/booking-detail', params: { id: notif.referenceId!, action: 'decline' } })}
-              onPress={
-                notif.referenceType === 'booking' && notif.referenceId
-                  ? () => handleBookingPress(notif)
-                  : notif.referenceType === 'invitation'
-                  ? () => setInvitationModal(notif)
-                  : undefined
+              status={
+                notif.actionedAs === "accepted"
+                  ? "accepted"
+                  : notif.actionedAs === "declined"
+                    ? "declined"
+                    : "pending"
               }
-              style={i < notifications.length - 1 ? styles.cardMargin : undefined}
+              showActions={
+                notif.actionType === "accept_decline_appointment" &&
+                notif.actionedAs === null
+              }
+              isClickable={
+                notif.referenceType === "booking" && !!notif.referenceId
+              }
+              onAccept={() =>
+                router.push({
+                  pathname: "/d/booking-detail",
+                  params: { id: notif.referenceId!, action: "accept" },
+                })
+              }
+              onDecline={() =>
+                router.push({
+                  pathname: "/d/booking-detail",
+                  params: { id: notif.referenceId!, action: "decline" },
+                })
+              }
+              onPress={
+                notif.referenceType === "booking" && notif.referenceId
+                  ? () => handleBookingPress(notif)
+                  : notif.referenceType === "invitation"
+                    ? () => setInvitationModal(notif)
+                    : undefined
+              }
+              style={
+                i < notifications.length - 1 ? styles.cardMargin : undefined
+              }
             />
           ))}
         </View>
@@ -107,7 +149,7 @@ export function NotificationsListScreen() {
       <ConfirmationModal
         visible={invitationModal !== null}
         icon="person-add"
-        title={invitationModal?.title ?? ''}
+        title={invitationModal?.title ?? ""}
         description={invitationModal?.body}
         cancelLabel="Accept"
         confirmLabel="Decline"
@@ -132,8 +174,8 @@ const styles = StyleSheet.create({
   },
   centered: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingTop: 80,
     gap: 8,
   },
@@ -143,7 +185,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   emptySubtitle: {

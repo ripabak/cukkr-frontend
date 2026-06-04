@@ -18,7 +18,8 @@ export function LoginScreen() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const { mutateAsync: signIn, isPending: signingIn } = useSignIn();
-  const { mutateAsync: sendOtp, isPending: sendingOtp } = useSendVerificationOtp();
+  const { mutateAsync: sendOtp, isPending: sendingOtp } =
+    useSendVerificationOtp();
   const isPending = signingIn || sendingOtp;
 
   const handleLogin = async () => {
@@ -28,9 +29,15 @@ export function LoginScreen() {
       await signIn({ email: identifier, password });
       router.replace((redirect as any) ?? "/d/(tabs)/home");
     } catch (error) {
-      if (error instanceof Error && (error as any).code === "EMAIL_NOT_VERIFIED") {
+      if (
+        error instanceof Error &&
+        (error as any).code === "EMAIL_NOT_VERIFIED"
+      ) {
         sendOtp({ email: identifier, type: "email-verification" });
-        router.replace({ pathname: "/d/verify-account", params: { email: identifier } });
+        router.replace({
+          pathname: "/d/verify-account",
+          params: { email: identifier },
+        });
         return;
       }
       toast.error(getErrorMessage(error));
@@ -41,7 +48,18 @@ export function LoginScreen() {
     <AuthScreenShell
       title="Login"
       description="Enter your email and password to securely access your account and manage your services."
-      footer={<AuthFooterPrompt prompt="Don't have an account?" actionLabel="Sign Up here" onPress={() => router.push({ pathname: "/d/register", params: redirect ? { redirect } : {} })} />}
+      footer={
+        <AuthFooterPrompt
+          prompt="Don't have an account?"
+          actionLabel="Sign Up here"
+          onPress={() =>
+            router.push({
+              pathname: "/d/register",
+              params: redirect ? { redirect } : {},
+            })
+          }
+        />
+      }
     >
       <AuthTextField
         autoCapitalize="none"
@@ -62,7 +80,14 @@ export function LoginScreen() {
       />
 
       <View style={styles.forgotPasswordRow}>
-        <Pressable onPress={() => router.push({ pathname: "/d/forgot-password", params: redirect ? { redirect } : {} })}>
+        <Pressable
+          onPress={() =>
+            router.push({
+              pathname: "/d/forgot-password",
+              params: redirect ? { redirect } : {},
+            })
+          }
+        >
           <Text style={styles.forgotPasswordLink}>Forgot Password</Text>
         </Pressable>
       </View>

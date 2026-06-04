@@ -1,8 +1,8 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 interface Props {
   selectionMode: boolean;
@@ -10,7 +10,11 @@ interface Props {
   onFilterPress?: () => void;
 }
 
-export function SelectionToolbar({ selectionMode, onToggleSelect, onFilterPress }: Props) {
+export function SelectionToolbar({
+  selectionMode,
+  onToggleSelect,
+  onFilterPress,
+}: Props) {
   const router = useRouter();
 
   return (
@@ -27,7 +31,9 @@ export function SelectionToolbar({ selectionMode, onToggleSelect, onFilterPress 
           <Ionicons name="filter" size={18} color={Colors.text.primary} />
         </TouchableOpacity>
         <TouchableOpacity onPress={onToggleSelect}>
-          <Text style={styles.selectText}>{selectionMode ? 'Cancel' : 'Select'}</Text>
+          <Text style={styles.selectText}>
+            {selectionMode ? "Cancel" : "Select"}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -36,9 +42,9 @@ export function SelectionToolbar({ selectionMode, onToggleSelect, onFilterPress 
 
 const styles = StyleSheet.create({
   row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingTop: 8,
     paddingBottom: 4,
@@ -51,12 +57,12 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     backgroundColor: Colors.bg.default,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   right: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 12,
   },
   filterBtn: {
@@ -64,12 +70,12 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     backgroundColor: Colors.bg.default,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   selectText: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.text.primary,
     backgroundColor: Colors.bg.default,
     paddingHorizontal: 14,

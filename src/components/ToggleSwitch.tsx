@@ -1,6 +1,6 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { TouchableOpacity, View, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { TouchableOpacity, View, StyleSheet, ViewStyle } from "react-native";
 
 interface Props {
   value: boolean;
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 24,
     borderRadius: 12,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingHorizontal: 2,
   },
   trackOn: {
@@ -41,9 +41,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.bg.default,
   },
   thumbOn: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
   },
   thumbOff: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
 });

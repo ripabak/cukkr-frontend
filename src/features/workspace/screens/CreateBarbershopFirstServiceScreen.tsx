@@ -1,4 +1,4 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { MultilineInputField } from "@/src/components/MultilineInputField";
 import { PrefixedInputField } from "@/src/components/PrefixedInputField";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
@@ -13,7 +13,11 @@ import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
 import { useCreateOrganization, useSetActiveOrganization } from "../hooks";
 import { servicesService } from "../services";
 import { getErrorMessage } from "../utils/error-handler";
-import { validateDuration, validatePrice, validateServiceName } from "../utils/form-validators";
+import {
+  validateDuration,
+  validatePrice,
+  validateServiceName,
+} from "../utils/form-validators";
 import { generateSlug } from "../utils/slug-generator";
 
 export function CreateBarbershopFirstServiceScreen() {
@@ -23,9 +27,13 @@ export function CreateBarbershopFirstServiceScreen() {
   const [serviceName, setServiceName] = useState(formData.serviceName || "");
   const [description, setDescription] = useState(formData.description || "");
   const [price, setPrice] = useState(formData.servicePrice?.toString() || "");
-  const [duration, setDuration] = useState(formData.serviceDuration?.toString() || "");
-  const { mutate: createOrg, isPending: isCreatingOrg } = useCreateOrganization();
-  const { mutate: setActive, isPending: isSettingActive } = useSetActiveOrganization();
+  const [duration, setDuration] = useState(
+    formData.serviceDuration?.toString() || "",
+  );
+  const { mutate: createOrg, isPending: isCreatingOrg } =
+    useCreateOrganization();
+  const { mutate: setActive, isPending: isSettingActive } =
+    useSetActiveOrganization();
 
   const handleFinish = () => {
     const nameValidation = validateServiceName(serviceName);
@@ -81,19 +89,21 @@ export function CreateBarbershopFirstServiceScreen() {
 
                 router.push("/d/create-barbershop-invite-barber-empty");
               } catch (error) {
-                console.log(error)
+                console.log(error);
                 toast.error(getErrorMessage(error));
               }
             },
             onError: (error) => {
-              toast.error("Failed to set active organization: " + error.message);
+              toast.error(
+                "Failed to set active organization: " + error.message,
+              );
             },
           });
         },
         onError: (error) => {
           toast.error("Failed to create organization: " + error.message);
         },
-      }
+      },
     );
   };
 
@@ -124,11 +134,7 @@ export function CreateBarbershopFirstServiceScreen() {
         style={styles.descInput}
       />
       <Text style={styles.fieldLabel}>Price</Text>
-      <PrefixedInputField
-        prefix="Rp"
-        value={price}
-        onChangeText={setPrice}
-      />
+      <PrefixedInputField prefix="Rp" value={price} onChangeText={setPrice} />
       <Text style={[styles.fieldLabel, styles.fieldLabelTop]}>Duration</Text>
       <PrefixedInputField
         prefix="Minutes"
@@ -137,7 +143,9 @@ export function CreateBarbershopFirstServiceScreen() {
       />
       <View style={styles.flex} />
       <PrimaryButton
-        label={isCreatingOrg || isSettingActive ? "Setting up..." : "Finish Setup"}
+        label={
+          isCreatingOrg || isSettingActive ? "Setting up..." : "Finish Setup"
+        }
         style={styles.button}
         onPress={handleFinish}
         disabled={!isValid || isCreatingOrg || isSettingActive}

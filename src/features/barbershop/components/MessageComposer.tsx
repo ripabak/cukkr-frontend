@@ -1,6 +1,6 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, TextInput, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { View, TextInput, StyleSheet, ViewStyle } from "react-native";
 
 interface Props {
   value: string;
@@ -9,7 +9,12 @@ interface Props {
   style?: ViewStyle;
 }
 
-export function MessageComposer({ value, onChangeText, placeholder = 'Messages to selected customers', style }: Props) {
+export function MessageComposer({
+  value,
+  onChangeText,
+  placeholder = "Messages to selected customers",
+  style,
+}: Props) {
   return (
     <View style={[styles.container, style]}>
       <TextInput

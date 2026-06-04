@@ -4,7 +4,10 @@ import { app } from "@/src/lib/eden-app";
 export const barbershopService = {
   async getCurrent() {
     const { data: response, error } = await app.api.barbershop.get();
-    if (error || !response) throw new Error(error?.value?.message || "Failed to fetch current barbershop");
+    if (error || !response)
+      throw new Error(
+        error?.value?.message || "Failed to fetch current barbershop",
+      );
     return response.data;
   },
 
@@ -15,8 +18,10 @@ export const barbershopService = {
     address?: string | null;
     onboardingCompleted?: boolean;
   }) {
-    const { data: response, error } = await app.api.barbershop.settings.patch(data);
-    if (error || !response) throw new Error(error?.value?.message || "Failed to update settings");
+    const { data: response, error } =
+      await app.api.barbershop.settings.patch(data);
+    if (error || !response)
+      throw new Error(error?.value?.message || "Failed to update settings");
     return response.data;
   },
 
@@ -29,7 +34,9 @@ export const barbershopService = {
   },
 
   async delete(orgId: string) {
-    const { data: response, error } = await (authClient.organization as any).delete({
+    const { data: response, error } = await (
+      authClient.organization as any
+    ).delete({
       organizationId: orgId,
     });
     if (error || !response) throw new Error("Failed to delete barbershop");
@@ -37,10 +44,15 @@ export const barbershopService = {
   },
 
   async checkSlugAvailability(slug: string) {
-    const { data: response, error } = await app.api.barbershop["slug-check"].get({
+    const { data: response, error } = await app.api.barbershop[
+      "slug-check"
+    ].get({
       query: { slug },
     });
-    if (error || !response) throw new Error(error?.value?.message || "Failed to check slug availability");
+    if (error || !response)
+      throw new Error(
+        error?.value?.message || "Failed to check slug availability",
+      );
     return response.data?.available || false;
   },
 };

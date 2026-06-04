@@ -1,6 +1,6 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { TouchableOpacity, Text, StyleSheet, ViewStyle } from "react-native";
 
 interface Props {
   label: string;
@@ -27,9 +27,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.brand.primary,
     borderRadius: 999,
     height: 52,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
   },
   disabled: {
     opacity: 0.5,
@@ -37,6 +37,6 @@ const styles = StyleSheet.create({
   label: {
     color: Colors.text.primary,
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: "700",
   },
 });

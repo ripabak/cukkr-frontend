@@ -1,7 +1,7 @@
-import { Colors } from '@/src/theme/colors';
-import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { Text, TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
 
 interface Props {
   placeholder: string;
@@ -11,7 +11,13 @@ interface Props {
   style?: ViewStyle;
 }
 
-export function SelectorInput({ placeholder, value, iconName, onPress, style }: Props) {
+export function SelectorInput({
+  placeholder,
+  value,
+  iconName,
+  onPress,
+  style,
+}: Props) {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -19,9 +25,20 @@ export function SelectorInput({ placeholder, value, iconName, onPress, style }: 
       style={[styles.container, style]}
     >
       {iconName ? (
-        <Ionicons name={iconName} size={18} color={Colors.icon.muted} style={styles.icon} />
+        <Ionicons
+          name={iconName}
+          size={18}
+          color={Colors.icon.muted}
+          style={styles.icon}
+        />
       ) : null}
-      <Text style={[styles.text, value ? styles.textFilled : styles.textPlaceholder]} numberOfLines={1}>
+      <Text
+        style={[
+          styles.text,
+          value ? styles.textFilled : styles.textPlaceholder,
+        ]}
+        numberOfLines={1}
+      >
         {value || placeholder}
       </Text>
       <Ionicons name="chevron-forward" size={16} color={Colors.icon.muted} />
@@ -37,8 +54,8 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderWidth: 1,
     borderColor: Colors.border.default,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
   },
   icon: {},

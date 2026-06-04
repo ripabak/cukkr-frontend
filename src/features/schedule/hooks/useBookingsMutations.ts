@@ -1,5 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { bookingsService, CreateBookingPayload } from "../services/bookings.service";
+import {
+  bookingsService,
+  CreateBookingPayload,
+} from "../services/bookings.service";
 import { BOOKINGS_QUERY_KEYS } from "./useBookingsQueries";
 import { HOME_QUERY_KEYS } from "../../home/hooks/useHomeDashboardQueries";
 import { NOTIFICATIONS_QUERY_KEYS } from "../../notifications/hooks/useNotificationsQueries";
@@ -7,7 +10,8 @@ import { NOTIFICATIONS_QUERY_KEYS } from "../../notifications/hooks/useNotificat
 export function useCreateBooking() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (payload: CreateBookingPayload) => bookingsService.create(payload),
+    mutationFn: (payload: CreateBookingPayload) =>
+      bookingsService.create(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: BOOKINGS_QUERY_KEYS.all });
       queryClient.invalidateQueries({ queryKey: HOME_QUERY_KEYS.all });
@@ -50,7 +54,13 @@ export function useUpdateBookingStatus() {
       cancelReason,
     }: {
       id: string;
-      status: "pending" | "requested" | "waiting" | "in_progress" | "completed" | "cancelled";
+      status:
+        | "pending"
+        | "requested"
+        | "waiting"
+        | "in_progress"
+        | "completed"
+        | "cancelled";
       cancelReason?: string | null;
     }) => bookingsService.updateStatus(id, status, cancelReason),
     onSuccess: (_result, { id }) => {

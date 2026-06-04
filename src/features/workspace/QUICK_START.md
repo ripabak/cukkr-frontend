@@ -166,31 +166,31 @@ function MyScreen() {
 
 ```tsx
 // Barbershop Operations
-barbershopService.create(data)           // POST /api/barbershop
-barbershopService.getCurrent()           // GET /api/barbershop
-barbershopService.getList()              // GET /api/barbershop/list
-barbershopService.checkSlugAvailability(slug)  // GET /api/barbershop/slug-check
-barbershopService.uploadLogo(file)       // POST /api/barbershop/logo
-barbershopService.updateSettings(data)   // PATCH /api/barbershop/settings
-barbershopService.leave(orgId)           // DELETE /api/barbershop/:orgId/leave
+barbershopService.create(data); // POST /api/barbershop
+barbershopService.getCurrent(); // GET /api/barbershop
+barbershopService.getList(); // GET /api/barbershop/list
+barbershopService.checkSlugAvailability(slug); // GET /api/barbershop/slug-check
+barbershopService.uploadLogo(file); // POST /api/barbershop/logo
+barbershopService.updateSettings(data); // PATCH /api/barbershop/settings
+barbershopService.leave(orgId); // DELETE /api/barbershop/:orgId/leave
 
 // Service Management
-servicesService.create(data)             // POST /api/services
-servicesService.getList(options)         // GET /api/services
-servicesService.getById(id)              // GET /api/services/:id
-servicesService.update(id, data)         // PATCH /api/services/:id
-servicesService.delete(id)               // DELETE /api/services/:id
-servicesService.toggleActive(id)         // PATCH /api/services/:id/toggle-active
-servicesService.setDefault(id)           // PATCH /api/services/:id/set-default
+servicesService.create(data); // POST /api/services
+servicesService.getList(options); // GET /api/services
+servicesService.getById(id); // GET /api/services/:id
+servicesService.update(id, data); // PATCH /api/services/:id
+servicesService.delete(id); // DELETE /api/services/:id
+servicesService.toggleActive(id); // PATCH /api/services/:id/toggle-active
+servicesService.setDefault(id); // PATCH /api/services/:id/set-default
 
 // Team Management
-barbersService.getList(search)           // GET /api/barbers
-barbersService.inviteSingle(data)        // POST /api/barbers/invite
-barbersService.inviteBulk(targets)       // POST /api/barbers/bulk-invite
-barbersService.cancelInvitation(id)      // DELETE /api/barbers/invite/:id
-barbersService.removeMember(id)          // DELETE /api/barbers/:id
-barbersService.acceptInvitation(id)      // POST /api/barbers/invitations/:id/accept
-barbersService.declineInvitation(id)     // POST /api/barbers/invitations/:id/decline
+barbersService.getList(search); // GET /api/barbers
+barbersService.inviteSingle(data); // POST /api/barbers/invite
+barbersService.inviteBulk(targets); // POST /api/barbers/bulk-invite
+barbersService.cancelInvitation(id); // DELETE /api/barbers/invite/:id
+barbersService.removeMember(id); // DELETE /api/barbers/:id
+barbersService.acceptInvitation(id); // POST /api/barbers/invitations/:id/accept
+barbersService.declineInvitation(id); // POST /api/barbers/invitations/:id/decline
 ```
 
 ## File Locations
@@ -211,4 +211,3 @@ A: Ensure the screen is wrapped with `CreateBarbershopProvider`
 
 **Q: Images not uploading?**
 A: Image picker is currently a placeholder. See "Handle Image Upload" section above.
-

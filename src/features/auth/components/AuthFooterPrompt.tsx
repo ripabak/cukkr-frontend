@@ -8,7 +8,11 @@ type AuthFooterPromptProps = {
   onPress: () => void;
 };
 
-export function AuthFooterPrompt({ prompt, actionLabel, onPress }: AuthFooterPromptProps) {
+export function AuthFooterPrompt({
+  prompt,
+  actionLabel,
+  onPress,
+}: AuthFooterPromptProps) {
   return (
     <View style={styles.row}>
       <Text style={styles.prompt}>{prompt}</Text>

@@ -1,12 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import {
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
-    type TextInputProps,
-    View,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  type TextInputProps,
+  View,
 } from "react-native";
 
 import { authTheme } from "../auth-theme";

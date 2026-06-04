@@ -8,14 +8,12 @@ interface Props {
   style?: any;
 }
 
-export function ImagePickerButton({
-  label,
-  imageUri,
-  style,
-}: Props) {
+export function ImagePickerButton({ label, imageUri, style }: Props) {
   const handlePress = async () => {
     try {
-      console.log("TODO: Implement image picker using react-native-image-picker or expo-image-picker");
+      console.log(
+        "TODO: Implement image picker using react-native-image-picker or expo-image-picker",
+      );
       Alert.alert("Info", "Image picker will be implemented soon");
     } catch (error) {
       console.error("Error picking image:", error);

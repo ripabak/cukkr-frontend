@@ -1,9 +1,12 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { DayHoursRow } from "@/src/features/barbershop/components/DayHoursRow";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
-import { useOpenHours, useUpdateOpenHours } from "@/src/features/barbershop/hooks";
+import {
+  useOpenHours,
+  useUpdateOpenHours,
+} from "@/src/features/barbershop/hooks";
 import {
   DAY_LABELS,
   DEFAULT_CLOSE,

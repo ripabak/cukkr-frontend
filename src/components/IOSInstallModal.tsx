@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Modal,
   View,
@@ -7,9 +7,9 @@ import {
   StyleSheet,
   Pressable,
   Platform,
-} from 'react-native';
-import { AppTheme } from '@/src/app-theme';
-import { Ionicons } from '@expo/vector-icons';
+} from "react-native";
+import { AppTheme } from "@/src/app-theme";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Props {
   visible: boolean;
@@ -17,7 +17,7 @@ interface Props {
 }
 
 export function IOSInstallModal({ visible, onClose }: Props) {
-  if (Platform.OS !== 'web') return null;
+  if (Platform.OS !== "web") return null;
 
   return (
     <Modal
@@ -32,7 +32,11 @@ export function IOSInstallModal({ visible, onClose }: Props) {
 
           <View style={styles.header}>
             <Text style={styles.title}>Install Cukkr</Text>
-            <TouchableOpacity onPress={onClose} style={styles.closeBtn} hitSlop={8}>
+            <TouchableOpacity
+              onPress={onClose}
+              style={styles.closeBtn}
+              hitSlop={8}
+            >
               <Ionicons name="close" size={20} color={AppTheme.colors.gray} />
             </TouchableOpacity>
           </View>
@@ -43,12 +47,17 @@ export function IOSInstallModal({ visible, onClose }: Props) {
 
           <View style={styles.step}>
             <View style={styles.stepIcon}>
-              <Ionicons name="share-outline" size={22} color={AppTheme.colors.accent} />
+              <Ionicons
+                name="share-outline"
+                size={22}
+                color={AppTheme.colors.accent}
+              />
             </View>
             <View style={styles.stepText}>
               <Text style={styles.stepTitle}>Tap the Share button</Text>
               <Text style={styles.stepDesc}>
-                At the bottom of Safari browser, tap the share icon (box with arrow up).
+                At the bottom of Safari browser, tap the share icon (box with
+                arrow up).
               </Text>
             </View>
           </View>
@@ -57,7 +66,11 @@ export function IOSInstallModal({ visible, onClose }: Props) {
 
           <View style={styles.step}>
             <View style={styles.stepIcon}>
-              <Ionicons name="square-outline" size={22} color={AppTheme.colors.accent} />
+              <Ionicons
+                name="square-outline"
+                size={22}
+                color={AppTheme.colors.accent}
+              />
             </View>
             <View style={styles.stepText}>
               <Text style={styles.stepTitle}>Select "Add to Home Screen"</Text>
@@ -79,11 +92,11 @@ export function IOSInstallModal({ visible, onClose }: Props) {
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'flex-end',
+    backgroundColor: "rgba(0,0,0,0.4)",
+    justifyContent: "flex-end",
   },
   sheet: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingHorizontal: AppTheme.spacing.xl,
@@ -95,18 +108,18 @@ const styles = StyleSheet.create({
     height: 4,
     borderRadius: 2,
     backgroundColor: AppTheme.colors.border,
-    alignSelf: 'center',
+    alignSelf: "center",
     marginBottom: 20,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 8,
   },
   title: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: "700",
     color: AppTheme.colors.dark,
   },
   closeBtn: {
@@ -119,7 +132,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   step: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 14,
     marginBottom: 16,
   },
@@ -128,8 +141,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 10,
     backgroundColor: AppTheme.colors.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     flexShrink: 0,
   },
   stepText: {
@@ -137,7 +150,7 @@ const styles = StyleSheet.create({
   },
   stepTitle: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     color: AppTheme.colors.dark,
     marginBottom: 4,
   },
@@ -156,11 +169,11 @@ const styles = StyleSheet.create({
     backgroundColor: AppTheme.colors.accent,
     paddingVertical: 14,
     borderRadius: AppTheme.borderRadius.lg,
-    alignItems: 'center',
+    alignItems: "center",
   },
   doneBtnText: {
     fontSize: 15,
-    fontWeight: '700',
-    color: '#1a1a1a',
+    fontWeight: "700",
+    color: "#1a1a1a",
   },
 });

@@ -1,6 +1,6 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, Text, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { View, Text, StyleSheet, ViewStyle } from "react-native";
 
 interface Props {
   lines: string[];

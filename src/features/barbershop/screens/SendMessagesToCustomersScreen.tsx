@@ -1,4 +1,4 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { HelperCopy } from "@/src/components/HelperCopy";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { MessageComposer } from "@/src/features/barbershop/components/MessageComposer";
@@ -12,7 +12,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export function SendMessagesToCustomersScreen() {
   const router = useRouter();
   const toast = useToast();
-  const params = useLocalSearchParams<{ count?: string; recipientName?: string }>();
+  const params = useLocalSearchParams<{
+    count?: string;
+    recipientName?: string;
+  }>();
   const recipientName = params.recipientName;
   const count = parseInt(params.count ?? "1", 10);
 
@@ -36,14 +39,24 @@ export function SendMessagesToCustomersScreen() {
   const canSend = message.trim().length > 0;
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: bgColor }]} edges={["top"]}>
+    <SafeAreaView
+      style={[styles.safe, { backgroundColor: bgColor }]}
+      edges={["top"]}
+    >
       <View style={[styles.container, { backgroundColor: bgColor }]}>
         <ScreenHeader
           title={title}
           onBack={() => router.back()}
           rightAction={
             <TouchableOpacity
-              style={[styles.sendBtn, { backgroundColor: canSend ? Colors.brand.primary : Colors.bg.surface }]}
+              style={[
+                styles.sendBtn,
+                {
+                  backgroundColor: canSend
+                    ? Colors.brand.primary
+                    : Colors.bg.surface,
+                },
+              ]}
               onPress={handleSend}
               activeOpacity={0.7}
             >

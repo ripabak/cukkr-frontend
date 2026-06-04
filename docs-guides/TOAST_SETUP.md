@@ -42,11 +42,11 @@ import { useToast } from "@/src/lib/providers";
 
 export function MyComponent() {
   const toast = useToast();
-  
-  toast.success("Success!");    // 🟢 Green
-  toast.error("Error!");        // 🔴 Red
-  toast.warning("Warning!");    // 🟠 Orange
-  toast.info("Info!");          // ⚫ Dark
+
+  toast.success("Success!"); // 🟢 Green
+  toast.error("Error!"); // 🔴 Red
+  toast.warning("Warning!"); // 🟠 Orange
+  toast.info("Info!"); // ⚫ Dark
 }
 ```
 
@@ -57,7 +57,7 @@ export function MyComponent() {
 ✅ Tap to dismiss manually  
 ✅ Smooth animations  
 ✅ 4 toast types  
-✅ Error message conversion  
+✅ Error message conversion
 
 ## 📚 Documentation
 
@@ -74,7 +74,7 @@ import { getErrorMessage, getErrorDuration } from "@/src/lib/utils";
 const msg = getErrorMessage(error);
 
 // Get recommended duration
-const duration = getErrorDuration("long");  // 4000ms
+const duration = getErrorDuration("long"); // 4000ms
 ```
 
 ## ⏱️ Duration Examples
@@ -120,6 +120,7 @@ export function MyScreen() {
 ## 🎨 Customization
 
 Edit `src/lib/providers/toast/ToastContainer.tsx` to customize:
+
 - Colors: `getBackgroundColor()`
 - Icons: `getIcon()`
 - Position: `styles.root`

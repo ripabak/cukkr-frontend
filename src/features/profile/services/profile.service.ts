@@ -10,10 +10,7 @@ export const profileService = {
     return response.data;
   },
 
-  async updateProfile(data: {
-    name?: string;
-    bio?: string | null;
-  }) {
+  async updateProfile(data: { name?: string; bio?: string | null }) {
     const { data: response, error } = await app.api.me.patch(data);
 
     if (error || !response) {
@@ -37,13 +34,17 @@ export const profileService = {
     });
 
     if (error || !response) {
-      throw new Error(error?.value?.message || "Failed to initiate phone change");
+      throw new Error(
+        error?.value?.message || "Failed to initiate phone change",
+      );
     }
     return response.data;
   },
 
   async verifyPhoneChange(phone: string, otp: string) {
-    const { data: response, error } = await app.api.me["change-phone"].verify.post({
+    const { data: response, error } = await app.api.me[
+      "change-phone"
+    ].verify.post({
       phone,
       otp,
     });

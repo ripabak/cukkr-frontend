@@ -83,19 +83,20 @@ mindmap
 
 All endpoints accept a `range` query parameter:
 
-| Value | Window |
-|-------|--------|
-| `24h` | Rolling last 24 hours |
-| `week` | Last 7 days (day-aligned, WIB) |
-| `month` | Current calendar month (WIB) |
-| `6m` | Last 6 calendar months |
-| `1y` | Last 12 calendar months |
+| Value   | Window                         |
+| ------- | ------------------------------ |
+| `24h`   | Rolling last 24 hours          |
+| `week`  | Last 7 days (day-aligned, WIB) |
+| `month` | Current calendar month (WIB)   |
+| `6m`    | Last 6 calendar months         |
+| `1y`    | Last 12 calendar months        |
 
 Stats include a **StatCard** (current + previous period + % change + direction) so the UI can show trend indicators.
 
 ## Authentication
 
 All endpoints require:
+
 - An active session cookie (`requireAuth: true`)
 - An active organisation context (`requireOrganization: true`)
 
@@ -114,10 +115,10 @@ Returns `401` when unauthenticated, `403` when no active organisation.
 
 ## Pages
 
-| File | Endpoints covered |
-|------|-------------------|
-| [overview.md](./overview.md) | `GET /api/analytics` |
-| [revenue.md](./revenue.md) | `GET /api/analytics/revenue`, `GET /api/analytics/revenue/bookings` |
+| File                           | Endpoints covered                                                   |
+| ------------------------------ | ------------------------------------------------------------------- |
+| [overview.md](./overview.md)   | `GET /api/analytics`                                                |
+| [revenue.md](./revenue.md)     | `GET /api/analytics/revenue`, `GET /api/analytics/revenue/bookings` |
 | [customers.md](./customers.md) | `GET /api/analytics/customers`, `GET /api/analytics/customers/list` |
-| [barbers.md](./barbers.md) | `GET /api/analytics/barbers`, `GET /api/analytics/barbers/list` |
-| [services.md](./services.md) | `GET /api/analytics/services`, `GET /api/analytics/services/list` |
+| [barbers.md](./barbers.md)     | `GET /api/analytics/barbers`, `GET /api/analytics/barbers/list`     |
+| [services.md](./services.md)   | `GET /api/analytics/services`, `GET /api/analytics/services/list`   |

@@ -1,11 +1,17 @@
-import React from 'react';
-import { StyleSheet, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
-import { OnboardingTheme } from '../onboarding-theme';
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  ViewStyle,
+} from "react-native";
+import { OnboardingTheme } from "../onboarding-theme";
 
 interface OnboardingButtonProps {
   label: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary';
+  variant?: "primary" | "secondary";
   style?: ViewStyle;
   textStyle?: TextStyle;
 }
@@ -13,11 +19,11 @@ interface OnboardingButtonProps {
 export const OnboardingButton: React.FC<OnboardingButtonProps> = ({
   label,
   onPress,
-  variant = 'primary',
+  variant = "primary",
   style,
   textStyle,
 }) => {
-  const isSecondary = variant === 'secondary';
+  const isSecondary = variant === "secondary";
 
   return (
     <TouchableOpacity
@@ -25,7 +31,13 @@ export const OnboardingButton: React.FC<OnboardingButtonProps> = ({
       onPress={onPress}
       activeOpacity={0.8}
     >
-      <Text style={[styles.buttonText, isSecondary && styles.buttonTextSecondary, textStyle]}>
+      <Text
+        style={[
+          styles.buttonText,
+          isSecondary && styles.buttonTextSecondary,
+          textStyle,
+        ]}
+      >
         {label}
       </Text>
     </TouchableOpacity>
@@ -38,19 +50,19 @@ const styles = StyleSheet.create({
     paddingVertical: OnboardingTheme.spacing.md,
     paddingHorizontal: OnboardingTheme.spacing.lg,
     borderRadius: 999,
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
     marginTop: OnboardingTheme.spacing.md,
   },
   buttonSecondary: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     borderWidth: 1.5,
     borderColor: OnboardingTheme.colors.dark,
   },
   buttonText: {
     color: OnboardingTheme.colors.dark,
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   buttonTextSecondary: {
     color: OnboardingTheme.colors.dark,

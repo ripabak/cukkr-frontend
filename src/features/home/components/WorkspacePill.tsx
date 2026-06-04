@@ -16,8 +16,15 @@ export function WorkspacePill({ name, onPress, style }: Props) {
       activeOpacity={0.7}
       style={[styles.container, style]}
     >
-      <Text style={styles.name} numberOfLines={1}>{name}</Text>
-      <Ionicons name="chevron-down" size={16} color={Colors.icon.muted} style={styles.icon} />
+      <Text style={styles.name} numberOfLines={1}>
+        {name}
+      </Text>
+      <Ionicons
+        name="chevron-down"
+        size={16}
+        color={Colors.icon.muted}
+        style={styles.icon}
+      />
     </TouchableOpacity>
   );
 }

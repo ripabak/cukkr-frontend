@@ -4,6 +4,9 @@ export { CreateBarbershopInviteBarberEmptyScreen } from "./screens/CreateBarbers
 export { CreateBarbershopInviteBarberFilledScreen } from "./screens/CreateBarbershopInviteBarberFilledScreen";
 export { CreateBarbershopSuccessScreen } from "./screens/CreateBarbershopSuccessScreen";
 
-export { CreateBarbershopProvider, useCreateBarbershopForm } from "./context/CreateBarbershopContext";
+export {
+  CreateBarbershopProvider,
+  useCreateBarbershopForm,
+} from "./context/CreateBarbershopContext";
 
 export { barbershopService, servicesService, barbersService } from "./services";

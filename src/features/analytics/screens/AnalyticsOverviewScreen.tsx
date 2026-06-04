@@ -18,7 +18,12 @@ import { useAnalyticsOverview } from "../hooks";
 import type { AnalyticsRange } from "../services/analytics.service";
 import { formatRupiah, getRangeLabel } from "../utils/format";
 
-const EMPTY_STAT = { current: 0, previous: 0, change: null, direction: "neutral" as const };
+const EMPTY_STAT = {
+  current: 0,
+  previous: 0,
+  change: null,
+  direction: "neutral" as const,
+};
 
 export function AnalyticsOverviewScreen() {
   const router = useRouter();
@@ -34,7 +39,9 @@ export function AnalyticsOverviewScreen() {
     <ScreenShell contentStyle={styles.scrollContent}>
       <View style={styles.topBar}>
         <Text style={styles.pageTitle}>Overview</Text>
-        <Text style={styles.pageSubtitle}>See your barbershop's performance</Text>
+        <Text style={styles.pageSubtitle}>
+          See your barbershop's performance
+        </Text>
       </View>
 
       <RangePicker value={range} onChange={setRange} />
@@ -52,32 +59,62 @@ export function AnalyticsOverviewScreen() {
             <StatCard
               label="Revenue"
               value={formatRupiah(stats.totalSales?.current ?? 0)}
-              icon={<Ionicons name="cash-outline" size={16} color={Colors.text.primary} />}
+              icon={
+                <Ionicons
+                  name="cash-outline"
+                  size={16}
+                  color={Colors.text.primary}
+                />
+              }
               stat={stats.totalSales ?? EMPTY_STAT}
               onPress={() => router.push(`/d/analytics-revenue?range=${range}`)}
             />
             <StatCard
               label="Customers"
               value={String(stats.totalCustomers?.current ?? 0)}
-              icon={<Ionicons name="person-outline" size={16} color={Colors.text.primary} />}
+              icon={
+                <Ionicons
+                  name="person-outline"
+                  size={16}
+                  color={Colors.text.primary}
+                />
+              }
               stat={stats.totalCustomers ?? EMPTY_STAT}
-              onPress={() => router.push(`/d/analytics-customers?range=${range}`)}
+              onPress={() =>
+                router.push(`/d/analytics-customers?range=${range}`)
+              }
             />
           </View>
           <View style={[styles.statGrid, styles.statGridGap]}>
             <StatCard
               label="Walk-in"
               value={String(stats.walkIns?.current ?? 0)}
-              icon={<Ionicons name="walk-outline" size={16} color={Colors.text.primary} />}
+              icon={
+                <Ionicons
+                  name="walk-outline"
+                  size={16}
+                  color={Colors.text.primary}
+                />
+              }
               stat={stats.walkIns ?? EMPTY_STAT}
-              onPress={() => router.push(`/d/analytics-customers?range=${range}`)}
+              onPress={() =>
+                router.push(`/d/analytics-customers?range=${range}`)
+              }
             />
             <StatCard
               label="Appointment"
               value={String(stats.appointments?.current ?? 0)}
-              icon={<Ionicons name="calendar-outline" size={16} color={Colors.text.primary} />}
+              icon={
+                <Ionicons
+                  name="calendar-outline"
+                  size={16}
+                  color={Colors.text.primary}
+                />
+              }
               stat={stats.appointments ?? EMPTY_STAT}
-              onPress={() => router.push(`/d/analytics-customers?range=${range}`)}
+              onPress={() =>
+                router.push(`/d/analytics-customers?range=${range}`)
+              }
             />
           </View>
 
@@ -94,7 +131,11 @@ export function AnalyticsOverviewScreen() {
                   direction={stats.totalSales?.direction ?? "neutral"}
                   change={stats.totalSales?.change ?? null}
                 />
-                <Ionicons name="chevron-forward" size={14} color={Colors.text.muted} />
+                <Ionicons
+                  name="chevron-forward"
+                  size={14}
+                  color={Colors.text.muted}
+                />
               </View>
             </View>
             <Text style={styles.chartCardValue}>
@@ -121,7 +162,11 @@ export function AnalyticsOverviewScreen() {
                   direction={stats.totalCustomers?.direction ?? "neutral"}
                   change={stats.totalCustomers?.change ?? null}
                 />
-                <Ionicons name="chevron-forward" size={14} color={Colors.text.muted} />
+                <Ionicons
+                  name="chevron-forward"
+                  size={14}
+                  color={Colors.text.muted}
+                />
               </View>
             </View>
             <Text style={styles.chartCardValue}>
@@ -130,7 +175,10 @@ export function AnalyticsOverviewScreen() {
             <Text style={styles.chartCardPeriod}>{getRangeLabel(range)}</Text>
             {charts?.customers ? (
               <View style={styles.chartWrap}>
-                <BarChart data={charts.customers} barColor={Colors.status.info} />
+                <BarChart
+                  data={charts.customers}
+                  barColor={Colors.status.info}
+                />
               </View>
             ) : null}
           </TouchableOpacity>
@@ -147,7 +195,9 @@ export function AnalyticsOverviewScreen() {
                   name={highlights.topBarber.name}
                   subtitle={`Top barber · ${highlights.topBarber.count} cuts`}
                   revenue={highlights.topBarber.revenue}
-                  onPress={() => router.push(`/d/analytics-barbers?range=${range}`)}
+                  onPress={() =>
+                    router.push(`/d/analytics-barbers?range=${range}`)
+                  }
                   fallbackIcon="person"
                 />
               ) : null}
@@ -157,7 +207,9 @@ export function AnalyticsOverviewScreen() {
                   name={highlights.topService.name}
                   subtitle={`Top service · ${highlights.topService.count} books`}
                   revenue={highlights.topService.revenue}
-                  onPress={() => router.push(`/d/analytics-services?range=${range}`)}
+                  onPress={() =>
+                    router.push(`/d/analytics-services?range=${range}`)
+                  }
                   fallbackIcon="cut"
                 />
               ) : null}

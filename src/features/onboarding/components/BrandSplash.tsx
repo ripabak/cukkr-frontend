@@ -1,6 +1,6 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { StyleSheet, Text, View, ViewStyle } from "react-native";
 
 interface BrandSplashProps {
   style?: ViewStyle;
@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.bg.default,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     gap: 16,
   },
   logoMark: {
@@ -32,19 +32,19 @@ const styles = StyleSheet.create({
     height: 64,
     borderRadius: 20,
     backgroundColor: Colors.brand.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   logoAccent: {
     width: 28,
     height: 28,
     borderRadius: 8,
     backgroundColor: Colors.brand.primaryDark,
-    transform: [{ rotate: '15deg' }],
+    transform: [{ rotate: "15deg" }],
   },
   wordmark: {
     fontSize: 32,
-    fontWeight: '800',
+    fontWeight: "800",
     color: Colors.text.primary,
     letterSpacing: 1,
   },

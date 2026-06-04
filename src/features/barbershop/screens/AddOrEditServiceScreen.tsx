@@ -1,4 +1,4 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
@@ -22,7 +22,10 @@ import { ActivityIndicator, StyleSheet } from "react-native";
 export function AddOrEditServiceScreen() {
   const router = useRouter();
   const toast = useToast();
-  const params = useLocalSearchParams<{ serviceId?: string; isEdit?: string }>();
+  const params = useLocalSearchParams<{
+    serviceId?: string;
+    isEdit?: string;
+  }>();
   const isEdit = params.isEdit === "true";
   const serviceId = params.serviceId ?? "";
 
@@ -54,19 +57,31 @@ export function AddOrEditServiceScreen() {
 
   const handleSubmit = () => {
     const nameVal = validateServiceName(name);
-    if (!nameVal.isValid) { toast.error(nameVal.message); return; }
+    if (!nameVal.isValid) {
+      toast.error(nameVal.message);
+      return;
+    }
 
     const priceNum = parseFloat(price);
     const priceVal = validatePrice(priceNum);
-    if (!priceVal.isValid) { toast.error(priceVal.message); return; }
+    if (!priceVal.isValid) {
+      toast.error(priceVal.message);
+      return;
+    }
 
     const durationNum = parseInt(duration, 10);
     const durationVal = validateDuration(durationNum);
-    if (!durationVal.isValid) { toast.error(durationVal.message); return; }
+    if (!durationVal.isValid) {
+      toast.error(durationVal.message);
+      return;
+    }
 
     const discountNum = discount ? parseFloat(discount) : 0;
     const discountVal = validateDiscount(discountNum);
-    if (!discountVal.isValid) { toast.error(discountVal.message); return; }
+    if (!discountVal.isValid) {
+      toast.error(discountVal.message);
+      return;
+    }
 
     if (isEdit && serviceId) {
       updateService(
@@ -120,7 +135,11 @@ export function AddOrEditServiceScreen() {
       }
     >
       {isEdit && isFetching && !initialized ? (
-        <ActivityIndicator size="large" color={Colors.brand.primary} style={styles.loader} />
+        <ActivityIndicator
+          size="large"
+          color={Colors.brand.primary}
+          style={styles.loader}
+        />
       ) : (
         <>
           <ServiceForm
@@ -141,7 +160,13 @@ export function AddOrEditServiceScreen() {
           />
 
           <PrimaryButton
-            label={isPending ? "Saving..." : isEdit ? "Save Service" : "Create Service"}
+            label={
+              isPending
+                ? "Saving..."
+                : isEdit
+                  ? "Save Service"
+                  : "Create Service"
+            }
             onPress={handleSubmit}
             disabled={isPending}
             style={styles.submitBtn}

@@ -1,4 +1,4 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useSignOut } from "@/src/features/auth/hooks";
@@ -30,7 +30,11 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
   const toast = useToast();
   const { data: session, isPending: sessionLoading } = authClient.useSession();
 
-  const { data: invitation, isLoading, error } = useGetInvitation(invitationId, !!session);
+  const {
+    data: invitation,
+    isLoading,
+    error,
+  } = useGetInvitation(invitationId, !!session);
   const { mutate: accept, isPending: isAccepting } = useAcceptInvitation();
   const { mutate: reject, isPending: isRejecting } = useRejectInvitation();
   const { mutateAsync: signOut } = useSignOut();
@@ -126,12 +130,17 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
   }
 
   if (error || !invitation) {
-    const isEmailMismatchError = error instanceof ApiError && error.status === 403;
+    const isEmailMismatchError =
+      error instanceof ApiError && error.status === 403;
     return (
       <ScreenShell>
         <View style={styles.center}>
           <Ionicons
-            name={isEmailMismatchError ? "person-circle-outline" : "alert-circle-outline"}
+            name={
+              isEmailMismatchError
+                ? "person-circle-outline"
+                : "alert-circle-outline"
+            }
             size={56}
             color="#666666"
           />
@@ -149,16 +158,18 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
               onPress={handleSwitchAccount}
               activeOpacity={0.7}
             >
-              <Text style={styles.backLinkText}>Sign in with different account</Text>
+              <Text style={styles.backLinkText}>
+                Sign in with different account
+              </Text>
             </TouchableOpacity>
           ) : (
-          <TouchableOpacity
-            style={styles.backLink}
-            onPress={() => router.replace("/")}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.backLinkText}>Go to Home</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.backLink}
+              onPress={() => router.replace("/")}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.backLinkText}>Go to Home</Text>
+            </TouchableOpacity>
           )}
         </View>
       </ScreenShell>

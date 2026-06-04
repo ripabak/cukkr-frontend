@@ -1,6 +1,12 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ViewStyle,
+} from "react-native";
 
 interface Props {
   declineLabel?: string;
@@ -11,8 +17,8 @@ interface Props {
 }
 
 export function InlineDecisionButtons({
-  declineLabel = 'Decline',
-  acceptLabel = 'Accept',
+  declineLabel = "Decline",
+  acceptLabel = "Accept",
   onDecline,
   onAccept,
   style,
@@ -39,7 +45,7 @@ export function InlineDecisionButtons({
 
 const styles = StyleSheet.create({
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 10,
     marginTop: 10,
   },
@@ -47,8 +53,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 999,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   declineBtn: {
     borderWidth: 1.5,
@@ -60,12 +66,12 @@ const styles = StyleSheet.create({
   },
   declineLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.status.danger,
   },
   acceptLabel: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.status.success,
   },
 });

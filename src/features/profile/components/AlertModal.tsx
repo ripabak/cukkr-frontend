@@ -1,7 +1,7 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useFrame } from '@/src/components/FrameContext';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { useFrame } from "@/src/components/FrameContext";
 
 interface Props {
   visible: boolean;
@@ -11,7 +11,13 @@ interface Props {
   onAction?: () => void;
 }
 
-export function AlertModal({ visible, title, description, actionLabel, onAction }: Props) {
+export function AlertModal({
+  visible,
+  title,
+  description,
+  actionLabel,
+  onAction,
+}: Props) {
   const { frameWidth } = useFrame();
 
   return (
@@ -19,9 +25,15 @@ export function AlertModal({ visible, title, description, actionLabel, onAction 
       <View style={styles.overlay}>
         <View style={[styles.card, { width: frameWidth * 0.85 }]}>
           <Text style={styles.title}>{title}</Text>
-          {description ? <Text style={styles.description}>{description}</Text> : null}
+          {description ? (
+            <Text style={styles.description}>{description}</Text>
+          ) : null}
           {actionLabel ? (
-            <TouchableOpacity onPress={onAction} activeOpacity={0.8} style={styles.btn}>
+            <TouchableOpacity
+              onPress={onAction}
+              activeOpacity={0.8}
+              style={styles.btn}
+            >
               <Text style={styles.btnLabel}>{actionLabel}</Text>
             </TouchableOpacity>
           ) : null}
@@ -34,9 +46,9 @@ export function AlertModal({ visible, title, description, actionLabel, onAction 
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0,0,0,0.4)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   card: {
     backgroundColor: Colors.bg.default,
@@ -45,14 +57,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: '700',
-    textAlign: 'center',
+    fontWeight: "700",
+    textAlign: "center",
     color: Colors.text.primary,
   },
   description: {
     fontSize: 14,
     color: Colors.text.secondary,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 8,
   },
   btn: {
@@ -60,13 +72,13 @@ const styles = StyleSheet.create({
     height: 52,
     borderRadius: 999,
     backgroundColor: Colors.brand.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
   },
   btnLabel: {
     color: Colors.text.primary,
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });

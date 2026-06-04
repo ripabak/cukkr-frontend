@@ -1,4 +1,4 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SortMenu } from "@/src/components/SortMenu";
 import {
@@ -9,9 +9,7 @@ import { CalendarModal } from "@/src/features/schedule/components/CalendarModal"
 import { DateSelectorPill } from "@/src/features/schedule/components/DateSelectorPill";
 import { HistoryBookingRow } from "@/src/features/schedule/components/HistoryBookingRow";
 import { useBookings } from "@/src/features/schedule/hooks";
-import {
-  mapApiStatusToBookingStatus,
-} from "@/src/features/schedule/utils/booking-formatters";
+import { mapApiStatusToBookingStatus } from "@/src/features/schedule/utils/booking-formatters";
 import { formatDateTime, toApiDate } from "@/src/utils/date";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -25,8 +23,18 @@ const SORT_OPTIONS = [
 
 function formatDatePill(date: Date): string {
   const monthShort = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
   ];
   return `${date.getDate()} ${monthShort[date.getMonth()]} ${date.getFullYear()}`;
 }
@@ -46,16 +54,34 @@ export function HistoryBookingsScreen() {
   const sortBtnRef = useRef<View>(null);
 
   const handleOpenStatusMenu = () => {
-    statusBtnRef.current?.measure((_x: number, _y: number, _w: number, height: number, _px: number, pageY: number) => {
-      setStatusMenuTop(pageY + height + 4);
-    });
+    statusBtnRef.current?.measure(
+      (
+        _x: number,
+        _y: number,
+        _w: number,
+        height: number,
+        _px: number,
+        pageY: number,
+      ) => {
+        setStatusMenuTop(pageY + height + 4);
+      },
+    );
     setStatusMenuVisible(true);
   };
 
   const handleOpenSortMenu = () => {
-    sortBtnRef.current?.measure((_x: number, _y: number, _w: number, height: number, _px: number, pageY: number) => {
-      setSortMenuTop(pageY + height + 4);
-    });
+    sortBtnRef.current?.measure(
+      (
+        _x: number,
+        _y: number,
+        _w: number,
+        height: number,
+        _px: number,
+        pageY: number,
+      ) => {
+        setSortMenuTop(pageY + height + 4);
+      },
+    );
     setSortMenuVisible(true);
   };
 
@@ -80,7 +106,11 @@ export function HistoryBookingsScreen() {
             activeOpacity={0.7}
             style={styles.backBtn}
           >
-            <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
+            <Ionicons
+              name="chevron-back"
+              size={20}
+              color={Colors.text.primary}
+            />
           </TouchableOpacity>
           <View style={styles.topActions}>
             <TouchableOpacity
@@ -129,8 +159,7 @@ export function HistoryBookingsScreen() {
     >
       <View style={styles.sectionHeader}>
         <Text style={styles.title}>
-          All Booking{" "}
-          <Text style={styles.titleCount}>({bookings.length})</Text>
+          All Booking <Text style={styles.titleCount}>({bookings.length})</Text>
         </Text>
         <TouchableOpacity
           ref={statusBtnRef}
@@ -139,7 +168,8 @@ export function HistoryBookingsScreen() {
           style={styles.filterPill}
         >
           <Text style={styles.filterLabel}>
-            {HISTORY_STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ?? "All"}
+            {HISTORY_STATUS_OPTIONS.find((o) => o.value === statusFilter)
+              ?.label ?? "All"}
           </Text>
           <Ionicons name="chevron-down" size={14} color={Colors.text.primary} />
         </TouchableOpacity>
@@ -154,7 +184,7 @@ export function HistoryBookingsScreen() {
             dateTimeLabel={formatDateTime(
               booking.scheduledAt
                 ? new Date(booking.scheduledAt as Date)
-                : new Date(booking.createdAt as Date)
+                : new Date(booking.createdAt as Date),
             )}
             duration="30 mins"
             status={mapApiStatusToBookingStatus(booking.status)}
@@ -198,7 +228,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.bg.default,
     alignItems: "center",
     justifyContent: "center",
-    boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.06)',
+    boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.06)",
     elevation: 2,
   },
   topActions: {
@@ -213,7 +243,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.bg.default,
     alignItems: "center",
     justifyContent: "center",
-    boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.06)',
+    boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.06)",
     elevation: 2,
   },
   sectionHeader: {
@@ -240,7 +270,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     gap: 4,
-    boxShadow: '0px 1px 4px rgba(0, 0, 0, 0.05)',
+    boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.05)",
     elevation: 1,
   },
   filterLabel: {

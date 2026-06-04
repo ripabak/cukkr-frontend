@@ -1,3 +1,3 @@
-import { EditUserProfileFieldsScreen } from '@/src/features/profile/screens/EditUserProfileFieldsScreen';
+import { EditUserProfileFieldsScreen } from "@/src/features/profile/screens/EditUserProfileFieldsScreen";
 
 export default EditUserProfileFieldsScreen;

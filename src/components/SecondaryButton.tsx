@@ -1,6 +1,6 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { TouchableOpacity, Text, StyleSheet, ViewStyle } from "react-native";
 
 interface Props {
   label: string;
@@ -22,18 +22,18 @@ export function SecondaryButton({ label, onPress, style }: Props) {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     borderRadius: 999,
     borderWidth: 1.5,
     borderColor: Colors.border.default,
     height: 52,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
   },
   label: {
     color: Colors.text.primary,
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });

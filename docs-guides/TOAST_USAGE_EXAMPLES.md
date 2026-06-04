@@ -5,21 +5,21 @@ Toast global sudah setup di root level dan bisa diakses dari **feature apapun** 
 ## 🔧 Basic Usage
 
 ### Minimal Example
+
 ```tsx
 import { useToast } from "@/src/lib/providers";
 
 export function MyComponent() {
   const toast = useToast();
-  
-  return (
-    <Button onPress={() => toast.success("Done!")} />
-  );
+
+  return <Button onPress={() => toast.success("Done!")} />;
 }
 ```
 
 ## 📲 Real-world Examples
 
 ### Example 1: Error Handling in screen with hooks
+
 ```tsx
 export function LoginScreen() {
   const toast = useToast();
@@ -37,11 +37,11 @@ export function LoginScreen() {
       toast.error(getErrorMessage(error));
     }
   };
-
 }
 ```
 
 ### Example 2: Form Validation
+
 ```tsx
 import { useToast } from "@/src/lib/providers";
 
@@ -68,6 +68,7 @@ export function FormScreen() {
 ```
 
 ### Example 3: Multi-step Process
+
 ```tsx
 import { useToast } from "@/src/lib/providers";
 
@@ -77,15 +78,15 @@ export function UploadFlow() {
   const handleCompleteSetup = async (files: any) => {
     try {
       toast.info("Uploading...");
-      
+
       // Step 1
       const logo = await uploadLogo(files.logo);
       toast.success("Logo uploaded!");
-      
+
       // Step 2
       const service = await createService(files.service);
       toast.success("Service created!");
-      
+
       // Step 3
       await inviteTeam(files.team);
       toast.success("Team invited! Setup complete!", 5000); // longer duration
@@ -99,6 +100,7 @@ export function UploadFlow() {
 ```
 
 ### Example 4: Network Request Status
+
 ```tsx
 import { useToast } from "@/src/lib/providers";
 
@@ -126,6 +128,7 @@ export function DataFetch() {
 ```
 
 ### Example 5: Copy to Clipboard
+
 ```tsx
 import { useToast } from "@/src/lib/providers";
 import * as Clipboard from "expo-clipboard";
@@ -152,24 +155,25 @@ export function ShareCode() {
 const toast = useToast();
 
 // Success - untuk aksi berhasil
-toast.success("Profile updated!");          // Green
-toast.success("File saved!", 2000);         // With custom duration
+toast.success("Profile updated!"); // Green
+toast.success("File saved!", 2000); // With custom duration
 
 // Error - untuk error/failure
-toast.error("Connection failed");           // Red
-toast.error(getErrorMessage(error));        // Using error converter
+toast.error("Connection failed"); // Red
+toast.error(getErrorMessage(error)); // Using error converter
 
 // Warning - untuk peringatan tapi tidak fatal
-toast.warning("This action cannot be undone", 4000);  // Orange
+toast.warning("This action cannot be undone", 4000); // Orange
 
 // Info - untuk informasi umum
-toast.info("Processing...");                // Dark
-toast.info("Tap to dismiss", 0);            // Never auto-dismiss
+toast.info("Processing..."); // Dark
+toast.info("Tap to dismiss", 0); // Never auto-dismiss
 ```
 
 ## 🧠 Smart Patterns
 
 ### Pattern 1: Error Converter Utility
+
 ```tsx
 // Create reusable error handler
 const handleApiError = (error: unknown, toast: ReturnType<typeof useToast>) => {
@@ -185,6 +189,7 @@ try {
 ```
 
 ### Pattern 2: Loading Toast
+
 ```tsx
 const handleLongOperation = async () => {
   const loadingId = toast.info("Loading...", 0); // 0 = no auto-dismiss
@@ -201,12 +206,13 @@ const handleLongOperation = async () => {
 ```
 
 ### Pattern 3: Wrapper Function
+
 ```tsx
 // Create service wrapper with automatic error handling
 const withToast = async (
   promise: Promise<any>,
   successMsg: string,
-  errorMsg?: string
+  errorMsg?: string,
 ) => {
   try {
     const result = await promise;
@@ -222,13 +228,14 @@ const withToast = async (
 const data = await withToast(
   api.getData(),
   "Data loaded!",
-  "Failed to load data"
+  "Failed to load data",
 );
 ```
 
 ## 🚀 Integration Points
 
 ### In Screens
+
 ```tsx
 import { useToast } from "@/src/lib/providers";
 
@@ -239,10 +246,11 @@ export function MyScreen() {
 ```
 
 ### In Custom Hooks
+
 ```tsx
 export function useMyHook() {
   const toast = useToast();
-  
+
   return {
     doSomething: async () => {
       try {
@@ -251,21 +259,18 @@ export function useMyHook() {
       } catch (error) {
         toast.error(getErrorMessage(error));
       }
-    }
+    },
   };
 }
 ```
 
 ### In Context/Providers
+
 ```tsx
 export function MyProvider({ children }) {
   const toast = useToast();
-  
-  return (
-    <MyContext.Provider value={{ toast }}>
-      {children}
-    </MyContext.Provider>
-  );
+
+  return <MyContext.Provider value={{ toast }}>{children}</MyContext.Provider>;
 }
 ```
 
@@ -312,6 +317,7 @@ const handleSave = async () => {
 ## 📱 Mobile-Specific Tips
 
 ### Handling Keyboard
+
 ```tsx
 const handleSubmit = async () => {
   Keyboard.dismiss(); // Hide keyboard first
@@ -325,6 +331,7 @@ const handleSubmit = async () => {
 ```
 
 ### Persisting Messages
+
 ```tsx
 // For important messages, don't auto-dismiss
 const handleCriticalAction = async () => {
@@ -338,6 +345,7 @@ const handleCriticalAction = async () => {
 ```
 
 ### Different Durations
+
 ```tsx
 // Quick confirmations (< 2s)
 toast.success("Copied!", 1500);

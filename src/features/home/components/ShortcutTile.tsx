@@ -13,8 +13,17 @@ interface Props {
 
 export function ShortcutTile({ label, icon, onPress, style, iconBg }: Props) {
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={[styles.container, style]}>
-      <View style={[styles.iconCircle, iconBg ? { backgroundColor: iconBg, borderWidth: 0 } : undefined]}>
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.7}
+      style={[styles.container, style]}
+    >
+      <View
+        style={[
+          styles.iconCircle,
+          iconBg ? { backgroundColor: iconBg, borderWidth: 0 } : undefined,
+        ]}
+      >
         {icon}
       </View>
       <Text style={styles.label}>{label}</Text>

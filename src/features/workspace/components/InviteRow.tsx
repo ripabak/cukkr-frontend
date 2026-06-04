@@ -1,7 +1,13 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ViewStyle,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Props {
   email: string;
@@ -14,7 +20,11 @@ export function InviteRow({ email, onRemove, style }: Props) {
     <View style={[styles.container, style]}>
       <View style={styles.dot} />
       <Text style={styles.email}>{email}</Text>
-      <TouchableOpacity onPress={onRemove} activeOpacity={0.7} style={styles.removeButton}>
+      <TouchableOpacity
+        onPress={onRemove}
+        activeOpacity={0.7}
+        style={styles.removeButton}
+      >
         <Ionicons name="close" size={14} color={Colors.text.primary} />
       </TouchableOpacity>
     </View>
@@ -23,8 +33,8 @@ export function InviteRow({ email, onRemove, style }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: Colors.bg.default,
     borderRadius: 999,
     borderWidth: 1,
@@ -49,7 +59,7 @@ const styles = StyleSheet.create({
     height: 28,
     borderRadius: 14,
     backgroundColor: Colors.status.danger,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

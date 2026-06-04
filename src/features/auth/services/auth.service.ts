@@ -18,7 +18,11 @@ export const authService = {
   },
 
   async signUp(name: string, email: string, password: string) {
-    const { data, error } = await authClient.signUp.email({ name, email, password });
+    const { data, error } = await authClient.signUp.email({
+      name,
+      email,
+      password,
+    });
 
     if (error) {
       throw new Error(error.message || "Failed to sign up");

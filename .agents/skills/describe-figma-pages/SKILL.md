@@ -36,22 +36,22 @@ If the task also includes slicing work, the same structure should be used to upd
 ## Workflow
 
 1. Inventory the design files.
-Collect all relevant images and group them by flow, feature, or state.
+   Collect all relevant images and group them by flow, feature, or state.
 
 2. Define unique page names.
-Name each page in `kebab-case` using the screen purpose, not only the folder name.
+   Name each page in `kebab-case` using the screen purpose, not only the folder name.
 
 3. Describe pages.
-For each page, capture purpose, visible content, colors, actions, likely flow, and page-level reusable components.
+   For each page, capture purpose, visible content, colors, actions, likely flow, and page-level reusable components.
 
 4. Describe reusable components.
-Create a separate component inventory that abstracts repeated UI patterns across pages.
+   Create a separate component inventory that abstracts repeated UI patterns across pages.
 
 5. Build implementation tracking.
-Map pages and components into implementation phases ordered by shared structure and delivery efficiency.
+   Map pages and components into implementation phases ordered by shared structure and delivery efficiency.
 
 6. Update implementation status when needed.
-If slicing already exists, update the tracking file and add preview entries only when the task explicitly includes slicing work.
+   If slicing already exists, update the tracking file and add preview entries only when the task explicitly includes slicing work.
 
 ## Output 1
 
@@ -91,45 +91,45 @@ Good examples:
 
 ### booking-detail
 
-| Field | Value |
-| --- | --- |
-| Page Name | `booking-detail` |
-| Reference PNG | `ui-ux-pages-pngs/booking-detail/booking-detail-main.png` |
-| Purpose | Show booking details and next available actions. |
-| Primary Actions | Back, Reschedule, Cancel Booking |
-| Flow Summary | Back returns to the previous screen. Reschedule opens schedule selection. Cancel opens a confirmation modal. |
-| Notes | Color values may be estimated from the PNG if no design tokens are available. |
+| Field           | Value                                                                                                        |
+| --------------- | ------------------------------------------------------------------------------------------------------------ |
+| Page Name       | `booking-detail`                                                                                             |
+| Reference PNG   | `ui-ux-pages-pngs/booking-detail/booking-detail-main.png`                                                    |
+| Purpose         | Show booking details and next available actions.                                                             |
+| Primary Actions | Back, Reschedule, Cancel Booking                                                                             |
+| Flow Summary    | Back returns to the previous screen. Reschedule opens schedule selection. Cancel opens a confirmation modal. |
+| Notes           | Color values may be estimated from the PNG if no design tokens are available.                                |
 
 #### Visible Content
 
-| Item Type | Label or Title | Example Value | Purpose or Behavior |
-| --- | --- | --- | --- |
-| App Bar | Booking Detail | - | Displays screen title and back navigation. |
-| Text Block | Customer Name | `Rifa Saputra` | Shows the customer identity. |
-| Text Block | Service | `Haircut + Beard Trim` | Shows the selected service package. |
-| Text Block | Schedule | `Tue, 14 May 2026 - 13:30` | Shows booking time. |
-| Badge | Status | `Confirmed` | Indicates the current booking state. |
-| Button | Reschedule | - | Starts the reschedule flow. |
-| Button | Cancel Booking | - | Opens a destructive confirmation step. |
+| Item Type  | Label or Title | Example Value              | Purpose or Behavior                        |
+| ---------- | -------------- | -------------------------- | ------------------------------------------ |
+| App Bar    | Booking Detail | -                          | Displays screen title and back navigation. |
+| Text Block | Customer Name  | `Rifa Saputra`             | Shows the customer identity.               |
+| Text Block | Service        | `Haircut + Beard Trim`     | Shows the selected service package.        |
+| Text Block | Schedule       | `Tue, 14 May 2026 - 13:30` | Shows booking time.                        |
+| Badge      | Status         | `Confirmed`                | Indicates the current booking state.       |
+| Button     | Reschedule     | -                          | Starts the reschedule flow.                |
+| Button     | Cancel Booking | -                          | Opens a destructive confirmation step.     |
 
 #### Colors
 
-| Hex | Usage |
-| --- | --- |
-| `#111827` | Primary text and headings |
+| Hex       | Usage                             |
+| --------- | --------------------------------- |
+| `#111827` | Primary text and headings         |
 | `#F59E0B` | Accent action or status highlight |
-| `#FFFFFF` | Main background |
-| `#E5E7EB` | Borders and dividers |
+| `#FFFFFF` | Main background                   |
+| `#E5E7EB` | Borders and dividers              |
 
 #### Reusable Components Used On This Page
 
-| Component Name | Variant or State | Example Content | Purpose |
-| --- | --- | --- | --- |
-| `app-bar` | Back button | `Booking Detail` | Top navigation header |
-| `info-row` | Label-value row | `Service / Haircut + Beard Trim` | Compact detail presentation |
-| `status-badge` | Confirmed | `Confirmed` | Status display |
-| `primary-button` | Filled | `Reschedule` | Main action |
-| `confirmation-modal` | Destructive | `Cancel Booking` | Confirm destructive actions |
+| Component Name       | Variant or State | Example Content                  | Purpose                     |
+| -------------------- | ---------------- | -------------------------------- | --------------------------- |
+| `app-bar`            | Back button      | `Booking Detail`                 | Top navigation header       |
+| `info-row`           | Label-value row  | `Service / Haircut + Beard Trim` | Compact detail presentation |
+| `status-badge`       | Confirmed        | `Confirmed`                      | Status display              |
+| `primary-button`     | Filled           | `Reschedule`                     | Main action                 |
+| `confirmation-modal` | Destructive      | `Cancel Booking`                 | Confirm destructive actions |
 ```
 
 ### Component Descriptions
@@ -150,11 +150,11 @@ Each component entry should include:
 ```md
 ## Component Descriptions
 
-| Component Name | Type | Variants or States | Example Content | Used By Pages | Notes |
-| --- | --- | --- | --- | --- | --- |
-| `primary-button` | Action button | Filled, outlined, disabled | `Submit`, `Continue`, `Save` | `login`, `register`, `booking-detail` | Keep height, radius, and text style consistent across features. |
-| `status-badge` | Status indicator | Confirmed, pending, cancelled | `Confirmed` | `booking-detail`, `schedule-list` | Should support color variants from a shared token set. |
-| `info-row` | Label-value row | Default, multi-line | `Phone Number / +62 812 3456 7890` | `booking-detail`, `user-profile` | Useful for compact detail summary screens. |
+| Component Name   | Type             | Variants or States            | Example Content                    | Used By Pages                         | Notes                                                           |
+| ---------------- | ---------------- | ----------------------------- | ---------------------------------- | ------------------------------------- | --------------------------------------------------------------- |
+| `primary-button` | Action button    | Filled, outlined, disabled    | `Submit`, `Continue`, `Save`       | `login`, `register`, `booking-detail` | Keep height, radius, and text style consistent across features. |
+| `status-badge`   | Status indicator | Confirmed, pending, cancelled | `Confirmed`                        | `booking-detail`, `schedule-list`     | Should support color variants from a shared token set.          |
+| `info-row`       | Label-value row  | Default, multi-line           | `Phone Number / +62 812 3456 7890` | `booking-detail`, `user-profile`      | Useful for compact detail summary screens.                      |
 ```
 
 ## Output 2
@@ -197,17 +197,17 @@ Reason: shared layout, buttons, cards, rows, and badges should be built first be
 
 ### Pages
 
-| nama_halaman | dependency | kegunaan | slicing_implemented | functioning_api_implemented | lokasi | lokasi_referensi_png | implementation_notes |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| booking-detail | info-row, status-badge, primary-button, confirmation-modal | Shows booking details and actions | [] | [] | - | ui-ux-pages-pngs/booking-detail/booking-detail-main.png | Build after shared detail rows and action footer patterns are ready. |
-| notification-empty | app-bar, empty-state-illustration, primary-button | Shows empty notification state | [] | [] | - | ui-ux-pages-pngs/notification/notification-empty.png | Can be implemented quickly once the shared empty-state pattern exists. |
+| nama_halaman       | dependency                                                 | kegunaan                          | slicing_implemented | functioning_api_implemented | lokasi | lokasi_referensi_png                                    | implementation_notes                                                   |
+| ------------------ | ---------------------------------------------------------- | --------------------------------- | ------------------- | --------------------------- | ------ | ------------------------------------------------------- | ---------------------------------------------------------------------- |
+| booking-detail     | info-row, status-badge, primary-button, confirmation-modal | Shows booking details and actions | []                  | []                          | -      | ui-ux-pages-pngs/booking-detail/booking-detail-main.png | Build after shared detail rows and action footer patterns are ready.   |
+| notification-empty | app-bar, empty-state-illustration, primary-button          | Shows empty notification state    | []                  | []                          | -      | ui-ux-pages-pngs/notification/notification-empty.png    | Can be implemented quickly once the shared empty-state pattern exists. |
 
 ### Components
 
-| nama_komponen | dependency | kegunaan | slicing_implemented | functioning_api_implemented | lokasi | lokasi_referensi_png | implementation_notes |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| primary-button | - | Main CTA across many flows | [] | [] | - | ui-ux-pages-pngs/onboarding/onboarding-01.png | High-priority shared component. |
-| info-row | - | Compact label-value layout | [] | [] | - | ui-ux-pages-pngs/booking-detail/booking-detail-main.png | Reusable across detail-heavy pages. |
+| nama_komponen  | dependency | kegunaan                   | slicing_implemented | functioning_api_implemented | lokasi | lokasi_referensi_png                                    | implementation_notes                |
+| -------------- | ---------- | -------------------------- | ------------------- | --------------------------- | ------ | ------------------------------------------------------- | ----------------------------------- |
+| primary-button | -          | Main CTA across many flows | []                  | []                          | -      | ui-ux-pages-pngs/onboarding/onboarding-01.png           | High-priority shared component.     |
+| info-row       | -          | Compact label-value layout | []                  | []                          | -      | ui-ux-pages-pngs/booking-detail/booking-detail-main.png | Reusable across detail-heavy pages. |
 ```
 
 ## Naming Rules

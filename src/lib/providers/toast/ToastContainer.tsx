@@ -19,8 +19,15 @@ interface AnimatedToastProps {
   frameWidth: number;
 }
 
-function AnimatedToast({ message, type, onDismiss, frameWidth }: AnimatedToastProps) {
-  const slideAnim = React.useRef(new Animated.Value(-TOAST_HEIGHT - 20)).current;
+function AnimatedToast({
+  message,
+  type,
+  onDismiss,
+  frameWidth,
+}: AnimatedToastProps) {
+  const slideAnim = React.useRef(
+    new Animated.Value(-TOAST_HEIGHT - 20),
+  ).current;
 
   useEffect(() => {
     Animated.timing(slideAnim, {
@@ -97,7 +104,7 @@ export function ToastContainer() {
   }, [toasts]);
 
   return (
-    <View style={[styles.root, { pointerEvents: "box-none" }]} >
+    <View style={[styles.root, { pointerEvents: "box-none" }]}>
       {displayedToasts.map((toast) => (
         <AnimatedToast
           key={toast.id}
@@ -113,7 +120,7 @@ export function ToastContainer() {
 
 const styles = StyleSheet.create({
   root: {
-    position: Platform.OS === "web" ? ("fixed") : "absolute",
+    position: Platform.OS === "web" ? "fixed" : "absolute",
     top: 0,
     left: 0,
     right: 0,

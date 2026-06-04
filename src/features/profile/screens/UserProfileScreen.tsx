@@ -7,11 +7,17 @@ import { AlertModal } from "@/src/features/profile/components/AlertModal";
 import { LogoutRow } from "@/src/features/profile/components/LogoutRow";
 import { ProfileSummaryCard } from "@/src/features/profile/components/ProfileSummaryCard";
 import { useToast } from "@/src/lib/providers/toast";
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useProfile } from "../hooks";
 import { getErrorMessage } from "../utils/error-handler";
 
@@ -65,12 +71,20 @@ export function UserProfileScreen() {
         <View style={styles.avatar}>
           <Text style={styles.avatarInitials}>
             {profile.name
-              ? profile.name.split(" ").slice(0, 2).map((w: string) => w[0].toUpperCase()).join("")
+              ? profile.name
+                  .split(" ")
+                  .slice(0, 2)
+                  .map((w: string) => w[0].toUpperCase())
+                  .join("")
               : "?"}
           </Text>
         </View>
         <TouchableOpacity style={styles.editAvatarBtn} activeOpacity={0.8}>
-          <Ionicons name="camera-outline" size={14} color={Colors.text.primary} />
+          <Ionicons
+            name="camera-outline"
+            size={14}
+            color={Colors.text.primary}
+          />
         </TouchableOpacity>
       </View>
 
@@ -79,22 +93,29 @@ export function UserProfileScreen() {
         <InfoRow
           label="Your Name"
           value={profile.name}
-          onPress={() => router.push({ pathname: "/d/edit-user-profile-fields", params: { mode: "name" } })}
+          onPress={() =>
+            router.push({
+              pathname: "/d/edit-user-profile-fields",
+              params: { mode: "name" },
+            })
+          }
         />
         <InfoRow
           label="Bio"
           value={profile.bio || "Add a bio"}
           isLast
-          onPress={() => router.push({ pathname: "/d/edit-user-profile-fields", params: { mode: "bio" } })}
+          onPress={() =>
+            router.push({
+              pathname: "/d/edit-user-profile-fields",
+              params: { mode: "bio" },
+            })
+          }
         />
       </ProfileSummaryCard>
 
       <Text style={styles.sectionLabel}>Account</Text>
       <ProfileSummaryCard style={styles.card}>
-        <InfoRow
-          label="Email"
-          value={profile.email}
-        />
+        <InfoRow label="Email" value={profile.email} />
         <InfoRow
           label="Phone Number"
           value={profile.phone || "Add phone number"}
@@ -102,7 +123,12 @@ export function UserProfileScreen() {
         <InfoRow
           label="Change Password"
           showChevron
-          onPress={() => router.push({ pathname: "/d/edit-user-profile-fields", params: { mode: "password" } })}
+          onPress={() =>
+            router.push({
+              pathname: "/d/edit-user-profile-fields",
+              params: { mode: "password" },
+            })
+          }
           isLast
         />
       </ProfileSummaryCard>

@@ -103,6 +103,7 @@ export default function CreateBarbershopNameLogo() {
 ## API Endpoints Used
 
 ### Barbershop Management
+
 - `POST /api/barbershop` - Create new barbershop
 - `GET /api/barbershop` - Get current barbershop
 - `GET /api/barbershop/list` - List user's barbershops
@@ -110,12 +111,14 @@ export default function CreateBarbershopNameLogo() {
 - `POST /api/barbershop/logo` - Upload logo
 
 ### Service Management
+
 - `POST /api/services` - Create service
 - `GET /api/services` - List services
 - `PATCH /api/services/:id` - Update service
 - `DELETE /api/services/:id` - Delete service
 
 ### Team Management
+
 - `POST /api/barbers/invite` - Invite single barber
 - `POST /api/barbers/bulk-invite` - Invite multiple barbers
 - `DELETE /api/barbers/invite/:invitationId` - Cancel invitation
@@ -126,7 +129,11 @@ export default function CreateBarbershopNameLogo() {
 ### Using Services Directly
 
 ```tsx
-import { barbershopService, servicesService, barbersService } from "@/src/features/workspace";
+import {
+  barbershopService,
+  servicesService,
+  barbersService,
+} from "@/src/features/workspace";
 
 // Create barbershop
 const barbershop = await barbershopService.create({
@@ -201,11 +208,13 @@ if (!nameValidation.isValid) {
 Currently, the image picker is a placeholder. To implement:
 
 1. Install image picker library:
+
    ```bash
    npx expo install expo-image-picker
    ```
 
 2. Update `ImagePickerButton.tsx`:
+
    ```tsx
    import * as ImagePicker from "expo-image-picker";
 
@@ -222,12 +231,14 @@ Currently, the image picker is a placeholder. To implement:
 ## Slug Generation
 
 The slug generator automatically:
+
 - Converts to lowercase
 - Replaces spaces with hyphens
 - Removes special characters
 - Validates against API (checks availability)
 
 Example:
+
 ```
 Input: "My Awesome Barber Shop!"
 Output slug: "my-awesome-barber-shop"
@@ -236,6 +247,7 @@ Output slug: "my-awesome-barber-shop"
 ## Error Handling
 
 All services throw errors that are caught and displayed to users via `Alert.alert()`. Each screen has error handling for:
+
 - Network failures
 - Validation errors
 - Duplicate entries

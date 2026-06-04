@@ -8,10 +8,14 @@ export const CUSTOMERS_QUERY_KEYS = {
   list: (search?: string, sort?: CustomerSort) =>
     [...CUSTOMERS_QUERY_KEYS.all, "list", search ?? "", sort ?? ""] as const,
   byId: (id: string) => [...CUSTOMERS_QUERY_KEYS.all, "detail", id] as const,
-  bookings: (id: string) => [...CUSTOMERS_QUERY_KEYS.all, "bookings", id] as const,
+  bookings: (id: string) =>
+    [...CUSTOMERS_QUERY_KEYS.all, "bookings", id] as const,
 };
 
-export function useCustomersList(options?: { search?: string; sort?: CustomerSort }) {
+export function useCustomersList(options?: {
+  search?: string;
+  sort?: CustomerSort;
+}) {
   return useQuery({
     queryKey: CUSTOMERS_QUERY_KEYS.list(options?.search, options?.sort),
     queryFn: () => customersService.getList(options),

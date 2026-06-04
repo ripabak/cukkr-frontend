@@ -11,10 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {
-  useAnalyticsBarbers,
-  useAnalyticsBarbersList,
-} from "../hooks";
+import { useAnalyticsBarbers, useAnalyticsBarbersList } from "../hooks";
 import type { AnalyticsRange } from "../services/analytics.service";
 import { formatRupiah } from "../utils/format";
 import { BarChart } from "../components/BarChart";
@@ -22,11 +19,15 @@ import { RangePicker } from "../components/RangePicker";
 
 export function AnalyticsBarbersScreen() {
   const router = useRouter();
-  const { range: rangeParam } = useLocalSearchParams<{ range?: AnalyticsRange }>();
+  const { range: rangeParam } = useLocalSearchParams<{
+    range?: AnalyticsRange;
+  }>();
   const [range, setRange] = useState<AnalyticsRange>(rangeParam ?? "month");
 
-  const { data: chartData, isLoading: chartLoading } = useAnalyticsBarbers(range);
-  const { data: listData, isLoading: listLoading } = useAnalyticsBarbersList(range);
+  const { data: chartData, isLoading: chartLoading } =
+    useAnalyticsBarbers(range);
+  const { data: listData, isLoading: listLoading } =
+    useAnalyticsBarbersList(range);
 
   const chartPoints = (chartData?.chart ?? []).map((b) => ({
     label: b.barberName.split(" ")[0],
@@ -41,8 +42,16 @@ export function AnalyticsBarbersScreen() {
       contentStyle={styles.scrollContent}
       headerSlot={
         <View style={styles.topBar}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} activeOpacity={0.7}>
-            <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.backBtn}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name="chevron-back"
+              size={20}
+              color={Colors.text.primary}
+            />
           </TouchableOpacity>
           <Text style={styles.pageTitle}>Barbers</Text>
           <View style={styles.topBarRight} />
@@ -75,12 +84,15 @@ export function AnalyticsBarbersScreen() {
               All Barbers ({barbers.length})
             </Text>
             {totalRevenue > 0 ? (
-              <Text style={styles.totalLabel}>{formatRupiah(totalRevenue)}</Text>
+              <Text style={styles.totalLabel}>
+                {formatRupiah(totalRevenue)}
+              </Text>
             ) : null}
           </View>
 
           {barbers.map((barber, i) => {
-            const revenueShare = totalRevenue > 0 ? (barber.totalRevenue / totalRevenue) * 100 : 0;
+            const revenueShare =
+              totalRevenue > 0 ? (barber.totalRevenue / totalRevenue) * 100 : 0;
             return (
               <View key={barber.barberId} style={styles.barberRow}>
                 <View style={styles.barberLeft}>
@@ -103,14 +115,19 @@ export function AnalyticsBarbersScreen() {
                     )}
                   </View>
                   <View style={styles.barberInfo}>
-                    <Text style={styles.barberName} numberOfLines={1}>{barber.name}</Text>
+                    <Text style={styles.barberName} numberOfLines={1}>
+                      {barber.name}
+                    </Text>
                     <Text style={styles.barberMeta}>
-                      {barber.totalCustomers} customer{barber.totalCustomers !== 1 ? "s" : ""}
+                      {barber.totalCustomers} customer
+                      {barber.totalCustomers !== 1 ? "s" : ""}
                     </Text>
                   </View>
                 </View>
                 <View style={styles.barberRight}>
-                  <Text style={styles.barberRevenue}>{formatRupiah(barber.totalRevenue)}</Text>
+                  <Text style={styles.barberRevenue}>
+                    {formatRupiah(barber.totalRevenue)}
+                  </Text>
                   <Text style={styles.barberShare}>
                     {revenueShare.toFixed(0)}%
                   </Text>
@@ -123,12 +140,22 @@ export function AnalyticsBarbersScreen() {
           <View style={styles.shareSection}>
             <Text style={styles.shareSectionTitle}>Revenue Share</Text>
             {barbers.map((barber) => {
-              const share = totalRevenue > 0 ? (barber.totalRevenue / totalRevenue) * 100 : 0;
+              const share =
+                totalRevenue > 0
+                  ? (barber.totalRevenue / totalRevenue) * 100
+                  : 0;
               return (
                 <View key={barber.barberId} style={styles.shareRow}>
-                  <Text style={styles.shareName} numberOfLines={1}>{barber.name.split(" ")[0]}</Text>
+                  <Text style={styles.shareName} numberOfLines={1}>
+                    {barber.name.split(" ")[0]}
+                  </Text>
                   <View style={styles.shareBarWrap}>
-                    <View style={[styles.shareBar, { width: `${Math.max(share, share > 0 ? 2 : 0)}%` }]} />
+                    <View
+                      style={[
+                        styles.shareBar,
+                        { width: `${Math.max(share, share > 0 ? 2 : 0)}%` },
+                      ]}
+                    />
                   </View>
                   <Text style={styles.sharePercent}>{share.toFixed(0)}%</Text>
                 </View>

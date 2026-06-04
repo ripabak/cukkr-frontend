@@ -1,7 +1,13 @@
-import { Colors } from '@/src/theme/colors';
-import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 
 interface ServiceItem {
   name: string;
@@ -16,16 +22,28 @@ interface Props {
 }
 
 function formatPrice(amount: number): string {
-  return `Rp. ${amount.toLocaleString('id-ID')}`;
+  return `Rp. ${amount.toLocaleString("id-ID")}`;
 }
 
-export function ServiceSelectionCard({ services, onSelectPress, style }: Props) {
+export function ServiceSelectionCard({
+  services,
+  onSelectPress,
+  style,
+}: Props) {
   return (
     <View style={[styles.wrapper, style]}>
       <Text style={styles.sectionLabel}>Service</Text>
       {services.length === 0 ? (
-        <TouchableOpacity onPress={onSelectPress} activeOpacity={0.7} style={styles.emptyRow}>
-          <Ionicons name="add-circle-outline" size={18} color={Colors.icon.muted} />
+        <TouchableOpacity
+          onPress={onSelectPress}
+          activeOpacity={0.7}
+          style={styles.emptyRow}
+        >
+          <Ionicons
+            name="add-circle-outline"
+            size={18}
+            color={Colors.icon.muted}
+          />
           <Text style={styles.emptyText}>Select a service</Text>
         </TouchableOpacity>
       ) : (
@@ -35,7 +53,9 @@ export function ServiceSelectionCard({ services, onSelectPress, style }: Props) 
               <View style={styles.imagePlaceholder} />
               <View style={styles.serviceInfo}>
                 <Text style={styles.serviceName}>{svc.name}</Text>
-                <Text style={styles.servicePrice}>{formatPrice(svc.price)}</Text>
+                <Text style={styles.servicePrice}>
+                  {formatPrice(svc.price)}
+                </Text>
               </View>
               {svc.isDefault ? (
                 <View style={styles.defaultBadge}>
@@ -44,7 +64,11 @@ export function ServiceSelectionCard({ services, onSelectPress, style }: Props) 
               ) : null}
             </View>
           ))}
-          <TouchableOpacity onPress={onSelectPress} activeOpacity={0.7} style={styles.changeRow}>
+          <TouchableOpacity
+            onPress={onSelectPress}
+            activeOpacity={0.7}
+            style={styles.changeRow}
+          >
             <Text style={styles.changeText}>Change service</Text>
           </TouchableOpacity>
         </>
@@ -67,8 +91,8 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   emptyRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
     paddingVertical: 6,
   },
@@ -77,8 +101,8 @@ const styles = StyleSheet.create({
     color: Colors.text.muted,
   },
   serviceRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: Colors.brand.primary,
     borderRadius: 12,
     padding: 10,
@@ -96,12 +120,12 @@ const styles = StyleSheet.create({
   },
   serviceName: {
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: "700",
     color: Colors.text.primary,
   },
   servicePrice: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   defaultBadge: {
@@ -113,15 +137,15 @@ const styles = StyleSheet.create({
   },
   defaultText: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   changeRow: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
   },
   changeText: {
     fontSize: 13,
     color: Colors.text.secondary,
-    textDecorationLine: 'underline',
+    textDecorationLine: "underline",
   },
 });

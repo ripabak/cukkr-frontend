@@ -10,8 +10,10 @@ export default function Index() {
 
   useEffect(() => {
     if (!hasHydrated) return;
-    if (pathname !== '/') return;
-    router.replace(hasSeenOnboarding ? "/d/(tabs)/home" : "/d/onboarding-splash");
+    if (pathname !== "/") return;
+    router.replace(
+      hasSeenOnboarding ? "/d/(tabs)/home" : "/d/onboarding-splash",
+    );
   }, [hasHydrated, hasSeenOnboarding, pathname]);
 
   return null;

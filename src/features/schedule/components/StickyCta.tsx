@@ -1,6 +1,6 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
 
 interface Props {
   label: string;
@@ -10,7 +10,13 @@ interface Props {
   style?: ViewStyle;
 }
 
-export function StickyCta({ label, onPress, color = Colors.brand.primary, textColor = Colors.text.primary, style }: Props) {
+export function StickyCta({
+  label,
+  onPress,
+  color = Colors.brand.primary,
+  textColor = Colors.text.primary,
+  style,
+}: Props) {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -24,19 +30,19 @@ export function StickyCta({ label, onPress, color = Colors.brand.primary, textCo
 
 const styles = StyleSheet.create({
   cta: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 32,
     left: 20,
     right: 20,
     height: 52,
     borderRadius: 999,
-    alignItems: 'center',
-    justifyContent: 'center',
-    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.15)',
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.15)",
     elevation: 6,
   },
   label: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });

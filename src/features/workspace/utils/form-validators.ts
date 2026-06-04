@@ -76,7 +76,10 @@ export function validatePhoneNumber(phone: string): {
     return { isValid: false, message: "Phone number is required" };
   }
   if (phone.replace(/\D/g, "").length < 10) {
-    return { isValid: false, message: "Phone number must be at least 10 digits" };
+    return {
+      isValid: false,
+      message: "Phone number must be at least 10 digits",
+    };
   }
   if (!phoneRegex.test(phone)) {
     return { isValid: false, message: "Invalid phone number format" };

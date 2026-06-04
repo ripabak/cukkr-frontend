@@ -11,17 +11,19 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {
-  useAnalyticsCustomers,
-  useAnalyticsCustomersList,
-} from "../hooks";
+import { useAnalyticsCustomers, useAnalyticsCustomersList } from "../hooks";
 import type { AnalyticsRange } from "../services/analytics.service";
 import { formatDate, formatRupiah } from "../utils/format";
 import { BarChart } from "../components/BarChart";
 import { RangePicker } from "../components/RangePicker";
 import { StatCard, TrendBadge } from "../components/StatCard";
 
-const EMPTY_STAT = { current: 0, previous: 0, change: null, direction: "neutral" as const };
+const EMPTY_STAT = {
+  current: 0,
+  previous: 0,
+  change: null,
+  direction: "neutral" as const,
+};
 
 const STATUS_OPTIONS = [
   { label: "All", value: "all" },
@@ -32,8 +34,18 @@ const STATUS_OPTIONS = [
 function CustomerStatusPill({ status }: { status: "new" | "return" }) {
   const isNew = status === "new";
   return (
-    <View style={[statusStyles.pill, isNew ? statusStyles.new : statusStyles.return]}>
-      <Text style={[statusStyles.text, isNew ? statusStyles.newText : statusStyles.returnText]}>
+    <View
+      style={[
+        statusStyles.pill,
+        isNew ? statusStyles.new : statusStyles.return,
+      ]}
+    >
+      <Text
+        style={[
+          statusStyles.text,
+          isNew ? statusStyles.newText : statusStyles.returnText,
+        ]}
+      >
         {isNew ? "New" : "Return"}
       </Text>
     </View>
@@ -51,16 +63,25 @@ const statusStyles = StyleSheet.create({
 
 export function AnalyticsCustomersScreen() {
   const router = useRouter();
-  const { range: rangeParam } = useLocalSearchParams<{ range?: AnalyticsRange }>();
+  const { range: rangeParam } = useLocalSearchParams<{
+    range?: AnalyticsRange;
+  }>();
   const [range, setRange] = useState<AnalyticsRange>(rangeParam ?? "month");
-  const [statusFilter, setStatusFilter] = useState<"all" | "new" | "return">("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "new" | "return">(
+    "all",
+  );
   const [statusMenuVisible, setStatusMenuVisible] = useState(false);
   const [menuTop, setMenuTop] = useState(0);
   const [page, setPage] = useState(1);
   const filterBtnRef = useRef<View>(null);
 
-  const { data: custData, isLoading: custLoading } = useAnalyticsCustomers(range);
-  const { data: listData, isLoading: listLoading } = useAnalyticsCustomersList(range, statusFilter, page);
+  const { data: custData, isLoading: custLoading } =
+    useAnalyticsCustomers(range);
+  const { data: listData, isLoading: listLoading } = useAnalyticsCustomersList(
+    range,
+    statusFilter,
+    page,
+  );
 
   const stats = custData?.stats;
   const chart = custData?.chart;
@@ -78,9 +99,18 @@ export function AnalyticsCustomersScreen() {
   };
 
   const handleOpenStatusMenu = () => {
-    filterBtnRef.current?.measure((_x: number, _y: number, _w: number, height: number, _px: number, pageY: number) => {
-      setMenuTop(pageY + height + 4);
-    });
+    filterBtnRef.current?.measure(
+      (
+        _x: number,
+        _y: number,
+        _w: number,
+        height: number,
+        _px: number,
+        pageY: number,
+      ) => {
+        setMenuTop(pageY + height + 4);
+      },
+    );
     setStatusMenuVisible(true);
   };
 
@@ -103,7 +133,11 @@ export function AnalyticsCustomersScreen() {
       }
     >
       <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} activeOpacity={0.7}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.backBtn}
+          activeOpacity={0.7}
+        >
           <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
         </TouchableOpacity>
         <Text style={styles.pageTitle}>Customers</Text>
@@ -125,24 +159,42 @@ export function AnalyticsCustomersScreen() {
             <StatCard
               label="Customers"
               value={String(stats.totalCustomers?.current ?? 0)}
-              icon={<Ionicons name="people-outline" size={16} color={Colors.text.primary} />}
+              icon={
+                <Ionicons
+                  name="people-outline"
+                  size={16}
+                  color={Colors.text.primary}
+                />
+              }
               stat={stats.totalCustomers ?? EMPTY_STAT}
               style={styles.statFlex}
             />
             <View style={styles.splitCol}>
               <View style={styles.splitCard}>
                 <View style={styles.splitCardHeader}>
-                  <Ionicons name="walk-outline" size={12} color={Colors.text.secondary} />
+                  <Ionicons
+                    name="walk-outline"
+                    size={12}
+                    color={Colors.text.secondary}
+                  />
                   <Text style={styles.splitLabel}>Walk-in</Text>
                 </View>
-                <Text style={styles.splitValue}>{stats.totalWalkIn?.current ?? 0}</Text>
+                <Text style={styles.splitValue}>
+                  {stats.totalWalkIn?.current ?? 0}
+                </Text>
               </View>
               <View style={styles.splitCard}>
                 <View style={styles.splitCardHeader}>
-                  <Ionicons name="calendar-outline" size={12} color={Colors.text.secondary} />
+                  <Ionicons
+                    name="calendar-outline"
+                    size={12}
+                    color={Colors.text.secondary}
+                  />
                   <Text style={styles.splitLabel}>Appt</Text>
                 </View>
-                <Text style={styles.splitValue}>{stats.totalAppointment?.current ?? 0}</Text>
+                <Text style={styles.splitValue}>
+                  {stats.totalAppointment?.current ?? 0}
+                </Text>
               </View>
             </View>
           </View>
@@ -152,14 +204,26 @@ export function AnalyticsCustomersScreen() {
             <StatCard
               label="New Customers"
               value={String(stats.totalNew?.current ?? 0)}
-              icon={<Ionicons name="person-add-outline" size={16} color={Colors.text.primary} />}
+              icon={
+                <Ionicons
+                  name="person-add-outline"
+                  size={16}
+                  color={Colors.text.primary}
+                />
+              }
               stat={stats.totalNew ?? EMPTY_STAT}
               style={styles.statFlex}
             />
             <StatCard
               label="Returning"
               value={String(stats.totalReturn?.current ?? 0)}
-              icon={<Ionicons name="repeat-outline" size={16} color={Colors.text.primary} />}
+              icon={
+                <Ionicons
+                  name="repeat-outline"
+                  size={16}
+                  color={Colors.text.primary}
+                />
+              }
               stat={stats.totalReturn ?? EMPTY_STAT}
               style={styles.statFlex}
             />
@@ -172,10 +236,17 @@ export function AnalyticsCustomersScreen() {
           <View style={styles.chartCardHeader}>
             <Text style={styles.chartCardTitle}>Customer Trend</Text>
             {stats ? (
-              <TrendBadge direction={stats.totalCustomers?.direction ?? "neutral"} change={stats.totalCustomers?.change ?? null} />
+              <TrendBadge
+                direction={stats.totalCustomers?.direction ?? "neutral"}
+                change={stats.totalCustomers?.change ?? null}
+              />
             ) : null}
           </View>
-          <BarChart data={chart} barColor={Colors.status.info} chartHeight={130} />
+          <BarChart
+            data={chart}
+            barColor={Colors.status.info}
+            chartHeight={130}
+          />
         </View>
       ) : null}
 
@@ -192,14 +263,23 @@ export function AnalyticsCustomersScreen() {
             activeOpacity={0.8}
           >
             <Text style={styles.filterPillText}>
-              {STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ?? "All"}
+              {STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ??
+                "All"}
             </Text>
-            <Ionicons name="chevron-down" size={13} color={Colors.text.primary} />
+            <Ionicons
+              name="chevron-down"
+              size={13}
+              color={Colors.text.primary}
+            />
           </TouchableOpacity>
         </View>
 
         {listLoading && customers.length === 0 ? (
-          <ActivityIndicator size="small" color={Colors.brand.primary} style={styles.listLoader} />
+          <ActivityIndicator
+            size="small"
+            color={Colors.brand.primary}
+            style={styles.listLoader}
+          />
         ) : customers.length === 0 ? (
           <Text style={styles.emptyText}>No customers found</Text>
         ) : (
@@ -208,7 +288,12 @@ export function AnalyticsCustomersScreen() {
               key={c.customerId}
               style={styles.customerRow}
               activeOpacity={0.75}
-              onPress={() => router.push({ pathname: "/d/customer-detail-general", params: { customerId: c.customerId } })}
+              onPress={() =>
+                router.push({
+                  pathname: "/d/customer-detail-general",
+                  params: { customerId: c.customerId },
+                })
+              }
             >
               <View style={styles.customerAvatar}>
                 <Text style={styles.customerInitial}>
@@ -217,7 +302,9 @@ export function AnalyticsCustomersScreen() {
               </View>
               <View style={styles.customerInfo}>
                 <View style={styles.customerNameRow}>
-                  <Text style={styles.customerName} numberOfLines={1}>{c.customerName}</Text>
+                  <Text style={styles.customerName} numberOfLines={1}>
+                    {c.customerName}
+                  </Text>
                   <CustomerStatusPill status={c.status} />
                 </View>
                 <Text style={styles.customerMeta}>
@@ -225,7 +312,9 @@ export function AnalyticsCustomersScreen() {
                   {c.lastVisitDate ? ` · ${formatDate(c.lastVisitDate)}` : ""}
                 </Text>
               </View>
-              <Text style={styles.customerRevenue}>{formatRupiah(c.totalRevenue)}</Text>
+              <Text style={styles.customerRevenue}>
+                {formatRupiah(c.totalRevenue)}
+              </Text>
             </TouchableOpacity>
           ))
         )}
@@ -237,15 +326,25 @@ export function AnalyticsCustomersScreen() {
               onPress={() => setPage((p) => p - 1)}
               style={[styles.pageBtn, !meta.hasPrev && styles.pageBtnDisabled]}
             >
-              <Ionicons name="chevron-back" size={16} color={meta.hasPrev ? Colors.text.primary : Colors.text.muted} />
+              <Ionicons
+                name="chevron-back"
+                size={16}
+                color={meta.hasPrev ? Colors.text.primary : Colors.text.muted}
+              />
             </TouchableOpacity>
-            <Text style={styles.pageLabel}>{meta.page} / {meta.totalPages}</Text>
+            <Text style={styles.pageLabel}>
+              {meta.page} / {meta.totalPages}
+            </Text>
             <TouchableOpacity
               disabled={!meta.hasNext}
               onPress={() => setPage((p) => p + 1)}
               style={[styles.pageBtn, !meta.hasNext && styles.pageBtnDisabled]}
             >
-              <Ionicons name="chevron-forward" size={16} color={meta.hasNext ? Colors.text.primary : Colors.text.muted} />
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={meta.hasNext ? Colors.text.primary : Colors.text.muted}
+              />
             </TouchableOpacity>
           </View>
         ) : null}

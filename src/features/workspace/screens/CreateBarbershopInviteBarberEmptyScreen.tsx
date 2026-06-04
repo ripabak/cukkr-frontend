@@ -1,4 +1,4 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SecondaryButton } from "@/src/components/SecondaryButton";
@@ -17,7 +17,9 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
   const [barber, setBarber] = useState("");
   const { mutate: inviteBarber, isPending: isInviting } = useInviteBarber();
 
-  const parseBarberInput = (input: string): { email?: string; phone?: string } | null => {
+  const parseBarberInput = (
+    input: string,
+  ): { email?: string; phone?: string } | null => {
     const trimmed = input.trim();
 
     if (trimmed.includes("@")) {
@@ -41,7 +43,7 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
     if (!parsed) {
       Alert.alert(
         "Invalid Input",
-        "Please enter a valid email or phone number"
+        "Please enter a valid email or phone number",
       );
       return;
     }
@@ -50,7 +52,7 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
     if (!parsed.email) {
       Alert.alert(
         "Email Required",
-        "Please enter an email address for invitation"
+        "Please enter an email address for invitation",
       );
       return;
     }
@@ -58,7 +60,7 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
     const currentInvites = formData.barberInvites || [];
     const isDuplicate = currentInvites.some(
       (invite) =>
-        invite.email === parsed.email || invite.phone === parsed.phone
+        invite.email === parsed.email || invite.phone === parsed.phone,
     );
 
     if (isDuplicate) {
@@ -66,23 +68,23 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
       return;
     }
 
-    inviteBarber({ email: parsed.email }, {
-      onSuccess: () => {
-        const newInvites = [...currentInvites, parsed];
-        updateFormData({ barberInvites: newInvites });
-        setBarber("");
+    inviteBarber(
+      { email: parsed.email },
+      {
+        onSuccess: () => {
+          const newInvites = [...currentInvites, parsed];
+          updateFormData({ barberInvites: newInvites });
+          setBarber("");
 
-        if (newInvites.length > 0) {
-          router.push("/d/create-barbershop-invite-barber-filled");
-        }
+          if (newInvites.length > 0) {
+            router.push("/d/create-barbershop-invite-barber-filled");
+          }
+        },
+        onError: (error) => {
+          Alert.alert("Error", error.message || "Failed to invite barber");
+        },
       },
-      onError: (error) => {
-        Alert.alert(
-          "Error",
-          error.message || "Failed to invite barber"
-        );
-      },
-    });
+    );
   };
 
   const handleSkip = () => {
@@ -108,10 +110,7 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
         onPress={handleAddBarber}
       />
       <View style={styles.flex} />
-      <PrimaryButton
-        label="Continue"
-        onPress={handleSkip}
-      />
+      <PrimaryButton label="Continue" onPress={handleSkip} />
     </ScreenShell>
   );
 }

@@ -1,6 +1,12 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ViewStyle,
+} from "react-native";
 
 interface Props {
   declineLabel?: string;
@@ -11,8 +17,8 @@ interface Props {
 }
 
 export function DualActionFooter({
-  declineLabel = 'Decline',
-  acceptLabel = 'Accept',
+  declineLabel = "Decline",
+  acceptLabel = "Accept",
   onDecline,
   onAccept,
   style,
@@ -39,11 +45,11 @@ export function DualActionFooter({
 
 const styles = StyleSheet.create({
   footer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 12,
     paddingHorizontal: 20,
     paddingBottom: 36,
@@ -56,8 +62,8 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 52,
     borderRadius: 999,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   declineBtn: {
     borderWidth: 1.5,
@@ -68,12 +74,12 @@ const styles = StyleSheet.create({
   },
   declineLabel: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.status.danger,
   },
   acceptLabel: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: "700",
     color: Colors.text.primary,
   },
 });

@@ -15,9 +15,9 @@ Authorization: session cookie
 
 ### Query Parameters
 
-| Parameter | Type | Required | Values |
-|-----------|------|----------|--------|
-| `range` | string | Yes | `24h` `week` `month` `6m` `1y` |
+| Parameter | Type   | Required | Values                         |
+| --------- | ------ | -------- | ------------------------------ |
+| `range`   | string | Yes      | `24h` `week` `month` `6m` `1y` |
 
 ### Response
 
@@ -54,9 +54,17 @@ Cookie: <session>
   "status": 200,
   "data": {
     "chart": [
-      { "barberId": "member_abc123", "barberName": "Pepe Julian",   "value": 480000 },
-      { "barberId": "member_def456", "barberName": "Andi Barberku", "value": 170000 },
-      { "barberId": "member_ghi789", "barberName": "Budi Cukur",    "value": 0      }
+      {
+        "barberId": "member_abc123",
+        "barberName": "Pepe Julian",
+        "value": 480000
+      },
+      {
+        "barberId": "member_def456",
+        "barberName": "Andi Barberku",
+        "value": 170000
+      },
+      { "barberId": "member_ghi789", "barberName": "Budi Cukur", "value": 0 }
     ]
   },
   "timeStamp": "2026-05-14T10:00:00.000Z"
@@ -65,11 +73,11 @@ Cookie: <session>
 
 ### Error Responses
 
-| Status | Condition |
-|--------|-----------|
-| `401` | No active session |
-| `403` | No active organisation |
-| `422` | Invalid `range` value |
+| Status | Condition              |
+| ------ | ---------------------- |
+| `401`  | No active session      |
+| `403`  | No active organisation |
+| `422`  | Invalid `range` value  |
 
 ---
 
@@ -84,9 +92,9 @@ Authorization: session cookie
 
 ### Query Parameters
 
-| Parameter | Type | Required | Values |
-|-----------|------|----------|--------|
-| `range` | string | Yes | `24h` `week` `month` `6m` `1y` |
+| Parameter | Type   | Required | Values                         |
+| --------- | ------ | -------- | ------------------------------ |
+| `range`   | string | Yes      | `24h` `week` `month` `6m` `1y` |
 
 ### Response
 
@@ -116,25 +124,25 @@ Cookie: <session>
   "status": 200,
   "data": [
     {
-      "barberId":       "member_abc123",
-      "name":           "Pepe Julian",
-      "imageUrl":       null,
+      "barberId": "member_abc123",
+      "name": "Pepe Julian",
+      "imageUrl": null,
       "totalCustomers": 5,
-      "totalRevenue":   480000
+      "totalRevenue": 480000
     },
     {
-      "barberId":       "member_def456",
-      "name":           "Andi Barberku",
-      "imageUrl":       "https://cdn.example.com/andi.jpg",
+      "barberId": "member_def456",
+      "name": "Andi Barberku",
+      "imageUrl": "https://cdn.example.com/andi.jpg",
       "totalCustomers": 2,
-      "totalRevenue":   170000
+      "totalRevenue": 170000
     },
     {
-      "barberId":       "member_ghi789",
-      "name":           "Budi Cukur",
-      "imageUrl":       null,
+      "barberId": "member_ghi789",
+      "name": "Budi Cukur",
+      "imageUrl": null,
       "totalCustomers": 0,
-      "totalRevenue":   0
+      "totalRevenue": 0
     }
   ],
   "timeStamp": "2026-05-14T10:00:00.000Z"
@@ -151,8 +159,8 @@ Cookie: <session>
 
 ### Error Responses
 
-| Status | Condition |
-|--------|-----------|
-| `401` | No active session |
-| `403` | No active organisation |
-| `422` | Invalid `range` value |
+| Status | Condition              |
+| ------ | ---------------------- |
+| `401`  | No active session      |
+| `403`  | No active organisation |
+| `422`  | Invalid `range` value  |

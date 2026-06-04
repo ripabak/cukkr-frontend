@@ -27,7 +27,10 @@ export function BarChart({
   return (
     <View style={[styles.container, { height: chartHeight + 20 }]}>
       {visible.map((point, i) => {
-        const barH = Math.max((point.value / maxVal) * chartHeight, point.value > 0 ? 4 : 2);
+        const barH = Math.max(
+          (point.value / maxVal) * chartHeight,
+          point.value > 0 ? 4 : 2,
+        );
         return (
           <View key={i} style={styles.col}>
             <View
@@ -35,7 +38,8 @@ export function BarChart({
                 styles.bar,
                 {
                   height: barH,
-                  backgroundColor: point.value > 0 ? barColor : Colors.border.default,
+                  backgroundColor:
+                    point.value > 0 ? barColor : Colors.border.default,
                   opacity: point.value > 0 ? 1 : 0.5,
                 },
               ]}

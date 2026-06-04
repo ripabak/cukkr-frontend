@@ -1,5 +1,5 @@
-import { Colors } from '@/src/theme/colors';
-import React, { useRef, useState } from 'react';
+import { Colors } from "@/src/theme/colors";
+import React, { useRef, useState } from "react";
 import {
   Modal,
   View,
@@ -8,9 +8,9 @@ import {
   StyleSheet,
   PanResponder,
   Animated,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useFrame } from '@/src/components/FrameContext';
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useFrame } from "@/src/components/FrameContext";
 
 interface Props {
   visible: boolean;
@@ -29,7 +29,7 @@ export function SwipeConfirmationModal({
   visible,
   title,
   description,
-  swipeLabel = 'Swipe to complete',
+  swipeLabel = "Swipe to complete",
   onComplete,
   onCancel,
 }: Props) {
@@ -61,7 +61,7 @@ export function SwipeConfirmationModal({
           }).start();
         }
       },
-    })
+    }),
   ).current;
 
   const handleClose = () => {
@@ -72,13 +72,27 @@ export function SwipeConfirmationModal({
 
   return (
     <Modal visible={visible} transparent animationType="slide">
-      <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={handleClose}>
-        <TouchableOpacity activeOpacity={1} style={[styles.card, { maxWidth: frameWidth - 48 }]}>
+      <TouchableOpacity
+        style={styles.overlay}
+        activeOpacity={1}
+        onPress={handleClose}
+      >
+        <TouchableOpacity
+          activeOpacity={1}
+          style={[styles.card, { maxWidth: frameWidth - 48 }]}
+        >
           <View style={styles.iconWrapper}>
-            <Ionicons name="checkmark" size={28} color="#FFFFFF" style={styles.checkIcon} />
+            <Ionicons
+              name="checkmark"
+              size={28}
+              color="#FFFFFF"
+              style={styles.checkIcon}
+            />
           </View>
           <Text style={styles.title}>{title}</Text>
-          {description ? <Text style={styles.description}>{description}</Text> : null}
+          {description ? (
+            <Text style={styles.description}>{description}</Text>
+          ) : null}
 
           {/* Swipe track */}
           <View style={styles.track}>
@@ -88,7 +102,9 @@ export function SwipeConfirmationModal({
             >
               <Ionicons name="arrow-forward" size={22} color="#FFFFFF" />
             </Animated.View>
-            <Text style={styles.swipeLabel}>{completed ? 'Completed!' : swipeLabel}</Text>
+            <Text style={styles.swipeLabel}>
+              {completed ? "Completed!" : swipeLabel}
+            </Text>
           </View>
         </TouchableOpacity>
       </TouchableOpacity>
@@ -99,68 +115,68 @@ export function SwipeConfirmationModal({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0,0,0,0.3)",
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 24,
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 24,
     padding: 28,
-    width: '100%',
-    alignSelf: 'center',
-    alignItems: 'center',
+    width: "100%",
+    alignSelf: "center",
+    alignItems: "center",
   },
   iconWrapper: {
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#55C46B',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#55C46B",
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 16,
   },
   checkIcon: {},
   title: {
     fontSize: 20,
-    fontWeight: '700',
-    color: '#1A1A1A',
-    textAlign: 'center',
+    fontWeight: "700",
+    color: "#1A1A1A",
+    textAlign: "center",
     marginBottom: 8,
   },
   description: {
     fontSize: 13,
-    color: '#666666',
-    textAlign: 'center',
+    color: "#666666",
+    textAlign: "center",
     lineHeight: 18,
     marginBottom: 24,
   },
   track: {
     width: SWIPE_TRACK_WIDTH,
     height: THUMB_SIZE + 8,
-    backgroundColor: '#F0F0E8',
+    backgroundColor: "#F0F0E8",
     borderRadius: 999,
-    justifyContent: 'center',
-    overflow: 'hidden',
+    justifyContent: "center",
+    overflow: "hidden",
     paddingHorizontal: 8,
   },
   thumb: {
     width: THUMB_SIZE,
     height: THUMB_SIZE,
     borderRadius: THUMB_SIZE / 2,
-    backgroundColor: '#55C46B',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
+    backgroundColor: "#55C46B",
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
     left: 4,
     zIndex: 1,
   },
   swipeLabel: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 14,
-    fontWeight: '500',
-    color: '#55C46B',
+    fontWeight: "500",
+    color: "#55C46B",
     marginLeft: THUMB_SIZE + 4,
   },
 });

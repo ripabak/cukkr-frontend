@@ -6,9 +6,15 @@ export const profileValidators = {
     return { isValid: true, message: "" };
   },
 
-  validateBio(bio: string | null | undefined): { isValid: boolean; message: string } {
+  validateBio(bio: string | null | undefined): {
+    isValid: boolean;
+    message: string;
+  } {
     if (bio && bio.length > 500) {
-      return { isValid: false, message: "Bio must be less than 500 characters" };
+      return {
+        isValid: false,
+        message: "Bio must be less than 500 characters",
+      };
     }
     return { isValid: true, message: "" };
   },
@@ -28,7 +34,10 @@ export const profileValidators = {
       return { isValid: false, message: "Password is required" };
     }
     if (password.length < 8) {
-      return { isValid: false, message: "Password must be at least 8 characters" };
+      return {
+        isValid: false,
+        message: "Password must be at least 8 characters",
+      };
     }
     return { isValid: true, message: "" };
   },

@@ -52,18 +52,38 @@ function getGreeting() {
 }
 
 const SHORTCUT_COLORS = {
-  barbers:   { bg: "#fff3e0", icon: "#f59e0b" },
+  barbers: { bg: "#fff3e0", icon: "#f59e0b" },
   customers: { bg: "#dbeafe", icon: "#2563eb" },
-  services:  { bg: "#ede9fe", icon: "#7c3aed" },
+  services: { bg: "#ede9fe", icon: "#7c3aed" },
   openHours: { bg: "#fce7f3", icon: "#db2777" },
-  newBook:   { bg: "#dcfce7", icon: "#16a34a" },
+  newBook: { bg: "#dcfce7", icon: "#16a34a" },
 };
 
 const STAT_CONFIG = [
-  { key: "walkIn",      label: "Walk-In",    bg: "#fff8e1", valueColor: Colors.brand.primaryDark },
-  { key: "appointment", label: "Appoint.",    bg: "#dbeafe", valueColor: "#2563eb" },
-  { key: "inProgress",  label: "In Progress", bg: "#ede9fe", valueColor: "#7c3aed" },
-  { key: "waiting",     label: "Waiting",     bg: "#fee2e2", valueColor: Colors.status.danger },
+  {
+    key: "walkIn",
+    label: "Walk-In",
+    bg: "#fff8e1",
+    valueColor: Colors.brand.primaryDark,
+  },
+  {
+    key: "appointment",
+    label: "Appoint.",
+    bg: "#dbeafe",
+    valueColor: "#2563eb",
+  },
+  {
+    key: "inProgress",
+    label: "In Progress",
+    bg: "#ede9fe",
+    valueColor: "#7c3aed",
+  },
+  {
+    key: "waiting",
+    label: "Waiting",
+    bg: "#fee2e2",
+    valueColor: Colors.status.danger,
+  },
 ];
 
 export function HomeDashboardScreen() {
@@ -78,7 +98,8 @@ export function HomeDashboardScreen() {
   const { data: summary } = useBookingSummary(today);
   const { data: activeBookings = [] } = useHomeActiveBookings(today);
   const { data: currentPinData } = useCurrentPin();
-  const { mutate: generatePin, isPending: isGenerating } = useGenerateWalkInPin();
+  const { mutate: generatePin, isPending: isGenerating } =
+    useGenerateWalkInPin();
   const { data: activeMember } = useMyOrgRole();
   const { data: unreadCount } = useUnreadNotificationsCount();
 
@@ -88,16 +109,23 @@ export function HomeDashboardScreen() {
   // Silently renew push subscription on mount if permission was already granted
   useEffect(() => {
     if (
-      typeof window === 'undefined' ||
-      !('Notification' in window) ||
-      Notification.permission !== 'granted'
-    ) return;
-    pwaNotificationService.requestPermission()
+      typeof window === "undefined" ||
+      !("Notification" in window) ||
+      Notification.permission !== "granted"
+    )
+      return;
+    pwaNotificationService
+      .requestPermission()
       .then(({ subscription }) => {
         if (subscription) {
-          notificationsService.registerWebPush(
-            subscription as { endpoint: string; keys: { p256dh: string; auth: string } }
-          ).catch(() => {});
+          notificationsService
+            .registerWebPush(
+              subscription as {
+                endpoint: string;
+                keys: { p256dh: string; auth: string };
+              },
+            )
+            .catch(() => {});
         }
       })
       .catch(() => {});
@@ -105,14 +133,15 @@ export function HomeDashboardScreen() {
   const [notifConsentVisible, setNotifConsentVisible] = useState(false);
   const [greetingInteractive, setGreetingInteractive] = useState(true);
   const [bannerSource, setBannerSource] = useState<number>(
-    require("@/assets/images/welcome-banner.avif")
+    require("@/assets/images/welcome-banner.avif"),
   );
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const activePin = currentPinData?.pin ?? null;
 
   const stickyHeaderHeight = insets.top + TOP_BAR_HEIGHT;
-  const bannerSectionHeight = insets.top + TOP_BAR_HEIGHT + VISIBLE_BANNER_HEIGHT;
+  const bannerSectionHeight =
+    insets.top + TOP_BAR_HEIGHT + VISIBLE_BANNER_HEIGHT;
   const bannerImgWidth = bannerSectionHeight * BANNER_IMG_RATIO;
   const spacerHeight = bannerSectionHeight - CARD_OVERLAP;
 
@@ -153,7 +182,8 @@ export function HomeDashboardScreen() {
 
   const handleGeneratePin = () => {
     generatePin(undefined, {
-      onSuccess: () => queryClient.invalidateQueries({ queryKey: HOME_QUERY_KEYS.currentPin }),
+      onSuccess: () =>
+        queryClient.invalidateQueries({ queryKey: HOME_QUERY_KEYS.currentPin }),
     });
   };
 
@@ -173,14 +203,18 @@ export function HomeDashboardScreen() {
   };
 
   const statValues: Record<string, number> = {
-    walkIn:      summary?.walkIn ?? 0,
+    walkIn: summary?.walkIn ?? 0,
     appointment: summary?.appointment ?? 0,
-    inProgress:  summary?.inProgress ?? 0,
-    waiting:     summary?.waiting ?? 0,
+    inProgress: summary?.inProgress ?? 0,
+    waiting: summary?.waiting ?? 0,
   };
 
   const avatarInitials = user?.name
-    ? user.name.split(" ").slice(0, 2).map((w: string) => w[0].toUpperCase()).join("")
+    ? user.name
+        .split(" ")
+        .slice(0, 2)
+        .map((w: string) => w[0].toUpperCase())
+        .join("")
     : "?";
 
   return (
@@ -189,7 +223,9 @@ export function HomeDashboardScreen() {
       <View style={[styles.bannerSection, { height: bannerSectionHeight }]}>
         <Image
           source={bannerSource}
-          onError={() => setBannerSource(require("@/assets/images/welcome-banner.jpg"))}
+          onError={() =>
+            setBannerSource(require("@/assets/images/welcome-banner.jpg"))
+          }
           style={{
             position: "absolute",
             top: 0,
@@ -202,7 +238,10 @@ export function HomeDashboardScreen() {
         {/* White overlay fades in as card climbs up over the banner */}
         <Animated.View
           pointerEvents="none"
-          style={[StyleSheet.absoluteFill, { backgroundColor: Colors.bg.default, opacity: bannerFadeOpacity }]}
+          style={[
+            StyleSheet.absoluteFill,
+            { backgroundColor: Colors.bg.default, opacity: bannerFadeOpacity },
+          ]}
         />
       </View>
 
@@ -210,46 +249,71 @@ export function HomeDashboardScreen() {
       <Animated.ScrollView
         style={styles.scroll}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 100 }]}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: insets.bottom + 100 },
+        ]}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-          { useNativeDriver: true }
+          { useNativeDriver: true },
         )}
         scrollEventThrottle={16}
       >
         <View style={{ height: spacerHeight }} />
 
         <View style={[styles.contentCard, { paddingTop: stickyHeaderHeight }]}>
-
           {/* Walk-In PIN + QR */}
           <View style={styles.checkInRow}>
             <View style={styles.pinCard}>
               <Text style={styles.pinLabel}>Walk-In Check-In</Text>
               <View style={styles.pinValueRow}>
-                <Text style={styles.pinValue} numberOfLines={1}>{activePin ?? "----"}</Text>
+                <Text style={styles.pinValue} numberOfLines={1}>
+                  {activePin ?? "----"}
+                </Text>
                 <TouchableOpacity
                   onPress={handleGeneratePin}
                   disabled={isGenerating}
                   style={styles.pinActionBtn}
                 >
                   {isGenerating ? (
-                    <ActivityIndicator size="small" color={Colors.text.secondary} />
+                    <ActivityIndicator
+                      size="small"
+                      color={Colors.text.secondary}
+                    />
                   ) : (
-                    <Ionicons name="refresh-outline" size={20} color={Colors.text.secondary} />
+                    <Ionicons
+                      name="refresh-outline"
+                      size={20}
+                      color={Colors.text.secondary}
+                    />
                   )}
                 </TouchableOpacity>
               </View>
               {bookingUrl && (
-                <TouchableOpacity onPress={handleCopyLink} activeOpacity={0.7} style={styles.linkPill}>
-                  <Text style={styles.linkText} numberOfLines={1}>{bookingUrl}</Text>
-                  <Ionicons name="copy-outline" size={14} color={Colors.text.secondary} />
+                <TouchableOpacity
+                  onPress={handleCopyLink}
+                  activeOpacity={0.7}
+                  style={styles.linkPill}
+                >
+                  <Text style={styles.linkText} numberOfLines={1}>
+                    {bookingUrl}
+                  </Text>
+                  <Ionicons
+                    name="copy-outline"
+                    size={14}
+                    color={Colors.text.secondary}
+                  />
                 </TouchableOpacity>
               )}
             </View>
 
             <View style={styles.qrCard}>
               <View style={styles.qrPlaceholder}>
-                <Ionicons name="qr-code" size={72} color={Colors.text.primary} />
+                <Ionicons
+                  name="qr-code"
+                  size={72}
+                  color={Colors.text.primary}
+                />
               </View>
               <TouchableOpacity
                 style={styles.shareQrBtn}
@@ -271,35 +335,65 @@ export function HomeDashboardScreen() {
             <ShortcutTile
               label="New Book"
               iconBg={SHORTCUT_COLORS.newBook.bg}
-              icon={<Ionicons name="calendar" size={22} color={SHORTCUT_COLORS.newBook.icon} />}
+              icon={
+                <Ionicons
+                  name="calendar"
+                  size={22}
+                  color={SHORTCUT_COLORS.newBook.icon}
+                />
+              }
               onPress={() => setNewBookVisible(true)}
               style={styles.shortcutItem}
             />
             <ShortcutTile
               label="Barbers"
               iconBg={SHORTCUT_COLORS.barbers.bg}
-              icon={<Ionicons name="people" size={22} color={SHORTCUT_COLORS.barbers.icon} />}
+              icon={
+                <Ionicons
+                  name="people"
+                  size={22}
+                  color={SHORTCUT_COLORS.barbers.icon}
+                />
+              }
               onPress={() => router.push("/d/barbers-management")}
               style={styles.shortcutItem}
             />
             <ShortcutTile
               label="Customers"
               iconBg={SHORTCUT_COLORS.customers.bg}
-              icon={<Ionicons name="person" size={22} color={SHORTCUT_COLORS.customers.icon} />}
+              icon={
+                <Ionicons
+                  name="person"
+                  size={22}
+                  color={SHORTCUT_COLORS.customers.icon}
+                />
+              }
               onPress={() => router.push("/d/customer-management")}
               style={styles.shortcutItem}
             />
             <ShortcutTile
               label="Services"
               iconBg={SHORTCUT_COLORS.services.bg}
-              icon={<Ionicons name="cut" size={22} color={SHORTCUT_COLORS.services.icon} />}
+              icon={
+                <Ionicons
+                  name="cut"
+                  size={22}
+                  color={SHORTCUT_COLORS.services.icon}
+                />
+              }
               onPress={() => router.push("/d/services-management")}
               style={styles.shortcutItem}
             />
             <ShortcutTile
               label="Open Hours"
               iconBg={SHORTCUT_COLORS.openHours.bg}
-              icon={<Ionicons name="time-outline" size={22} color={SHORTCUT_COLORS.openHours.icon} />}
+              icon={
+                <Ionicons
+                  name="time-outline"
+                  size={22}
+                  color={SHORTCUT_COLORS.openHours.icon}
+                />
+              }
               onPress={() => router.push("/d/open-hours")}
               style={styles.shortcutItem}
             />
@@ -314,8 +408,13 @@ export function HomeDashboardScreen() {
           </View>
           <View style={styles.statsRow}>
             {STAT_CONFIG.map((s) => (
-              <View key={s.key} style={[styles.statCard, { backgroundColor: s.bg }]}>
-                <Text style={[styles.statValue, { color: s.valueColor }]}>{statValues[s.key]}</Text>
+              <View
+                key={s.key}
+                style={[styles.statCard, { backgroundColor: s.bg }]}
+              >
+                <Text style={[styles.statValue, { color: s.valueColor }]}>
+                  {statValues[s.key]}
+                </Text>
                 <Text style={styles.statLabel}>{s.label}</Text>
               </View>
             ))}
@@ -340,11 +439,13 @@ export function HomeDashboardScreen() {
                   customerName={booking.customerName}
                   barberName={booking.barber?.name ?? "—"}
                   timeLabel={formatTime12h(timeDate)}
-                  duration="30 mins"
+                  duration={`${booking.totalDuration} mins`}
                   status={mapApiStatusToBookingStatus(booking.status)}
                   bookingType={booking.type}
                   onPress={() => handleBookingPress(booking.id)}
-                  style={i < todayBookings.length - 1 ? styles.cardMargin : undefined}
+                  style={
+                    i < todayBookings.length - 1 ? styles.cardMargin : undefined
+                  }
                 />
               );
             })
@@ -360,7 +461,10 @@ export function HomeDashboardScreen() {
         pointerEvents="box-none" lets scroll gestures pass through the empty area.
       ── */}
       <Animated.View
-        style={[styles.greetingLayer, { top: stickyHeaderHeight + 16, opacity: greetingOpacity }]}
+        style={[
+          styles.greetingLayer,
+          { top: stickyHeaderHeight + 16, opacity: greetingOpacity },
+        ]}
         pointerEvents={greetingInteractive ? "box-none" : "none"}
       >
         <TouchableOpacity
@@ -386,13 +490,20 @@ export function HomeDashboardScreen() {
         A hairline divider appears with the white background for a clean separation.
       ── */}
       <View
-        style={[styles.stickyHeader, { height: stickyHeaderHeight, paddingTop: insets.top }]}
+        style={[
+          styles.stickyHeader,
+          { height: stickyHeaderHeight, paddingTop: insets.top },
+        ]}
         pointerEvents="box-none"
       >
         {/* Animated white background with rounded bottom corners and soft shadow */}
         <Animated.View
           pointerEvents="none"
-          style={[StyleSheet.absoluteFill, styles.headerBg, { opacity: headerBgOpacity }]}
+          style={[
+            StyleSheet.absoluteFill,
+            styles.headerBg,
+            { opacity: headerBgOpacity },
+          ]}
         />
         <View style={styles.headerRow} pointerEvents="box-none">
           <View style={styles.logoWrapper}>
@@ -404,7 +515,11 @@ export function HomeDashboardScreen() {
             />
             <Animated.Image
               source={require("@/public/cukkr-logo-trans.png")}
-              style={[StyleSheet.absoluteFill, styles.logo, { opacity: logoDarkOpacity }]}
+              style={[
+                StyleSheet.absoluteFill,
+                styles.logo,
+                { opacity: logoDarkOpacity },
+              ]}
               resizeMode="contain"
               tintColor={Colors.text.primary}
             />
@@ -426,7 +541,10 @@ export function HomeDashboardScreen() {
           <TouchableOpacity
             style={styles.notifBtn}
             onPress={async () => {
-              if (typeof window === "undefined" || !("Notification" in window)) {
+              if (
+                typeof window === "undefined" ||
+                !("Notification" in window)
+              ) {
                 router.push("/d/notifications-list");
                 return;
               }
@@ -440,24 +558,35 @@ export function HomeDashboardScreen() {
               }
               // Permission already granted — silently renew subscription then navigate
               try {
-                const { subscription } = await pwaNotificationService.requestPermission();
+                const { subscription } =
+                  await pwaNotificationService.requestPermission();
                 if (subscription) {
-                  notificationsService.registerWebPush(
-                    subscription as { endpoint: string; keys: { p256dh: string; auth: string } }
-                  ).catch(() => {});
+                  notificationsService
+                    .registerWebPush(
+                      subscription as {
+                        endpoint: string;
+                        keys: { p256dh: string; auth: string };
+                      },
+                    )
+                    .catch(() => {});
                 }
                 router.push("/d/notifications-list");
               } catch (err) {
-                const msg = err instanceof Error ? err.message : "Failed to set up notifications";
+                const msg =
+                  err instanceof Error
+                    ? err.message
+                    : "Failed to set up notifications";
                 toast.error(msg);
                 setTimeout(() => router.push("/d/notifications-list"), 1500);
               }
             }}
           >
-            <Ionicons name="notifications-outline" size={18} color={Colors.text.primary} />
-            {(unreadCount ?? 0) > 0 ? (
-              <View style={styles.notifDot} />
-            ) : null}
+            <Ionicons
+              name="notifications-outline"
+              size={18}
+              color={Colors.text.primary}
+            />
+            {(unreadCount ?? 0) > 0 ? <View style={styles.notifDot} /> : null}
           </TouchableOpacity>
         </View>
       </View>
@@ -484,15 +613,24 @@ export function HomeDashboardScreen() {
           // otherwise some browsers block the native permission dialog.
           setTimeout(async () => {
             try {
-              const { subscription } = await pwaNotificationService.requestPermission();
+              const { subscription } =
+                await pwaNotificationService.requestPermission();
               if (subscription) {
-                notificationsService.registerWebPush(
-                  subscription as { endpoint: string; keys: { p256dh: string; auth: string } }
-                ).catch(() => {});
+                notificationsService
+                  .registerWebPush(
+                    subscription as {
+                      endpoint: string;
+                      keys: { p256dh: string; auth: string };
+                    },
+                  )
+                  .catch(() => {});
               }
               router.push("/d/notifications-list");
             } catch (err) {
-              const msg = err instanceof Error ? err.message : "Failed to set up notifications";
+              const msg =
+                err instanceof Error
+                  ? err.message
+                  : "Failed to set up notifications";
               toast.error(msg);
               // Delay navigation so the toast is visible before screen change
               setTimeout(() => router.push("/d/notifications-list"), 1500);

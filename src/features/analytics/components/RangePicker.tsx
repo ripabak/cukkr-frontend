@@ -1,6 +1,12 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import type { AnalyticsRange } from "../services/analytics.service";
 
 const RANGE_OPTIONS: { value: AnalyticsRange; label: string }[] = [

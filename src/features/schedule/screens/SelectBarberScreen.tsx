@@ -3,7 +3,7 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { SearchInput } from "@/src/components/SearchInput";
 import { useNewBookingForm } from "@/src/features/schedule/context/NewBookingContext";
 import { useScheduleBarbers } from "@/src/features/schedule/hooks";
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -14,7 +14,9 @@ export function SelectBarberScreen() {
   const { setBarber } = useNewBookingForm();
   const [query, setQuery] = useState("");
 
-  const { data: barbers = [], isLoading } = useScheduleBarbers(query || undefined);
+  const { data: barbers = [], isLoading } = useScheduleBarbers(
+    query || undefined,
+  );
 
   const filtered = barbers.filter((b) =>
     b.name.toLowerCase().includes(query.toLowerCase()),
@@ -27,7 +29,9 @@ export function SelectBarberScreen() {
 
   return (
     <ScreenShell
-      headerSlot={<ScreenHeader title="Select Barber" onBack={() => router.back()} />}
+      headerSlot={
+        <ScreenHeader title="Select Barber" onBack={() => router.back()} />
+      }
       contentStyle={styles.content}
     >
       <SearchInput value={query} onChangeText={setQuery} placeholder="Search" />
@@ -47,7 +51,11 @@ export function SelectBarberScreen() {
                 <Ionicons name="person" size={22} color={Colors.text.primary} />
               </View>
               <Text style={styles.barberName}>{item.name}</Text>
-              <Ionicons name="chevron-forward" size={18} color={Colors.text.primary} />
+              <Ionicons
+                name="chevron-forward"
+                size={18}
+                color={Colors.text.primary}
+              />
             </TouchableOpacity>
           ))}
         </View>
