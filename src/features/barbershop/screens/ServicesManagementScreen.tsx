@@ -1,3 +1,4 @@
+import { Permission } from "@/src/components/Permission";
 import { Colors } from "@/src/theme/colors";
 import { IconActionButton } from "@/src/features/barbershop/components/IconActionButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -5,6 +6,7 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { SearchInput } from "@/src/components/SearchInput";
 import { ServiceCard } from "@/src/components/ServiceCard";
 import { SortMenu } from "@/src/components/SortMenu";
+import { useMemberRole } from "@/src/hooks";
 import {
   useServicesList,
   useToggleServiceActive,
@@ -33,6 +35,8 @@ const SORT_OPTIONS = [
 export function ServicesManagementScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { role } = useMemberRole();
+  const canManage = role === "owner" || role === "admin";
   const [search, setSearch] = useState("");
   const [sortMenuVisible, setSortMenuVisible] = useState(false);
   const [selectedSort, setSelectedSort] = useState<SortOption>("name_asc");
@@ -67,11 +71,13 @@ export function ServicesManagementScreen() {
                   color={Colors.text.primary}
                 />
               </TouchableOpacity>
-              <IconActionButton
-                iconName="add"
-                onPress={() => router.push("/d/add-or-edit-service")}
-                size={36}
-              />
+              <Permission roles={["owner", "admin"]}>
+                <IconActionButton
+                  iconName="add"
+                  onPress={() => router.push("/d/add-or-edit-service")}
+                  size={36}
+                />
+              </Permission>
             </View>
           }
         />
@@ -127,7 +133,9 @@ export function ServicesManagementScreen() {
                 }
                 isDefault={service.isDefault}
                 isActive={service.isActive}
-                onToggleActive={() => handleToggle(service.id)}
+                onToggleActive={
+                  canManage ? () => handleToggle(service.id) : undefined
+                }
                 style={
                   index < services.length - 1 ? styles.cardMargin : undefined
                 }

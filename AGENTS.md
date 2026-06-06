@@ -185,6 +185,76 @@ function formatDate(d: Date) { ... }  // use src/utils/date.ts instead
 - **Error & loading states from hooks.** Hooks return `{ data, isLoading, error, isPending }` for UI feedback without manual state management.
 - **Example**: `useUpdateBarbershopSettings()` returns `{ mutate, isPending, error }`; screen calls `mutate(data)` and shows `isPending` in button.
 
+### Role-Based Access & Permission Components
+
+The app uses Better Auth Organizations for multi-tenancy. Each member has one of three roles:
+
+| Role | Level | Description |
+|------|-------|-------------|
+| `owner` | Full control | Barbershop creator; can manage everything |
+| `admin` | Management | Can manage services, view analytics, accept/decline bookings |
+| `member` | Staff (barber) | Can handle bookings and view data, but cannot modify services or view analytics |
+
+#### `useMemberRole()` hook (shared — `src/hooks/useMemberRole.ts`)
+
+Returns the current user's role in the active organization:
+
+```typescript
+import { useMemberRole } from "@/src/hooks";
+
+function MyScreen() {
+  const { role, isPending } = useMemberRole();
+  // role: 'owner' | 'admin' | 'member' | null
+  if (isPending) return null;
+  if (role === "owner" || role === "admin") {
+    // user can manage
+  }
+}
+```
+
+#### `Permission` component (shared — `src/components/Permission.tsx`)
+
+Wraps any JSX and shows it only if the user's role matches one of the allowed `roles`. Optionally renders a `fallback` when access is denied.
+
+**Usage — hide buttons from barbers:**
+```tsx
+import { Permission } from "@/src/components/Permission";
+
+// Hide the "Add" button unless the user is owner or admin
+<Permission roles={["owner", "admin"]}>
+  <IconActionButton iconName="add" onPress={handleAdd} />
+</Permission>
+
+// Hide toggle switch from barbers — conditional prop passing
+const canManage = role === "owner" || role === "admin";
+<ServiceCard
+  onToggleActive={canManage ? handleToggle : undefined}
+/>
+
+// Hide an entire section with a fallback message
+<Permission roles={["owner", "admin"]} fallback={<Text>View only</Text>}>
+  <AdminPanel />
+</Permission>
+```
+
+**Rules:**
+- Always pair frontend Permission with backend `requireRoles` — Permission is UX-only, backend enforces security.
+- `Permission` renders `children` when the user's role is in the `roles` array.
+- When `isPending` (role still loading), Permission renders nothing (prevents flash).
+- For conditional props (e.g., `onToggleActive`), use the `role` value directly via `useMemberRole()`.
+
+#### Where to apply Permission
+
+| Component/Screen | What to hide | Allowed roles |
+|---|---|---|
+| `ServicesManagementScreen` | Add (+) button, active toggle per service | `owner`, `admin` |
+| `ServiceDetailScreen` | Overflow menu (edit/delete), active toggle, set-default button | `owner`, `admin` |
+
+When adding a new screen or feature, follow this checklist:
+1. Decide which roles should access each action.
+2. Add `requireRoles` on the backend endpoint.
+3. Wrap the corresponding frontend action buttons/components with `<Permission>`.
+
 ## Data Flow Architecture
 
 ### Query Flow (Reading Data)

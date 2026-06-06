@@ -10,13 +10,12 @@ import {
   useCurrentPin,
   useGenerateWalkInPin,
   useHomeActiveBookings,
-  useMyOrgRole,
 } from "@/src/features/home/hooks";
 import { useUnreadNotificationsCount } from "@/src/features/notifications/hooks";
 import { notificationsService } from "@/src/features/notifications/services/notifications.service";
 import { pwaNotificationService } from "@/src/services/pwa-notification.service";
 import { mapApiStatusToBookingStatus } from "@/src/features/schedule/utils/booking-formatters";
-import { useAuthUser } from "@/src/hooks/useAuthUser";
+import { useAuthUser, useMemberRole } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
 import { formatTime12h, toApiDate } from "@/src/utils/date";
@@ -100,7 +99,7 @@ export function HomeDashboardScreen() {
   const { data: currentPinData } = useCurrentPin();
   const { mutate: generatePin, isPending: isGenerating } =
     useGenerateWalkInPin();
-  const { data: activeMember } = useMyOrgRole();
+  const { role } = useMemberRole();
   const { data: unreadCount } = useUnreadNotificationsCount();
 
   const [switcherVisible, setSwitcherVisible] = useState(false);
@@ -476,9 +475,9 @@ export function HomeDashboardScreen() {
           </View>
           <Text style={styles.greetingSmall}>{getGreeting()}</Text>
           <Text style={styles.greetingName}>{user?.name ?? "..."}</Text>
-          {activeMember?.role ? (
+          {role ? (
             <View style={styles.rolePillContainer}>
-              <Text style={styles.rolePill}>{activeMember.role}</Text>
+              <Text style={styles.rolePill}>{role}</Text>
             </View>
           ) : null}
         </TouchableOpacity>

@@ -8,7 +8,7 @@ import {
   useDeleteBarbershop,
   useLeaveBarbershop,
 } from "@/src/features/barbershop/hooks";
-import { useMyOrgRole } from "@/src/features/home/hooks/useHomeDashboardQueries";
+import { useMemberRole } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -21,8 +21,8 @@ export function BarbershopSettingsScreen() {
   const router = useRouter();
   const toast = useToast();
   const { data: barbershop, isLoading } = useBarbershopCurrent();
-  const { data: activeMember } = useMyOrgRole();
-  const isOwner = activeMember?.role === "owner";
+  const { role } = useMemberRole();
+  const isOwner = role === "owner";
   const { mutate: leave, isPending: isLeaving } = useLeaveBarbershop();
   const { mutate: deleteBarbershop, isPending: isDeleting } =
     useDeleteBarbershop();
