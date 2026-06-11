@@ -19,16 +19,6 @@ export const profileValidators = {
     return { isValid: true, message: "" };
   },
 
-  validatePhone(phone: string): { isValid: boolean; message: string } {
-    if (!phone || phone.trim().length === 0) {
-      return { isValid: false, message: "Phone number is required" };
-    }
-    if (phone.trim().length < 6) {
-      return { isValid: false, message: "Invalid phone number" };
-    }
-    return { isValid: true, message: "" };
-  },
-
   validatePassword(password: string): { isValid: boolean; message: string } {
     if (!password || password.length === 0) {
       return { isValid: false, message: "Password is required" };

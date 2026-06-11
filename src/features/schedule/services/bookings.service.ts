@@ -15,7 +15,6 @@ export type CreateBookingPayload =
       type: "walk_in";
       notes?: string | null;
       barberId?: string | null;
-      customerPhone?: string | null;
       customerEmail?: string | null;
       scheduledAt?: string | null;
     }
@@ -24,10 +23,9 @@ export type CreateBookingPayload =
       serviceIds: string[];
       type: "appointment";
       scheduledAt: string;
+      customerEmail: string;
       notes?: string | null;
       barberId?: string | null;
-      customerPhone?: string | null;
-      customerEmail?: string | null;
     };
 
 export const bookingsService = {

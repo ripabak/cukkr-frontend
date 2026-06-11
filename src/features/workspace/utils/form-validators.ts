@@ -66,23 +66,3 @@ export function validateEmail(email: string): {
   }
   return { isValid: true, message: "" };
 }
-
-export function validatePhoneNumber(phone: string): {
-  isValid: boolean;
-  message: string;
-} {
-  const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-  if (!phone.trim()) {
-    return { isValid: false, message: "Phone number is required" };
-  }
-  if (phone.replace(/\D/g, "").length < 10) {
-    return {
-      isValid: false,
-      message: "Phone number must be at least 10 digits",
-    };
-  }
-  if (!phoneRegex.test(phone)) {
-    return { isValid: false, message: "Invalid phone number format" };
-  }
-  return { isValid: true, message: "" };
-}

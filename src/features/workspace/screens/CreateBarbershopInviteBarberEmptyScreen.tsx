@@ -6,7 +6,7 @@ import { TextInputField } from "@/src/components/TextInputField";
 import { WizardProgress } from "@/src/features/workspace/components/WizardProgress";
 import { useInviteBarber } from "../hooks";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
-import { validateEmail, validatePhoneNumber } from "../utils/form-validators";
+import { validateEmail } from "../utils/form-validators";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Alert } from "react-native";
@@ -19,7 +19,7 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
 
   const parseBarberInput = (
     input: string,
-  ): { email?: string; phone?: string } | null => {
+  ): { email?: string } | null => {
     const trimmed = input.trim();
 
     if (trimmed.includes("@")) {
@@ -30,11 +30,6 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
       return null;
     }
 
-    const phoneValidation = validatePhoneNumber(trimmed);
-    if (phoneValidation.isValid) {
-      return { phone: trimmed };
-    }
-
     return null;
   };
 
@@ -43,24 +38,14 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
     if (!parsed) {
       Alert.alert(
         "Invalid Input",
-        "Please enter a valid email or phone number",
-      );
-      return;
-    }
-
-    // Only email-based invitations are supported
-    if (!parsed.email) {
-      Alert.alert(
-        "Email Required",
-        "Please enter an email address for invitation",
+        "Please enter a valid email address",
       );
       return;
     }
 
     const currentInvites = formData.barberInvites || [];
     const isDuplicate = currentInvites.some(
-      (invite) =>
-        invite.email === parsed.email || invite.phone === parsed.phone,
+      (invite) => invite.email === parsed.email,
     );
 
     if (isDuplicate) {
@@ -69,7 +54,7 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
     }
 
     inviteBarber(
-      { email: parsed.email },
+      { email: parsed.email! },
       {
         onSuccess: () => {
           const newInvites = [...currentInvites, parsed];
@@ -99,7 +84,7 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
       <Text style={styles.subtitle}>Inviting barber to your barbershop</Text>
       <TextInputField
         label="Add Barber"
-        placeholder="email / phone number"
+        placeholder="email"
         value={barber}
         onChangeText={setBarber}
         keyboardType="email-address"

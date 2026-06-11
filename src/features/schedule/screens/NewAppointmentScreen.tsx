@@ -130,10 +130,10 @@ export function NewAppointmentScreen() {
       {
         type: "appointment",
         customerName: formData.customerName,
+        customerEmail: formData.email,
         serviceIds: formData.serviceIds,
         scheduledAt: formData.scheduledAt,
         barberId: formData.barberId ?? undefined,
-        customerPhone: formData.contact || null,
         notes: formData.notes || null,
       },
       {
@@ -179,8 +179,9 @@ export function NewAppointmentScreen() {
       <BookingForm
         customerName={formData.customerName}
         onCustomerNameChange={(v) => updateFormData({ customerName: v })}
-        contact={formData.contact}
-        onContactChange={(v) => updateFormData({ contact: v })}
+        email={formData.email}
+        onEmailChange={(v) => updateFormData({ email: v })}
+        emailRequired
         selectedBarber={formData.barberName ?? undefined}
         onBarberPress={() => router.push("/d/select-barber")}
         selectedDateTime={displayDateTime ?? displayDateOnly}

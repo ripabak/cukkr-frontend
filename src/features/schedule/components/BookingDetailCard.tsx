@@ -8,7 +8,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
   ViewStyle,
 } from "react-native";
@@ -44,7 +43,6 @@ interface Props {
   services?: ServiceLine[];
   notes?: string;
   paymentSummary?: { label: string; value: string }[];
-  onWhatsApp?: () => void;
   style?: ViewStyle;
   children?: React.ReactNode;
 }
@@ -79,7 +77,6 @@ export function BookingDetailCard({
   services = [],
   notes,
   paymentSummary = [],
-  onWhatsApp,
   style,
   children,
 }: Props) {
@@ -120,15 +117,6 @@ export function BookingDetailCard({
             style={styles.badge}
           />
         </View>
-        {onWhatsApp ? (
-          <TouchableOpacity
-            onPress={onWhatsApp}
-            activeOpacity={0.7}
-            style={styles.whatsappBtn}
-          >
-            <Ionicons name="logo-whatsapp" size={22} color="#AAAAAA" />
-          </TouchableOpacity>
-        ) : null}
       </View>
 
       {/* Info rows */}
@@ -229,15 +217,6 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   badge: {
-    marginTop: 4,
-  },
-  whatsappBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#F0F0E8",
-    alignItems: "center",
-    justifyContent: "center",
     marginTop: 4,
   },
   section: {

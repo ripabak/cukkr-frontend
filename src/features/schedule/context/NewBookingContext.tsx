@@ -9,7 +9,7 @@ export interface SelectedService {
 
 export interface NewBookingFormData {
   customerName: string;
-  contact: string;
+  email: string;
   notes: string;
   barberId: string | null;
   barberName: string | null;
@@ -28,7 +28,7 @@ interface NewBookingContextType {
 
 const defaultFormData: NewBookingFormData = {
   customerName: "",
-  contact: "",
+  email: "",
   notes: "",
   barberId: null,
   barberName: null,

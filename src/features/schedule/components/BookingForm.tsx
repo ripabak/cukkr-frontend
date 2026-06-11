@@ -13,8 +13,9 @@ interface ServiceItem {
 interface Props {
   customerName: string;
   onCustomerNameChange: (v: string) => void;
-  contact: string;
-  onContactChange: (v: string) => void;
+  email: string;
+  onEmailChange: (v: string) => void;
+  emailRequired?: boolean;
   selectedBarber?: string;
   onBarberPress?: () => void;
   selectedDateTime?: string;
@@ -28,8 +29,9 @@ interface Props {
 export function BookingForm({
   customerName,
   onCustomerNameChange,
-  contact,
-  onContactChange,
+  email,
+  onEmailChange,
+  emailRequired = false,
   selectedBarber,
   onBarberPress,
   selectedDateTime,
@@ -48,10 +50,10 @@ export function BookingForm({
         placeholder="Customer Name"
       />
       <TextInputField
-        label="Email / Phone Number (Opsional)"
-        value={contact}
-        onChangeText={onContactChange}
-        placeholder="email / phone number *"
+        label={`Email${emailRequired ? '' : ' (Opsional)'}`}
+        value={email}
+        onChangeText={onEmailChange}
+        placeholder="email"
         keyboardType="email-address"
       />
       <View>

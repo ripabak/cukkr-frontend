@@ -3,7 +3,6 @@ import { InfoRow } from "@/src/components/InfoRow";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useSignOut } from "@/src/features/auth/hooks";
-import { AlertModal } from "@/src/features/profile/components/AlertModal";
 import { LogoutRow } from "@/src/features/profile/components/LogoutRow";
 import { ProfileSummaryCard } from "@/src/features/profile/components/ProfileSummaryCard";
 import { useToast } from "@/src/lib/providers/toast";
@@ -25,7 +24,6 @@ export function UserProfileScreen() {
   const router = useRouter();
   const toast = useToast();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-  const [showContactChanged, setShowContactChanged] = useState(false);
   const { data: profile, isLoading, error } = useProfile();
   const { mutateAsync: signOut, isPending: signingOut } = useSignOut();
 
@@ -117,10 +115,6 @@ export function UserProfileScreen() {
       <ProfileSummaryCard style={styles.card}>
         <InfoRow label="Email" value={profile.email} />
         <InfoRow
-          label="Phone Number"
-          value={profile.phone || "Add phone number"}
-        />
-        <InfoRow
           label="Change Password"
           showChevron
           onPress={() =>
@@ -143,13 +137,6 @@ export function UserProfileScreen() {
         cancelLabel="Cancel"
         onConfirm={handleLogout}
         onCancel={() => setShowLogoutConfirm(false)}
-      />
-      <AlertModal
-        visible={showContactChanged}
-        title="Contact Changed"
-        description="Your contact has been changed successfully."
-        actionLabel="OK"
-        onAction={() => setShowContactChanged(false)}
       />
     </ScreenShell>
   );

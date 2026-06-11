@@ -17,11 +17,11 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useChangePhone, useProfile, useUpdateProfile } from "../hooks";
+import { useProfile, useUpdateProfile } from "../hooks";
 import { getErrorMessage } from "../utils/error-handler";
 import { profileValidators } from "../utils/form-validators";
 
-type EditMode = "name" | "bio" | "password" | "phone";
+type EditMode = "name" | "bio" | "password";
 
 export function EditUserProfileFieldsScreen() {
   const router = useRouter();
@@ -36,16 +36,11 @@ export function EditUserProfileFieldsScreen() {
     useUpdateProfile();
   const { mutateAsync: changePassword, isPending: changingPassword } =
     useChangePassword();
-  const { mutateAsync: changePhone, isPending: changingPhone } =
-    useChangePhone();
 
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
   const [nameError, setNameError] = useState("");
   const [bioError, setBioError] = useState("");
-
-  const [phone, setPhone] = useState("");
-  const [phoneError, setPhoneError] = useState("");
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -58,7 +53,6 @@ export function EditUserProfileFieldsScreen() {
     if (profile) {
       setName(profile.name);
       setBio(profile.bio || "");
-      setPhone(profile.phone || "");
     }
   }, [profile]);
 
@@ -75,22 +69,6 @@ export function EditUserProfileFieldsScreen() {
       await updateProfile({ name: name.trim(), bio: bio.trim() || null });
       toast.success("Profile updated successfully");
       router.back();
-    } catch (error) {
-      toast.error(getErrorMessage(error));
-    }
-  };
-
-  const handleSavePhone = async () => {
-    const phoneResult = profileValidators.validatePhone(phone);
-    setPhoneError(phoneResult.isValid ? "" : phoneResult.message);
-    if (!phoneResult.isValid) return;
-
-    try {
-      await changePhone(phone.trim());
-      router.push({
-        pathname: "/d/verify-contact",
-        params: { contact: phone.trim(), type: "phone" },
-      });
     } catch (error) {
       toast.error(getErrorMessage(error));
     }
@@ -213,50 +191,6 @@ export function EditUserProfileFieldsScreen() {
           />
         </ScrollView>
         {changingPassword && (
-          <View style={styles.savingOverlay}>
-            <ActivityIndicator size="small" color={Colors.text.primary} />
-          </View>
-        )}
-      </View>
-    );
-  }
-
-  if (mode === "phone") {
-    return (
-      <View
-        style={[
-          styles.safe,
-          { paddingTop: insets.top, paddingBottom: insets.bottom },
-        ]}
-      >
-        <EditFieldHeader
-          title="Phone Number"
-          onBack={() => router.back()}
-          onSave={handleSavePhone}
-        />
-        <ScrollView
-          contentContainerStyle={styles.content}
-          keyboardShouldPersistTaps="handled"
-        >
-          <TextInputField
-            value={phone}
-            onChangeText={(text) => {
-              setPhone(text);
-              setPhoneError("");
-            }}
-            placeholder="+628xxxxxxxxxx"
-            keyboardType="phone-pad"
-          />
-          {phoneError ? (
-            <Text style={styles.errorText}>{phoneError}</Text>
-          ) : null}
-          <HelperCopy
-            lines={[
-              "Enter your new phone number. We will send a verification code to confirm the change.",
-            ]}
-          />
-        </ScrollView>
-        {changingPhone && (
           <View style={styles.savingOverlay}>
             <ActivityIndicator size="small" color={Colors.text.primary} />
           </View>

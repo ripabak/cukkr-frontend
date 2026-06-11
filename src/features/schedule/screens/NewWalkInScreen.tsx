@@ -45,7 +45,7 @@ export function NewWalkInScreen() {
         customerName: formData.customerName,
         serviceIds: formData.serviceIds,
         barberId: formData.barberId ?? undefined,
-        customerPhone: formData.contact || null,
+        customerEmail: formData.email || null,
         notes: formData.notes || null,
       },
       {
@@ -91,8 +91,8 @@ export function NewWalkInScreen() {
       <BookingForm
         customerName={formData.customerName}
         onCustomerNameChange={(v) => updateFormData({ customerName: v })}
-        contact={formData.contact}
-        onContactChange={(v) => updateFormData({ contact: v })}
+        email={formData.email}
+        onEmailChange={(v) => updateFormData({ email: v })}
         selectedBarber={formData.barberName ?? undefined}
         onBarberPress={() => router.push("/d/select-barber")}
         showDateTimeSelector={false}

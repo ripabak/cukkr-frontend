@@ -7,7 +7,6 @@ interface AuthUser {
   email: string;
   emailVerified: boolean;
   image?: string | null;
-  phone?: string | null;
   bio?: string | null;
   createdAt: Date;
   updatedAt: Date;

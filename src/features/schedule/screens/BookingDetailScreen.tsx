@@ -293,7 +293,6 @@ export function BookingDetailScreen() {
           services={services}
           notes={booking.notes ?? undefined}
           paymentSummary={paymentSummary}
-          onWhatsApp={() => {}}
         />
         {footer}
       </>

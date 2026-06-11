@@ -27,31 +27,4 @@ export const profileService = {
     }
     return response.data;
   },
-
-  async changePhone(phone: string) {
-    const { data: response, error } = await app.api.me["change-phone"].post({
-      phone,
-    });
-
-    if (error || !response) {
-      throw new Error(
-        error?.value?.message || "Failed to initiate phone change",
-      );
-    }
-    return response.data;
-  },
-
-  async verifyPhoneChange(phone: string, otp: string) {
-    const { data: response, error } = await app.api.me[
-      "change-phone"
-    ].verify.post({
-      phone,
-      otp,
-    });
-
-    if (error || !response) {
-      throw new Error(error?.value?.message || "Failed to verify phone change");
-    }
-    return response.data;
-  },
 };

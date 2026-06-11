@@ -9,7 +9,7 @@ export interface CreateBarbershopFormData {
   servicePrice: number;
   serviceDuration: number;
   serviceId?: string;
-  barberInvites: { email?: string; phone?: string }[];
+  barberInvites: { email?: string }[];
 }
 
 interface CreateBarbershopContextType {
