@@ -19,6 +19,7 @@ interface Props {
   services: ServiceItem[];
   onSelectPress?: () => void;
   style?: ViewStyle;
+  required?: boolean;
 }
 
 function formatPrice(amount: number): string {
@@ -29,10 +30,14 @@ export function ServiceSelectionCard({
   services,
   onSelectPress,
   style,
+  required,
 }: Props) {
   return (
     <View style={[styles.wrapper, style]}>
-      <Text style={styles.sectionLabel}>Service</Text>
+      <Text style={styles.sectionLabel}>
+        Service
+        {required ? <Text style={styles.asterisk}> *</Text> : null}
+      </Text>
       {services.length === 0 ? (
         <TouchableOpacity
           onPress={onSelectPress}
@@ -89,6 +94,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Colors.icon.muted,
     marginBottom: 2,
+  },
+  asterisk: {
+    color: Colors.status.danger,
   },
   emptyRow: {
     flexDirection: "row",

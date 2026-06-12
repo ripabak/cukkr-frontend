@@ -51,11 +51,15 @@ export function formatPrice(amount: number): string {
 }
 
 type QueueBooking = {
+  id: string;
   type: "walk_in" | "appointment";
   status: string;
   createdAt: Date;
   scheduledAt: Date | null;
   totalDuration: number;
+  customerName: string;
+  barber: { name: string } | null;
+  source?: "customer" | "staff";
 };
 
 export function sortBookingsQueue<T extends QueueBooking>(bookings: T[]): T[] {

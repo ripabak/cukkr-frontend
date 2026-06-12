@@ -82,7 +82,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: AppTheme.colors.border,
-    zIndex: 9999,
   },
   left: {
     flexDirection: "row",

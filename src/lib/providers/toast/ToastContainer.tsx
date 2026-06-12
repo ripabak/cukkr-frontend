@@ -1,5 +1,5 @@
 import { useFrame } from "@/src/components/FrameContext";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Animated,
   Platform,
@@ -25,24 +25,37 @@ function AnimatedToast({
   onDismiss,
   frameWidth,
 }: AnimatedToastProps) {
-  const slideAnim = React.useRef(
-    new Animated.Value(-TOAST_HEIGHT - 20),
-  ).current;
+  const translateY = useRef(new Animated.Value(0)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.timing(slideAnim, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: Platform.OS !== "web",
-    }).start();
-  }, [slideAnim]);
+    Animated.parallel([
+      Animated.timing(translateY, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: false,
+      }),
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: false,
+      }),
+    ]).start();
+  }, [translateY, opacity]);
 
   const handleDismiss = () => {
-    Animated.timing(slideAnim, {
-      toValue: -TOAST_HEIGHT - 20,
-      duration: 300,
-      useNativeDriver: Platform.OS !== "web",
-    }).start(onDismiss);
+    Animated.parallel([
+      Animated.timing(translateY, {
+        toValue: -TOAST_HEIGHT - 20,
+        duration: 300,
+        useNativeDriver: false,
+      }),
+      Animated.timing(opacity, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: false,
+      }),
+    ]).start(onDismiss);
   };
 
   const getBackgroundColor = () => {
@@ -62,14 +75,14 @@ function AnimatedToast({
   const getIcon = () => {
     switch (type) {
       case "success":
-        return "✓";
+        return "\u2713";
       case "error":
-        return "✕";
+        return "\u2715";
       case "warning":
-        return "⚠";
+        return "\u26A0";
       case "info":
       default:
-        return "ℹ";
+        return "\u2139";
     }
   };
 
@@ -77,7 +90,11 @@ function AnimatedToast({
     <Animated.View
       style={[
         styles.container,
-        { transform: [{ translateY: slideAnim }], maxWidth: frameWidth },
+        {
+          transform: [{ translateY }],
+          opacity,
+          maxWidth: frameWidth,
+        },
       ]}
     >
       <TouchableOpacity
@@ -97,15 +114,10 @@ function AnimatedToast({
 export function ToastContainer() {
   const { toasts, hideToast } = useToastContext();
   const { frameWidth } = useFrame();
-  const [displayedToasts, setDisplayedToasts] = useState(toasts.slice(-1));
-
-  useEffect(() => {
-    setDisplayedToasts(toasts.slice(-1));
-  }, [toasts]);
 
   return (
     <View style={[styles.root, { pointerEvents: "box-none" }]}>
-      {displayedToasts.map((toast) => (
+      {toasts.map((toast) => (
         <AnimatedToast
           key={toast.id}
           message={toast.message}
@@ -126,6 +138,7 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 9999,
     alignItems: "center",
+    paddingTop: Platform.OS === "web" ? 8 : 0,
   },
   container: {
     height: TOAST_HEIGHT,

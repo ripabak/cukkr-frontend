@@ -23,7 +23,7 @@ export type CreateBookingPayload =
       serviceIds: string[];
       type: "appointment";
       scheduledAt: string;
-      customerEmail: string;
+      customerEmail?: string | null;
       notes?: string | null;
       barberId?: string | null;
     };

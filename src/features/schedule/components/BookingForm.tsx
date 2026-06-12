@@ -45,27 +45,30 @@ export function BookingForm({
     <View style={[styles.container, style]}>
       <TextInputField
         label="Customer Name"
+        required
         value={customerName}
         onChangeText={onCustomerNameChange}
         placeholder="Customer Name"
       />
       <TextInputField
-        label={`Email${emailRequired ? '' : ' (Opsional)'}`}
+        label={`Email${emailRequired ? '' : ' (Optional)'}`}
+        required={emailRequired}
         value={email}
         onChangeText={onEmailChange}
         placeholder="email"
         keyboardType="email-address"
       />
-      <View>
-        <SelectorInput
-          placeholder="Select preffered barber"
-          value={selectedBarber}
-          iconName="person-outline"
-          onPress={onBarberPress}
-        />
-      </View>
+      <SelectorInput
+        label="Barber"
+        placeholder="Select preferred barber"
+        value={selectedBarber}
+        iconName="person-outline"
+        onPress={onBarberPress}
+      />
       {showDateTimeSelector ? (
         <SelectorInput
+          label="Date & Time"
+          required
           placeholder="Select your date and time"
           value={selectedDateTime}
           iconName="calendar-outline"
@@ -73,6 +76,7 @@ export function BookingForm({
         />
       ) : null}
       <ServiceSelectionCard
+        required
         services={services}
         onSelectPress={onServicePress}
       />

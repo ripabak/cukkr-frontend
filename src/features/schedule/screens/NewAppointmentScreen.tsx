@@ -11,7 +11,7 @@ import { useCreateBooking } from "@/src/features/schedule/hooks";
 import { useToast } from "@/src/lib/providers";
 import { getErrorMessage } from "@/src/lib/utils/error-handler";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type BookingType = "appointment" | "walkin";
@@ -32,26 +32,43 @@ const MONTH_LABELS = [
   "Dec",
 ];
 
-function generateTimeSlots(openTime: string, closeTime: string): string[] {
+function generateTimeSlots(
+  openTime: string,
+  closeTime: string,
+  minMinutes?: number
+): string[] {
   const slots: string[] = [];
   const [oh, om] = openTime.split(":").map(Number);
   const [ch, cm] = closeTime.split(":").map(Number);
   let cur = oh * 60 + om;
   const end = ch * 60 + cm;
+  const min = minMinutes ?? 0;
   while (cur < end) {
-    const hh = Math.floor(cur / 60);
-    const mm = cur % 60;
-    slots.push(`${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`);
+    if (cur >= min) {
+      const hh = Math.floor(cur / 60);
+      const mm = cur % 60;
+      slots.push(
+        `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`
+      );
+    }
     cur += 30;
   }
   return slots;
+}
+
+function isSameDay(a: Date, b: Date): boolean {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
 }
 
 export function NewAppointmentScreen() {
   const router = useRouter();
   const toast = useToast();
   const { formData, updateFormData, resetFormData } = useNewBookingForm();
-  const { mutate: createBooking, isPending } = useCreateBooking();
+  const { mutateAsync: createBooking, isPending } = useCreateBooking();
   const { data: openHoursData } = useOpenHours();
 
   const [bookingType, setBookingType] = useState<BookingType>("appointment");
@@ -94,16 +111,35 @@ export function NewAppointmentScreen() {
     updateFormData({ scheduledAt: d.toISOString() });
   }
 
-  const timeSlots =
-    dayAvailability?.isOpen &&
-    dayAvailability.openTime &&
-    dayAvailability.closeTime
-      ? generateTimeSlots(dayAvailability.openTime, dayAvailability.closeTime)
-      : [];
+  const timeSlots = useMemo(() => {
+    if (
+      !dayAvailability?.isOpen ||
+      !dayAvailability.openTime ||
+      !dayAvailability.closeTime
+    )
+      return [];
+    if (!selectedDate) return [];
+
+    const isToday = isSameDay(selectedDate, new Date());
+    const minMinutes = isToday
+      ? new Date().getHours() * 60 + new Date().getMinutes()
+      : undefined;
+
+    return generateTimeSlots(
+      dayAvailability.openTime,
+      dayAvailability.closeTime,
+      minMinutes
+    );
+  }, [dayAvailability, selectedDate]);
 
   const displayDateOnly = selectedDate
     ? `${DAY_LABELS[selectedDate.getDay()]}, ${selectedDate.getDate()} ${MONTH_LABELS[selectedDate.getMonth()]} ${selectedDate.getFullYear()}`
     : undefined;
+
+  const isValid =
+    formData.customerName.trim().length > 0 &&
+    formData.scheduledAt !== null &&
+    formData.serviceIds.length > 0;
 
   function handleBookingTypeChange(type: BookingType) {
     setBookingType(type);
@@ -112,7 +148,7 @@ export function NewAppointmentScreen() {
     }
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!formData.customerName.trim()) {
       toast.error("Please enter customer name");
       return;
@@ -126,27 +162,22 @@ export function NewAppointmentScreen() {
       return;
     }
 
-    createBooking(
-      {
+    try {
+      await createBooking({
         type: "appointment",
         customerName: formData.customerName,
-        customerEmail: formData.email,
+        customerEmail: formData.email || null,
         serviceIds: formData.serviceIds,
         scheduledAt: formData.scheduledAt,
         barberId: formData.barberId ?? undefined,
         notes: formData.notes || null,
-      },
-      {
-        onSuccess: () => {
-          toast.success("Appointment created");
-          resetFormData();
-          router.back();
-        },
-        onError: (error) => {
-          toast.error(getErrorMessage(error));
-        },
-      },
-    );
+      });
+      toast.success("Appointment created");
+      resetFormData();
+      router.back();
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
   }
 
   return (
@@ -169,7 +200,7 @@ export function NewAppointmentScreen() {
           <PrimaryButton
             label="New Appointment"
             onPress={handleSubmit}
-            disabled={isPending}
+            disabled={isPending || !isValid}
           />
         </View>
       }
@@ -181,7 +212,6 @@ export function NewAppointmentScreen() {
         onCustomerNameChange={(v) => updateFormData({ customerName: v })}
         email={formData.email}
         onEmailChange={(v) => updateFormData({ email: v })}
-        emailRequired
         selectedBarber={formData.barberName ?? undefined}
         onBarberPress={() => router.push("/d/select-barber")}
         selectedDateTime={displayDateTime ?? displayDateOnly}

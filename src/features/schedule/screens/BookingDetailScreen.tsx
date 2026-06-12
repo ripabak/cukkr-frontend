@@ -224,6 +224,15 @@ export function BookingDetailScreen() {
             },
           ]
         : []),
+      {
+        label: "Source",
+        value:
+          booking.source === "customer"
+            ? "Customer"
+            : booking.createdByName
+              ? `Staff · ${booking.createdByName}`
+              : "Staff",
+      },
     ];
 
     const services = booking.services.map((s) => ({

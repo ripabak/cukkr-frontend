@@ -11,6 +11,7 @@ import {
 
 interface Props {
   label?: string;
+  required?: boolean;
   value: string;
   onChangeText: (t: string) => void;
   placeholder?: string;
@@ -22,6 +23,7 @@ interface Props {
 
 export function TextInputField({
   label,
+  required,
   value,
   onChangeText,
   placeholder,
@@ -32,7 +34,12 @@ export function TextInputField({
 }: Props) {
   return (
     <View style={style}>
-      {label ? <Text style={styles.label}>{label}</Text> : null}
+      {label ? (
+        <Text style={styles.label}>
+          {label}
+          {required ? <Text style={styles.asterisk}> *</Text> : null}
+        </Text>
+      ) : null}
       <View style={styles.inputContainer}>
         <TextInput
           value={value}
@@ -53,6 +60,9 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: Colors.text.secondary,
     marginBottom: 6,
+  },
+  asterisk: {
+    color: Colors.status.danger,
   },
   inputContainer: {
     backgroundColor: Colors.bg.default,

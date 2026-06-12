@@ -22,6 +22,10 @@ export function NewWalkInScreen() {
 
   const [bookingType, setBookingType] = useState<BookingType>("walkin");
 
+  const isValid =
+    formData.customerName.trim().length > 0 &&
+    formData.serviceIds.length > 0;
+
   function handleBookingTypeChange(type: BookingType) {
     setBookingType(type);
     if (type === "appointment") {
@@ -81,7 +85,7 @@ export function NewWalkInScreen() {
           <PrimaryButton
             label="New Walk-In"
             onPress={handleSubmit}
-            disabled={isPending}
+            disabled={isPending || !isValid}
           />
         </View>
       }
