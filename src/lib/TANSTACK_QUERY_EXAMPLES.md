@@ -3,6 +3,7 @@
 ## Refactoring Existing Code
 
 ### Before: Manual async handling
+
 ```tsx
 export function CreateBarbershopNameLogoScreen() {
   const [isCheckingSlug, setIsCheckingSlug] = useState(false);
@@ -27,14 +28,15 @@ export function CreateBarbershopNameLogoScreen() {
 ```
 
 ### After: Using TanStack Query
+
 ```tsx
-import { useBarbershopSlugCheck } from '@/src/features/workspace/hooks';
-import { generateSlug } from '../utils/slug-generator';
+import { useBarbershopSlugCheck } from "@/src/features/workspace/hooks";
+import { generateSlug } from "../utils/slug-generator";
 
 export function CreateBarbershopNameLogoScreen() {
   const [name, setName] = useState("");
   const slug = generateSlug(name);
-  
+
   // TanStack Query handles debouncing, loading, caching automatically
   const { data: isAvailable, isLoading } = useBarbershopSlugCheck(slug);
 
@@ -54,15 +56,17 @@ export function CreateBarbershopNameLogoScreen() {
 ## Complete Screen Examples
 
 ### Example 1: Query + Mutation
+
 ```tsx
-import { 
+import {
   useBarbershopCurrent,
-  useUpdateBarbershopSettings 
-} from '@/src/features/workspace/hooks';
-import { useToast } from '@/src/lib/providers';
+  useUpdateBarbershopSettings,
+} from "@/src/features/workspace/hooks";
+import { useToast } from "@/src/lib/providers";
 
 export function SettingsScreen() {
-  const { data: barbershop, isLoading: isLoadingBarbershop } = useBarbershopCurrent();
+  const { data: barbershop, isLoading: isLoadingBarbershop } =
+    useBarbershopCurrent();
   const { mutate: updateSettings, isPending } = useUpdateBarbershopSettings();
   const toast = useToast();
   const [name, setName] = useState("");
@@ -75,18 +79,21 @@ export function SettingsScreen() {
   }, [barbershop?.name]);
 
   const handleSave = () => {
-    updateSettings({ name }, {
-      onSuccess: () => {
-        toast.show({ title: 'Saved successfully!' });
+    updateSettings(
+      { name },
+      {
+        onSuccess: () => {
+          toast.show({ title: "Saved successfully!" });
+        },
+        onError: (error) => {
+          toast.show({
+            title: "Error",
+            message: error.message,
+            type: "error",
+          });
+        },
       },
-      onError: (error) => {
-        toast.show({ 
-          title: 'Error', 
-          message: error.message,
-          type: 'error'
-        });
-      },
-    });
+    );
   };
 
   if (isLoadingBarbershop) return <LoadingScreen />;
@@ -102,7 +109,7 @@ export function SettingsScreen() {
       <PrimaryButton
         onPress={handleSave}
         disabled={isPending}
-        title={isPending ? 'Saving...' : 'Save Changes'}
+        title={isPending ? "Saving..." : "Save Changes"}
       />
     </ScreenShell>
   );
@@ -110,9 +117,10 @@ export function SettingsScreen() {
 ```
 
 ### Example 2: List with Infinite Queries
+
 ```tsx
-import { useBarbersList } from '@/src/features/workspace/hooks';
-import { useState } from 'react';
+import { useBarbersList } from "@/src/features/workspace/hooks";
+import { useState } from "react";
 
 export function BarbersListScreen() {
   const [search, setSearch] = useState("");
@@ -138,15 +146,17 @@ export function BarbersListScreen() {
 ```
 
 ### Example 3: Multiple Mutations in Sequence
+
 ```tsx
-import { 
+import {
   useCreateOrganization,
-  useSetActiveOrganization 
-} from '@/src/features/workspace/hooks';
+  useSetActiveOrganization,
+} from "@/src/features/workspace/hooks";
 
 export function CreateOrganizationFlow() {
   const { mutate: createOrg, isPending: isCreating } = useCreateOrganization();
-  const { mutate: setActive, isPending: isActivating } = useSetActiveOrganization();
+  const { mutate: setActive, isPending: isActivating } =
+    useSetActiveOrganization();
 
   const handleCreateAndActivate = (name: string, slug: string) => {
     createOrg(
@@ -156,26 +166,27 @@ export function CreateOrganizationFlow() {
           setActive(newOrg.id);
         },
         onError: (error) => {
-          showToast('Failed to create organization: ' + error.message);
+          showToast("Failed to create organization: " + error.message);
         },
-      }
+      },
     );
   };
 
   const isLoading = isCreating || isActivating;
 
   return (
-    <CreateOrgForm 
-      onSubmit={handleCreateAndActivate}
-      isLoading={isLoading}
-    />
+    <CreateOrgForm onSubmit={handleCreateAndActivate} isLoading={isLoading} />
   );
 }
 ```
 
 ### Example 4: Dependent Queries
+
 ```tsx
-import { useBarbershopCurrent, useBarbersList } from '@/src/features/workspace/hooks';
+import {
+  useBarbershopCurrent,
+  useBarbersList,
+} from "@/src/features/workspace/hooks";
 
 export function DashboardScreen() {
   // First query: fetch current barbershop
@@ -197,9 +208,10 @@ export function DashboardScreen() {
 ```
 
 ### Example 5: Mutation with Optimistic Update
+
 ```tsx
-import { useInviteBarber } from '@/src/features/workspace/hooks';
-import { useQueryClient } from '@tanstack/react-query';
+import { useInviteBarber } from "@/src/features/workspace/hooks";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function InviteBarberModal() {
   const queryClient = useQueryClient();
@@ -209,24 +221,22 @@ export function InviteBarberModal() {
     // Optional: optimistic update
     // queryClient.setQueryData(['barbers', 'list'], (old) => [...old, { email, status: 'pending' }]);
 
-    inviteBarber({ email }, {
-      onSuccess: () => {
-        showToast('Invitation sent!');
-        // Query automatically refetches due to invalidation in hook
+    inviteBarber(
+      { email },
+      {
+        onSuccess: () => {
+          showToast("Invitation sent!");
+          // Query automatically refetches due to invalidation in hook
+        },
+        onError: (error) => {
+          showToast("Failed: " + error.message);
+          // If using optimistic update, rollback here if needed
+        },
       },
-      onError: (error) => {
-        showToast('Failed: ' + error.message);
-        // If using optimistic update, rollback here if needed
-      },
-    });
+    );
   };
 
-  return (
-    <InviteForm
-      onSubmit={handleInvite}
-      isLoading={isPending}
-    />
-  );
+  return <InviteForm onSubmit={handleInvite} isLoading={isPending} />;
 }
 ```
 
@@ -248,6 +258,7 @@ When migrating screens to use TanStack Query:
 1. **Minimize Re-renders**: Query data is memoized, won't cause re-renders unless it changes
 
 2. **Use Proper Keys**: Same component using different params creates separate cache entries
+
    ```tsx
    const { data: search1 } = useBarbersList("john");
    const { data: search2 } = useBarbersList("jane");
@@ -255,6 +266,7 @@ When migrating screens to use TanStack Query:
    ```
 
 3. **Stale While Revalidate**: Queries serve cached data immediately while revalidating in background
+
    ```tsx
    // User sees cached list instantly, updates in background
    const { data: barbers } = useBarbersList();
@@ -264,9 +276,11 @@ When migrating screens to use TanStack Query:
    ```tsx
    onSuccess: () => {
      // Good: only invalidate current barbershop
-     queryClient.invalidateQueries({ queryKey: BARBERSHOP_QUERY_KEYS.current() });
-     
+     queryClient.invalidateQueries({
+       queryKey: BARBERSHOP_QUERY_KEYS.current(),
+     });
+
      // Avoid: invalidating everything
      // queryClient.invalidateQueries();
-   }
+   };
    ```

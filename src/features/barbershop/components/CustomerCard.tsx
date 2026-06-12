@@ -1,7 +1,13 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ViewStyle,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Props {
   name: string;
@@ -9,25 +15,49 @@ interface Props {
   bookValue: string;
   selected?: boolean;
   selectionMode?: boolean;
+  hasContact?: boolean;
   onPress?: () => void;
   style?: ViewStyle;
 }
 
-export function CustomerCard({ name, totalBook, bookValue, selected, selectionMode, onPress, style }: Props) {
+export function CustomerCard({
+  name,
+  totalBook,
+  bookValue,
+  selected,
+  selectionMode,
+  hasContact = true,
+  onPress,
+  style,
+}: Props) {
+  const selectable = !selectionMode || hasContact;
+
   return (
     <TouchableOpacity
-      onPress={onPress}
-      activeOpacity={0.8}
-      style={[styles.card, selected && styles.cardSelected, style]}
+      onPress={selectable ? onPress : undefined}
+      activeOpacity={selectable ? 0.8 : 1}
+      style={[
+        styles.card,
+        selected && styles.cardSelected,
+        !selectable && styles.cardDisabled,
+        style,
+      ]}
     >
-      <View style={styles.avatar}>
-        <Ionicons name="person" size={22} color={Colors.text.primary} />
+      <View style={[styles.avatar, !hasContact && styles.avatarMuted]}>
+        <Ionicons
+          name="person"
+          size={22}
+          color={hasContact ? Colors.text.primary : Colors.icon.muted}
+        />
       </View>
       <View style={styles.info}>
-        <Text style={styles.name}>{name}</Text>
+        <Text style={[styles.name, !hasContact && styles.textMuted]}>
+          {name}
+        </Text>
         <Text style={styles.meta}>
           Total Book <Text style={styles.metaBold}>{totalBook}</Text>
-          {'  ·  '}Book Value <Text style={styles.metaBold}>{bookValue}</Text>
+          {"  ·  "}Book Value{" "}
+          <Text style={styles.metaBold}>{bookValue}</Text>
         </Text>
       </View>
       <Ionicons name="chevron-forward" size={18} color={Colors.icon.muted} />
@@ -37,8 +67,8 @@ export function CustomerCard({ name, totalBook, bookValue, selected, selectionMo
 
 const styles = StyleSheet.create({
   card: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: Colors.brand.primarySurface,
     borderRadius: 16,
     paddingVertical: 14,
@@ -55,8 +85,17 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     backgroundColor: Colors.brand.primaryDark,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  avatarMuted: {
+    backgroundColor: Colors.bg.surface,
+  },
+  cardDisabled: {
+    opacity: 0.5,
+  },
+  textMuted: {
+    color: Colors.text.muted,
   },
   info: {
     flex: 1,
@@ -64,7 +103,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: "700",
     color: Colors.text.primary,
   },
   meta: {
@@ -72,7 +111,7 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
   },
   metaBold: {
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.text.primary,
   },
 });

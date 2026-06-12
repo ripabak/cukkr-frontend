@@ -10,26 +10,33 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {
-  useAnalyticsServices,
-  useAnalyticsServicesList,
-} from "../hooks";
+import { useAnalyticsServices, useAnalyticsServicesList } from "../hooks";
 import type { AnalyticsRange } from "../services/analytics.service";
 import { formatRupiah } from "../utils/format";
 import { BarChart } from "../components/BarChart";
 import { RangePicker } from "../components/RangePicker";
 import { StatCard } from "../components/StatCard";
 
-const EMPTY_STAT = { current: 0, previous: 0, change: null, direction: "neutral" as const };
+const EMPTY_STAT = {
+  current: 0,
+  previous: 0,
+  change: null,
+  direction: "neutral" as const,
+};
 
 export function AnalyticsServicesScreen() {
   const router = useRouter();
-  const { range: rangeParam } = useLocalSearchParams<{ range?: AnalyticsRange }>();
+  const { range: rangeParam } = useLocalSearchParams<{
+    range?: AnalyticsRange;
+  }>();
   const [range, setRange] = useState<AnalyticsRange>(rangeParam ?? "month");
   const [page, setPage] = useState(1);
 
   const { data: svcData, isLoading: svcLoading } = useAnalyticsServices(range);
-  const { data: listData, isLoading: listLoading } = useAnalyticsServicesList(range, page);
+  const { data: listData, isLoading: listLoading } = useAnalyticsServicesList(
+    range,
+    page,
+  );
 
   const stats = svcData?.stats;
   const chart = svcData?.chart ?? [];
@@ -48,8 +55,16 @@ export function AnalyticsServicesScreen() {
       contentStyle={styles.scrollContent}
       headerSlot={
         <View style={styles.topBar}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} activeOpacity={0.7}>
-            <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.backBtn}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name="chevron-back"
+              size={20}
+              color={Colors.text.primary}
+            />
           </TouchableOpacity>
           <Text style={styles.pageTitle}>Services</Text>
           <View style={styles.topBarRight} />
@@ -69,14 +84,26 @@ export function AnalyticsServicesScreen() {
           <StatCard
             label="Total Bookings"
             value={String(stats.totalBookings?.current ?? 0)}
-            icon={<Ionicons name="receipt-outline" size={16} color={Colors.text.primary} />}
+            icon={
+              <Ionicons
+                name="receipt-outline"
+                size={16}
+                color={Colors.text.primary}
+              />
+            }
             stat={stats.totalBookings ?? EMPTY_STAT}
             style={styles.statFlex}
           />
           <StatCard
             label="Total Revenue"
             value={formatRupiah(stats.totalRevenue?.current ?? 0)}
-            icon={<Ionicons name="cash-outline" size={16} color={Colors.text.primary} />}
+            icon={
+              <Ionicons
+                name="cash-outline"
+                size={16}
+                color={Colors.text.primary}
+              />
+            }
             stat={stats.totalRevenue ?? EMPTY_STAT}
             style={styles.statFlex}
           />
@@ -99,25 +126,42 @@ export function AnalyticsServicesScreen() {
         </View>
 
         {listLoading && services.length === 0 ? (
-          <ActivityIndicator size="small" color={Colors.brand.primary} style={styles.listLoader} />
+          <ActivityIndicator
+            size="small"
+            color={Colors.brand.primary}
+            style={styles.listLoader}
+          />
         ) : services.length === 0 ? (
-          <Text style={styles.emptyText}>No services found for this period</Text>
+          <Text style={styles.emptyText}>
+            No services found for this period
+          </Text>
         ) : (
           services.map((svc, i) => (
             <TouchableOpacity
               key={svc.serviceId}
               style={styles.serviceRow}
               activeOpacity={0.75}
-              onPress={() => router.push({ pathname: "/d/service-detail", params: { serviceId: svc.serviceId } })}
+              onPress={() =>
+                router.push({
+                  pathname: "/d/service-detail",
+                  params: { serviceId: svc.serviceId },
+                })
+              }
             >
               <View style={styles.serviceRank}>
-                <Text style={styles.serviceRankText}>{i + 1 + (page - 1) * 20}</Text>
+                <Text style={styles.serviceRankText}>
+                  {i + 1 + (page - 1) * 20}
+                </Text>
               </View>
               <View style={styles.serviceInfo}>
                 <View style={styles.serviceNameRow}>
-                  <Text style={styles.serviceName} numberOfLines={1}>{svc.serviceName}</Text>
+                  <Text style={styles.serviceName} numberOfLines={1}>
+                    {svc.serviceName}
+                  </Text>
                   <View style={styles.serviceCountBadge}>
-                    <Text style={styles.serviceCountText}>{svc.totalBookings}×</Text>
+                    <Text style={styles.serviceCountText}>
+                      {svc.totalBookings}×
+                    </Text>
                   </View>
                 </View>
                 {/* Progress bar */}
@@ -144,15 +188,25 @@ export function AnalyticsServicesScreen() {
               onPress={() => setPage((p) => p - 1)}
               style={[styles.pageBtn, !meta.hasPrev && styles.pageBtnDisabled]}
             >
-              <Ionicons name="chevron-back" size={16} color={meta.hasPrev ? Colors.text.primary : Colors.text.muted} />
+              <Ionicons
+                name="chevron-back"
+                size={16}
+                color={meta.hasPrev ? Colors.text.primary : Colors.text.muted}
+              />
             </TouchableOpacity>
-            <Text style={styles.pageLabel}>{meta.page} / {meta.totalPages}</Text>
+            <Text style={styles.pageLabel}>
+              {meta.page} / {meta.totalPages}
+            </Text>
             <TouchableOpacity
               disabled={!meta.hasNext}
               onPress={() => setPage((p) => p + 1)}
               style={[styles.pageBtn, !meta.hasNext && styles.pageBtnDisabled]}
             >
-              <Ionicons name="chevron-forward" size={16} color={meta.hasNext ? Colors.text.primary : Colors.text.muted} />
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={meta.hasNext ? Colors.text.primary : Colors.text.muted}
+              />
             </TouchableOpacity>
           </View>
         ) : null}

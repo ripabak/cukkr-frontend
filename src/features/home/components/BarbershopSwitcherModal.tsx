@@ -83,7 +83,7 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
   }, [visible]);
 
   const filtered = barbershops.filter((b) =>
-    b.name.toLowerCase().includes(search.toLowerCase())
+    b.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   const handleSelect = (id: string) => {
@@ -118,7 +118,12 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
 
   return (
     <>
-      <Modal visible={isSwitchingWorkspace} transparent animationType="fade" statusBarTranslucent>
+      <Modal
+        visible={isSwitchingWorkspace}
+        transparent
+        animationType="fade"
+        statusBarTranslucent
+      >
         <View style={styles.switchingOverlay}>
           <View style={[styles.switchingCard, { width: frameWidth * 0.72 }]}>
             <ActivityIndicator size="large" color={Colors.brand.primary} />
@@ -128,10 +133,21 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
         </View>
       </Modal>
 
-      <Modal visible={visible && !isSwitchingWorkspace} transparent animationType="none" statusBarTranslucent>
+      <Modal
+        visible={visible && !isSwitchingWorkspace}
+        transparent
+        animationType="none"
+        statusBarTranslucent
+      >
         {/* Full-screen tap-to-close backdrop */}
         <TouchableWithoutFeedback onPress={onClose}>
-          <Animated.View style={[StyleSheet.absoluteFill, styles.backdrop, { opacity: fadeAnim }]} />
+          <Animated.View
+            style={[
+              StyleSheet.absoluteFill,
+              styles.backdrop,
+              { opacity: fadeAnim },
+            ]}
+          />
         </TouchableWithoutFeedback>
 
         {/* Dropdown panel — slides down from top, covers the sticky header */}
@@ -152,7 +168,11 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
 
           {/* Search */}
           <View style={styles.searchRow}>
-            <Ionicons name="search-outline" size={16} color={Colors.icon.muted} />
+            <Ionicons
+              name="search-outline"
+              size={16}
+              color={Colors.icon.muted}
+            />
             <TextInput
               style={styles.searchInput}
               placeholder="Search barbershop..."
@@ -163,7 +183,11 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
             />
             {search.length > 0 && (
               <TouchableOpacity onPress={() => setSearch("")}>
-                <Ionicons name="close-circle" size={16} color={Colors.icon.muted} />
+                <Ionicons
+                  name="close-circle"
+                  size={16}
+                  color={Colors.icon.muted}
+                />
               </TouchableOpacity>
             )}
           </View>
@@ -174,12 +198,17 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
             showsVerticalScrollIndicator={false}
           >
             {isLoading ? (
-              <ActivityIndicator size="small" color={Colors.brand.primary} style={styles.loader} />
+              <ActivityIndicator
+                size="small"
+                color={Colors.brand.primary}
+                style={styles.loader}
+              />
             ) : filtered.length === 0 ? (
               <Text style={styles.emptyText}>No barbershop found</Text>
             ) : (
               filtered.map((shop) => {
-                const isActive = sessionData?.session?.activeOrganizationId === shop.id;
+                const isActive =
+                  sessionData?.session?.activeOrganizationId === shop.id;
                 const initials = shop.name
                   .split(" ")
                   .slice(0, 2)
@@ -194,14 +223,27 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
                     activeOpacity={0.7}
                     disabled={isSwitchingWorkspace}
                   >
-                    <View style={[styles.avatar, isActive && styles.avatarActive]}>
-                      <Text style={[styles.avatarText, isActive && styles.avatarTextActive]}>
+                    <View
+                      style={[styles.avatar, isActive && styles.avatarActive]}
+                    >
+                      <Text
+                        style={[
+                          styles.avatarText,
+                          isActive && styles.avatarTextActive,
+                        ]}
+                      >
                         {initials}
                       </Text>
                     </View>
-                    <Text style={styles.itemName} numberOfLines={1}>{shop.name}</Text>
+                    <Text style={styles.itemName} numberOfLines={1}>
+                      {shop.name}
+                    </Text>
                     {isActive && (
-                      <Ionicons name="checkmark-circle" size={18} color={Colors.brand.primaryDark} />
+                      <Ionicons
+                        name="checkmark-circle"
+                        size={18}
+                        color={Colors.brand.primaryDark}
+                      />
                     )}
                   </TouchableOpacity>
                 );
@@ -209,7 +251,11 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
             )}
           </ScrollView>
 
-          <TouchableOpacity style={styles.createRow} onPress={handleCreateNew} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={styles.createRow}
+            onPress={handleCreateNew}
+            activeOpacity={0.7}
+          >
             <View style={styles.createIcon}>
               <Ionicons name="add" size={20} color={Colors.text.secondary} />
             </View>

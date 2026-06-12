@@ -1,9 +1,15 @@
-import { Colors } from '@/src/theme/colors';
-import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Colors } from "@/src/theme/colors";
+import { Ionicons } from "@expo/vector-icons";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-type Tab = 'home' | 'stats' | 'schedule' | 'barbershop';
+type Tab = "home" | "stats" | "schedule" | "barbershop";
 
 interface Props {
   activeTab: Tab;
@@ -11,17 +17,23 @@ interface Props {
   style?: ViewStyle;
 }
 
-const TABS: { key: Tab; label: string; icon: React.ComponentProps<typeof Ionicons>['name'] }[] = [
-  { key: 'home', label: 'Home', icon: 'home' },
-  { key: 'schedule', label: 'Schedule', icon: 'calendar' },
-  { key: 'stats', label: 'Stats', icon: 'bar-chart' },
-  { key: 'barbershop', label: 'Barbershop', icon: 'storefront' },
+const TABS: {
+  key: Tab;
+  label: string;
+  icon: React.ComponentProps<typeof Ionicons>["name"];
+}[] = [
+  { key: "home", label: "Home", icon: "home" },
+  { key: "schedule", label: "Schedule", icon: "calendar" },
+  { key: "stats", label: "Stats", icon: "bar-chart" },
+  { key: "barbershop", label: "Barbershop", icon: "storefront" },
 ];
 
 export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
   const insets = useSafeAreaInsets();
   return (
-    <View style={[styles.container, { paddingBottom: insets.bottom || 12 }, style]}>
+    <View
+      style={[styles.container, { paddingBottom: insets.bottom || 12 }, style]}
+    >
       {TABS.map((tab) => {
         const isActive = tab.key === activeTab;
         const color = isActive ? Colors.brand.primary : Colors.icon.muted;
@@ -43,7 +55,7 @@ export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: "row",
     backgroundColor: Colors.bg.default,
     borderTopWidth: 1,
     borderTopColor: Colors.border.default,
@@ -51,11 +63,11 @@ const styles = StyleSheet.create({
   },
   tab: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     gap: 2,
   },
   label: {
     fontSize: 9,
-    fontWeight: '500',
+    fontWeight: "500",
   },
 });

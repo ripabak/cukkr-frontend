@@ -5,7 +5,8 @@ import { homeService } from "../services/home.service";
 export const HOME_QUERY_KEYS = {
   all: ["home"] as const,
   summary: (date: string) => [...HOME_QUERY_KEYS.all, "summary", date] as const,
-  activeBookings: (date: string) => [...HOME_QUERY_KEYS.all, "active-bookings", date] as const,
+  activeBookings: (date: string) =>
+    [...HOME_QUERY_KEYS.all, "active-bookings", date] as const,
   currentPin: [...["home"], "current-pin"] as const,
 };
 

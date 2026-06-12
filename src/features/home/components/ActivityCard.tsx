@@ -1,6 +1,12 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 
 export type RecentActivity = {
   id: string;
@@ -18,9 +24,15 @@ interface Props {
 
 export function ActivityCard({ item, style, onPress }: Props) {
   const accentColor =
-    item.type === "in_progress" ? Colors.status.inProgress : Colors.status.waiting;
+    item.type === "in_progress"
+      ? Colors.status.inProgress
+      : Colors.status.waiting;
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={onPress ? 0.8 : 1} style={[styles.container, style]}>
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={onPress ? 0.8 : 1}
+      style={[styles.container, style]}
+    >
       <View style={styles.circle}>
         <Ionicons name="people" size={22} color={accentColor} />
       </View>

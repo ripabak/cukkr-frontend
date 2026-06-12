@@ -1,6 +1,6 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { OnboardingTheme } from '../onboarding-theme';
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { OnboardingTheme } from "../onboarding-theme";
 
 interface OnboardingIndicatorProps {
   current: number;
@@ -28,9 +28,9 @@ export const OnboardingIndicator: React.FC<OnboardingIndicatorProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     gap: OnboardingTheme.spacing.xs,
     marginTop: OnboardingTheme.spacing.lg,
   },

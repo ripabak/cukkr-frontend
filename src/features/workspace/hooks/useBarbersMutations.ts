@@ -13,11 +13,11 @@ export function useInviteBarber() {
   });
 }
 
-
 export function useAcceptInvitation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (invitationId: string) => barbersService.acceptInvitation(invitationId),
+    mutationFn: (invitationId: string) =>
+      barbersService.acceptInvitation(invitationId),
     onSuccess: async () => {
       await authClient.getSession({ fetchOptions: { cache: "no-cache" } });
       queryClient.invalidateQueries({ queryKey: BARBERSHOP_QUERY_KEYS.all });
@@ -27,6 +27,7 @@ export function useAcceptInvitation() {
 
 export function useRejectInvitation() {
   return useMutation({
-    mutationFn: (invitationId: string) => barbersService.rejectInvitation(invitationId),
+    mutationFn: (invitationId: string) =>
+      barbersService.rejectInvitation(invitationId),
   });
 }

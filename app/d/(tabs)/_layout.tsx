@@ -4,12 +4,12 @@ import { ProtectedRoute } from "@/src/components/ProtectedRoute";
 import { useBookingRealtimeSync } from "@/src/hooks";
 import { useInProgressBooking } from "@/src/features/schedule/hooks";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { View } from 'react-native';
+import { Tabs } from "expo-router";
+import React from "react";
+import { View } from "react-native";
 
-import { useClientOnlyValue } from '@/src/components/useClientOnlyValue';
-import { useColorScheme } from '@/src/components/useColorScheme';
+import { useClientOnlyValue } from "@/src/components/useClientOnlyValue";
+import { useColorScheme } from "@/src/components/useColorScheme";
 import { WorkspaceRoute } from "@/src/components/WorkspaceRoute";
 
 type Tab = "home" | "stats" | "schedule" | "barbershop";
@@ -71,7 +71,8 @@ export default function TabLayout() {
             // Disable the static render of the header on web
             // to prevent a hydration error in React Navigation v6.
             headerShown: useClientOnlyValue(false, false),
-          }}>
+          }}
+        >
           <Tabs.Screen name="home" />
           <Tabs.Screen name="schedule" />
           <Tabs.Screen name="stats" />

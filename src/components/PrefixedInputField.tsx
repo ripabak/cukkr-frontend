@@ -1,6 +1,6 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, Text, TextInput, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { View, Text, TextInput, StyleSheet, ViewStyle } from "react-native";
 
 interface Props {
   prefix: string;
@@ -10,7 +10,13 @@ interface Props {
   style?: ViewStyle;
 }
 
-export function PrefixedInputField({ prefix, value, onChangeText, placeholder, style }: Props) {
+export function PrefixedInputField({
+  prefix,
+  value,
+  onChangeText,
+  placeholder,
+  style,
+}: Props) {
   return (
     <View style={[styles.container, style]}>
       <Text style={styles.prefix}>{prefix}</Text>
@@ -27,8 +33,8 @@ export function PrefixedInputField({ prefix, value, onChangeText, placeholder, s
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: Colors.bg.default,
     borderRadius: 999,
     borderWidth: 1,

@@ -1,8 +1,8 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, Text, Image, StyleSheet, ViewStyle } from 'react-native';
-import { StatusBadge } from '@/src/components/StatusBadge';
-import { ToggleSwitch } from '@/src/components/ToggleSwitch';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { View, Text, Image, StyleSheet, ViewStyle } from "react-native";
+import { StatusBadge } from "@/src/components/StatusBadge";
+import { ToggleSwitch } from "@/src/components/ToggleSwitch";
 
 interface Props {
   name: string;
@@ -16,7 +16,7 @@ interface Props {
 }
 
 function formatPrice(amount: number): string {
-  return `Rp ${amount.toLocaleString('id-ID')}`;
+  return `Rp ${amount.toLocaleString("id-ID")}`;
 }
 
 export function ServiceCard({
@@ -43,7 +43,9 @@ export function ServiceCard({
         )}
       </View>
       <View style={styles.info}>
-        <Text style={styles.name} numberOfLines={1}>{name}</Text>
+        <Text style={styles.name} numberOfLines={1}>
+          {name}
+        </Text>
         {discountPercent ? (
           <View style={styles.discountRow}>
             <View style={styles.discountBadge}>
@@ -56,7 +58,11 @@ export function ServiceCard({
       </View>
       <View style={styles.right}>
         {isDefault ? (
-          <StatusBadge label="Default" variant="default" style={styles.defaultBadge} />
+          <StatusBadge
+            label="Default"
+            variant="default"
+            style={styles.defaultBadge}
+          />
         ) : null}
         {onToggleActive !== undefined ? (
           <ToggleSwitch value={isActive} onValueChange={onToggleActive} />
@@ -70,8 +76,8 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.brand.primarySurface,
     borderRadius: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 14,
     gap: 12,
@@ -80,16 +86,16 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 8,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   imageEmpty: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     backgroundColor: Colors.brand.primaryDark,
   },
   info: {
@@ -98,12 +104,12 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: "700",
     color: Colors.text.primary,
   },
   discountRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 6,
   },
   discountBadge: {
@@ -115,20 +121,20 @@ const styles = StyleSheet.create({
   discountText: {
     color: Colors.text.primary,
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   originalPrice: {
     fontSize: 12,
     color: Colors.text.secondary,
-    textDecorationLine: 'line-through',
+    textDecorationLine: "line-through",
   },
   finalPrice: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   right: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
     gap: 8,
   },
   defaultBadge: {

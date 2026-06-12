@@ -1,7 +1,7 @@
-import { Colors } from '@/src/theme/colors';
-import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 
 interface Props {
   onPress?: () => void;
@@ -22,16 +22,16 @@ export function FloatingActionButton({ onPress, style }: Props) {
 
 const styles = StyleSheet.create({
   btn: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 28,
     right: 20,
     width: 52,
     height: 52,
     borderRadius: 26,
     backgroundColor: Colors.brand.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
     elevation: 6,
   },
 });

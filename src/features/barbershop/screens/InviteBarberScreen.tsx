@@ -1,4 +1,4 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import AppTheme from "@/src/app-theme";
 import { HelperCopy } from "@/src/components/HelperCopy";
 import { IconActionButton } from "@/src/features/barbershop/components/IconActionButton";

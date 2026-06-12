@@ -14,7 +14,14 @@ interface Props {
   fallbackIcon?: keyof typeof Ionicons.glyphMap;
 }
 
-export function HighlightRow({ imageUrl, name, subtitle, revenue, onPress, fallbackIcon = "person" }: Props) {
+export function HighlightRow({
+  imageUrl,
+  name,
+  subtitle,
+  revenue,
+  onPress,
+  fallbackIcon = "person",
+}: Props) {
   return (
     <TouchableOpacity
       style={styles.row}
@@ -24,16 +31,28 @@ export function HighlightRow({ imageUrl, name, subtitle, revenue, onPress, fallb
     >
       <View style={styles.avatar}>
         {imageUrl ? (
-          <Image source={{ uri: imageUrl }} style={styles.avatarImg} contentFit="cover" />
+          <Image
+            source={{ uri: imageUrl }}
+            style={styles.avatarImg}
+            contentFit="cover"
+          />
         ) : (
           <View style={styles.avatarPlaceholder}>
-            <Ionicons name={fallbackIcon} size={20} color={Colors.text.secondary} />
+            <Ionicons
+              name={fallbackIcon}
+              size={20}
+              color={Colors.text.secondary}
+            />
           </View>
         )}
       </View>
       <View style={styles.info}>
-        <Text style={styles.name} numberOfLines={1}>{name}</Text>
-        <Text style={styles.subtitle} numberOfLines={1}>{subtitle}</Text>
+        <Text style={styles.name} numberOfLines={1}>
+          {name}
+        </Text>
+        <Text style={styles.subtitle} numberOfLines={1}>
+          {subtitle}
+        </Text>
       </View>
       <View style={styles.revenueBadge}>
         <Text style={styles.revenueText}>{formatRupiah(revenue)}</Text>

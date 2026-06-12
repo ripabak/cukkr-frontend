@@ -1,7 +1,7 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, Text, StyleSheet, ViewStyle } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { View, Text, StyleSheet, ViewStyle } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Props {
   label: string;
@@ -11,13 +11,24 @@ interface Props {
   style?: ViewStyle;
 }
 
-export function StatCard({ label, value, iconName, iconColor = Colors.brand.primary, style }: Props) {
+export function StatCard({
+  label,
+  value,
+  iconName,
+  iconColor = Colors.brand.primary,
+  style,
+}: Props) {
   return (
     <View style={[styles.card, style]}>
       <Text style={styles.label}>{label}</Text>
       <View style={styles.valueRow}>
         {iconName && (
-          <Ionicons name={iconName} size={20} color={iconColor} style={styles.icon} />
+          <Ionicons
+            name={iconName}
+            size={20}
+            color={iconColor}
+            style={styles.icon}
+          />
         )}
         <Text style={styles.value}>{value}</Text>
       </View>
@@ -36,17 +47,17 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     color: Colors.icon.muted,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   valueRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 6,
   },
   icon: {},
   value: {
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: "700",
     color: Colors.text.primary,
   },
 });

@@ -1,4 +1,4 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SecondaryButton } from "@/src/components/SecondaryButton";
@@ -6,7 +6,7 @@ import { TextInputField } from "@/src/components/TextInputField";
 import { WizardProgress } from "@/src/features/workspace/components/WizardProgress";
 import { useInviteBarber } from "../hooks";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
-import { validateEmail, validatePhoneNumber } from "../utils/form-validators";
+import { validateEmail } from "../utils/form-validators";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Alert } from "react-native";
@@ -17,7 +17,9 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
   const [barber, setBarber] = useState("");
   const { mutate: inviteBarber, isPending: isInviting } = useInviteBarber();
 
-  const parseBarberInput = (input: string): { email?: string; phone?: string } | null => {
+  const parseBarberInput = (
+    input: string,
+  ): { email?: string } | null => {
     const trimmed = input.trim();
 
     if (trimmed.includes("@")) {
@@ -28,11 +30,6 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
       return null;
     }
 
-    const phoneValidation = validatePhoneNumber(trimmed);
-    if (phoneValidation.isValid) {
-      return { phone: trimmed };
-    }
-
     return null;
   };
 
@@ -41,24 +38,14 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
     if (!parsed) {
       Alert.alert(
         "Invalid Input",
-        "Please enter a valid email or phone number"
-      );
-      return;
-    }
-
-    // Only email-based invitations are supported
-    if (!parsed.email) {
-      Alert.alert(
-        "Email Required",
-        "Please enter an email address for invitation"
+        "Please enter a valid email address",
       );
       return;
     }
 
     const currentInvites = formData.barberInvites || [];
     const isDuplicate = currentInvites.some(
-      (invite) =>
-        invite.email === parsed.email || invite.phone === parsed.phone
+      (invite) => invite.email === parsed.email,
     );
 
     if (isDuplicate) {
@@ -66,23 +53,23 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
       return;
     }
 
-    inviteBarber({ email: parsed.email }, {
-      onSuccess: () => {
-        const newInvites = [...currentInvites, parsed];
-        updateFormData({ barberInvites: newInvites });
-        setBarber("");
+    inviteBarber(
+      { email: parsed.email! },
+      {
+        onSuccess: () => {
+          const newInvites = [...currentInvites, parsed];
+          updateFormData({ barberInvites: newInvites });
+          setBarber("");
 
-        if (newInvites.length > 0) {
-          router.push("/d/create-barbershop-invite-barber-filled");
-        }
+          if (newInvites.length > 0) {
+            router.push("/d/create-barbershop-invite-barber-filled");
+          }
+        },
+        onError: (error) => {
+          Alert.alert("Error", error.message || "Failed to invite barber");
+        },
       },
-      onError: (error) => {
-        Alert.alert(
-          "Error",
-          error.message || "Failed to invite barber"
-        );
-      },
-    });
+    );
   };
 
   const handleSkip = () => {
@@ -97,7 +84,7 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
       <Text style={styles.subtitle}>Inviting barber to your barbershop</Text>
       <TextInputField
         label="Add Barber"
-        placeholder="email / phone number"
+        placeholder="email"
         value={barber}
         onChangeText={setBarber}
         keyboardType="email-address"
@@ -108,10 +95,7 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
         onPress={handleAddBarber}
       />
       <View style={styles.flex} />
-      <PrimaryButton
-        label="Continue"
-        onPress={handleSkip}
-      />
+      <PrimaryButton label="Continue" onPress={handleSkip} />
     </ScreenShell>
   );
 }

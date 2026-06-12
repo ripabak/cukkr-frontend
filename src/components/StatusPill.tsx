@@ -1,1 +1,1 @@
-export { StatusBadge as StatusPill } from '@/src/components/StatusBadge';
+export { StatusBadge as StatusPill } from "@/src/components/StatusBadge";

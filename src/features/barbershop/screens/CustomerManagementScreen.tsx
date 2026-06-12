@@ -1,4 +1,4 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { CustomerCard } from "@/src/features/barbershop/components/CustomerCard";
 import { FloatingActionButton } from "@/src/features/barbershop/components/FloatingActionButton";
 import { SearchInput } from "@/src/components/SearchInput";
@@ -28,10 +28,12 @@ export function CustomerManagementScreen() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [sortVisible, setSortVisible] = useState(false);
   const [sortValue, setSortValue] = useState<CustomerSort>("name_asc");
+  const [hasContact, setHasContact] = useState(true);
 
   const { data: customers = [], isLoading } = useCustomersList({
     search: search || undefined,
     sort: sortValue,
+    hasContact,
   });
 
   function toggleSelect(id: string) {
@@ -43,11 +45,16 @@ export function CustomerManagementScreen() {
     });
   }
 
-  function handleCardPress(customerId: string) {
+  function handleCardPress(customerId: string, customerHasContact: boolean) {
     if (selectionMode) {
-      toggleSelect(customerId);
+      if (customerHasContact) {
+        toggleSelect(customerId);
+      }
     } else {
-      router.push({ pathname: "/d/customer-detail-general", params: { customerId } });
+      router.push({
+        pathname: "/d/customer-detail-general",
+        params: { customerId },
+      });
     }
   }
 
@@ -69,6 +76,8 @@ export function CustomerManagementScreen() {
             else setSelectionMode(true);
           }}
           onFilterPress={() => setSortVisible(true)}
+          hasContact={hasContact}
+          onContactFilterPress={() => setHasContact((prev) => !prev)}
         />
       }
       footerSlot={
@@ -99,15 +108,23 @@ export function CustomerManagementScreen() {
       contentStyle={styles.content}
     >
       <Text style={styles.title}>Customer{"\n"}Management</Text>
-      <Text style={styles.subtitle}>Manage all your customers in one place.</Text>
+      <Text style={styles.subtitle}>
+        Manage all your customers in one place.
+      </Text>
       {!selectionMode && (
         <Text style={styles.hint}>
-          Only customers with valid contact information will appear here.
+          {hasContact
+            ? "Only customers with valid contact information will appear here."
+            : "Showing all customers including those without contact info."}
         </Text>
       )}
 
       <View style={styles.searchWrapper}>
-        <SearchInput value={search} onChangeText={setSearch} placeholder="Search" />
+        <SearchInput
+          value={search}
+          onChangeText={setSearch}
+          placeholder="Search"
+        />
       </View>
 
       {!isLoading && customers.length === 0 ? (
@@ -118,17 +135,23 @@ export function CustomerManagementScreen() {
 
       {customers.length > 0 ? (
         <View style={styles.list}>
-          {customers.map((customer) => (
-            <CustomerCard
-              key={customer.id}
-              name={customer.name}
-              totalBook={customer.totalBookings}
-              bookValue={formatCurrency(customer.totalSpend)}
-              selectionMode={selectionMode}
-              selected={selectedIds.has(customer.id)}
-              onPress={() => handleCardPress(customer.id)}
-            />
-          ))}
+          {customers.map((customer) => {
+            const customerHasContact = !!(
+              customer.email || customer.phone
+            );
+            return (
+              <CustomerCard
+                key={customer.id}
+                name={customer.name}
+                totalBook={customer.totalBookings}
+                bookValue={formatCurrency(customer.totalSpend)}
+                hasContact={customerHasContact}
+                selectionMode={selectionMode}
+                selected={selectedIds.has(customer.id)}
+                onPress={() => handleCardPress(customer.id, customerHasContact)}
+              />
+            );
+          })}
         </View>
       ) : null}
 
@@ -149,7 +172,12 @@ const styles = StyleSheet.create({
   subtitle: { fontSize: 14, color: Colors.text.secondary, marginTop: 8 },
   hint: { fontSize: 14, color: Colors.text.secondary, marginTop: 4 },
   searchWrapper: { marginTop: 24, marginBottom: 16 },
-  empty: { fontSize: 14, color: Colors.text.secondary, textAlign: "center", marginTop: 40 },
+  empty: {
+    fontSize: 14,
+    color: Colors.text.secondary,
+    textAlign: "center",
+    marginTop: 40,
+  },
   list: { gap: 10 },
   sortMenu: { top: 100, right: 20, left: 20 },
 });

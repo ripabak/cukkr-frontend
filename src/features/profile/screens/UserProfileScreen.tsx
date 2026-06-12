@@ -3,15 +3,20 @@ import { InfoRow } from "@/src/components/InfoRow";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useSignOut } from "@/src/features/auth/hooks";
-import { AlertModal } from "@/src/features/profile/components/AlertModal";
 import { LogoutRow } from "@/src/features/profile/components/LogoutRow";
 import { ProfileSummaryCard } from "@/src/features/profile/components/ProfileSummaryCard";
 import { useToast } from "@/src/lib/providers/toast";
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useProfile } from "../hooks";
 import { getErrorMessage } from "../utils/error-handler";
 
@@ -19,7 +24,6 @@ export function UserProfileScreen() {
   const router = useRouter();
   const toast = useToast();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-  const [showContactChanged, setShowContactChanged] = useState(false);
   const { data: profile, isLoading, error } = useProfile();
   const { mutateAsync: signOut, isPending: signingOut } = useSignOut();
 
@@ -65,12 +69,20 @@ export function UserProfileScreen() {
         <View style={styles.avatar}>
           <Text style={styles.avatarInitials}>
             {profile.name
-              ? profile.name.split(" ").slice(0, 2).map((w: string) => w[0].toUpperCase()).join("")
+              ? profile.name
+                  .split(" ")
+                  .slice(0, 2)
+                  .map((w: string) => w[0].toUpperCase())
+                  .join("")
               : "?"}
           </Text>
         </View>
         <TouchableOpacity style={styles.editAvatarBtn} activeOpacity={0.8}>
-          <Ionicons name="camera-outline" size={14} color={Colors.text.primary} />
+          <Ionicons
+            name="camera-outline"
+            size={14}
+            color={Colors.text.primary}
+          />
         </TouchableOpacity>
       </View>
 
@@ -79,30 +91,38 @@ export function UserProfileScreen() {
         <InfoRow
           label="Your Name"
           value={profile.name}
-          onPress={() => router.push({ pathname: "/d/edit-user-profile-fields", params: { mode: "name" } })}
+          onPress={() =>
+            router.push({
+              pathname: "/d/edit-user-profile-fields",
+              params: { mode: "name" },
+            })
+          }
         />
         <InfoRow
           label="Bio"
           value={profile.bio || "Add a bio"}
           isLast
-          onPress={() => router.push({ pathname: "/d/edit-user-profile-fields", params: { mode: "bio" } })}
+          onPress={() =>
+            router.push({
+              pathname: "/d/edit-user-profile-fields",
+              params: { mode: "bio" },
+            })
+          }
         />
       </ProfileSummaryCard>
 
       <Text style={styles.sectionLabel}>Account</Text>
       <ProfileSummaryCard style={styles.card}>
-        <InfoRow
-          label="Email"
-          value={profile.email}
-        />
-        <InfoRow
-          label="Phone Number"
-          value={profile.phone || "Add phone number"}
-        />
+        <InfoRow label="Email" value={profile.email} />
         <InfoRow
           label="Change Password"
           showChevron
-          onPress={() => router.push({ pathname: "/d/edit-user-profile-fields", params: { mode: "password" } })}
+          onPress={() =>
+            router.push({
+              pathname: "/d/edit-user-profile-fields",
+              params: { mode: "password" },
+            })
+          }
           isLast
         />
       </ProfileSummaryCard>
@@ -117,13 +137,6 @@ export function UserProfileScreen() {
         cancelLabel="Cancel"
         onConfirm={handleLogout}
         onCancel={() => setShowLogoutConfirm(false)}
-      />
-      <AlertModal
-        visible={showContactChanged}
-        title="Contact Changed"
-        description="Your contact has been changed successfully."
-        actionLabel="OK"
-        onAction={() => setShowContactChanged(false)}
       />
     </ScreenShell>
   );

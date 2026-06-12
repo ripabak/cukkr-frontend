@@ -1,8 +1,8 @@
-import { Colors } from '@/src/theme/colors';
-import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useFrame } from '@/src/components/FrameContext';
+import { Colors } from "@/src/theme/colors";
+import { Ionicons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useFrame } from "@/src/components/FrameContext";
 
 interface DayHourInfo {
   dayOfWeek: number;
@@ -15,14 +15,25 @@ interface Props {
   openHours?: DayHourInfo[];
   disablePast?: boolean;
   highlightDates?: Set<string>;
+  waitingDates?: Set<string>;
   onSelect: (date: Date) => void;
   onClose: () => void;
 }
 
-const DAY_LABELS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+const DAY_LABELS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 const MONTH_NAMES = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 function getDaysInMonth(year: number, month: number) {
@@ -33,17 +44,32 @@ function getFirstDayOfMonth(year: number, month: number) {
   return new Date(year, month, 1).getDay();
 }
 
-export function CalendarModal({ visible, selectedDate, openHours, disablePast = true, highlightDates, onSelect, onClose }: Props) {
+export function CalendarModal({
+  visible,
+  selectedDate,
+  openHours,
+  disablePast = true,
+  highlightDates,
+  waitingDates,
+  onSelect,
+  onClose,
+}: Props) {
   const { frameWidth } = useFrame();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const [viewYear, setViewYear] = useState(selectedDate?.getFullYear() ?? today.getFullYear());
-  const [viewMonth, setViewMonth] = useState(selectedDate?.getMonth() ?? today.getMonth());
+  const [viewYear, setViewYear] = useState(
+    selectedDate?.getFullYear() ?? today.getFullYear(),
+  );
+  const [viewMonth, setViewMonth] = useState(
+    selectedDate?.getMonth() ?? today.getMonth(),
+  );
 
   const closedDaySet = React.useMemo(() => {
     const s = new Set<number>();
-    (openHours ?? []).forEach(d => { if (!d.isOpen) s.add(d.dayOfWeek); });
+    (openHours ?? []).forEach((d) => {
+      if (!d.isOpen) s.add(d.dayOfWeek);
+    });
     return s;
   }, [openHours]);
 
@@ -63,7 +89,7 @@ export function CalendarModal({ visible, selectedDate, openHours, disablePast = 
   }
 
   function toDayKey(day: number): string {
-    return `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    return `${viewYear}-${String(viewMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
   }
 
   function isDayPast(day: number): boolean {
@@ -113,18 +139,41 @@ export function CalendarModal({ visible, selectedDate, openHours, disablePast = 
 
   return (
     <Modal visible={visible} transparent animationType="fade">
-      <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={onClose}>
-        <TouchableOpacity activeOpacity={1} style={[styles.card, { maxWidth: frameWidth - 48 }]}>
+      <TouchableOpacity
+        style={styles.overlay}
+        activeOpacity={1}
+        onPress={onClose}
+      >
+        <TouchableOpacity
+          activeOpacity={1}
+          style={[styles.card, { maxWidth: frameWidth - 48 }]}
+        >
           {/* Month navigation */}
           <View style={styles.monthRow}>
-            <TouchableOpacity onPress={prevMonth} activeOpacity={0.7} style={styles.navBtn}>
-              <Ionicons name="chevron-back" size={18} color={Colors.text.primary} />
+            <TouchableOpacity
+              onPress={prevMonth}
+              activeOpacity={0.7}
+              style={styles.navBtn}
+            >
+              <Ionicons
+                name="chevron-back"
+                size={18}
+                color={Colors.text.primary}
+              />
             </TouchableOpacity>
             <Text style={styles.monthTitle}>
               {MONTH_NAMES[viewMonth]} {viewYear}
             </Text>
-            <TouchableOpacity onPress={nextMonth} activeOpacity={0.7} style={styles.navBtn}>
-              <Ionicons name="chevron-forward" size={18} color={Colors.text.primary} />
+            <TouchableOpacity
+              onPress={nextMonth}
+              activeOpacity={0.7}
+              style={styles.navBtn}
+            >
+              <Ionicons
+                name="chevron-forward"
+                size={18}
+                color={Colors.text.primary}
+              />
             </TouchableOpacity>
           </View>
 
@@ -147,19 +196,27 @@ export function CalendarModal({ visible, selectedDate, openHours, disablePast = 
           {rows.map((row, ri) => (
             <View key={ri} style={styles.week}>
               {row.map((day, di) => {
-                if (day === null) return <View key={di} style={styles.dayCell} />;
+                if (day === null)
+                  return <View key={di} style={styles.dayCell} />;
 
                 const past = isDayPast(day);
                 const closed = isDayClosed(day);
                 const disabled = past || closed;
                 const selected = isSelected(day);
                 const todayMark = isToday(day);
-                const hasRequest = !selected && highlightDates?.has(toDayKey(day));
+                const hasRequest =
+                  !selected && highlightDates?.has(toDayKey(day));
+                const hasWaiting =
+                  !selected && waitingDates?.has(toDayKey(day));
 
                 return (
                   <View key={di} style={styles.dayCell}>
                     <TouchableOpacity
-                      onPress={disabled ? undefined : () => onSelect(new Date(viewYear, viewMonth, day))}
+                      onPress={
+                        disabled
+                          ? undefined
+                          : () => onSelect(new Date(viewYear, viewMonth, day))
+                      }
                       activeOpacity={disabled ? 1 : 0.8}
                       style={[
                         styles.dayBtn,
@@ -178,7 +235,10 @@ export function CalendarModal({ visible, selectedDate, openHours, disablePast = 
                         {day}
                       </Text>
                       {closed && !past && <View style={styles.closedDot} />}
-                      {hasRequest && <View style={styles.requestDot} />}
+                      <View style={styles.dotsRow}>
+                        {hasRequest && <View style={styles.requestDot} />}
+                        {hasWaiting && <View style={styles.waitingDot} />}
+                      </View>
                     </TouchableOpacity>
                   </View>
                 );
@@ -187,7 +247,9 @@ export function CalendarModal({ visible, selectedDate, openHours, disablePast = 
           ))}
 
           {/* Legend */}
-          {(hasOpenHours && closedDaySet.size > 0) || highlightDates?.size ? (
+          {(hasOpenHours && closedDaySet.size > 0) ||
+          highlightDates?.size ||
+          waitingDates?.size ? (
             <View style={styles.legend}>
               {hasOpenHours && closedDaySet.size > 0 && (
                 <>
@@ -197,8 +259,21 @@ export function CalendarModal({ visible, selectedDate, openHours, disablePast = 
               )}
               {highlightDates?.size ? (
                 <>
-                  <View style={styles.legendRequestDot} />
+                  <View
+                    style={[
+                      styles.legendRequestDot,
+                      hasOpenHours && closedDaySet.size > 0
+                        ? undefined
+                        : styles.legendDotFirst,
+                    ]}
+                  />
                   <Text style={styles.legendText}>Has Requests</Text>
+                </>
+              ) : null}
+              {waitingDates?.size ? (
+                <>
+                  <View style={styles.legendWaitingDot} />
+                  <Text style={styles.legendText}>Has Waiting</Text>
                 </>
               ) : null}
             </View>
@@ -212,127 +287,147 @@ export function CalendarModal({ visible, selectedDate, openHours, disablePast = 
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0,0,0,0.2)",
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 24,
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 20,
     padding: 20,
-    width: '100%',
-    alignSelf: 'center',
+    width: "100%",
+    alignSelf: "center",
   },
   monthRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 16,
   },
   navBtn: {
     width: 32,
     height: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   monthTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#1A1A1A',
+    fontWeight: "600",
+    color: "#1A1A1A",
   },
   dayLabelRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 8,
   },
   dayLabel: {
     flex: 1,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 11,
-    fontWeight: '600',
-    color: '#AAAAAA',
+    fontWeight: "600",
+    color: "#AAAAAA",
   },
   dayLabelClosed: {
-    color: '#DDDBCD',
+    color: "#DDDBCD",
   },
   week: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 4,
   },
   dayCell: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     height: 40,
   },
   dayBtn: {
     width: 34,
     height: 34,
     borderRadius: 17,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   dayBtnSelected: {
-    backgroundColor: '#E63030',
+    backgroundColor: "#E63030",
   },
   dayBtnToday: {
     borderWidth: 1.5,
-    borderColor: '#E63030',
+    borderColor: "#E63030",
   },
   dayText: {
     fontSize: 14,
-    color: '#1A1A1A',
+    color: "#1A1A1A",
   },
   dayTextSelected: {
-    color: '#FFFFFF',
-    fontWeight: '700',
+    color: "#FFFFFF",
+    fontWeight: "700",
   },
   dayTextPast: {
-    color: '#D5D3C8',
+    color: "#D5D3C8",
   },
   dayTextClosed: {
-    color: '#C8C5BA',
+    color: "#C8C5BA",
   },
   closedDot: {
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#D0CEC5',
-    position: 'absolute',
+    backgroundColor: "#D0CEC5",
+    position: "absolute",
+    bottom: 2,
+  },
+  dotsRow: {
+    flexDirection: "row",
+    gap: 2,
+    position: "absolute",
     bottom: 2,
   },
   requestDot: {
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#E63030',
-    position: 'absolute',
-    bottom: 2,
+    backgroundColor: "#E63030",
+  },
+  waitingDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: Colors.brand.primary,
   },
   legend: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 6,
     marginTop: 12,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: '#F0EDE5',
+    borderTopColor: "#F0EDE5",
   },
   legendDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#D0CEC5',
+    backgroundColor: "#D0CEC5",
+  },
+  legendDotFirst: {
+    marginLeft: 0,
   },
   legendRequestDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#E63030',
+    backgroundColor: "#E63030",
+    marginLeft: 12,
+  },
+  legendWaitingDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: Colors.brand.primary,
     marginLeft: 12,
   },
   legendText: {
     fontSize: 12,
-    color: '#9E9B90',
+    color: "#9E9B90",
   },
 });

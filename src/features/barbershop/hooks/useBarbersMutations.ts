@@ -18,7 +18,8 @@ export function useInviteBarber() {
 export function useRemoveBarber() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (memberIdOrEmail: string) => barbersService.removeMember(memberIdOrEmail),
+    mutationFn: (memberIdOrEmail: string) =>
+      barbersService.removeMember(memberIdOrEmail),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: BARBERS_QUERY_KEYS.all });
       queryClient.invalidateQueries({ queryKey: SCHEDULE_BARBERS_KEY });
@@ -29,7 +30,8 @@ export function useRemoveBarber() {
 export function useCancelBarberInvitation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (invitationId: string) => barbersService.cancelInvitation(invitationId),
+    mutationFn: (invitationId: string) =>
+      barbersService.cancelInvitation(invitationId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: BARBERS_QUERY_KEYS.all });
     },

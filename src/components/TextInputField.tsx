@@ -1,20 +1,29 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, Text, TextInput, StyleSheet, ViewStyle, KeyboardTypeOptions } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  ViewStyle,
+  KeyboardTypeOptions,
+} from "react-native";
 
 interface Props {
   label?: string;
+  required?: boolean;
   value: string;
   onChangeText: (t: string) => void;
   placeholder?: string;
   keyboardType?: KeyboardTypeOptions;
   secureTextEntry?: boolean;
   style?: ViewStyle;
-  inputStyle?: import('react-native').TextStyle;
+  inputStyle?: import("react-native").TextStyle;
 }
 
 export function TextInputField({
   label,
+  required,
   value,
   onChangeText,
   placeholder,
@@ -25,7 +34,12 @@ export function TextInputField({
 }: Props) {
   return (
     <View style={style}>
-      {label ? <Text style={styles.label}>{label}</Text> : null}
+      {label ? (
+        <Text style={styles.label}>
+          {label}
+          {required ? <Text style={styles.asterisk}> *</Text> : null}
+        </Text>
+      ) : null}
       <View style={styles.inputContainer}>
         <TextInput
           value={value}
@@ -47,6 +61,9 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
     marginBottom: 6,
   },
+  asterisk: {
+    color: Colors.status.danger,
+  },
   inputContainer: {
     backgroundColor: Colors.bg.default,
     borderRadius: 999,
@@ -59,5 +76,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.text.primary,
     padding: 0,
+    flex: 1,
   },
 });

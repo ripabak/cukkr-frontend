@@ -1,7 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { servicesService } from "../services/services.service";
 
-type SortOption = "name_asc" | "name_desc" | "price_asc" | "price_desc" | "recent";
+type SortOption =
+  | "name_asc"
+  | "name_desc"
+  | "price_asc"
+  | "price_desc"
+  | "recent";
 
 export const SERVICES_QUERY_KEYS = {
   all: ["barbershop-services"] as const,
@@ -10,7 +15,10 @@ export const SERVICES_QUERY_KEYS = {
   byId: (id: string) => [...SERVICES_QUERY_KEYS.all, "detail", id] as const,
 };
 
-export function useServicesList(options?: { search?: string; sort?: SortOption }) {
+export function useServicesList(options?: {
+  search?: string;
+  sort?: SortOption;
+}) {
   return useQuery({
     queryKey: SERVICES_QUERY_KEYS.list(options?.search, options?.sort),
     queryFn: () => servicesService.getList(options),

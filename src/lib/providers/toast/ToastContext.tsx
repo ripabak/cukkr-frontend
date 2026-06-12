@@ -14,7 +14,9 @@ export interface ToastContextType {
   clearAll: () => void;
 }
 
-export const ToastContext = createContext<ToastContextType | undefined>(undefined);
+export const ToastContext = createContext<ToastContextType | undefined>(
+  undefined,
+);
 
 export function useToastContext() {
   const context = React.useContext(ToastContext);

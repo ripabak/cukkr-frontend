@@ -1,7 +1,7 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { TouchableOpacity, Text, StyleSheet, ViewStyle } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Props {
   label: string;
@@ -18,15 +18,19 @@ export function OperationRow({ label, onPress, isLast, style }: Props) {
       style={[styles.container, !isLast && styles.borderBottom, style]}
     >
       <Text style={styles.label}>{label}</Text>
-      <Ionicons name="chevron-forward" size={16} color={Colors.text.secondary} />
+      <Ionicons
+        name="chevron-forward"
+        size={16}
+        color={Colors.text.secondary}
+      />
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
@@ -35,7 +39,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.border.light,
   },
   label: {
-    fontWeight: '700',
+    fontWeight: "700",
     fontSize: 14,
     color: Colors.text.primary,
     flex: 1,

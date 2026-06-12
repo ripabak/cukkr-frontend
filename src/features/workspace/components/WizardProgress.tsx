@@ -1,6 +1,6 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { View, StyleSheet, ViewStyle } from "react-native";
 
 interface Props {
   totalSteps: number;
@@ -26,7 +26,7 @@ export function WizardProgress({ totalSteps, currentStep, style }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 8,
   },
   step: {

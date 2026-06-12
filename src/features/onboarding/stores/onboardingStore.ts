@@ -24,6 +24,6 @@ export const useOnboardingStore = create<OnboardingState>()(
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true);
       },
-    }
-  )
+    },
+  ),
 );

@@ -16,10 +16,14 @@ import { getErrorMessage } from "../utils/error-handler";
 export function VerifyOtpScreen() {
   const router = useRouter();
   const toast = useToast();
-  const { email, redirect } = useLocalSearchParams<{ email: string; redirect?: string }>();
+  const { email, redirect } = useLocalSearchParams<{
+    email: string;
+    redirect?: string;
+  }>();
   const [otp, setOtp] = useState("");
   const countdown = useCountdown(300);
-  const { mutateAsync: sendOtp, isPending: resending } = useSendVerificationOtp();
+  const { mutateAsync: sendOtp, isPending: resending } =
+    useSendVerificationOtp();
 
   const handleResend = async () => {
     if (!email) return;

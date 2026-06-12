@@ -15,7 +15,9 @@ export function useUpdateBarbershopSettings() {
       onboardingCompleted?: boolean;
     }) => barbershopService.updateSettings(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: BARBERSHOP_QUERY_KEYS.current() });
+      queryClient.invalidateQueries({
+        queryKey: BARBERSHOP_QUERY_KEYS.current(),
+      });
     },
   });
 }

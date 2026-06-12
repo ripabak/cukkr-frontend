@@ -31,7 +31,7 @@ export function WorkspaceRoute({ children }: WorkspaceRouteProps) {
 
         const oldest = [...orgs].sort(
           (a, b) =>
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
         )[0];
 
         organizationService

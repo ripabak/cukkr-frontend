@@ -1,6 +1,6 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { View, Text, ScrollView, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { View, Text, ScrollView, StyleSheet, ViewStyle } from "react-native";
 
 export interface MessageItem {
   id: string;
@@ -16,7 +16,10 @@ interface Props {
 export function MessageThread({ messages, style }: Props) {
   return (
     <View style={[styles.container, style]}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.list}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.list}
+      >
         {messages.map((msg) => (
           <View key={msg.id} style={styles.messageGroup}>
             <View style={styles.bubble}>
@@ -44,13 +47,13 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   bubble: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     backgroundColor: Colors.brand.primary,
     borderRadius: 12,
     borderBottomLeftRadius: 4,
     paddingHorizontal: 14,
     paddingVertical: 10,
-    maxWidth: '85%',
+    maxWidth: "85%",
   },
   bubbleText: {
     fontSize: 13,
@@ -60,6 +63,6 @@ const styles = StyleSheet.create({
   timestamp: {
     fontSize: 11,
     color: Colors.icon.muted,
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
   },
 });

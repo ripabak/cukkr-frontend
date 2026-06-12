@@ -1,7 +1,17 @@
 export {
-  useAcceptBooking, useCreateBooking, useDeclineBooking,
-  useUpdateBookingStatus
+  useAcceptBooking,
+  useCreateBooking,
+  useDeclineBooking,
+  useUpdateBookingStatus,
 } from "./useBookingsMutations";
-export { BOOKINGS_QUERY_KEYS, useBookingById, useBookingRequestedDates, useBookings, useInProgressBooking } from "./useBookingsQueries";
-export { useScheduleBarbers, useScheduleServices } from "./useScheduleResourcesQueries";
-
+export {
+  BOOKINGS_QUERY_KEYS,
+  useBookingById,
+  useBookingDateMarkers,
+  useBookings,
+  useInProgressBooking,
+} from "./useBookingsQueries";
+export {
+  useScheduleBarbers,
+  useScheduleServices,
+} from "./useScheduleResourcesQueries";

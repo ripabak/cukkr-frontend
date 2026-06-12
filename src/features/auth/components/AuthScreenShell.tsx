@@ -1,7 +1,14 @@
-import type { PropsWithChildren, ReactNode } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import type { PropsWithChildren, ReactNode } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
-import { authTheme } from '../auth-theme';
+import { authTheme } from "../auth-theme";
 
 type AuthScreenShellProps = PropsWithChildren<{
   title: string;
@@ -18,7 +25,7 @@ export function AuthScreenShell({
   return (
     <View style={styles.page}>
       <KeyboardAvoidingView
-        behavior={Platform.select({ ios: 'padding', default: undefined })}
+        behavior={Platform.select({ ios: "padding", default: undefined })}
         style={styles.keyboardAvoidingView}
       >
         <ScrollView
@@ -51,7 +58,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingHorizontal: authTheme.spacing.xl,
     paddingVertical: authTheme.spacing.xl,
   },
@@ -62,7 +69,7 @@ const styles = StyleSheet.create({
   title: {
     color: authTheme.colors.textPrimary,
     fontSize: 34,
-    fontWeight: '800',
+    fontWeight: "800",
   },
   description: {
     color: authTheme.colors.textSecondary,

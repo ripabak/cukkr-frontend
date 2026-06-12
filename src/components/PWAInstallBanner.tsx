@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -6,11 +6,11 @@ import {
   StyleSheet,
   Platform,
   Image,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { AppTheme } from '@/src/app-theme';
-import { usePWAInstall } from '@/src/hooks/usePWAInstall';
-import { IOSInstallModal } from './IOSInstallModal';
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { AppTheme } from "@/src/app-theme";
+import { usePWAInstall } from "@/src/hooks/usePWAInstall";
+import { IOSInstallModal } from "./IOSInstallModal";
 
 export function PWAInstallBanner() {
   const {
@@ -23,7 +23,7 @@ export function PWAInstallBanner() {
     closeIOSModal,
   } = usePWAInstall();
 
-  if (Platform.OS !== 'web' || !showBanner) return null;
+  if (Platform.OS !== "web" || !showBanner) return null;
 
   const handleInstall = () => {
     if (isIOS) {
@@ -39,7 +39,7 @@ export function PWAInstallBanner() {
         <View style={styles.left}>
           <View style={styles.iconWrap}>
             <Image
-              source={require('@/assets/images/icon.png')}
+              source={require("@/assets/images/icon.png")}
               style={styles.icon}
               resizeMode="cover"
             />
@@ -50,10 +50,18 @@ export function PWAInstallBanner() {
           </View>
         </View>
         <View style={styles.right}>
-          <TouchableOpacity style={styles.installBtn} onPress={handleInstall} activeOpacity={0.8}>
+          <TouchableOpacity
+            style={styles.installBtn}
+            onPress={handleInstall}
+            activeOpacity={0.8}
+          >
             <Text style={styles.installBtnText}>Install</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={dismiss} style={styles.closeBtn} hitSlop={8}>
+          <TouchableOpacity
+            onPress={dismiss}
+            style={styles.closeBtn}
+            hitSlop={8}
+          >
             <Ionicons name="close" size={18} color={AppTheme.colors.gray} />
           </TouchableOpacity>
         </View>
@@ -66,19 +74,18 @@ export function PWAInstallBanner() {
 
 const styles = StyleSheet.create({
   banner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#fff',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#fff",
     paddingHorizontal: AppTheme.spacing.lg,
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: AppTheme.colors.border,
-    zIndex: 9999,
   },
   left: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
     flex: 1,
   },
@@ -86,7 +93,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 10,
-    overflow: 'hidden',
+    overflow: "hidden",
     backgroundColor: AppTheme.colors.surface,
   },
   icon: {
@@ -98,7 +105,7 @@ const styles = StyleSheet.create({
   },
   appName: {
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: "700",
     color: AppTheme.colors.dark,
   },
   desc: {
@@ -107,8 +114,8 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   right: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   installBtn: {
@@ -119,8 +126,8 @@ const styles = StyleSheet.create({
   },
   installBtnText: {
     fontSize: 13,
-    fontWeight: '700',
-    color: '#1a1a1a',
+    fontWeight: "700",
+    color: "#1a1a1a",
   },
   closeBtn: {
     padding: 4,

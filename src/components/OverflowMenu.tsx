@@ -1,6 +1,12 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 
 interface MenuItem {
   label: string;
@@ -20,7 +26,11 @@ export function OverflowMenu({ visible, items, onClose, style }: Props) {
 
   return (
     <>
-      <TouchableOpacity style={styles.backdrop} onPress={onClose} activeOpacity={1} />
+      <TouchableOpacity
+        style={styles.backdrop}
+        onPress={onClose}
+        activeOpacity={1}
+      />
       <View style={[styles.menu, style]}>
         {items.map((item, index) => (
           <TouchableOpacity
@@ -32,7 +42,9 @@ export function OverflowMenu({ visible, items, onClose, style }: Props) {
             activeOpacity={0.7}
             style={[styles.item, index < items.length - 1 && styles.itemBorder]}
           >
-            <Text style={[styles.itemText, item.danger && styles.itemTextDanger]}>
+            <Text
+              style={[styles.itemText, item.danger && styles.itemTextDanger]}
+            >
               {item.label}
             </Text>
           </TouchableOpacity>
@@ -44,21 +56,21 @@ export function OverflowMenu({ visible, items, onClose, style }: Props) {
 
 const styles = StyleSheet.create({
   backdrop: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
   },
   menu: {
-    position: 'absolute',
+    position: "absolute",
     top: 56,
     right: 20,
     backgroundColor: Colors.bg.default,
     borderRadius: 12,
     borderWidth: 1,
     borderColor: Colors.border.light,
-    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.08)',
+    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.08)",
     elevation: 8,
     minWidth: 180,
     zIndex: 100,
@@ -73,7 +85,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   itemTextDanger: {

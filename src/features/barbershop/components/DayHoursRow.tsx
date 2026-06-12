@@ -1,13 +1,19 @@
-import { Colors } from '@/src/theme/colors';
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
-import { ToggleSwitch } from '@/src/components/ToggleSwitch';
-import { TimePickerModal } from '@/src/components/TimePickerModal';
+import { Colors } from "@/src/theme/colors";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ViewStyle,
+} from "react-native";
+import { ToggleSwitch } from "@/src/components/ToggleSwitch";
+import { TimePickerModal } from "@/src/components/TimePickerModal";
 
 interface TimeValue {
   hour: number;
   minute: number;
-  amPm: 'AM' | 'PM';
+  amPm: "AM" | "PM";
 }
 
 interface Props {
@@ -54,7 +60,9 @@ export function DayHoursRow({
             style={[styles.timePill, !enabled && styles.timePillDisabled]}
             disabled={!enabled}
           >
-            <Text style={[styles.timeText, !enabled && styles.timeTextDisabled]}>
+            <Text
+              style={[styles.timeText, !enabled && styles.timeTextDisabled]}
+            >
               {formatTime(openTime)}
             </Text>
           </TouchableOpacity>
@@ -65,7 +73,9 @@ export function DayHoursRow({
             style={[styles.timePill, !enabled && styles.timePillDisabled]}
             disabled={!enabled}
           >
-            <Text style={[styles.timeText, !enabled && styles.timeTextDisabled]}>
+            <Text
+              style={[styles.timeText, !enabled && styles.timeTextDisabled]}
+            >
               {formatTime(closeTime)}
             </Text>
           </TouchableOpacity>
@@ -117,24 +127,24 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.border.light,
   },
   row: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 12,
   },
   day: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.text.primary,
     width: 36,
   },
   dayDisabled: {
-    color: '#B0ADA0',
+    color: "#B0ADA0",
   },
   times: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
     gap: 6,
   },
   timePill: {
@@ -143,18 +153,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderWidth: 1,
-    borderColor: '#E0DDD0',
+    borderColor: "#E0DDD0",
   },
   timePillDisabled: {
     opacity: 0.4,
   },
   timeText: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   timeTextDisabled: {
-    color: '#B0ADA0',
+    color: "#B0ADA0",
   },
   dash: {
     fontSize: 14,

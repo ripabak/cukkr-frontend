@@ -1,4 +1,6 @@
-import { Colors } from '@/src/theme/colors';
+import { Permission } from "@/src/components/Permission";
+import { useMemberRole } from "@/src/hooks";
+import { Colors } from "@/src/theme/colors";
 import AppTheme from "@/src/app-theme";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { InfoRow } from "@/src/components/InfoRow";
@@ -34,11 +36,14 @@ function formatPrice(amount: number): string {
 export function ServiceDetailScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { role } = useMemberRole();
+  const canManage = role === "owner" || role === "admin";
   const { serviceId = "" } = useLocalSearchParams<{ serviceId?: string }>();
 
   const { data: service, isLoading } = useServiceById(serviceId);
   const { mutate: toggleActive } = useToggleServiceActive();
-  const { mutate: setDefault, isPending: isSettingDefault } = useSetServiceDefault();
+  const { mutate: setDefault, isPending: isSettingDefault } =
+    useSetServiceDefault();
   const { mutate: deleteService, isPending: isDeleting } = useDeleteService();
 
   const [overflowVisible, setOverflowVisible] = useState(false);
@@ -80,7 +85,11 @@ export function ServiceDetailScreen() {
   if (isLoading) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <ActivityIndicator size="large" color={Colors.brand.primary} style={styles.loader} />
+        <ActivityIndicator
+          size="large"
+          color={Colors.brand.primary}
+          style={styles.loader}
+        />
       </SafeAreaView>
     );
   }
@@ -91,13 +100,19 @@ export function ServiceDetailScreen() {
         <ScreenHeader
           onBack={() => router.back()}
           rightAction={
-            <TouchableOpacity
-              onPress={() => setOverflowVisible(true)}
-              activeOpacity={0.7}
-              style={styles.overflowBtn}
-            >
-              <Ionicons name="ellipsis-horizontal" size={18} color={Colors.text.primary} />
-            </TouchableOpacity>
+            <Permission roles={["owner", "admin"]}>
+              <TouchableOpacity
+                onPress={() => setOverflowVisible(true)}
+                activeOpacity={0.7}
+                style={styles.overflowBtn}
+              >
+                <Ionicons
+                  name="ellipsis-horizontal"
+                  size={18}
+                  color={Colors.text.primary}
+                />
+              </TouchableOpacity>
+            </Permission>
           }
         />
 
@@ -149,25 +164,27 @@ export function ServiceDetailScreen() {
           <Text style={styles.operationalSubtitle}>
             Toggle activation and configure default service settings.
           </Text>
-          <View style={styles.card}>
-            <ToggleRow
-              label="Active"
-              value={service?.isActive ?? false}
-              onValueChange={handleToggleActive}
-            />
-            {service?.isDefault ? (
-              <View style={styles.defaultRow}>
-                <Text style={styles.defaultLabel}>Set As Default</Text>
-                <StatusBadge label="Default" variant="default" />
-              </View>
-            ) : (
-              <OperationRow
-                label="Set As Default"
-                onPress={() => setShowSetDefaultModal(true)}
-                isLast
+          <Permission roles={["owner", "admin"]}>
+            <View style={styles.card}>
+              <ToggleRow
+                label="Active"
+                value={service?.isActive ?? false}
+                onValueChange={handleToggleActive}
               />
-            )}
-          </View>
+              {service?.isDefault ? (
+                <View style={styles.defaultRow}>
+                  <Text style={styles.defaultLabel}>Set As Default</Text>
+                  <StatusBadge label="Default" variant="default" />
+                </View>
+              ) : (
+                <OperationRow
+                  label="Set As Default"
+                  onPress={() => setShowSetDefaultModal(true)}
+                  isLast
+                />
+              )}
+            </View>
+          </Permission>
         </ScrollView>
 
         {overflowVisible && (

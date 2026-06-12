@@ -1,8 +1,8 @@
-import React from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
-import { TextInputField } from '@/src/components/TextInputField';
-import { SelectorInput } from '@/src/features/schedule/components/SelectorInput';
-import { ServiceSelectionCard } from '@/src/features/schedule/components/ServiceSelectionCard';
+import React from "react";
+import { View, StyleSheet, ViewStyle } from "react-native";
+import { TextInputField } from "@/src/components/TextInputField";
+import { SelectorInput } from "@/src/features/schedule/components/SelectorInput";
+import { ServiceSelectionCard } from "@/src/features/schedule/components/ServiceSelectionCard";
 
 interface ServiceItem {
   name: string;
@@ -13,8 +13,9 @@ interface ServiceItem {
 interface Props {
   customerName: string;
   onCustomerNameChange: (v: string) => void;
-  contact: string;
-  onContactChange: (v: string) => void;
+  email: string;
+  onEmailChange: (v: string) => void;
+  emailRequired?: boolean;
   selectedBarber?: string;
   onBarberPress?: () => void;
   selectedDateTime?: string;
@@ -28,8 +29,9 @@ interface Props {
 export function BookingForm({
   customerName,
   onCustomerNameChange,
-  contact,
-  onContactChange,
+  email,
+  onEmailChange,
+  emailRequired = false,
   selectedBarber,
   onBarberPress,
   selectedDateTime,
@@ -43,27 +45,30 @@ export function BookingForm({
     <View style={[styles.container, style]}>
       <TextInputField
         label="Customer Name"
+        required
         value={customerName}
         onChangeText={onCustomerNameChange}
         placeholder="Customer Name"
       />
       <TextInputField
-        label="Email / Phone Number (Opsional)"
-        value={contact}
-        onChangeText={onContactChange}
-        placeholder="email / phone number *"
+        label={`Email${emailRequired ? '' : ' (Optional)'}`}
+        required={emailRequired}
+        value={email}
+        onChangeText={onEmailChange}
+        placeholder="email"
         keyboardType="email-address"
       />
-      <View>
-        <SelectorInput
-          placeholder="Select preffered barber"
-          value={selectedBarber}
-          iconName="person-outline"
-          onPress={onBarberPress}
-        />
-      </View>
+      <SelectorInput
+        label="Barber"
+        placeholder="Select preferred barber"
+        value={selectedBarber}
+        iconName="person-outline"
+        onPress={onBarberPress}
+      />
       {showDateTimeSelector ? (
         <SelectorInput
+          label="Date & Time"
+          required
           placeholder="Select your date and time"
           value={selectedDateTime}
           iconName="calendar-outline"
@@ -71,6 +76,7 @@ export function BookingForm({
         />
       ) : null}
       <ServiceSelectionCard
+        required
         services={services}
         onSelectPress={onServicePress}
       />

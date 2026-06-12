@@ -1,9 +1,15 @@
-import AppTheme from '@/src/app-theme';
-import { AppHeader } from '@/src/components/AppHeader';
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, ViewStyle } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import AppTheme from "@/src/app-theme";
+import { AppHeader } from "@/src/components/AppHeader";
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  ViewStyle,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Props {
   children: React.ReactNode;
@@ -20,7 +26,7 @@ interface Props {
   /** Override SafeAreaView root style — always last */
   style?: ViewStyle;
   /** Safe area edges to apply — default: all */
-  edges?: ('top' | 'bottom' | 'left' | 'right')[];
+  edges?: ("top" | "bottom" | "left" | "right")[];
   /** Hide the global app logo header — default: false */
   hideAppHeader?: boolean;
   /** Wrap scroll content in KeyboardAvoidingView — use for form screens */
@@ -76,11 +82,13 @@ export function ScreenShell({
       {keyboardAvoid ? (
         <KeyboardAvoidingView
           style={styles.keyboardView}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
           {scrollView}
         </KeyboardAvoidingView>
-      ) : scrollView}
+      ) : (
+        scrollView
+      )}
       {footerSlot}
       {overlaySlot}
     </SafeAreaView>

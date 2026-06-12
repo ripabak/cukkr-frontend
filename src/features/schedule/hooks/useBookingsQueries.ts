@@ -13,9 +13,13 @@ type BookingApiStatus =
 export const BOOKINGS_QUERY_KEYS = {
   all: ["schedule-bookings"] as const,
   list: (date: string, status?: BookingApiStatus, barberId?: string) =>
-    [...BOOKINGS_QUERY_KEYS.all, "list", date, status ?? "", barberId ?? ""] as const,
-  requests: (dateFrom: string, dateTo: string) =>
-    [...BOOKINGS_QUERY_KEYS.all, "requests", dateFrom, dateTo] as const,
+    [
+      ...BOOKINGS_QUERY_KEYS.all,
+      "list",
+      date,
+      status ?? "",
+      barberId ?? "",
+    ] as const,
   byId: (id: string) => [...BOOKINGS_QUERY_KEYS.all, "detail", id] as const,
   inProgress: ["schedule-bookings", "in-progress"] as const,
 };
@@ -29,16 +33,20 @@ export function useBookings(
   },
 ) {
   return useQuery({
-    queryKey: BOOKINGS_QUERY_KEYS.list(date, options?.status, options?.barberId),
+    queryKey: BOOKINGS_QUERY_KEYS.list(
+      date,
+      options?.status,
+      options?.barberId,
+    ),
     queryFn: () => bookingsService.getBookings(date, options),
     enabled: !!date,
   });
 }
 
-export function useBookingRequestedDates(dateFrom: string, dateTo: string) {
+export function useBookingDateMarkers(dateFrom: string, dateTo: string) {
   return useQuery({
-    queryKey: BOOKINGS_QUERY_KEYS.requests(dateFrom, dateTo),
-    queryFn: () => bookingsService.getRequestedBookings(dateFrom, dateTo),
+    queryKey: [...BOOKINGS_QUERY_KEYS.all, "date-markers", dateFrom, dateTo] as const,
+    queryFn: () => bookingsService.getDateMarkers(dateFrom, dateTo),
     enabled: !!dateFrom && !!dateTo,
     staleTime: 5 * 60 * 1000,
   });

@@ -1,8 +1,8 @@
-import { Colors } from '@/src/theme/colors';
-import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useFrame } from './FrameContext';
+import { Colors } from "@/src/theme/colors";
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { useFrame } from "./FrameContext";
 
 interface Props {
   visible: boolean;
@@ -34,11 +34,17 @@ export function ConfirmationModal({
         <View style={[styles.card, { width: frameWidth * 0.85 }]}>
           {icon ? (
             <View style={styles.iconWrapper}>
-              <Ionicons name={icon as React.ComponentProps<typeof Ionicons>['name']} size={32} color={Colors.text.primary} />
+              <Ionicons
+                name={icon as React.ComponentProps<typeof Ionicons>["name"]}
+                size={32}
+                color={Colors.text.primary}
+              />
             </View>
           ) : null}
           <Text style={styles.title}>{title}</Text>
-          {description ? <Text style={styles.description}>{description}</Text> : null}
+          {description ? (
+            <Text style={styles.description}>{description}</Text>
+          ) : null}
           <View style={[styles.buttons, hasBoth && styles.buttonsRow]}>
             {cancelLabel ? (
               <TouchableOpacity
@@ -53,7 +59,11 @@ export function ConfirmationModal({
               <TouchableOpacity
                 onPress={onConfirm}
                 activeOpacity={0.8}
-                style={[styles.btn, styles.btnOutline, hasBoth && styles.btnFlex]}
+                style={[
+                  styles.btn,
+                  styles.btnOutline,
+                  hasBoth && styles.btnFlex,
+                ]}
               >
                 <Text style={styles.btnOutlineLabel}>{confirmLabel}</Text>
               </TouchableOpacity>
@@ -69,8 +79,8 @@ const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     backgroundColor: Colors.bg.overlay,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   card: {
     backgroundColor: Colors.bg.default,
@@ -78,19 +88,19 @@ const styles = StyleSheet.create({
     padding: 28,
   },
   iconWrapper: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 16,
   },
   title: {
     fontSize: 20,
-    fontWeight: '700',
-    textAlign: 'center',
+    fontWeight: "700",
+    textAlign: "center",
     color: Colors.text.primary,
   },
   description: {
     fontSize: 14,
     color: Colors.text.secondary,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 8,
   },
   buttons: {
@@ -98,13 +108,13 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   buttonsRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   btn: {
     height: 52,
     borderRadius: 999,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   btnFlex: {
     flex: 1,
@@ -115,7 +125,7 @@ const styles = StyleSheet.create({
   btnDarkLabel: {
     color: Colors.text.primary,
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   btnOutline: {
     borderWidth: 1.5,
@@ -124,6 +134,6 @@ const styles = StyleSheet.create({
   btnOutlineLabel: {
     color: Colors.text.primary,
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });

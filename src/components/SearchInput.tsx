@@ -1,7 +1,7 @@
-import { Colors } from '@/src/theme/colors';
-import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { View, TextInput, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { View, TextInput, StyleSheet, ViewStyle } from "react-native";
 
 interface Props {
   value: string;
@@ -10,7 +10,12 @@ interface Props {
   style?: ViewStyle;
 }
 
-export function SearchInput({ value, onChangeText, placeholder = 'Search', style }: Props) {
+export function SearchInput({
+  value,
+  onChangeText,
+  placeholder = "Search",
+  style,
+}: Props) {
   return (
     <View style={[styles.container, style]}>
       <Ionicons name="search" size={18} color={Colors.icon.muted} />
@@ -27,8 +32,8 @@ export function SearchInput({ value, onChangeText, placeholder = 'Search', style
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
     backgroundColor: Colors.bg.surface,
     borderRadius: 999,

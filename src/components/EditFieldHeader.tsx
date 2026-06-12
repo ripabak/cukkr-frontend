@@ -1,7 +1,13 @@
-import { Colors } from '@/src/theme/colors';
-import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ViewStyle,
+} from "react-native";
 
 interface Props {
   title: string;
@@ -13,11 +19,19 @@ interface Props {
 export function EditFieldHeader({ title, onBack, onSave, style }: Props) {
   return (
     <View style={[styles.container, style]}>
-      <TouchableOpacity onPress={onBack} activeOpacity={0.7} style={styles.backButton}>
+      <TouchableOpacity
+        onPress={onBack}
+        activeOpacity={0.7}
+        style={styles.backButton}
+      >
         <Ionicons name="chevron-back" size={18} color={Colors.text.primary} />
       </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>
-      <TouchableOpacity onPress={onSave} activeOpacity={0.7} style={styles.saveButton}>
+      <TouchableOpacity
+        onPress={onSave}
+        activeOpacity={0.7}
+        style={styles.saveButton}
+      >
         <Ionicons name="checkmark" size={18} color={Colors.text.primary} />
       </TouchableOpacity>
     </View>
@@ -26,8 +40,8 @@ export function EditFieldHeader({ title, onBack, onSave, style }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 12,
   },
@@ -36,14 +50,14 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     backgroundColor: Colors.bg.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
     flex: 1,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 17,
-    fontWeight: '700',
+    fontWeight: "700",
     color: Colors.text.primary,
   },
   saveButton: {
@@ -51,7 +65,7 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     backgroundColor: Colors.brand.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

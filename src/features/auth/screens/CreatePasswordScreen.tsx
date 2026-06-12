@@ -15,7 +15,11 @@ const MIN_PASSWORD_LENGTH = 8;
 export function CreatePasswordScreen() {
   const router = useRouter();
   const toast = useToast();
-  const { email, otp, redirect } = useLocalSearchParams<{ email: string; otp: string; redirect?: string }>();
+  const { email, otp, redirect } = useLocalSearchParams<{
+    email: string;
+    otp: string;
+    redirect?: string;
+  }>();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const { mutateAsync: resetPassword, isPending } = useResetPassword();
@@ -46,13 +50,17 @@ export function CreatePasswordScreen() {
     try {
       await resetPassword({ email, otp, password });
       toast.success("Password reset successfully");
-      router.replace({ pathname: "/d/login", params: redirect ? { redirect } : {} });
+      router.replace({
+        pathname: "/d/login",
+        params: redirect ? { redirect } : {},
+      });
     } catch (error) {
       toast.error(getErrorMessage(error));
     }
   };
 
-  const isFormValid = password && confirmPassword && password === confirmPassword;
+  const isFormValid =
+    password && confirmPassword && password === confirmPassword;
 
   return (
     <AuthScreenShell
@@ -62,7 +70,12 @@ export function CreatePasswordScreen() {
         <AuthFooterPrompt
           prompt="Remember your password?"
           actionLabel="Sign In here"
-          onPress={() => router.replace({ pathname: "/d/login", params: redirect ? { redirect } : {} })}
+          onPress={() =>
+            router.replace({
+              pathname: "/d/login",
+              params: redirect ? { redirect } : {},
+            })
+          }
         />
       }
     >

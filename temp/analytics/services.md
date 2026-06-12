@@ -15,9 +15,9 @@ Authorization: session cookie
 
 ### Query Parameters
 
-| Parameter | Type | Required | Values |
-|-----------|------|----------|--------|
-| `range` | string | Yes | `24h` `week` `month` `6m` `1y` |
+| Parameter | Type   | Required | Values                         |
+| --------- | ------ | -------- | ------------------------------ |
+| `range`   | string | Yes      | `24h` `week` `month` `6m` `1y` |
 
 ### Response
 
@@ -59,11 +59,21 @@ Cookie: <session>
   "data": {
     "range": "week",
     "stats": {
-      "totalBookings": { "current": 10, "previous": 8,      "change": 25,  "direction": "up" },
-      "totalRevenue":  { "current": 750000, "previous": 600000, "change": 25, "direction": "up" }
+      "totalBookings": {
+        "current": 10,
+        "previous": 8,
+        "change": 25,
+        "direction": "up"
+      },
+      "totalRevenue": {
+        "current": 750000,
+        "previous": 600000,
+        "change": 25,
+        "direction": "up"
+      }
     },
     "chart": [
-      { "label": "Hair Cut",   "value": 8 },
+      { "label": "Hair Cut", "value": 8 },
       { "label": "Beard Trim", "value": 5 },
       { "label": "Hair Color", "value": 2 }
     ]
@@ -74,11 +84,11 @@ Cookie: <session>
 
 ### Error Responses
 
-| Status | Condition |
-|--------|-----------|
-| `401` | No active session |
-| `403` | No active organisation |
-| `422` | Invalid `range` value |
+| Status | Condition              |
+| ------ | ---------------------- |
+| `401`  | No active session      |
+| `403`  | No active organisation |
+| `422`  | Invalid `range` value  |
 
 ---
 
@@ -93,11 +103,11 @@ Authorization: session cookie
 
 ### Query Parameters
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `range` | string | Yes | — | `24h` `week` `month` `6m` `1y` |
-| `page` | number | No | `1` | Page number (1-indexed) |
-| `limit` | number | No | `10` | Items per page (max 100) |
+| Parameter | Type   | Required | Default | Description                    |
+| --------- | ------ | -------- | ------- | ------------------------------ |
+| `range`   | string | Yes      | —       | `24h` `week` `month` `6m` `1y` |
+| `page`    | number | No       | `1`     | Page number (1-indexed)        |
+| `limit`   | number | No       | `10`    | Items per page (max 100)       |
 
 ### Response
 
@@ -146,25 +156,25 @@ Cookie: <session>
   "status": 200,
   "data": [
     {
-      "serviceId":     "svc_abc111",
-      "serviceName":   "Hair Cut",
+      "serviceId": "svc_abc111",
+      "serviceName": "Hair Cut",
       "totalBookings": 8,
-      "percentage":    53.3,
-      "revenue":       480000
+      "percentage": 53.3,
+      "revenue": 480000
     },
     {
-      "serviceId":     "svc_def222",
-      "serviceName":   "Beard Trim",
+      "serviceId": "svc_def222",
+      "serviceName": "Beard Trim",
       "totalBookings": 5,
-      "percentage":    33.3,
-      "revenue":       200000
+      "percentage": 33.3,
+      "revenue": 200000
     },
     {
-      "serviceId":     "svc_ghi333",
-      "serviceName":   "Hair Color",
+      "serviceId": "svc_ghi333",
+      "serviceName": "Hair Color",
       "totalBookings": 2,
-      "percentage":    13.3,
-      "revenue":       70000
+      "percentage": 13.3,
+      "revenue": 70000
     }
   ],
   "meta": {
@@ -190,8 +200,8 @@ Cookie: <session>
 
 ### Error Responses
 
-| Status | Condition |
-|--------|-----------|
-| `401` | No active session |
-| `403` | No active organisation |
-| `422` | Invalid `range` value |
+| Status | Condition              |
+| ------ | ---------------------- |
+| `401`  | No active session      |
+| `403`  | No active organisation |
+| `422`  | Invalid `range` value  |

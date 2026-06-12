@@ -6,20 +6,25 @@ import { Platform } from "react-native";
 
 // Lazy proxy so localStorage is only accessed after hydration, not during SSR
 const webStorage = {
-    getItem: (key: string) => (typeof localStorage !== "undefined" ? localStorage.getItem(key) : null),
-    setItem: (key: string, value: string) => { if (typeof localStorage !== "undefined") localStorage.setItem(key, value); },
-    removeItem: (key: string) => { if (typeof localStorage !== "undefined") localStorage.removeItem(key); },
+  getItem: (key: string) =>
+    typeof localStorage !== "undefined" ? localStorage.getItem(key) : null,
+  setItem: (key: string, value: string) => {
+    if (typeof localStorage !== "undefined") localStorage.setItem(key, value);
+  },
+  removeItem: (key: string) => {
+    if (typeof localStorage !== "undefined") localStorage.removeItem(key);
+  },
 };
 
 export const authClient = createAuthClient({
-    baseURL: process.env.EXPO_PUBLIC_ENV_AUTH_URL,
-    plugins: [
-        expoClient({
-            scheme: "cukkrfrontend",
-            storagePrefix: "cukkrfrontend",
-            storage: (Platform.OS === "web" ? webStorage : SecureStore),
-        }),
-        emailOTPClient(),
-        organizationClient()
-    ]
+  baseURL: process.env.EXPO_PUBLIC_ENV_AUTH_URL,
+  plugins: [
+    expoClient({
+      scheme: "cukkrfrontend",
+      storagePrefix: "cukkrfrontend",
+      storage: Platform.OS === "web" ? webStorage : SecureStore,
+    }),
+    emailOTPClient(),
+    organizationClient(),
+  ],
 });

@@ -15,9 +15,9 @@ Authorization: session cookie
 
 ### Query Parameters
 
-| Parameter | Type | Required | Values |
-|-----------|------|----------|--------|
-| `range` | string | Yes | `24h` `week` `month` `6m` `1y` |
+| Parameter | Type   | Required | Values                         |
+| --------- | ------ | -------- | ------------------------------ |
+| `range`   | string | Yes      | `24h` `week` `month` `6m` `1y` |
 
 ### Response
 
@@ -37,9 +37,9 @@ Authorization: session cookie
 
 #### New vs Return definition
 
-| Status | Definition |
-|--------|-----------|
-| **New** | Customer has **no** completed booking in the org before `currentStart` of this period |
+| Status     | Definition                                                                                      |
+| ---------- | ----------------------------------------------------------------------------------------------- |
+| **New**    | Customer has **no** completed booking in the org before `currentStart` of this period           |
 | **Return** | Customer has **at least one** completed booking in the org before `currentStart` of this period |
 
 The previous-period StatCard for `totalNew`/`totalReturn` applies the same logic relative to the **previous** period's start, enabling trend comparison.
@@ -61,11 +61,36 @@ Cookie: <session>
   "data": {
     "range": "week",
     "stats": {
-      "totalCustomers":  { "current": 8,  "previous": 6,  "change": 33.3, "direction": "up" },
-      "totalWalkIn":     { "current": 5,  "previous": 4,  "change": 25,   "direction": "up" },
-      "totalAppointment":{ "current": 3,  "previous": 2,  "change": 50,   "direction": "up" },
-      "totalNew":        { "current": 3,  "previous": 2,  "change": 50,   "direction": "up" },
-      "totalReturn":     { "current": 5,  "previous": 4,  "change": 25,   "direction": "up" }
+      "totalCustomers": {
+        "current": 8,
+        "previous": 6,
+        "change": 33.3,
+        "direction": "up"
+      },
+      "totalWalkIn": {
+        "current": 5,
+        "previous": 4,
+        "change": 25,
+        "direction": "up"
+      },
+      "totalAppointment": {
+        "current": 3,
+        "previous": 2,
+        "change": 50,
+        "direction": "up"
+      },
+      "totalNew": {
+        "current": 3,
+        "previous": 2,
+        "change": 50,
+        "direction": "up"
+      },
+      "totalReturn": {
+        "current": 5,
+        "previous": 4,
+        "change": 25,
+        "direction": "up"
+      }
     },
     "chart": [
       { "label": "Mon", "value": 2 },
@@ -83,11 +108,11 @@ Cookie: <session>
 
 ### Error Responses
 
-| Status | Condition |
-|--------|-----------|
-| `401` | No active session |
-| `403` | No active organisation |
-| `422` | Invalid `range` value |
+| Status | Condition              |
+| ------ | ---------------------- |
+| `401`  | No active session      |
+| `403`  | No active organisation |
+| `422`  | Invalid `range` value  |
 
 ---
 
@@ -102,19 +127,19 @@ Authorization: session cookie
 
 ### Query Parameters
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `range` | string | Yes | — | `24h` `week` `month` `6m` `1y` |
-| `status` | string | No | `all` | `all` `new` `return` |
-| `page` | number | No | `1` | Page number (1-indexed) |
-| `limit` | number | No | `10` | Items per page (max 100) |
+| Parameter | Type   | Required | Default | Description                    |
+| --------- | ------ | -------- | ------- | ------------------------------ |
+| `range`   | string | Yes      | —       | `24h` `week` `month` `6m` `1y` |
+| `status`  | string | No       | `all`   | `all` `new` `return`           |
+| `page`    | number | No       | `1`     | Page number (1-indexed)        |
+| `limit`   | number | No       | `10`    | Items per page (max 100)       |
 
 #### Status filter
 
-| Value | Shows |
-|-------|-------|
-| `all` | All customers active in the period |
-| `new` | Only customers with no bookings before the period |
+| Value    | Shows                                             |
+| -------- | ------------------------------------------------- |
+| `all`    | All customers active in the period                |
+| `new`    | Only customers with no bookings before the period |
 | `return` | Only customers with at least one previous booking |
 
 ### Response
@@ -157,19 +182,19 @@ Cookie: <session>
   "status": 200,
   "data": [
     {
-      "customerId":   "cust_abc",
+      "customerId": "cust_abc",
       "customerName": "Budi Santoso",
-      "totalVisits":  3,
+      "totalVisits": 3,
       "lastVisitDate": "2026-05-13T10:30:00.000Z",
-      "status":       "return",
+      "status": "return",
       "totalRevenue": 240000
     },
     {
-      "customerId":   "cust_def",
+      "customerId": "cust_def",
       "customerName": "Andi Wijaya",
-      "totalVisits":  1,
+      "totalVisits": 1,
       "lastVisitDate": "2026-05-11T09:00:00.000Z",
-      "status":       "return",
+      "status": "return",
       "totalRevenue": 80000
     }
   ],
@@ -195,8 +220,8 @@ Cookie: <session>
 
 ### Error Responses
 
-| Status | Condition |
-|--------|-----------|
-| `401` | No active session |
-| `403` | No active organisation |
-| `422` | Invalid `range` or `status` value |
+| Status | Condition                         |
+| ------ | --------------------------------- |
+| `401`  | No active session                 |
+| `403`  | No active organisation            |
+| `422`  | Invalid `range` or `status` value |

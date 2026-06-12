@@ -13,11 +13,15 @@ import { getErrorMessage } from "../utils/error-handler";
 export function VerifyAccountScreen() {
   const router = useRouter();
   const toast = useToast();
-  const { email, redirect } = useLocalSearchParams<{ email: string; redirect?: string }>();
+  const { email, redirect } = useLocalSearchParams<{
+    email: string;
+    redirect?: string;
+  }>();
   const [otp, setOtp] = useState("");
   const countdown = useCountdown(300);
   const { mutateAsync: verifyEmail, isPending: verifying } = useVerifyEmail();
-  const { mutateAsync: sendOtp, isPending: resending } = useSendVerificationOtp();
+  const { mutateAsync: sendOtp, isPending: resending } =
+    useSendVerificationOtp();
 
   const handleVerify = async () => {
     if (!otp) return;

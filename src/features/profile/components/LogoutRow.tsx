@@ -1,7 +1,7 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { TouchableOpacity, Text, StyleSheet, ViewStyle } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Props {
   onPress?: () => void;
@@ -25,15 +25,15 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.bg.default,
     borderRadius: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 18,
   },
   label: {
     flex: 1,
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: "600",
     color: Colors.text.primary,
   },
 });

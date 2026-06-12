@@ -1,4 +1,4 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
@@ -43,7 +43,12 @@ function toHour24(h: number, amPm: "AM" | "PM"): number {
   return h === 12 ? 12 : h + 12;
 }
 
-function getValidHours(amPm: "AM" | "PM", minutes: number[], min?: TimePoint, max?: TimePoint): number[] {
+function getValidHours(
+  amPm: "AM" | "PM",
+  minutes: number[],
+  min?: TimePoint,
+  max?: TimePoint,
+): number[] {
   if (!min || !max) return HOURS;
   const minTotal = min.hour24 * 60 + min.minute;
   const maxTotal = max.hour24 * 60 + max.minute;
@@ -151,7 +156,7 @@ function ScrollPicker({
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <View style={[pickerStyles.selectionBar, {pointerEvents: "none"}]} />
+      <View style={[pickerStyles.selectionBar, { pointerEvents: "none" }]} />
     </View>
   );
 }
@@ -201,20 +206,34 @@ export function TimePickerModal({
   onClose,
   style,
 }: Props) {
-  const MINUTES = minuteStep > 1
-    ? Array.from({ length: Math.ceil(60 / minuteStep) }, (_, i) => i * minuteStep)
-    : Array.from({ length: 60 }, (_, i) => i);
+  const MINUTES =
+    minuteStep > 1
+      ? Array.from(
+          { length: Math.ceil(60 / minuteStep) },
+          (_, i) => i * minuteStep,
+        )
+      : Array.from({ length: 60 }, (_, i) => i);
 
   function computeInitialState() {
     const amPmIdx = initialAmPm === "PM" ? 1 : 0;
     const validHours = getValidHours(initialAmPm, MINUTES, minTime, maxTime);
     const hourIdx = Math.max(0, validHours.indexOf(initialHour));
     const hour = validHours[hourIdx] ?? validHours[0] ?? HOURS[0];
-    const validMins = getValidMinutes(hour, initialAmPm, MINUTES, minTime, maxTime);
-    const closestMin = validMins.length > 0
-      ? validMins.reduce((prev, curr) =>
-          Math.abs(curr - initialMinute) < Math.abs(prev - initialMinute) ? curr : prev)
-      : 0;
+    const validMins = getValidMinutes(
+      hour,
+      initialAmPm,
+      MINUTES,
+      minTime,
+      maxTime,
+    );
+    const closestMin =
+      validMins.length > 0
+        ? validMins.reduce((prev, curr) =>
+            Math.abs(curr - initialMinute) < Math.abs(prev - initialMinute)
+              ? curr
+              : prev,
+          )
+        : 0;
     const minIdx = Math.max(0, validMins.indexOf(closestMin));
     return { amPmIdx, hourIdx, minIdx };
   }
@@ -231,20 +250,33 @@ export function TimePickerModal({
       setHourIndex(next.hourIdx);
       setMinuteIndex(next.minIdx);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, minTime, maxTime]);
 
   const currentAmPm = AM_PM[amPmIndex];
   const validHours = getValidHours(currentAmPm, MINUTES, minTime, maxTime);
-  const currentHour = validHours[Math.min(hourIndex, validHours.length - 1)] ?? validHours[0];
-  const validMinutes = getValidMinutes(currentHour, currentAmPm, MINUTES, minTime, maxTime);
+  const currentHour =
+    validHours[Math.min(hourIndex, validHours.length - 1)] ?? validHours[0];
+  const validMinutes = getValidMinutes(
+    currentHour,
+    currentAmPm,
+    MINUTES,
+    minTime,
+    maxTime,
+  );
 
   function handleAmPmChange(idx: number) {
     const newAmPm = AM_PM[idx];
     const newValidHours = getValidHours(newAmPm, MINUTES, minTime, maxTime);
     const newHourIdx = Math.min(hourIndex, newValidHours.length - 1);
     const newHour = newValidHours[newHourIdx] ?? newValidHours[0];
-    const newValidMins = getValidMinutes(newHour, newAmPm, MINUTES, minTime, maxTime);
+    const newValidMins = getValidMinutes(
+      newHour,
+      newAmPm,
+      MINUTES,
+      minTime,
+      maxTime,
+    );
     const newMinIdx = Math.min(minuteIndex, newValidMins.length - 1);
     setAmPmIndex(idx);
     setHourIndex(newHourIdx);
@@ -254,7 +286,13 @@ export function TimePickerModal({
   function handleHourChange(idx: number) {
     const newHour = validHours[idx];
     if (newHour !== undefined) {
-      const newValidMins = getValidMinutes(newHour, currentAmPm, MINUTES, minTime, maxTime);
+      const newValidMins = getValidMinutes(
+        newHour,
+        currentAmPm,
+        MINUTES,
+        minTime,
+        maxTime,
+      );
       setMinuteIndex(Math.min(minuteIndex, newValidMins.length - 1));
     }
     setHourIndex(idx);
@@ -274,7 +312,10 @@ export function TimePickerModal({
         activeOpacity={1}
         onPress={onClose}
       >
-        <TouchableOpacity activeOpacity={1} style={[styles.container, { maxWidth: frameWidth - 48 }, style]}>
+        <TouchableOpacity
+          activeOpacity={1}
+          style={[styles.container, { maxWidth: frameWidth - 48 }, style]}
+        >
           {/* Header */}
           <View style={styles.header}>
             <Text style={styles.title}>Select Time</Text>

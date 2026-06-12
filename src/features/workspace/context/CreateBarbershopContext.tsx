@@ -9,7 +9,7 @@ export interface CreateBarbershopFormData {
   servicePrice: number;
   serviceDuration: number;
   serviceId?: string;
-  barberInvites: { email?: string; phone?: string }[];
+  barberInvites: { email?: string }[];
 }
 
 interface CreateBarbershopContextType {
@@ -28,7 +28,7 @@ export function CreateBarbershopProvider({
   children: React.ReactNode;
 }) {
   const [formData, setFormData] = useState<Partial<CreateBarbershopFormData>>(
-    {}
+    {},
   );
 
   const updateFormData = (data: Partial<CreateBarbershopFormData>) => {
@@ -50,7 +50,7 @@ export function useCreateBarbershopForm() {
   const context = useContext(CreateBarbershopContext);
   if (!context) {
     throw new Error(
-      "useCreateBarbershopForm must be used within CreateBarbershopProvider"
+      "useCreateBarbershopForm must be used within CreateBarbershopProvider",
     );
   }
   return context;

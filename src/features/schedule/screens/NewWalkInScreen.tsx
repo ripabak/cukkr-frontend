@@ -1,4 +1,4 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { BookingForm } from "@/src/features/schedule/components/BookingForm";
@@ -21,6 +21,10 @@ export function NewWalkInScreen() {
   const { mutate: createBooking, isPending } = useCreateBooking();
 
   const [bookingType, setBookingType] = useState<BookingType>("walkin");
+
+  const isValid =
+    formData.customerName.trim().length > 0 &&
+    formData.serviceIds.length > 0;
 
   function handleBookingTypeChange(type: BookingType) {
     setBookingType(type);
@@ -45,7 +49,7 @@ export function NewWalkInScreen() {
         customerName: formData.customerName,
         serviceIds: formData.serviceIds,
         barberId: formData.barberId ?? undefined,
-        customerPhone: formData.contact || null,
+        customerEmail: formData.email || null,
         notes: formData.notes || null,
       },
       {
@@ -69,7 +73,10 @@ export function NewWalkInScreen() {
           title="New Walk-In"
           onBack={() => router.back()}
           rightAction={
-            <BookingTypeToggle value={bookingType} onChange={handleBookingTypeChange} />
+            <BookingTypeToggle
+              value={bookingType}
+              onChange={handleBookingTypeChange}
+            />
           }
         />
       }
@@ -78,7 +85,7 @@ export function NewWalkInScreen() {
           <PrimaryButton
             label="New Walk-In"
             onPress={handleSubmit}
-            disabled={isPending}
+            disabled={isPending || !isValid}
           />
         </View>
       }
@@ -88,8 +95,8 @@ export function NewWalkInScreen() {
       <BookingForm
         customerName={formData.customerName}
         onCustomerNameChange={(v) => updateFormData({ customerName: v })}
-        contact={formData.contact}
-        onContactChange={(v) => updateFormData({ contact: v })}
+        email={formData.email}
+        onEmailChange={(v) => updateFormData({ email: v })}
         selectedBarber={formData.barberName ?? undefined}
         onBarberPress={() => router.push("/d/select-barber")}
         showDateTimeSelector={false}

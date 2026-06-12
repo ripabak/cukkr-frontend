@@ -4,7 +4,10 @@ type OtpType = "email-verification" | "forget-password";
 
 export const otpService = {
   async sendVerificationOtp(email: string, type: OtpType) {
-    const { data, error } = await authClient.emailOtp.sendVerificationOtp({ email, type });
+    const { data, error } = await authClient.emailOtp.sendVerificationOtp({
+      email,
+      type,
+    });
 
     if (error) {
       throw new Error(error.message || "Failed to send OTP");
@@ -14,7 +17,10 @@ export const otpService = {
   },
 
   async verifyEmail(email: string, otp: string) {
-    const { data, error } = await authClient.emailOtp.verifyEmail({ email, otp });
+    const { data, error } = await authClient.emailOtp.verifyEmail({
+      email,
+      otp,
+    });
 
     if (error) {
       throw new Error(error.message || "Failed to verify email");
@@ -24,7 +30,11 @@ export const otpService = {
   },
 
   async resetPassword(email: string, otp: string, password: string) {
-    const { data, error } = await authClient.emailOtp.resetPassword({ email, otp, password });
+    const { data, error } = await authClient.emailOtp.resetPassword({
+      email,
+      otp,
+      password,
+    });
 
     if (error) {
       throw new Error(error.message || "Failed to reset password");

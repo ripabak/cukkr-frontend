@@ -1,4 +1,4 @@
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { InviteRow } from "@/src/features/workspace/components/InviteRow";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
@@ -7,7 +7,7 @@ import { TextInputField } from "@/src/components/TextInputField";
 import { WizardProgress } from "@/src/features/workspace/components/WizardProgress";
 import { useInviteBarber } from "../hooks";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
-import { validateEmail, validatePhoneNumber } from "../utils/form-validators";
+import { validateEmail } from "../utils/form-validators";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Alert } from "react-native";
@@ -20,7 +20,9 @@ export function CreateBarbershopInviteBarberFilledScreen() {
 
   const invitedBarbers = formData.barberInvites || [];
 
-  const parseBarberInput = (input: string): { email?: string; phone?: string } | null => {
+  const parseBarberInput = (
+    input: string,
+  ): { email?: string } | null => {
     const trimmed = input.trim();
 
     if (trimmed.includes("@")) {
@@ -31,11 +33,6 @@ export function CreateBarbershopInviteBarberFilledScreen() {
       return null;
     }
 
-    const phoneValidation = validatePhoneNumber(trimmed);
-    if (phoneValidation.isValid) {
-      return { phone: trimmed };
-    }
-
     return null;
   };
 
@@ -44,14 +41,13 @@ export function CreateBarbershopInviteBarberFilledScreen() {
     if (!parsed) {
       Alert.alert(
         "Invalid Input",
-        "Please enter a valid email or phone number"
+        "Please enter a valid email address",
       );
       return;
     }
 
     const isDuplicate = invitedBarbers.some(
-      (invite) =>
-        invite.email === parsed.email || invite.phone === parsed.phone
+      (invite) => invite.email === parsed.email,
     );
 
     if (isDuplicate) {
@@ -59,26 +55,26 @@ export function CreateBarbershopInviteBarberFilledScreen() {
       return;
     }
 
-    inviteBarber({ email: parsed.email || parsed.phone || "" }, {
-      onSuccess: () => {
-        const newInvites = [...invitedBarbers, parsed];
-        updateFormData({ barberInvites: newInvites });
-        setBarber("");
+    inviteBarber(
+      { email: parsed.email! },
+      {
+        onSuccess: () => {
+          const newInvites = [...invitedBarbers, parsed];
+          updateFormData({ barberInvites: newInvites });
+          setBarber("");
+        },
+        onError: (error) => {
+          Alert.alert("Error", error.message || "Failed to invite barber");
+        },
       },
-      onError: (error) => {
-        Alert.alert(
-          "Error",
-          error.message || "Failed to invite barber"
-        );
-      },
-    });
+    );
   };
 
-  const handleRemoveBarber = (email?: string, phone?: string) => {
-    if (!email && !phone) return;
+  const handleRemoveBarber = (email?: string) => {
+    if (!email) return;
 
     const newInvites = invitedBarbers.filter(
-      (invite) => invite.email !== email && invite.phone !== phone
+      (invite) => invite.email !== email,
     );
     updateFormData({ barberInvites: newInvites });
   };
@@ -99,9 +95,9 @@ export function CreateBarbershopInviteBarberFilledScreen() {
           {invitedBarbers.map((barberInvite, index) => (
             <InviteRow
               key={index}
-              email={barberInvite.email || barberInvite.phone || ""}
+              email={barberInvite.email || ""}
               onRemove={() =>
-                handleRemoveBarber(barberInvite.email, barberInvite.phone)
+                handleRemoveBarber(barberInvite.email)
               }
               style={index > 0 ? styles.inviteRowTop : undefined}
             />
@@ -111,7 +107,7 @@ export function CreateBarbershopInviteBarberFilledScreen() {
 
       <TextInputField
         label="Add More Barbers"
-        placeholder="email / phone number"
+        placeholder="email"
         value={barber}
         onChangeText={setBarber}
         style={invitedBarbers.length > 0 ? styles.inputTop : undefined}
@@ -124,10 +120,7 @@ export function CreateBarbershopInviteBarberFilledScreen() {
       />
 
       <View style={styles.flex} />
-      <PrimaryButton
-        label="Finish Setup"
-        onPress={handleContinue}
-      />
+      <PrimaryButton label="Finish Setup" onPress={handleContinue} />
     </ScreenShell>
   );
 }

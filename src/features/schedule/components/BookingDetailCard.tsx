@@ -1,12 +1,25 @@
-import { Colors } from '@/src/theme/colors';
-import { BookingType } from '@/src/components/BookingCard';
-import { InfoRow } from '@/src/components/InfoRow';
-import { StatusBadge } from '@/src/components/StatusBadge';
-import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import { BookingType } from "@/src/components/BookingCard";
+import { InfoRow } from "@/src/components/InfoRow";
+import { StatusBadge } from "@/src/components/StatusBadge";
+import { Ionicons } from "@expo/vector-icons";
+import React from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 
-export type BookingDetailStatus = 'waiting' | 'in_progress' | 'completed' | 'cancelled' | 'requested' | 'declined';
+export type BookingDetailStatus =
+  | "waiting"
+  | "in_progress"
+  | "completed"
+  | "cancelled"
+  | "requested"
+  | "declined";
 
 interface ServiceLine {
   name: string;
@@ -22,7 +35,7 @@ interface InfoLine {
 interface Props {
   customerName: string;
   dateLabel: string;
-  metaIcon?: 'people' | 'calendar';
+  metaIcon?: "people" | "calendar";
   bookingType?: BookingType;
   metaLine1: string;
   metaLine2?: string;
@@ -31,33 +44,33 @@ interface Props {
   services?: ServiceLine[];
   notes?: string;
   paymentSummary?: { label: string; value: string }[];
-  onWhatsApp?: () => void;
   style?: ViewStyle;
   children?: React.ReactNode;
+  onCustomerPress?: () => void;
 }
 
 const STATUS_TO_BADGE: Record<BookingDetailStatus, string> = {
-  waiting: 'waiting',
-  'in_progress': 'in_progress',
-  completed: 'completed',
-  cancelled: 'cancelled',
-  requested: 'requested',
-  declined: 'declined',
+  waiting: "waiting",
+  in_progress: "in_progress",
+  completed: "completed",
+  cancelled: "cancelled",
+  requested: "requested",
+  declined: "declined",
 };
 
 const STATUS_LABEL: Record<BookingDetailStatus, string> = {
-  waiting: 'Waiting',
-  'in_progress': 'In Progress',
-  completed: 'Completed',
-  cancelled: 'Cancelled',
-  requested: 'Requested',
-  declined: 'Declined',
+  waiting: "Waiting",
+  in_progress: "In Progress",
+  completed: "Completed",
+  cancelled: "Cancelled",
+  requested: "Requested",
+  declined: "Declined",
 };
 
 export function BookingDetailCard({
   customerName,
   dateLabel,
-  metaIcon = 'calendar',
+  metaIcon = "calendar",
   bookingType,
   metaLine1,
   metaLine2,
@@ -66,13 +79,17 @@ export function BookingDetailCard({
   services = [],
   notes,
   paymentSummary = [],
-  onWhatsApp,
   style,
   children,
+  onCustomerPress,
 }: Props) {
   const resolvedMetaIcon = bookingType
-    ? (bookingType === 'walk_in' ? 'walk' : 'calendar')
-    : (metaIcon === 'people' ? 'people' : 'calendar');
+    ? bookingType === "walk_in"
+      ? "walk"
+      : "calendar"
+    : metaIcon === "people"
+      ? "people"
+      : "calendar";
   return (
     <ScrollView
       style={[styles.scroll, style]}
@@ -82,13 +99,34 @@ export function BookingDetailCard({
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <Text style={styles.customerName}>{customerName}</Text>
+          {onCustomerPress ? (
+            <TouchableOpacity
+              style={styles.customerNameRow}
+              onPress={onCustomerPress}
+              activeOpacity={0.6}
+            >
+              <Text style={styles.customerNameLink}>{customerName}</Text>
+              <Ionicons
+                name="chevron-forward"
+                size={18}
+                color={Colors.brand.primary}
+              />
+            </TouchableOpacity>
+          ) : (
+            <Text style={styles.customerName}>{customerName}</Text>
+          )}
           <Text style={styles.dateLabel}>{dateLabel}</Text>
           <View style={styles.metaRow}>
-            <Ionicons name={resolvedMetaIcon as any} size={14} color={Colors.text.secondary} />
+            <Ionicons
+              name={resolvedMetaIcon as any}
+              size={14}
+              color={Colors.text.secondary}
+            />
             <View style={styles.metaText}>
               <Text style={styles.metaLine}>{metaLine1}</Text>
-              {metaLine2 ? <Text style={styles.metaLine}>{metaLine2}</Text> : null}
+              {metaLine2 ? (
+                <Text style={styles.metaLine}>{metaLine2}</Text>
+              ) : null}
             </View>
           </View>
           <StatusBadge
@@ -97,11 +135,6 @@ export function BookingDetailCard({
             style={styles.badge}
           />
         </View>
-        {onWhatsApp ? (
-          <TouchableOpacity onPress={onWhatsApp} activeOpacity={0.7} style={styles.whatsappBtn}>
-            <Ionicons name="logo-whatsapp" size={22} color="#AAAAAA" />
-          </TouchableOpacity>
-        ) : null}
       </View>
 
       {/* Info rows */}
@@ -167,9 +200,9 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     paddingTop: 8,
     paddingBottom: 4,
   },
@@ -178,18 +211,29 @@ const styles = StyleSheet.create({
   },
   customerName: {
     fontSize: 28,
-    fontWeight: '700',
-    color: '#1A1A1A',
+    fontWeight: "700",
+    color: "#1A1A1A",
     marginBottom: 2,
+  },
+  customerNameRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    marginBottom: 2,
+  },
+  customerNameLink: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: Colors.brand.primaryDark,
   },
   dateLabel: {
     fontSize: 14,
-    color: '#666666',
+    color: "#666666",
     marginBottom: 8,
   },
   metaRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    alignItems: "flex-start",
     gap: 6,
     marginBottom: 8,
   },
@@ -198,68 +242,66 @@ const styles = StyleSheet.create({
   },
   metaLine: {
     fontSize: 13,
-    color: '#444444',
+    color: "#444444",
     lineHeight: 18,
   },
   badge: {
     marginTop: 4,
   },
-  whatsappBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F0F0E8',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 4,
-  },
   section: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 16,
     padding: 16,
   },
   sectionTitle: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#1A1A1A',
+    fontWeight: "600",
+    color: "#1A1A1A",
     marginBottom: 10,
   },
   serviceLine: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 6,
   },
   serviceLabel: {
     fontSize: 14,
-    color: '#444444',
+    color: "#444444",
+    flex: 1,
+    flexShrink: 1,
   },
   servicePrice: {
     fontSize: 14,
-    color: '#1A1A1A',
-    fontWeight: '500',
+    color: "#1A1A1A",
+    fontWeight: "500",
+    marginLeft: 12,
+    flexShrink: 0,
   },
   divider: {
     height: 1,
-    backgroundColor: '#E8E5D8',
+    backgroundColor: "#E8E5D8",
     marginVertical: 12,
   },
   notes: {
     fontSize: 13,
-    color: '#666666',
+    color: "#666666",
     lineHeight: 18,
   },
   paymentLine: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 6,
   },
   paymentLabel: {
     fontSize: 14,
-    color: '#666666',
+    color: "#666666",
+    flex: 1,
+    flexShrink: 1,
   },
   paymentValue: {
     fontSize: 14,
-    color: '#1A1A1A',
-    fontWeight: '500',
+    color: "#1A1A1A",
+    fontWeight: "500",
+    marginLeft: 12,
   },
 });

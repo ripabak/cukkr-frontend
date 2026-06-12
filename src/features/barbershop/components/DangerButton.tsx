@@ -1,6 +1,6 @@
-import { Colors } from '@/src/theme/colors';
-import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { Colors } from "@/src/theme/colors";
+import React from "react";
+import { TouchableOpacity, Text, StyleSheet, ViewStyle } from "react-native";
 
 interface Props {
   label: string;
@@ -10,7 +10,11 @@ interface Props {
 
 export function DangerButton({ label, onPress, style }: Props) {
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={[styles.button, style]}>
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.8}
+      style={[styles.button, style]}
+    >
       <Text style={styles.label}>{label}</Text>
     </TouchableOpacity>
   );
@@ -18,15 +22,15 @@ export function DangerButton({ label, onPress, style }: Props) {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#FFE4E4',
+    backgroundColor: "#FFE4E4",
     borderRadius: 12,
     paddingVertical: 14,
-    width: '100%',
+    width: "100%",
   },
   label: {
     fontSize: 15,
-    fontWeight: '600',
-    color: '#E53E3E',
-    textAlign: 'center',
+    fontWeight: "600",
+    color: "#E53E3E",
+    textAlign: "center",
   },
 });

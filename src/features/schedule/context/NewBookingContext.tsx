@@ -9,7 +9,7 @@ export interface SelectedService {
 
 export interface NewBookingFormData {
   customerName: string;
-  contact: string;
+  email: string;
   notes: string;
   barberId: string | null;
   barberName: string | null;
@@ -28,7 +28,7 @@ interface NewBookingContextType {
 
 const defaultFormData: NewBookingFormData = {
   customerName: "",
-  contact: "",
+  email: "",
   notes: "",
   barberId: null,
   barberName: null,
@@ -37,9 +37,15 @@ const defaultFormData: NewBookingFormData = {
   scheduledAt: null,
 };
 
-const NewBookingContext = createContext<NewBookingContextType | undefined>(undefined);
+const NewBookingContext = createContext<NewBookingContextType | undefined>(
+  undefined,
+);
 
-export function NewBookingProvider({ children }: { children: React.ReactNode }) {
+export function NewBookingProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [formData, setFormData] = useState<NewBookingFormData>(defaultFormData);
 
   const updateFormData = (data: Partial<NewBookingFormData>) => {
@@ -62,7 +68,13 @@ export function NewBookingProvider({ children }: { children: React.ReactNode }) 
 
   return (
     <NewBookingContext.Provider
-      value={{ formData, updateFormData, setBarber, setServices, resetFormData }}
+      value={{
+        formData,
+        updateFormData,
+        setBarber,
+        setServices,
+        resetFormData,
+      }}
     >
       {children}
     </NewBookingContext.Provider>

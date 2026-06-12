@@ -8,29 +8,24 @@ import {
   useDeleteBarbershop,
   useLeaveBarbershop,
 } from "@/src/features/barbershop/hooks";
-import { useMyOrgRole } from "@/src/features/home/hooks/useHomeDashboardQueries";
+import { useMemberRole } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
-import { Colors } from '@/src/theme/colors';
+import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import {
-  Alert,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export function BarbershopSettingsScreen() {
   const router = useRouter();
   const toast = useToast();
   const { data: barbershop, isLoading } = useBarbershopCurrent();
-  const { data: activeMember } = useMyOrgRole();
-  const isOwner = activeMember?.role === "owner";
+  const { role } = useMemberRole();
+  const isOwner = role === "owner";
   const { mutate: leave, isPending: isLeaving } = useLeaveBarbershop();
-  const { mutate: deleteBarbershop, isPending: isDeleting } = useDeleteBarbershop();
+  const { mutate: deleteBarbershop, isPending: isDeleting } =
+    useDeleteBarbershop();
   const isPending = isLeaving || isDeleting;
   const [showActionModal, setShowActionModal] = useState(false);
 
@@ -68,9 +63,7 @@ export function BarbershopSettingsScreen() {
   };
 
   return (
-    <ScreenShell
-      contentStyle={styles.scrollContentPadding}
-    >
+    <ScreenShell contentStyle={styles.scrollContentPadding}>
       <View style={styles.titleRow}>
         <Text style={styles.title}>Barbershop Settings</Text>
       </View>
@@ -87,13 +80,25 @@ export function BarbershopSettingsScreen() {
           <View style={styles.avatar}>
             <Text style={styles.avatarInitials}>
               {barbershop?.name
-                ? barbershop.name.split(" ").slice(0, 2).map((w: string) => w[0].toUpperCase()).join("")
+                ? barbershop.name
+                    .split(" ")
+                    .slice(0, 2)
+                    .map((w: string) => w[0].toUpperCase())
+                    .join("")
                 : "?"}
             </Text>
           </View>
         )}
-        <TouchableOpacity style={styles.editAvatarBtn} onPress={isLoading ? undefined : handleCameraBadge} activeOpacity={0.8}>
-          <Ionicons name="camera-outline" size={14} color={Colors.text.primary} />
+        <TouchableOpacity
+          style={styles.editAvatarBtn}
+          onPress={isLoading ? undefined : handleCameraBadge}
+          activeOpacity={0.8}
+        >
+          <Ionicons
+            name="camera-outline"
+            size={14}
+            color={Colors.text.primary}
+          />
         </TouchableOpacity>
       </View>
 
@@ -103,22 +108,28 @@ export function BarbershopSettingsScreen() {
           label="Name"
           value={barbershop?.name}
           placeholder="Name"
-          onPress={isLoading ? undefined : () =>
-            router.push({
-              pathname: "/d/edit-barbershop-info",
-              params: { mode: "name" },
-            })
+          onPress={
+            isLoading
+              ? undefined
+              : () =>
+                  router.push({
+                    pathname: "/d/edit-barbershop-info",
+                    params: { mode: "name" },
+                  })
           }
         />
         <InfoRow
           label="Description"
           value={barbershop?.description!}
           placeholder="Description"
-          onPress={isLoading ? undefined : () =>
-            router.push({
-              pathname: "/d/edit-barbershop-info",
-              params: { mode: "description" },
-            })
+          onPress={
+            isLoading
+              ? undefined
+              : () =>
+                  router.push({
+                    pathname: "/d/edit-barbershop-info",
+                    params: { mode: "description" },
+                  })
           }
         />
         <InfoRow
@@ -126,11 +137,14 @@ export function BarbershopSettingsScreen() {
           value={barbershop?.address!}
           placeholder="Address"
           isLast
-          onPress={isLoading ? undefined : () =>
-            router.push({
-              pathname: "/d/edit-barbershop-info",
-              params: { mode: "address" },
-            })
+          onPress={
+            isLoading
+              ? undefined
+              : () =>
+                  router.push({
+                    pathname: "/d/edit-barbershop-info",
+                    params: { mode: "address" },
+                  })
           }
         />
       </View>
@@ -148,7 +162,9 @@ export function BarbershopSettingsScreen() {
           }
           placeholder="—"
           isLast
-          onPress={isLoading ? undefined : () => router.push("/d/edit-booking-url")}
+          onPress={
+            isLoading ? undefined : () => router.push("/d/edit-booking-url")
+          }
         />
       </View>
 
@@ -158,15 +174,21 @@ export function BarbershopSettingsScreen() {
       <View style={styles.card}>
         <OperationRow
           label="Barbers"
-          onPress={isLoading ? undefined : () => router.push("/d/barbers-management")}
+          onPress={
+            isLoading ? undefined : () => router.push("/d/barbers-management")
+          }
         />
         <OperationRow
           label="Customers"
-          onPress={isLoading ? undefined : () => router.push("/d/customer-management")}
+          onPress={
+            isLoading ? undefined : () => router.push("/d/customer-management")
+          }
         />
         <OperationRow
           label="Services"
-          onPress={isLoading ? undefined : () => router.push("/d/services-management")}
+          onPress={
+            isLoading ? undefined : () => router.push("/d/services-management")
+          }
         />
         <OperationRow
           label="Open Hours"
@@ -192,7 +214,15 @@ export function BarbershopSettingsScreen() {
             ? "Are you sure you want to delete this barbershop? This action cannot be undone."
             : "Are you sure you want to leave this barbershop?"
         }
-        confirmLabel={isPending ? (isOwner ? "Deleting..." : "Leaving...") : (isOwner ? "Delete" : "Leave")}
+        confirmLabel={
+          isPending
+            ? isOwner
+              ? "Deleting..."
+              : "Leaving..."
+            : isOwner
+              ? "Delete"
+              : "Leave"
+        }
         cancelLabel="Cancel"
         onConfirm={handleActionConfirm}
         onCancel={() => setShowActionModal(false)}

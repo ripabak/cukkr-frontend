@@ -8,8 +8,7 @@ export default function WorkspaceLayout() {
         screenOptions={{
           headerShown: false,
         }}
-      >
-      </Stack>
+      ></Stack>
     </CreateBarbershopProvider>
   );
 }

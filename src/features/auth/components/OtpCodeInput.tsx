@@ -1,11 +1,5 @@
 import { useEffect, useRef } from "react";
-import {
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 import { authTheme } from "../auth-theme";
 
@@ -54,7 +48,10 @@ export function OtpCodeInput({
           const isActive = index === value.length && value.length < length;
 
           return (
-            <View key={index} style={[styles.cell, isActive && styles.activeCell]}>
+            <View
+              key={index}
+              style={[styles.cell, isActive && styles.activeCell]}
+            >
               <Text style={styles.cellText}>{digit}</Text>
             </View>
           );

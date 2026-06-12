@@ -1,17 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
-import { analyticsService, type AnalyticsRange } from "../services/analytics.service";
+import {
+  analyticsService,
+  type AnalyticsRange,
+} from "../services/analytics.service";
 
 export const ANALYTICS_KEYS = {
-  overview: (range: AnalyticsRange) => ["analytics", "overview", range] as const,
+  overview: (range: AnalyticsRange) =>
+    ["analytics", "overview", range] as const,
   revenue: (range: AnalyticsRange) => ["analytics", "revenue", range] as const,
   revenueBookings: (range: AnalyticsRange, type: string, page: number) =>
     ["analytics", "revenue-bookings", range, type, page] as const,
-  customers: (range: AnalyticsRange) => ["analytics", "customers", range] as const,
+  customers: (range: AnalyticsRange) =>
+    ["analytics", "customers", range] as const,
   customersList: (range: AnalyticsRange, status: string, page: number) =>
     ["analytics", "customers-list", range, status, page] as const,
   barbers: (range: AnalyticsRange) => ["analytics", "barbers", range] as const,
-  barbersList: (range: AnalyticsRange) => ["analytics", "barbers-list", range] as const,
-  services: (range: AnalyticsRange) => ["analytics", "services", range] as const,
+  barbersList: (range: AnalyticsRange) =>
+    ["analytics", "barbers-list", range] as const,
+  services: (range: AnalyticsRange) =>
+    ["analytics", "services", range] as const,
   servicesList: (range: AnalyticsRange, page: number) =>
     ["analytics", "services-list", range, page] as const,
 };

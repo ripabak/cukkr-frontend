@@ -21,10 +21,10 @@ Koneksi dibuka satu kali, server akan push event setiap kali ada perubahan data 
 
 Server mengirim dua jenis data:
 
-| `event.data`       | Keterangan                                         |
-|--------------------|----------------------------------------------------|
-| `booking_updated`  | Ada perubahan data booking — trigger refetch       |
-| `ping`             | Heartbeat tiap 30 detik, tidak perlu ditangani     |
+| `event.data`      | Keterangan                                     |
+| ----------------- | ---------------------------------------------- |
+| `booking_updated` | Ada perubahan data booking — trigger refetch   |
+| `ping`            | Heartbeat tiap 30 detik, tidak perlu ditangani |
 
 ---
 
@@ -49,29 +49,29 @@ Buat hook ini sekali, pakai di semua page yang butuh real-time:
 
 ```ts
 // hooks/useBookingRealtimeSync.ts
-import { useEffect } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
+import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function useBookingRealtimeSync() {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    const es = new EventSource('/api/bookings/events', {
-      withCredentials: true
-    })
+    const es = new EventSource("/api/bookings/events", {
+      withCredentials: true,
+    });
 
     es.onmessage = (e) => {
-      if (e.data === 'booking_updated') {
-        queryClient.invalidateQueries({ queryKey: ['bookings'] })
+      if (e.data === "booking_updated") {
+        queryClient.invalidateQueries({ queryKey: ["bookings"] });
       }
-    }
+    };
 
     es.onerror = () => {
       // EventSource auto-reconnect setelah beberapa detik — tidak perlu handle manual
-    }
+    };
 
-    return () => es.close()
-  }, [queryClient])
+    return () => es.close();
+  }, [queryClient]);
 }
 ```
 
@@ -118,48 +118,52 @@ Jika ada query yang belum pakai prefix `'bookings'`, ganti dulu sebelum pakai SS
 ## Behaviour & Edge Cases
 
 ### Auto-reconnect
+
 `EventSource` browser akan otomatis reconnect jika koneksi terputus (network hiccup, server restart). Tidak perlu implementasi retry manual.
 
 ### Tab tidak aktif
+
 Koneksi SSE tetap hidup meski tab di-background. Jika ingin menghemat resource, tambahkan visibility check:
 
 ```ts
 useEffect(() => {
-  let es: EventSource | null = null
+  let es: EventSource | null = null;
 
   const connect = () => {
-    es = new EventSource('/api/bookings/events', { withCredentials: true })
+    es = new EventSource("/api/bookings/events", { withCredentials: true });
     es.onmessage = (e) => {
-      if (e.data === 'booking_updated') {
-        queryClient.invalidateQueries({ queryKey: ['bookings'] })
+      if (e.data === "booking_updated") {
+        queryClient.invalidateQueries({ queryKey: ["bookings"] });
       }
-    }
-  }
+    };
+  };
 
   const handleVisibility = () => {
-    if (document.visibilityState === 'visible') {
-      connect()
+    if (document.visibilityState === "visible") {
+      connect();
       // Invalidate langsung saat tab kembali aktif untuk catch up missed updates
-      queryClient.invalidateQueries({ queryKey: ['bookings'] })
+      queryClient.invalidateQueries({ queryKey: ["bookings"] });
     } else {
-      es?.close()
+      es?.close();
     }
-  }
+  };
 
-  connect()
-  document.addEventListener('visibilitychange', handleVisibility)
+  connect();
+  document.addEventListener("visibilitychange", handleVisibility);
 
   return () => {
-    es?.close()
-    document.removeEventListener('visibilitychange', handleVisibility)
-  }
-}, [queryClient])
+    es?.close();
+    document.removeEventListener("visibilitychange", handleVisibility);
+  };
+}, [queryClient]);
 ```
 
 ### Multiple pages
+
 Jika lebih dari satu page aktif pada waktu bersamaan (misal tab berbeda dalam org yang sama), masing-masing page punya koneksi SSE sendiri. Ini normal — server handle tiap koneksi secara independen.
 
 ### Organisasi berbeda
+
 SSE di-scope per `active-organization-id`. Jika user switch org, hook akan dismount dan remount otomatis karena komponen page berganti, sehingga koneksi SSE lama ditutup dan yang baru dibuka dengan org yang benar.
 
 ---

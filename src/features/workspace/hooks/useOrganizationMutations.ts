@@ -1,22 +1,22 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { organizationService } from '../services/organization.service';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { organizationService } from "../services/organization.service";
 
 const ORGANIZATION_QUERY_KEYS = {
-  all: ['organization'] as const,
+  all: ["organization"] as const,
 };
 
 // All workspace-scoped cache roots — invalidated when active workspace changes
 const WORKSPACE_SCOPED_KEYS = [
-  ['home'],
-  ['barbershop'],
-  ['barbershop-services'],
-  ['barbershop-barbers'],
-  ['barbershop-open-hours'],
-  ['barbershop-customers'],
-  ['schedule-bookings'],
-  ['schedule-barbers'],
-  ['schedule-services'],
-  ['notifications'],
+  ["home"],
+  ["barbershop"],
+  ["barbershop-services"],
+  ["barbershop-barbers"],
+  ["barbershop-open-hours"],
+  ["barbershop-customers"],
+  ["schedule-bookings"],
+  ["schedule-barbers"],
+  ["schedule-services"],
+  ["notifications"],
 ] as const;
 
 export function useCreateOrganization() {
@@ -31,7 +31,7 @@ export function useCreateOrganization() {
       };
     }) => organizationService.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['barbershop'] });
+      queryClient.invalidateQueries({ queryKey: ["barbershop"] });
     },
   });
 }

@@ -11,17 +11,19 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {
-  useAnalyticsRevenue,
-  useAnalyticsRevenueBookings,
-} from "../hooks";
+import { useAnalyticsRevenue, useAnalyticsRevenueBookings } from "../hooks";
 import type { AnalyticsRange } from "../services/analytics.service";
 import { formatDate, formatRupiah, formatRupiahFull } from "../utils/format";
 import { BarChart } from "../components/BarChart";
 import { RangePicker } from "../components/RangePicker";
 import { StatCard, TrendBadge } from "../components/StatCard";
 
-const EMPTY_STAT = { current: 0, previous: 0, change: null, direction: "neutral" as const };
+const EMPTY_STAT = {
+  current: 0,
+  previous: 0,
+  change: null,
+  direction: "neutral" as const,
+};
 
 const TYPE_OPTIONS = [
   { label: "All", value: "all" },
@@ -31,7 +33,12 @@ const TYPE_OPTIONS = [
 
 function BookingTypeIcon({ type }: { type: "walk_in" | "appointment" }) {
   return (
-    <View style={[bookingTypeStyles.badge, type === "walk_in" ? bookingTypeStyles.walkIn : bookingTypeStyles.appt]}>
+    <View
+      style={[
+        bookingTypeStyles.badge,
+        type === "walk_in" ? bookingTypeStyles.walkIn : bookingTypeStyles.appt,
+      ]}
+    >
       <Ionicons
         name={type === "walk_in" ? "walk" : "calendar"}
         size={10}
@@ -42,23 +49,34 @@ function BookingTypeIcon({ type }: { type: "walk_in" | "appointment" }) {
 }
 
 const bookingTypeStyles = StyleSheet.create({
-  badge: { width: 18, height: 18, borderRadius: 9, alignItems: "center", justifyContent: "center" },
+  badge: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   walkIn: { backgroundColor: Colors.status.info },
   appt: { backgroundColor: Colors.status.warning },
 });
 
 export function AnalyticsRevenueScreen() {
   const router = useRouter();
-  const { range: rangeParam } = useLocalSearchParams<{ range?: AnalyticsRange }>();
+  const { range: rangeParam } = useLocalSearchParams<{
+    range?: AnalyticsRange;
+  }>();
   const [range, setRange] = useState<AnalyticsRange>(rangeParam ?? "month");
-  const [typeFilter, setTypeFilter] = useState<"all" | "walk_in" | "appointment">("all");
+  const [typeFilter, setTypeFilter] = useState<
+    "all" | "walk_in" | "appointment"
+  >("all");
   const [typeMenuVisible, setTypeMenuVisible] = useState(false);
   const [menuTop, setMenuTop] = useState(0);
   const [page, setPage] = useState(1);
   const filterBtnRef = useRef<View>(null);
 
   const { data: revData, isLoading: revLoading } = useAnalyticsRevenue(range);
-  const { data: bookingsData, isLoading: bookingsLoading } = useAnalyticsRevenueBookings(range, typeFilter, page);
+  const { data: bookingsData, isLoading: bookingsLoading } =
+    useAnalyticsRevenueBookings(range, typeFilter, page);
 
   const stats = revData?.stats;
   const chart = revData?.chart;
@@ -76,9 +94,18 @@ export function AnalyticsRevenueScreen() {
   };
 
   const handleOpenTypeMenu = () => {
-    filterBtnRef.current?.measure((_x: number, _y: number, _w: number, height: number, _px: number, pageY: number) => {
-      setMenuTop(pageY + height + 4);
-    });
+    filterBtnRef.current?.measure(
+      (
+        _x: number,
+        _y: number,
+        _w: number,
+        height: number,
+        _px: number,
+        pageY: number,
+      ) => {
+        setMenuTop(pageY + height + 4);
+      },
+    );
     setTypeMenuVisible(true);
   };
 
@@ -101,7 +128,11 @@ export function AnalyticsRevenueScreen() {
       }
     >
       <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} activeOpacity={0.7}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.backBtn}
+          activeOpacity={0.7}
+        >
           <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
         </TouchableOpacity>
         <Text style={styles.pageTitle}>Revenue</Text>
@@ -121,21 +152,39 @@ export function AnalyticsRevenueScreen() {
           <StatCard
             label="Bookings"
             value={String(stats.totalBookings?.current ?? 0)}
-            icon={<Ionicons name="receipt-outline" size={16} color={Colors.text.primary} />}
+            icon={
+              <Ionicons
+                name="receipt-outline"
+                size={16}
+                color={Colors.text.primary}
+              />
+            }
             stat={stats.totalBookings ?? EMPTY_STAT}
             style={styles.statFlex}
           />
           <StatCard
             label="Avg / Booking"
             value={formatRupiah(stats.avgRevenuePerBooking?.current ?? 0)}
-            icon={<Ionicons name="cash-outline" size={16} color={Colors.text.primary} />}
+            icon={
+              <Ionicons
+                name="cash-outline"
+                size={16}
+                color={Colors.text.primary}
+              />
+            }
             stat={stats.avgRevenuePerBooking ?? EMPTY_STAT}
             style={styles.statFlex}
           />
           <StatCard
             label="Avg Time"
             value={`${stats.avgTime?.current ?? 0}m`}
-            icon={<Ionicons name="time-outline" size={16} color={Colors.text.primary} />}
+            icon={
+              <Ionicons
+                name="time-outline"
+                size={16}
+                color={Colors.text.primary}
+              />
+            }
             stat={stats.avgTime ?? EMPTY_STAT}
             style={styles.statFlex}
           />
@@ -147,7 +196,10 @@ export function AnalyticsRevenueScreen() {
           <View style={styles.chartCardHeader}>
             <Text style={styles.chartCardTitle}>Revenue Trend</Text>
             {stats ? (
-              <TrendBadge direction={stats.totalBookings?.direction ?? "neutral"} change={stats.totalBookings?.change ?? null} />
+              <TrendBadge
+                direction={stats.totalBookings?.direction ?? "neutral"}
+                change={stats.totalBookings?.change ?? null}
+              />
             ) : null}
           </View>
           <BarChart data={chart} chartHeight={130} />
@@ -169,12 +221,20 @@ export function AnalyticsRevenueScreen() {
             <Text style={styles.filterPillText}>
               {TYPE_OPTIONS.find((o) => o.value === typeFilter)?.label ?? "All"}
             </Text>
-            <Ionicons name="chevron-down" size={13} color={Colors.text.primary} />
+            <Ionicons
+              name="chevron-down"
+              size={13}
+              color={Colors.text.primary}
+            />
           </TouchableOpacity>
         </View>
 
         {bookingsLoading && bookings.length === 0 ? (
-          <ActivityIndicator size="small" color={Colors.brand.primary} style={styles.listLoader} />
+          <ActivityIndicator
+            size="small"
+            color={Colors.brand.primary}
+            style={styles.listLoader}
+          />
         ) : bookings.length === 0 ? (
           <Text style={styles.emptyText}>No transactions found</Text>
         ) : (
@@ -183,13 +243,17 @@ export function AnalyticsRevenueScreen() {
               <View style={styles.bookingLeft}>
                 <View style={styles.bookingIconRow}>
                   <BookingTypeIcon type={bk.type} />
-                  <Text style={styles.bookingCustomer} numberOfLines={1}>{bk.customerName}</Text>
+                  <Text style={styles.bookingCustomer} numberOfLines={1}>
+                    {bk.customerName}
+                  </Text>
                 </View>
                 <Text style={styles.bookingMeta} numberOfLines={1}>
                   {bk.services.join(", ")} · {formatDate(bk.completedAt)}
                 </Text>
               </View>
-              <Text style={styles.bookingRevenue}>{formatRupiahFull(bk.revenue)}</Text>
+              <Text style={styles.bookingRevenue}>
+                {formatRupiahFull(bk.revenue)}
+              </Text>
             </View>
           ))
         )}
@@ -201,15 +265,25 @@ export function AnalyticsRevenueScreen() {
               onPress={() => setPage((p) => p - 1)}
               style={[styles.pageBtn, !meta.hasPrev && styles.pageBtnDisabled]}
             >
-              <Ionicons name="chevron-back" size={16} color={meta.hasPrev ? Colors.text.primary : Colors.text.muted} />
+              <Ionicons
+                name="chevron-back"
+                size={16}
+                color={meta.hasPrev ? Colors.text.primary : Colors.text.muted}
+              />
             </TouchableOpacity>
-            <Text style={styles.pageLabel}>{meta.page} / {meta.totalPages}</Text>
+            <Text style={styles.pageLabel}>
+              {meta.page} / {meta.totalPages}
+            </Text>
             <TouchableOpacity
               disabled={!meta.hasNext}
               onPress={() => setPage((p) => p + 1)}
               style={[styles.pageBtn, !meta.hasNext && styles.pageBtnDisabled]}
             >
-              <Ionicons name="chevron-forward" size={16} color={meta.hasNext ? Colors.text.primary : Colors.text.muted} />
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={meta.hasNext ? Colors.text.primary : Colors.text.muted}
+              />
             </TouchableOpacity>
           </View>
         ) : null}

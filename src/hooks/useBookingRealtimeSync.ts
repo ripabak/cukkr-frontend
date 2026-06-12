@@ -1,5 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { Platform } from "react-native";
 import { app } from "@/src/lib/eden-app";
 
 // Invalidates all booking-related queries on SSE event:
@@ -16,10 +17,14 @@ function invalidateAll(queryClient: ReturnType<typeof useQueryClient>) {
 function abortableDelay(ms: number, signal: AbortSignal): Promise<void> {
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(resolve, ms);
-    signal.addEventListener("abort", () => {
-      clearTimeout(timeout);
-      reject(new DOMException("Aborted", "AbortError"));
-    }, { once: true });
+    signal.addEventListener(
+      "abort",
+      () => {
+        clearTimeout(timeout);
+        reject(new DOMException("Aborted", "AbortError"));
+      },
+      { once: true },
+    );
   });
 }
 
@@ -45,7 +50,8 @@ export function useBookingRealtimeSync() {
           for await (const chunk of data) {
             // Eden yields the SSE data field value directly as a string,
             // not wrapped in { data: string } despite the server-side type
-            const value = typeof chunk === "string" ? chunk : (chunk as any)?.data;
+            const value =
+              typeof chunk === "string" ? chunk : (chunk as any)?.data;
             if (value === "booking_updated") {
               invalidateAll(queryClient);
             }
@@ -73,11 +79,16 @@ export function useBookingRealtimeSync() {
     };
 
     subscribe(controller.signal);
-    document.addEventListener("visibilitychange", handleVisibility);
+
+    if (Platform.OS === "web") {
+      document.addEventListener("visibilitychange", handleVisibility);
+    }
 
     return () => {
       controller.abort();
-      document.removeEventListener("visibilitychange", handleVisibility);
+      if (Platform.OS === "web") {
+        document.removeEventListener("visibilitychange", handleVisibility);
+      }
     };
   }, [queryClient]);
 }

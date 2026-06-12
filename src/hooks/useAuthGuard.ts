@@ -1,5 +1,10 @@
 import { authClient } from "@/src/lib/auth-client";
-import { useGlobalSearchParams, usePathname, useRouter, useSegments } from "expo-router";
+import {
+  useGlobalSearchParams,
+  usePathname,
+  useRouter,
+  useSegments,
+} from "expo-router";
 import { useEffect } from "react";
 
 export function useAuthGuard() {
@@ -14,7 +19,7 @@ export function useAuthGuard() {
   useEffect(() => {
     if (isPending) return;
 
-    if (!isAuthenticated && !segments.some(s => s?.includes("auth"))) {
+    if (!isAuthenticated && !segments.some((s) => s?.includes("auth"))) {
       const queryString = Object.entries(globalParams)
         .map(([k, v]) => `${k}=${encodeURIComponent(String(v))}`)
         .join("&");

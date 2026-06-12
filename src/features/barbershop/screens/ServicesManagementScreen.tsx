@@ -1,23 +1,28 @@
-import { Colors } from '@/src/theme/colors';
+import { Permission } from "@/src/components/Permission";
+import { Colors } from "@/src/theme/colors";
 import { IconActionButton } from "@/src/features/barbershop/components/IconActionButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SearchInput } from "@/src/components/SearchInput";
 import { ServiceCard } from "@/src/components/ServiceCard";
 import { SortMenu } from "@/src/components/SortMenu";
-import { useServicesList, useToggleServiceActive } from "@/src/features/barbershop/hooks";
+import { useMemberRole } from "@/src/hooks";
+import {
+  useServicesList,
+  useToggleServiceActive,
+} from "@/src/features/barbershop/hooks";
 import { useToast } from "@/src/lib/providers";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-type SortOption = "name_asc" | "name_desc" | "price_asc" | "price_desc" | "recent";
+type SortOption =
+  | "name_asc"
+  | "name_desc"
+  | "price_asc"
+  | "price_desc"
+  | "recent";
 
 const SORT_OPTIONS = [
   { label: "Sort by Name (A-Z)", value: "name_asc" },
@@ -30,6 +35,8 @@ const SORT_OPTIONS = [
 export function ServicesManagementScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { role } = useMemberRole();
+  const canManage = role === "owner" || role === "admin";
   const [search, setSearch] = useState("");
   const [sortMenuVisible, setSortMenuVisible] = useState(false);
   const [selectedSort, setSelectedSort] = useState<SortOption>("name_asc");
@@ -58,13 +65,19 @@ export function ServicesManagementScreen() {
                 activeOpacity={0.7}
                 style={styles.headerIcon}
               >
-                <Ionicons name="filter-outline" size={18} color={Colors.text.primary} />
+                <Ionicons
+                  name="filter-outline"
+                  size={18}
+                  color={Colors.text.primary}
+                />
               </TouchableOpacity>
-              <IconActionButton
-                iconName="add"
-                onPress={() => router.push("/d/add-or-edit-service")}
-                size={36}
-              />
+              <Permission roles={["owner", "admin"]}>
+                <IconActionButton
+                  iconName="add"
+                  onPress={() => router.push("/d/add-or-edit-service")}
+                  size={36}
+                />
+              </Permission>
             </View>
           }
         />
@@ -86,11 +99,17 @@ export function ServicesManagementScreen() {
       <Text style={styles.title}>Services Management</Text>
       <Text style={styles.subtitle}>Manage your barbershop services</Text>
 
-      <SearchInput value={search} onChangeText={setSearch} style={styles.search} />
+      <SearchInput
+        value={search}
+        onChangeText={setSearch}
+        style={styles.search}
+      />
 
       {!isLoading && services.length === 0 ? (
         <Text style={styles.empty}>
-          {search ? "No services match your search." : "No services yet. Add one."}
+          {search
+            ? "No services match your search."
+            : "No services yet. Add one."}
         </Text>
       ) : null}
       {services.length > 0 ? (
@@ -109,11 +128,17 @@ export function ServicesManagementScreen() {
               <ServiceCard
                 name={service.name}
                 price={service.price}
-                discountPercent={service.discount > 0 ? service.discount : undefined}
+                discountPercent={
+                  service.discount > 0 ? service.discount : undefined
+                }
                 isDefault={service.isDefault}
                 isActive={service.isActive}
-                onToggleActive={() => handleToggle(service.id)}
-                style={index < services.length - 1 ? styles.cardMargin : undefined}
+                onToggleActive={
+                  canManage ? () => handleToggle(service.id) : undefined
+                }
+                style={
+                  index < services.length - 1 ? styles.cardMargin : undefined
+                }
               />
             </TouchableOpacity>
           ))}

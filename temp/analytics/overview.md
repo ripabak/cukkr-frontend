@@ -13,9 +13,9 @@ Authorization: session cookie
 
 ### Query Parameters
 
-| Parameter | Type | Required | Values |
-|-----------|------|----------|--------|
-| `range` | string | Yes | `24h` `week` `month` `6m` `1y` |
+| Parameter | Type   | Required | Values                         |
+| --------- | ------ | -------- | ------------------------------ |
+| `range`   | string | Yes      | `24h` `week` `month` `6m` `1y` |
 
 ### Response
 
@@ -48,12 +48,12 @@ Authorization: session cookie
 
 Bucket labels by range:
 
-| Range | Label format | Example |
-|-------|-------------|---------|
-| `24h` | `"HH:00"` (WIB) | `"14:00"` |
-| `week` | Day abbreviation | `"Mon"` |
-| `month` | Zero-padded day | `"05"` |
-| `6m` / `1y` | Month abbreviation | `"Jan"` |
+| Range       | Label format       | Example   |
+| ----------- | ------------------ | --------- |
+| `24h`       | `"HH:00"` (WIB)    | `"14:00"` |
+| `week`      | Day abbreviation   | `"Mon"`   |
+| `month`     | Zero-padded day    | `"05"`    |
+| `6m` / `1y` | Month abbreviation | `"Jan"`   |
 
 #### HighlightItem
 
@@ -84,15 +84,48 @@ Cookie: <session>
   "data": {
     "range": "week",
     "stats": {
-      "totalSales":     { "current": 650000, "previous": 500000, "change": 30, "direction": "up" },
-      "totalBookings":  { "current": 10,     "previous": 8,      "change": 25, "direction": "up" },
-      "totalCustomers": { "current": 8,      "previous": 6,      "change": null,"direction": "neutral" },
-      "appointments":   { "current": 4,      "previous": 3,      "change": 33.3,"direction": "up" },
-      "walkIns":        { "current": 6,      "previous": 5,      "change": 20, "direction": "up" }
+      "totalSales": {
+        "current": 650000,
+        "previous": 500000,
+        "change": 30,
+        "direction": "up"
+      },
+      "totalBookings": {
+        "current": 10,
+        "previous": 8,
+        "change": 25,
+        "direction": "up"
+      },
+      "totalCustomers": {
+        "current": 8,
+        "previous": 6,
+        "change": null,
+        "direction": "neutral"
+      },
+      "appointments": {
+        "current": 4,
+        "previous": 3,
+        "change": 33.3,
+        "direction": "up"
+      },
+      "walkIns": {
+        "current": 6,
+        "previous": 5,
+        "change": 20,
+        "direction": "up"
+      }
     },
     "chart": {
-      "revenue":   [{ "label": "Mon", "value": 80000 }, { "label": "Tue", "value": 120000 }, "..."],
-      "customers": [{ "label": "Mon", "value": 3 },     { "label": "Tue", "value": 5 },      "..."]
+      "revenue": [
+        { "label": "Mon", "value": 80000 },
+        { "label": "Tue", "value": 120000 },
+        "..."
+      ],
+      "customers": [
+        { "label": "Mon", "value": 3 },
+        { "label": "Tue", "value": 5 },
+        "..."
+      ]
     },
     "highlights": {
       "topBarber": {
@@ -125,8 +158,8 @@ Cookie: <session>
 
 ### Error Responses
 
-| Status | Condition |
-|--------|-----------|
-| `401` | No active session |
-| `403` | No active organisation |
-| `422` | Invalid `range` value |
+| Status | Condition              |
+| ------ | ---------------------- |
+| `401`  | No active session      |
+| `403`  | No active organisation |
+| `422`  | Invalid `range` value  |

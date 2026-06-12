@@ -27,21 +27,3 @@ export function useUploadAvatar() {
     },
   });
 }
-
-export function useChangePhone() {
-  return useMutation({
-    mutationFn: (phone: string) => profileService.changePhone(phone),
-  });
-}
-
-export function useVerifyPhoneChange() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ phone, otp }: { phone: string; otp: string }) =>
-      profileService.verifyPhoneChange(phone, otp),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: PROFILE_QUERY_KEYS.current() });
-    },
-  });
-}

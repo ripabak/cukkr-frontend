@@ -78,7 +78,7 @@ After all steps in the phase are complete:
 In the plan file, mark the completed phase with a `✓` or status badge:
 
 ```markdown
-## Phase 2 — App shell  ✓ done — 2026-05-02
+## Phase 2 — App shell ✓ done — 2026-05-02
 ```
 
 Also update the checklist items in the phase (check off completed items).

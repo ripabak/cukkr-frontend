@@ -31,14 +31,23 @@ export function WalkInQrScreen() {
   return (
     <ScreenShell
       contentStyle={styles.content}
-      headerSlot={<ScreenHeader title="Walk-In QR" onBack={() => router.back()} />}
+      headerSlot={
+        <ScreenHeader title="Walk-In QR" onBack={() => router.back()} />
+      }
     >
       <View style={styles.card}>
         {qrUrl ? (
-          <QRCode value={qrUrl} size={220} backgroundColor={Colors.bg.surface} color={Colors.text.primary} />
+          <QRCode
+            value={qrUrl}
+            size={220}
+            backgroundColor={Colors.bg.surface}
+            color={Colors.text.primary}
+          />
         ) : (
           <View style={styles.qrPlaceholder}>
-            <Text style={styles.placeholderText}>No booking URL configured</Text>
+            <Text style={styles.placeholderText}>
+              No booking URL configured
+            </Text>
           </View>
         )}
       </View>
@@ -51,7 +60,8 @@ export function WalkInQrScreen() {
       ) : null}
 
       <Text style={styles.hint}>
-        Customer scan this QR code to check-in as a walk-in. PIN will be auto-filled on the booking page.
+        Customer scan this QR code to check-in as a walk-in. PIN will be
+        auto-filled on the booking page.
       </Text>
 
       <PrimaryButton

@@ -4,7 +4,7 @@ import { Stack } from "expo-router";
 export default function BarbershopLayout() {
   return (
     <WorkspaceRoute>
-        <Stack screenOptions={{ headerShown: false }} />
+      <Stack screenOptions={{ headerShown: false }} />
     </WorkspaceRoute>
   );
 }
