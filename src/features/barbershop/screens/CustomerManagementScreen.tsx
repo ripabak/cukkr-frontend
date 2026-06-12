@@ -28,10 +28,12 @@ export function CustomerManagementScreen() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [sortVisible, setSortVisible] = useState(false);
   const [sortValue, setSortValue] = useState<CustomerSort>("name_asc");
+  const [hasContact, setHasContact] = useState(true);
 
   const { data: customers = [], isLoading } = useCustomersList({
     search: search || undefined,
     sort: sortValue,
+    hasContact,
   });
 
   function toggleSelect(id: string) {
@@ -43,9 +45,11 @@ export function CustomerManagementScreen() {
     });
   }
 
-  function handleCardPress(customerId: string) {
+  function handleCardPress(customerId: string, customerHasContact: boolean) {
     if (selectionMode) {
-      toggleSelect(customerId);
+      if (customerHasContact) {
+        toggleSelect(customerId);
+      }
     } else {
       router.push({
         pathname: "/d/customer-detail-general",
@@ -72,6 +76,8 @@ export function CustomerManagementScreen() {
             else setSelectionMode(true);
           }}
           onFilterPress={() => setSortVisible(true)}
+          hasContact={hasContact}
+          onContactFilterPress={() => setHasContact((prev) => !prev)}
         />
       }
       footerSlot={
@@ -107,7 +113,9 @@ export function CustomerManagementScreen() {
       </Text>
       {!selectionMode && (
         <Text style={styles.hint}>
-          Only customers with valid contact information will appear here.
+          {hasContact
+            ? "Only customers with valid contact information will appear here."
+            : "Showing all customers including those without contact info."}
         </Text>
       )}
 
@@ -127,17 +135,23 @@ export function CustomerManagementScreen() {
 
       {customers.length > 0 ? (
         <View style={styles.list}>
-          {customers.map((customer) => (
-            <CustomerCard
-              key={customer.id}
-              name={customer.name}
-              totalBook={customer.totalBookings}
-              bookValue={formatCurrency(customer.totalSpend)}
-              selectionMode={selectionMode}
-              selected={selectedIds.has(customer.id)}
-              onPress={() => handleCardPress(customer.id)}
-            />
-          ))}
+          {customers.map((customer) => {
+            const customerHasContact = !!(
+              customer.email || customer.phone
+            );
+            return (
+              <CustomerCard
+                key={customer.id}
+                name={customer.name}
+                totalBook={customer.totalBookings}
+                bookValue={formatCurrency(customer.totalSpend)}
+                hasContact={customerHasContact}
+                selectionMode={selectionMode}
+                selected={selectedIds.has(customer.id)}
+                onPress={() => handleCardPress(customer.id, customerHasContact)}
+              />
+            );
+          })}
         </View>
       ) : null}
 

@@ -15,6 +15,7 @@ interface Props {
   bookValue: string;
   selected?: boolean;
   selectionMode?: boolean;
+  hasContact?: boolean;
   onPress?: () => void;
   style?: ViewStyle;
 }
@@ -25,23 +26,38 @@ export function CustomerCard({
   bookValue,
   selected,
   selectionMode,
+  hasContact = true,
   onPress,
   style,
 }: Props) {
+  const selectable = !selectionMode || hasContact;
+
   return (
     <TouchableOpacity
-      onPress={onPress}
-      activeOpacity={0.8}
-      style={[styles.card, selected && styles.cardSelected, style]}
+      onPress={selectable ? onPress : undefined}
+      activeOpacity={selectable ? 0.8 : 1}
+      style={[
+        styles.card,
+        selected && styles.cardSelected,
+        !selectable && styles.cardDisabled,
+        style,
+      ]}
     >
-      <View style={styles.avatar}>
-        <Ionicons name="person" size={22} color={Colors.text.primary} />
+      <View style={[styles.avatar, !hasContact && styles.avatarMuted]}>
+        <Ionicons
+          name="person"
+          size={22}
+          color={hasContact ? Colors.text.primary : Colors.icon.muted}
+        />
       </View>
       <View style={styles.info}>
-        <Text style={styles.name}>{name}</Text>
+        <Text style={[styles.name, !hasContact && styles.textMuted]}>
+          {name}
+        </Text>
         <Text style={styles.meta}>
           Total Book <Text style={styles.metaBold}>{totalBook}</Text>
-          {"  ·  "}Book Value <Text style={styles.metaBold}>{bookValue}</Text>
+          {"  ·  "}Book Value{" "}
+          <Text style={styles.metaBold}>{bookValue}</Text>
         </Text>
       </View>
       <Ionicons name="chevron-forward" size={18} color={Colors.icon.muted} />
@@ -71,6 +87,15 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.brand.primaryDark,
     alignItems: "center",
     justifyContent: "center",
+  },
+  avatarMuted: {
+    backgroundColor: Colors.bg.surface,
+  },
+  cardDisabled: {
+    opacity: 0.5,
+  },
+  textMuted: {
+    color: Colors.text.muted,
   },
   info: {
     flex: 1,

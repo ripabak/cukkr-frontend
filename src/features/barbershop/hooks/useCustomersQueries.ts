@@ -5,8 +5,14 @@ type CustomerSort = "name_asc" | "recent" | "bookings_desc" | "spend_desc";
 
 export const CUSTOMERS_QUERY_KEYS = {
   all: ["barbershop-customers"] as const,
-  list: (search?: string, sort?: CustomerSort) =>
-    [...CUSTOMERS_QUERY_KEYS.all, "list", search ?? "", sort ?? ""] as const,
+  list: (search?: string, sort?: CustomerSort, hasContact?: boolean) =>
+    [
+      ...CUSTOMERS_QUERY_KEYS.all,
+      "list",
+      search ?? "",
+      sort ?? "",
+      hasContact?.toString() ?? "",
+    ] as const,
   byId: (id: string) => [...CUSTOMERS_QUERY_KEYS.all, "detail", id] as const,
   bookings: (id: string) =>
     [...CUSTOMERS_QUERY_KEYS.all, "bookings", id] as const,
@@ -15,9 +21,14 @@ export const CUSTOMERS_QUERY_KEYS = {
 export function useCustomersList(options?: {
   search?: string;
   sort?: CustomerSort;
+  hasContact?: boolean;
 }) {
   return useQuery({
-    queryKey: CUSTOMERS_QUERY_KEYS.list(options?.search, options?.sort),
+    queryKey: CUSTOMERS_QUERY_KEYS.list(
+      options?.search,
+      options?.sort,
+      options?.hasContact,
+    ),
     queryFn: () => customersService.getList(options),
   });
 }

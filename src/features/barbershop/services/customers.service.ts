@@ -12,7 +12,11 @@ type BookingStatus =
   | "cancelled";
 
 export const customersService = {
-  async getList(options?: { search?: string; sort?: CustomerSort }) {
+  async getList(options?: {
+    search?: string;
+    sort?: CustomerSort;
+    hasContact?: boolean;
+  }) {
     const { data: response, error } = await app.api.customers.get({
       query: options,
     });

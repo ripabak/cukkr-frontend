@@ -8,12 +8,16 @@ interface Props {
   selectionMode: boolean;
   onToggleSelect: () => void;
   onFilterPress?: () => void;
+  hasContact?: boolean;
+  onContactFilterPress?: () => void;
 }
 
 export function SelectionToolbar({
   selectionMode,
   onToggleSelect,
   onFilterPress,
+  hasContact,
+  onContactFilterPress,
 }: Props) {
   const router = useRouter();
 
@@ -30,11 +34,30 @@ export function SelectionToolbar({
         <TouchableOpacity style={styles.filterBtn} onPress={onFilterPress}>
           <Ionicons name="filter" size={18} color={Colors.text.primary} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={onToggleSelect}>
-          <Text style={styles.selectText}>
-            {selectionMode ? "Cancel" : "Select"}
-          </Text>
-        </TouchableOpacity>
+        {onContactFilterPress ? (
+          <TouchableOpacity
+            style={[
+              styles.filterBtn,
+              hasContact && styles.filterBtnActive,
+            ]}
+            onPress={onContactFilterPress}
+          >
+            <Ionicons
+              name={hasContact ? "call" : "call-outline"}
+              size={18}
+              color={
+                hasContact ? Colors.brand.primaryDark : Colors.icon.muted
+              }
+            />
+          </TouchableOpacity>
+        ) : null}
+        {hasContact !== false ? (
+          <TouchableOpacity onPress={onToggleSelect}>
+            <Text style={styles.selectText}>
+              {selectionMode ? "Cancel" : "Select"}
+            </Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
     </View>
   );
@@ -72,6 +95,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.bg.default,
     alignItems: "center",
     justifyContent: "center",
+  },
+  filterBtnActive: {
+    backgroundColor: Colors.brand.primarySurface,
+    borderWidth: 1,
+    borderColor: Colors.brand.primaryDark,
   },
   selectText: {
     fontSize: 15,
