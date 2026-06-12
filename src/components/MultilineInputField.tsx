@@ -58,5 +58,7 @@ const styles = StyleSheet.create({
     color: Colors.text.primary,
     padding: 0,
     textAlignVertical: "top",
+    flex: 1,
+    minHeight: 72,
   },
 });

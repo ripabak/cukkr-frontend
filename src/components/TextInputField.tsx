@@ -76,5 +76,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.text.primary,
     padding: 0,
+    flex: 1,
   },
 });
