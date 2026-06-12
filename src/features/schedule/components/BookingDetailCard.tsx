@@ -238,11 +238,15 @@ const styles = StyleSheet.create({
   serviceLabel: {
     fontSize: 14,
     color: "#444444",
+    flex: 1,
+    flexShrink: 1,
   },
   servicePrice: {
     fontSize: 14,
     color: "#1A1A1A",
     fontWeight: "500",
+    marginLeft: 12,
+    flexShrink: 0,
   },
   divider: {
     height: 1,
@@ -262,10 +266,13 @@ const styles = StyleSheet.create({
   paymentLabel: {
     fontSize: 14,
     color: "#666666",
+    flex: 1,
+    flexShrink: 1,
   },
   paymentValue: {
     fontSize: 14,
     color: "#1A1A1A",
     fontWeight: "500",
+    marginLeft: 12,
   },
 });
