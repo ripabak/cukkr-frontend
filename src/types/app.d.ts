@@ -2160,6 +2160,7 @@ export declare const app: Elysia<"", {
                             type?: "all" | "walk_in" | "appointment" | undefined;
                             limit?: number | undefined;
                             page?: number | undefined;
+                            status?: "all" | "pending" | "requested" | "waiting" | "in_progress" | "completed" | "cancelled" | undefined;
                         };
                         headers: {};
                         response: {

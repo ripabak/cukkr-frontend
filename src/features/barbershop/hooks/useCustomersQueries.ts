@@ -30,10 +30,19 @@ export function useCustomerById(id: string) {
   });
 }
 
-export function useCustomerBookings(id: string) {
+type BookingStatus =
+  | "all"
+  | "pending"
+  | "requested"
+  | "waiting"
+  | "in_progress"
+  | "completed"
+  | "cancelled";
+
+export function useCustomerBookings(id: string, options?: { status?: BookingStatus }) {
   return useQuery({
     queryKey: CUSTOMERS_QUERY_KEYS.bookings(id),
-    queryFn: () => customersService.getBookings(id),
+    queryFn: () => customersService.getBookings(id, options),
     enabled: !!id,
   });
 }

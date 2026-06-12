@@ -29,6 +29,15 @@ import {
   View,
 } from "react-native";
 
+type BookingStatus =
+  | "all"
+  | "pending"
+  | "requested"
+  | "waiting"
+  | "in_progress"
+  | "completed"
+  | "cancelled";
+
 const DETAIL_TABS = [
   { key: "general", label: "General" },
   { key: "books", label: "Books" },
@@ -46,22 +55,12 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
   const { customerId = "" } = useLocalSearchParams<{ customerId?: string }>();
   const [activeTab, setActiveTab] = useState<string>(defaultTab);
   const [filterVisible, setFilterVisible] = useState(false);
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState<BookingStatus>("all");
 
   const { data: customer, isLoading: isLoadingCustomer } =
     useCustomerById(customerId);
   const { data: bookings = [], isLoading: isLoadingBookings } =
-    useCustomerBookings(customerId);
-
-  const filteredBookings = (
-    bookings as Array<{
-      id: string;
-      referenceNumber: string;
-      status: string;
-      createdAt: Date;
-      totalAmount: number;
-    }>
-  ).filter((b) => statusFilter === "all" || b.status === statusFilter);
+    useCustomerBookings(customerId, { status: statusFilter });
 
   if (isLoadingCustomer) {
     return (
@@ -157,11 +156,13 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
               <Text style={styles.bookingCount}>({bookings.length})</Text>
             </Text>
             <TouchableOpacity
-              style={styles.filterBtn}
+              style={styles.filterPill}
               onPress={() => setFilterVisible(true)}
+              activeOpacity={0.8}
             >
-              <Text style={styles.filterBtnText}>
-                {statusFilter === "all" ? "All" : statusFilter}
+              <Text style={styles.filterLabel}>
+                {SCHEDULE_STATUS_OPTIONS.find((o) => o.value === statusFilter)
+                  ?.label ?? "All"}
               </Text>
               <Ionicons
                 name="chevron-down"
@@ -174,7 +175,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
             <ActivityIndicator size="small" color={Colors.brand.primary} />
           ) : (
             <View style={styles.bookingList}>
-              {filteredBookings.map((b) => (
+              {bookings.map((b: { id: string; referenceNumber: string; status: string; createdAt: Date; totalAmount: number }) => (
                 <BookingCard
                   key={b.id}
                   customerName={b.referenceNumber}
@@ -206,7 +207,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
             options={SCHEDULE_STATUS_OPTIONS}
             selected={statusFilter}
             onSelect={(s) => {
-              setStatusFilter(s);
+              setStatusFilter(s as BookingStatus);
               setFilterVisible(false);
             }}
             onClose={() => setFilterVisible(false)}
@@ -270,20 +271,21 @@ const styles = StyleSheet.create({
   },
   bookingTitle: { fontSize: 20, fontWeight: "700", color: Colors.text.primary },
   bookingCount: { color: Colors.icon.muted, fontWeight: "500" },
-  filterBtn: {
+  filterPill: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
     backgroundColor: Colors.bg.default,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
+    borderRadius: 999,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    gap: 4,
+    boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.05)",
+    elevation: 1,
   },
-  filterBtnText: {
-    fontSize: 13,
+  filterLabel: {
+    fontSize: 14,
     fontWeight: "500",
     color: Colors.text.primary,
-    textTransform: "capitalize",
   },
   bookingList: { gap: 10 },
   statusMenu: { top: 36, right: 0 },
