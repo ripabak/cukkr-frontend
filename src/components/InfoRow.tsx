@@ -86,13 +86,15 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 14,
     color: Colors.text.primary,
+    flexShrink: 0,
+    marginRight: 12,
   },
   valueRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
     marginLeft: "auto",
-    maxWidth: "50%",
+    flexShrink: 1,
   },
   value: {
     fontSize: 14,
