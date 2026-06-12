@@ -8,6 +8,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
   ViewStyle,
 } from "react-native";
@@ -45,6 +46,7 @@ interface Props {
   paymentSummary?: { label: string; value: string }[];
   style?: ViewStyle;
   children?: React.ReactNode;
+  onCustomerPress?: () => void;
 }
 
 const STATUS_TO_BADGE: Record<BookingDetailStatus, string> = {
@@ -79,6 +81,7 @@ export function BookingDetailCard({
   paymentSummary = [],
   style,
   children,
+  onCustomerPress,
 }: Props) {
   const resolvedMetaIcon = bookingType
     ? bookingType === "walk_in"
@@ -96,7 +99,22 @@ export function BookingDetailCard({
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <Text style={styles.customerName}>{customerName}</Text>
+          {onCustomerPress ? (
+            <TouchableOpacity
+              style={styles.customerNameRow}
+              onPress={onCustomerPress}
+              activeOpacity={0.6}
+            >
+              <Text style={styles.customerNameLink}>{customerName}</Text>
+              <Ionicons
+                name="chevron-forward"
+                size={18}
+                color={Colors.brand.primary}
+              />
+            </TouchableOpacity>
+          ) : (
+            <Text style={styles.customerName}>{customerName}</Text>
+          )}
           <Text style={styles.dateLabel}>{dateLabel}</Text>
           <View style={styles.metaRow}>
             <Ionicons
@@ -196,6 +214,17 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "#1A1A1A",
     marginBottom: 2,
+  },
+  customerNameRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    marginBottom: 2,
+  },
+  customerNameLink: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: Colors.brand.primaryDark,
   },
   dateLabel: {
     fontSize: 14,

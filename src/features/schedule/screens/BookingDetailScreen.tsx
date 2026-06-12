@@ -302,6 +302,12 @@ export function BookingDetailScreen() {
           services={services}
           notes={booking.notes ?? undefined}
           paymentSummary={paymentSummary}
+          onCustomerPress={() =>
+            router.push({
+              pathname: "/d/customer-detail-general",
+              params: { customerId: booking.customer.id },
+            })
+          }
         />
         {footer}
       </>
