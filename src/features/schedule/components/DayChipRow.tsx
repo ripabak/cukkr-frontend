@@ -21,6 +21,7 @@ interface Props {
   onSelect: (key: string) => void;
   onShowMore?: () => void;
   highlightDates?: Set<string>;
+  waitingDates?: Set<string>;
 }
 
 export function DayChipRow({
@@ -29,6 +30,7 @@ export function DayChipRow({
   onSelect,
   onShowMore,
   highlightDates,
+  waitingDates,
 }: Props) {
   return (
     <ScrollView
@@ -39,6 +41,7 @@ export function DayChipRow({
       {days.map((day) => {
         const isSelected = day.dateKey === selectedKey;
         const hasRequest = !isSelected && highlightDates?.has(day.dateKey);
+        const hasWaiting = !isSelected && waitingDates?.has(day.dateKey);
         return (
           <TouchableOpacity
             key={day.dateKey}
@@ -56,11 +59,18 @@ export function DayChipRow({
             >
               {day.dayNumber}
             </Text>
-            {hasRequest ? (
-              <View style={styles.requestDot} />
-            ) : (
-              <View style={styles.dotPlaceholder} />
-            )}
+            <View style={styles.dotsRow}>
+              {hasRequest ? (
+                <View style={styles.requestDot} />
+              ) : (
+                <View style={styles.dotPlaceholder} />
+              )}
+              {hasWaiting ? (
+                <View style={styles.waitingDot} />
+              ) : (
+                <View style={styles.dotPlaceholder} />
+              )}
+            </View>
           </TouchableOpacity>
         );
       })}
@@ -121,11 +131,21 @@ const styles = StyleSheet.create({
   dayNumberSelected: {
     color: Colors.text.primary,
   },
+  dotsRow: {
+    flexDirection: "row",
+    gap: 3,
+  },
   requestDot: {
     width: 5,
     height: 5,
     borderRadius: 3,
     backgroundColor: "#E63030",
+  },
+  waitingDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: Colors.brand.primary,
   },
   dotPlaceholder: {
     width: 5,

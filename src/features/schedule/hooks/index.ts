@@ -7,7 +7,7 @@ export {
 export {
   BOOKINGS_QUERY_KEYS,
   useBookingById,
-  useBookingRequestedDates,
+  useBookingDateMarkers,
   useBookings,
   useInProgressBooking,
 } from "./useBookingsQueries";

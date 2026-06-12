@@ -50,15 +50,17 @@ export const bookingsService = {
     return response.data || [];
   },
 
-  async getRequestedBookings(dateFrom: string, dateTo: string) {
-    const { data: response, error } = await app.api.bookings.requests.get({
+  async getDateMarkers(dateFrom: string, dateTo: string) {
+    const { data: response, error } = await app.api.bookings[
+      "date-markers"
+    ].get({
       query: { dateFrom, dateTo },
     });
     if (error || !response)
       throw new Error(
-        error?.value?.message || "Failed to fetch booking requests",
+        error?.value?.message || "Failed to fetch date markers",
       );
-    return response.data || [];
+    return response.data;
   },
 
   async getById(id: string) {

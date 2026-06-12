@@ -20,8 +20,6 @@ export const BOOKINGS_QUERY_KEYS = {
       status ?? "",
       barberId ?? "",
     ] as const,
-  requests: (dateFrom: string, dateTo: string) =>
-    [...BOOKINGS_QUERY_KEYS.all, "requests", dateFrom, dateTo] as const,
   byId: (id: string) => [...BOOKINGS_QUERY_KEYS.all, "detail", id] as const,
   inProgress: ["schedule-bookings", "in-progress"] as const,
 };
@@ -45,10 +43,10 @@ export function useBookings(
   });
 }
 
-export function useBookingRequestedDates(dateFrom: string, dateTo: string) {
+export function useBookingDateMarkers(dateFrom: string, dateTo: string) {
   return useQuery({
-    queryKey: BOOKINGS_QUERY_KEYS.requests(dateFrom, dateTo),
-    queryFn: () => bookingsService.getRequestedBookings(dateFrom, dateTo),
+    queryKey: [...BOOKINGS_QUERY_KEYS.all, "date-markers", dateFrom, dateTo] as const,
+    queryFn: () => bookingsService.getDateMarkers(dateFrom, dateTo),
     enabled: !!dateFrom && !!dateTo,
     staleTime: 5 * 60 * 1000,
   });

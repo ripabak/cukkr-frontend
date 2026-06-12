@@ -15,6 +15,7 @@ interface Props {
   openHours?: DayHourInfo[];
   disablePast?: boolean;
   highlightDates?: Set<string>;
+  waitingDates?: Set<string>;
   onSelect: (date: Date) => void;
   onClose: () => void;
 }
@@ -49,6 +50,7 @@ export function CalendarModal({
   openHours,
   disablePast = true,
   highlightDates,
+  waitingDates,
   onSelect,
   onClose,
 }: Props) {
@@ -204,6 +206,8 @@ export function CalendarModal({
                 const todayMark = isToday(day);
                 const hasRequest =
                   !selected && highlightDates?.has(toDayKey(day));
+                const hasWaiting =
+                  !selected && waitingDates?.has(toDayKey(day));
 
                 return (
                   <View key={di} style={styles.dayCell}>
@@ -231,7 +235,10 @@ export function CalendarModal({
                         {day}
                       </Text>
                       {closed && !past && <View style={styles.closedDot} />}
-                      {hasRequest && <View style={styles.requestDot} />}
+                      <View style={styles.dotsRow}>
+                        {hasRequest && <View style={styles.requestDot} />}
+                        {hasWaiting && <View style={styles.waitingDot} />}
+                      </View>
                     </TouchableOpacity>
                   </View>
                 );
@@ -240,7 +247,9 @@ export function CalendarModal({
           ))}
 
           {/* Legend */}
-          {(hasOpenHours && closedDaySet.size > 0) || highlightDates?.size ? (
+          {(hasOpenHours && closedDaySet.size > 0) ||
+          highlightDates?.size ||
+          waitingDates?.size ? (
             <View style={styles.legend}>
               {hasOpenHours && closedDaySet.size > 0 && (
                 <>
@@ -250,8 +259,21 @@ export function CalendarModal({
               )}
               {highlightDates?.size ? (
                 <>
-                  <View style={styles.legendRequestDot} />
+                  <View
+                    style={[
+                      styles.legendRequestDot,
+                      hasOpenHours && closedDaySet.size > 0
+                        ? undefined
+                        : styles.legendDotFirst,
+                    ]}
+                  />
                   <Text style={styles.legendText}>Has Requests</Text>
+                </>
+              ) : null}
+              {waitingDates?.size ? (
+                <>
+                  <View style={styles.legendWaitingDot} />
+                  <Text style={styles.legendText}>Has Waiting</Text>
                 </>
               ) : null}
             </View>
@@ -354,13 +376,23 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 2,
   },
+  dotsRow: {
+    flexDirection: "row",
+    gap: 2,
+    position: "absolute",
+    bottom: 2,
+  },
   requestDot: {
     width: 4,
     height: 4,
     borderRadius: 2,
     backgroundColor: "#E63030",
-    position: "absolute",
-    bottom: 2,
+  },
+  waitingDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: Colors.brand.primary,
   },
   legend: {
     flexDirection: "row",
@@ -377,11 +409,21 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: "#D0CEC5",
   },
+  legendDotFirst: {
+    marginLeft: 0,
+  },
   legendRequestDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
     backgroundColor: "#E63030",
+    marginLeft: 12,
+  },
+  legendWaitingDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: Colors.brand.primary,
     marginLeft: 12,
   },
   legendText: {

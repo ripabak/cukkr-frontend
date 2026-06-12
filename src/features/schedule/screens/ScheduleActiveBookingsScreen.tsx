@@ -11,7 +11,7 @@ import {
   DayChipRow,
 } from "@/src/features/schedule/components/DayChipRow";
 import {
-  useBookingRequestedDates,
+  useBookingDateMarkers,
   useBookings,
 } from "@/src/features/schedule/hooks";
 import {
@@ -164,17 +164,18 @@ export function ScheduleActiveBookingsScreen() {
   const reqDateTo = toApiDate(
     new Date(today.getFullYear() + 1, today.getMonth(), today.getDate()),
   );
-  const { data: requestedList = [] } = useBookingRequestedDates(
-    reqDateFrom,
-    reqDateTo,
-  );
-  const requestedDateSet = React.useMemo(() => {
-    const s = new Set<string>();
-    requestedList.forEach((b) => {
-      s.add(toApiDate(new Date((b.scheduledAt ?? b.createdAt) as Date)));
-    });
-    return s;
-  }, [requestedList]);
+  const { data: markersData } = useBookingDateMarkers(reqDateFrom, reqDateTo);
+  const { requestedDateSet, waitingDateSet } = React.useMemo(() => {
+    const requested = new Set<string>();
+    const waiting = new Set<string>();
+    if (markersData?.markers) {
+      for (const [dateKey, entry] of Object.entries(markersData.markers)) {
+        if (entry.requested) requested.add(dateKey);
+        if (entry.waiting) waiting.add(dateKey);
+      }
+    }
+    return { requestedDateSet: requested, waitingDateSet: waiting };
+  }, [markersData]);
 
   const { data: rawBookings = [], isLoading } = useBookings(selectedKey, {
     status: "all",
@@ -233,6 +234,7 @@ export function ScheduleActiveBookingsScreen() {
               onSelect={handleSelectDay}
               onShowMore={() => setCalendarVisible(true)}
               highlightDates={requestedDateSet}
+              waitingDates={waitingDateSet}
             />
           </View>
         </>
@@ -361,6 +363,7 @@ export function ScheduleActiveBookingsScreen() {
         selectedDate={selectedDate}
         disablePast={false}
         highlightDates={requestedDateSet}
+        waitingDates={waitingDateSet}
         onSelect={handleCalendarSelect}
         onClose={() => setCalendarVisible(false)}
       />
