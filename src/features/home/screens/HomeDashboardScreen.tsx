@@ -50,38 +50,45 @@ function getGreeting() {
   return "Good Evening,";
 }
 
-const SHORTCUT_COLORS = {
-  barbers: { bg: "#fff3e0", icon: "#f59e0b" },
-  customers: { bg: "#dbeafe", icon: "#2563eb" },
-  services: { bg: "#ede9fe", icon: "#7c3aed" },
-  openHours: { bg: "#fce7f3", icon: "#db2777" },
-  newBook: { bg: "#dcfce7", icon: "#16a34a" },
-};
 
-const STAT_CONFIG = [
+
+const STAT_CONFIG: {
+  key: string;
+  label: string;
+  icon: React.ComponentProps<typeof Ionicons>["name"];
+  bg: string;
+  valueColor: string;
+  labelColor?: string;
+}[] = [
   {
     key: "walkIn",
     label: "Walk-In",
-    bg: "#fff8e1",
+    icon: "walk",
+    bg: Colors.brand.primarySurface,
     valueColor: Colors.brand.primaryDark,
   },
   {
     key: "appointment",
     label: "Appoint.",
-    bg: "#dbeafe",
-    valueColor: "#2563eb",
-  },
-  {
-    key: "inProgress",
-    label: "In Progress",
-    bg: "#ede9fe",
-    valueColor: "#7c3aed",
+    icon: "calendar-outline",
+    bg: Colors.brand.primarySurface,
+    valueColor: Colors.brand.primaryDark,
   },
   {
     key: "waiting",
     label: "Waiting",
-    bg: "#fee2e2",
-    valueColor: Colors.status.danger,
+    icon: "time-outline",
+    bg: Colors.brand.primarySurface,
+    valueColor: Colors.status.waiting,
+    labelColor: Colors.status.waiting,
+  },
+  {
+    key: "inProgress",
+    label: "In Progress",
+    icon: "sync-outline",
+    bg: Colors.brand.primarySurface,
+    valueColor: Colors.status.inProgress,
+    labelColor: Colors.status.inProgress,
   },
 ];
 
@@ -350,12 +357,12 @@ export function HomeDashboardScreen() {
           >
             <ShortcutTile
               label="New Book"
-              iconBg={SHORTCUT_COLORS.newBook.bg}
+              dotColor={Colors.brand.primary}
               icon={
                 <Ionicons
-                  name="calendar"
+                  name="calendar-outline"
                   size={22}
-                  color={SHORTCUT_COLORS.newBook.icon}
+                  color={Colors.text.primary}
                 />
               }
               onPress={() => setNewBookVisible(true)}
@@ -363,12 +370,12 @@ export function HomeDashboardScreen() {
             />
             <ShortcutTile
               label="Barbers"
-              iconBg={SHORTCUT_COLORS.barbers.bg}
+              dotColor={Colors.brand.primary}
               icon={
                 <Ionicons
-                  name="people"
+                  name="people-outline"
                   size={22}
-                  color={SHORTCUT_COLORS.barbers.icon}
+                  color={Colors.text.primary}
                 />
               }
               onPress={() => router.push("/d/barbers-management")}
@@ -376,12 +383,12 @@ export function HomeDashboardScreen() {
             />
             <ShortcutTile
               label="Customers"
-              iconBg={SHORTCUT_COLORS.customers.bg}
+              dotColor={Colors.brand.primary}
               icon={
                 <Ionicons
-                  name="person"
+                  name="person-outline"
                   size={22}
-                  color={SHORTCUT_COLORS.customers.icon}
+                  color={Colors.text.primary}
                 />
               }
               onPress={() => router.push("/d/customer-management")}
@@ -389,12 +396,12 @@ export function HomeDashboardScreen() {
             />
             <ShortcutTile
               label="Services"
-              iconBg={SHORTCUT_COLORS.services.bg}
+              dotColor={Colors.brand.primary}
               icon={
                 <Ionicons
-                  name="cut"
+                  name="cut-outline"
                   size={22}
-                  color={SHORTCUT_COLORS.services.icon}
+                  color={Colors.text.primary}
                 />
               }
               onPress={() => router.push("/d/services-management")}
@@ -402,12 +409,12 @@ export function HomeDashboardScreen() {
             />
             <ShortcutTile
               label="Open Hours"
-              iconBg={SHORTCUT_COLORS.openHours.bg}
+              dotColor={Colors.brand.primary}
               icon={
                 <Ionicons
                   name="time-outline"
                   size={22}
-                  color={SHORTCUT_COLORS.openHours.icon}
+                  color={Colors.text.primary}
                 />
               }
               onPress={() => router.push("/d/open-hours")}
@@ -428,10 +435,24 @@ export function HomeDashboardScreen() {
                 key={s.key}
                 style={[styles.statCard, { backgroundColor: s.bg }]}
               >
+                <View style={styles.statIconCircle}>
+                  <Ionicons
+                    name={s.icon}
+                    size={16}
+                    color={s.valueColor}
+                  />
+                </View>
                 <Text style={[styles.statValue, { color: s.valueColor }]}>
                   {statValues[s.key]}
                 </Text>
-                <Text style={styles.statLabel}>{s.label}</Text>
+                <Text
+                  style={[
+                    styles.statLabel,
+                    s.labelColor ? { color: s.labelColor } : undefined,
+                  ]}
+                >
+                  {s.label}
+                </Text>
               </View>
             ))}
           </View>
@@ -920,7 +941,7 @@ const styles = StyleSheet.create({
   },
   seeAll: {
     fontSize: 13,
-    color: Colors.text.muted,
+    color: Colors.brand.primaryDark,
     fontWeight: "500",
   },
 
@@ -937,6 +958,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     alignItems: "center",
     gap: 4,
+  },
+  statIconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: Colors.bg.default,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 4,
   },
   statValue: {
     fontSize: 26,
