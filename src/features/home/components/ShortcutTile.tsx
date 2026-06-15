@@ -9,9 +9,10 @@ interface Props {
   onPress?: () => void;
   style?: ViewStyle;
   iconBg?: string;
+  dotColor?: string;
 }
 
-export function ShortcutTile({ label, icon, onPress, style, iconBg }: Props) {
+export function ShortcutTile({ label, icon, onPress, style, iconBg, dotColor }: Props) {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -24,6 +25,7 @@ export function ShortcutTile({ label, icon, onPress, style, iconBg }: Props) {
           iconBg ? { backgroundColor: iconBg, borderWidth: 0 } : undefined,
         ]}
       >
+        {dotColor ? <View style={[styles.dot, { backgroundColor: dotColor }]} /> : null}
         {icon}
       </View>
       <Text style={styles.label}>{label}</Text>
@@ -46,6 +48,15 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.bg.default,
     alignItems: "center",
     justifyContent: "center",
+  },
+  dot: {
+    position: "absolute",
+    bottom: 16,
+    right: 14,
+    width: 12,
+    height: 12,
+    borderRadius: 12,
+    opacity: 0.8,
   },
   label: {
     fontSize: 12,
