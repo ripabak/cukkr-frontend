@@ -83,6 +83,7 @@ export function BarbershopSettingsScreen() {
                 ? barbershop.name
                     .split(" ")
                     .slice(0, 2)
+                    .filter(Boolean)
                     .map((w: string) => w[0].toUpperCase())
                     .join("")
                 : "?"}
