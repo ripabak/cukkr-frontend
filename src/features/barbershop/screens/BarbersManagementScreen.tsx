@@ -130,7 +130,7 @@ export function BarbersManagementScreen() {
                             id: member.id,
                             name: member.user.name,
                             type: "member",
-                            memberIdOrEmail: member.userId ?? member.user.email,
+                            memberIdOrEmail: member.id,
                           })
                   }
                   style={
