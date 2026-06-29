@@ -3,6 +3,7 @@ export { CreateBarbershopFirstServiceScreen } from "./screens/CreateBarbershopFi
 export { CreateBarbershopInviteBarberEmptyScreen } from "./screens/CreateBarbershopInviteBarberEmptyScreen";
 export { CreateBarbershopInviteBarberFilledScreen } from "./screens/CreateBarbershopInviteBarberFilledScreen";
 export { CreateBarbershopSuccessScreen } from "./screens/CreateBarbershopSuccessScreen";
+export { CreateBarbershopOpenHoursScreen } from "./screens/CreateBarbershopOpenHoursScreen";
 
 export {
   CreateBarbershopProvider,

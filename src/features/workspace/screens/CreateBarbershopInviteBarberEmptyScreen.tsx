@@ -79,7 +79,7 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
 
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
-      <WizardProgress totalSteps={3} currentStep={2} style={styles.wizard} />
+      <WizardProgress totalSteps={4} currentStep={3} style={styles.wizard} />
       <Text style={styles.title}>Invite Barber</Text>
       <Text style={styles.subtitle}>Inviting barber to your barbershop</Text>
       <TextInputField

@@ -32,7 +32,7 @@ export function CreateBarbershopNameLogoScreen() {
 
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
-      <WizardProgress totalSteps={3} currentStep={0} style={styles.wizard} />
+      <WizardProgress totalSteps={4} currentStep={0} style={styles.wizard} />
       <Text style={styles.title}>Create Barbershop</Text>
       <Text style={styles.subtitle}>Set up your own barbershop</Text>
 

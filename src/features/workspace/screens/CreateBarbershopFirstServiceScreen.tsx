@@ -87,7 +87,7 @@ export function CreateBarbershopFirstServiceScreen() {
                   serviceId: serviceResponse?.id,
                 });
 
-                router.push("/d/create-barbershop-invite-barber-empty");
+                router.push("/d/create-barbershop-open-hours");
               } catch (error) {
                 console.log(error);
                 toast.error(getErrorMessage(error));
@@ -114,7 +114,7 @@ export function CreateBarbershopFirstServiceScreen() {
 
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
-      <WizardProgress totalSteps={3} currentStep={1} style={styles.wizard} />
+      <WizardProgress totalSteps={4} currentStep={1} style={styles.wizard} />
       <Text style={styles.title}>Create Your First Service</Text>
       <Text style={styles.subtitle}>
         This will be the default service for your barbershop. You can change it
