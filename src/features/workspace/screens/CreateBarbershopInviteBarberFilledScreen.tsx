@@ -1,5 +1,6 @@
 import { Colors } from "@/src/theme/colors";
 import { InviteRow } from "@/src/features/workspace/components/InviteRow";
+import { BackButton } from "@/src/components/BackButton";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SecondaryButton } from "@/src/components/SecondaryButton";
@@ -85,7 +86,7 @@ export function CreateBarbershopInviteBarberFilledScreen() {
 
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
-      <WizardProgress totalSteps={3} currentStep={2} style={styles.wizard} />
+      <WizardProgress totalSteps={2} currentStep={1} style={styles.wizard} />
       <Text style={styles.title}>Invite Barber</Text>
       <Text style={styles.subtitle}>Inviting barber to your barbershop</Text>
 
@@ -120,7 +121,12 @@ export function CreateBarbershopInviteBarberFilledScreen() {
       />
 
       <View style={styles.flex} />
-      <PrimaryButton label="Finish Setup" onPress={handleContinue} />
+      <View style={styles.buttonRow}>
+        <BackButton onPress={() => router.back()} />
+        <View style={styles.primaryButtonWrapper}>
+          <PrimaryButton label="Finish Setup" onPress={handleContinue} />
+        </View>
+      </View>
     </ScreenShell>
   );
 }
@@ -159,6 +165,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
   },
   flex: {
+    flex: 1,
+  },
+  buttonRow: {
+    flexDirection: "row",
+    gap: 12,
+    marginBottom: 16,
+  },
+  primaryButtonWrapper: {
     flex: 1,
   },
 });

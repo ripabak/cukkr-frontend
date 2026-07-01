@@ -1,28 +1,25 @@
 import { Colors } from "@/src/theme/colors";
+import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from "react-native";
+import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
 
 interface Props {
-  label: string;
   onPress?: () => void;
   style?: ViewStyle;
-  color?: string;
 }
 
-export function SecondaryButton({ label, onPress, style, color }: Props) {
+export function BackButton({ onPress, style }: Props) {
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.8}
-      style={[
-        styles.button,
-        color ? { borderColor: color } : undefined,
-        style,
-      ]}
+      style={[styles.button, style]}
     >
-      <Text style={[styles.label, color ? { color } : undefined]}>
-        {label}
-      </Text>
+      <Ionicons
+        name="chevron-back-outline"
+        size={24}
+        color={Colors.text.primary}
+      />
     </TouchableOpacity>
   );
 }
@@ -34,13 +31,8 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: Colors.border.default,
     height: 52,
+    width: 56,
     alignItems: "center",
     justifyContent: "center",
-    width: "100%",
-  },
-  label: {
-    color: Colors.text.primary,
-    fontSize: 16,
-    fontWeight: "600",
   },
 });

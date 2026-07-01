@@ -1,24 +1,21 @@
 import { Colors } from "@/src/theme/colors";
 import { DayHoursRow } from "@/src/components/DayHoursRow";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
-import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
-import {
-  useOpenHours,
-  useUpdateOpenHours,
-} from "@/src/features/barbershop/hooks";
+import { WizardProgress } from "@/src/features/workspace/components/WizardProgress";
+import { useToast } from "@/src/lib/providers";
 import {
   DAY_LABELS,
   DEFAULT_CLOSE,
   DEFAULT_OPEN,
   TimeValue,
-  stringToTime,
   timeToString,
 } from "@/src/utils/time-format";
-import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { openHoursService } from "../services";
+import { getErrorMessage } from "../utils/error-handler";
 
 interface DayConfig {
   dayOfWeek: number;
@@ -36,31 +33,11 @@ const DEFAULT_DAYS: DayConfig[] = [1, 2, 3, 4, 5, 6, 0].map((day) => ({
   close: DEFAULT_CLOSE,
 }));
 
-export function OpenHoursScreen() {
+export function CreateBarbershopOpenHoursScreen() {
   const router = useRouter();
   const toast = useToast();
-  const { data: apiDays, isLoading } = useOpenHours();
-  const { mutate: updateHours, isPending: isSaving } = useUpdateOpenHours();
   const [days, setDays] = useState<DayConfig[]>(DEFAULT_DAYS);
-  const [initialized, setInitialized] = useState(false);
-
-  useEffect(() => {
-    if (apiDays && apiDays.length > 0 && !initialized) {
-      setDays((prev) =>
-        prev.map((d) => {
-          const api = apiDays.find((a) => a.dayOfWeek === d.dayOfWeek);
-          if (!api) return d;
-          return {
-            ...d,
-            enabled: api.isOpen,
-            open: api.openTime ? stringToTime(api.openTime) : DEFAULT_OPEN,
-            close: api.closeTime ? stringToTime(api.closeTime) : DEFAULT_CLOSE,
-          };
-        }),
-      );
-      setInitialized(true);
-    }
-  }, [apiDays, initialized]);
+  const [isSaving, setIsSaving] = useState(false);
 
   const updateDay = (dayOfWeek: number, updates: Partial<DayConfig>) => {
     setDays((prev) =>
@@ -68,26 +45,30 @@ export function OpenHoursScreen() {
     );
   };
 
-  const handleSave = () => {
-    const payload = days.map((d) => ({
-      dayOfWeek: d.dayOfWeek,
-      isOpen: d.enabled,
-      openTime: d.enabled ? timeToString(d.open) : null,
-      closeTime: d.enabled ? timeToString(d.close) : null,
-    }));
+  const handleSave = async () => {
+    setIsSaving(true);
 
-    updateHours(payload, {
-      onSuccess: () => {
-        toast.success("Open hours saved");
-        router.back();
-      },
-      onError: (e) => toast.error(e.message || "Failed to save open hours"),
-    });
+    try {
+      const payload = days.map((d) => ({
+        dayOfWeek: d.dayOfWeek,
+        isOpen: d.enabled,
+        openTime: d.enabled ? timeToString(d.open) : null,
+        closeTime: d.enabled ? timeToString(d.close) : null,
+      }));
+
+      await openHoursService.update(payload);
+      router.push("/d/create-barbershop-invite-barber-empty");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
-    <ScreenShell headerSlot={<ScreenHeader onBack={() => router.back()} />}>
-      <Text style={styles.title}>Open Hours</Text>
+    <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
+      <WizardProgress totalSteps={2} currentStep={0} style={styles.wizard} />
+      <Text style={styles.title}>Set Open Hours</Text>
       <Text style={styles.subtitle}>
         Set your barbershop operating hours for each day
       </Text>
@@ -108,33 +89,42 @@ export function OpenHoursScreen() {
         ))}
       </View>
 
+      <View style={styles.flex} />
       <PrimaryButton
-        label={isSaving ? "Saving..." : "Save Hours"}
+        label={isSaving ? "Saving..." : "Save & Continue"}
         onPress={handleSave}
-        disabled={isSaving || isLoading}
-        style={styles.saveBtn}
+        disabled={isSaving}
+        style={styles.button}
       />
     </ScreenShell>
   );
 }
 
 const styles = StyleSheet.create({
+  wizard: {
+    marginBottom: 32,
+  },
   title: {
     fontSize: 28,
     fontWeight: "700",
     color: Colors.text.primary,
-    marginTop: 8,
   },
   subtitle: {
     fontSize: 14,
     color: Colors.text.secondary,
-    marginTop: 4,
-    marginBottom: 20,
+    marginTop: 8,
+    marginBottom: 24,
   },
   card: {
     backgroundColor: Colors.brand.primarySurface,
     borderRadius: 16,
     marginBottom: 24,
   },
-  saveBtn: {},
+  flex: {
+    flex: 1,
+    minHeight: 32,
+  },
+  button: {
+    marginBottom: 16,
+  },
 });
