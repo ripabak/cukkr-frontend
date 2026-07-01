@@ -6,16 +6,23 @@ interface Props {
   label: string;
   onPress?: () => void;
   style?: ViewStyle;
+  color?: string;
 }
 
-export function SecondaryButton({ label, onPress, style }: Props) {
+export function SecondaryButton({ label, onPress, style, color }: Props) {
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.8}
-      style={[styles.button, style]}
+      style={[
+        styles.button,
+        color ? { borderColor: color } : undefined,
+        style,
+      ]}
     >
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, color ? { color } : undefined]}>
+        {label}
+      </Text>
     </TouchableOpacity>
   );
 }
