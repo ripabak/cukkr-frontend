@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import { MultilineInputField } from "@/src/components/MultilineInputField";
 import { PrefixedInputField } from "@/src/components/PrefixedInputField";
+import { BackButton } from "@/src/components/BackButton";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { TextInputField } from "@/src/components/TextInputField";
@@ -87,7 +88,8 @@ export function CreateBarbershopFirstServiceScreen() {
                   serviceId: serviceResponse?.id,
                 });
 
-                router.push("/d/create-barbershop-open-hours");
+                router.back();
+                router.replace("/d/create-barbershop-open-hours");
               } catch (error) {
                 console.log(error);
                 toast.error(getErrorMessage(error));
@@ -114,7 +116,7 @@ export function CreateBarbershopFirstServiceScreen() {
 
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
-      <WizardProgress totalSteps={4} currentStep={1} style={styles.wizard} />
+      <WizardProgress totalSteps={2} currentStep={1} style={styles.wizard} />
       <Text style={styles.title}>Create Your First Service</Text>
       <Text style={styles.subtitle}>
         This will be the default service for your barbershop. You can change it
@@ -142,14 +144,18 @@ export function CreateBarbershopFirstServiceScreen() {
         onChangeText={setDuration}
       />
       <View style={styles.flex} />
-      <PrimaryButton
-        label={
-          isCreatingOrg || isSettingActive ? "Setting up..." : "Finish Setup"
-        }
-        style={styles.button}
-        onPress={handleFinish}
-        disabled={!isValid || isCreatingOrg || isSettingActive}
-      />
+      <View style={styles.buttonRow}>
+        <BackButton onPress={() => router.back()} />
+        <View style={styles.primaryButtonWrapper}>
+          <PrimaryButton
+            label={
+              isCreatingOrg || isSettingActive ? "Setting up..." : "Finish Setup"
+            }
+            onPress={handleFinish}
+            disabled={!isValid || isCreatingOrg || isSettingActive}
+          />
+        </View>
+      </View>
     </ScreenShell>
   );
 }
@@ -186,7 +192,12 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: 32,
   },
-  button: {
+  buttonRow: {
+    flexDirection: "row",
+    gap: 12,
     marginBottom: 16,
+  },
+  primaryButtonWrapper: {
+    flex: 1,
   },
 });

@@ -67,7 +67,7 @@ export function CreateBarbershopOpenHoursScreen() {
 
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
-      <WizardProgress totalSteps={4} currentStep={2} style={styles.wizard} />
+      <WizardProgress totalSteps={2} currentStep={0} style={styles.wizard} />
       <Text style={styles.title}>Set Open Hours</Text>
       <Text style={styles.subtitle}>
         Set your barbershop operating hours for each day

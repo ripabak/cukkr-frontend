@@ -3,7 +3,7 @@ import { GradientButton } from "@/src/features/workspace/components/GradientButt
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
 import { useRouter } from "expo-router";
-import React, { useEffect } from "react";
+import React from "react";
 import { StyleSheet, Text } from "react-native";
 
 export function CreateBarbershopSuccessScreen() {
@@ -11,9 +11,9 @@ export function CreateBarbershopSuccessScreen() {
   const { formData, resetFormData } = useCreateBarbershopForm();
   const barbershopName = formData.name || "Your Barbershop";
 
-  const handleOpenBarbershop = async () => {
+  const handleOpenBarbershop = () => {
     resetFormData();
-    router.replace("/");
+    router.replace("/d/home");
   };
 
   return (
