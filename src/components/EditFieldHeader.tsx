@@ -13,10 +13,11 @@ interface Props {
   title: string;
   onBack?: () => void;
   onSave?: () => void;
+  hideSave?: boolean;
   style?: ViewStyle;
 }
 
-export function EditFieldHeader({ title, onBack, onSave, style }: Props) {
+export function EditFieldHeader({ title, onBack, onSave, hideSave, style }: Props) {
   return (
     <View style={[styles.container, style]}>
       <TouchableOpacity
@@ -27,13 +28,17 @@ export function EditFieldHeader({ title, onBack, onSave, style }: Props) {
         <Ionicons name="chevron-back" size={18} color={Colors.text.primary} />
       </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>
-      <TouchableOpacity
-        onPress={onSave}
-        activeOpacity={0.7}
-        style={styles.saveButton}
-      >
-        <Ionicons name="checkmark" size={18} color={Colors.text.primary} />
-      </TouchableOpacity>
+      {hideSave ? (
+        <View style={styles.placeholder} />
+      ) : (
+        <TouchableOpacity
+          onPress={onSave}
+          activeOpacity={0.7}
+          style={styles.saveButton}
+        >
+          <Ionicons name="checkmark" size={18} color={Colors.text.primary} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -67,5 +72,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
+  },
+  placeholder: {
+    width: 36,
+    height: 36,
   },
 });

@@ -7,6 +7,7 @@ interface Props {
   value: string;
   onChangeText: (t: string) => void;
   placeholder?: string;
+  editable?: boolean;
   style?: ViewStyle;
 }
 
@@ -15,6 +16,7 @@ export function PrefixedInputField({
   value,
   onChangeText,
   placeholder,
+  editable,
   style,
 }: Props) {
   return (
@@ -25,6 +27,7 @@ export function PrefixedInputField({
         onChangeText={onChangeText}
         placeholder={placeholder}
         placeholderTextColor={Colors.text.muted}
+        editable={editable}
         style={styles.input}
       />
     </View>

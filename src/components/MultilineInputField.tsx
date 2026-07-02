@@ -8,6 +8,7 @@ interface Props {
   onChangeText: (t: string) => void;
   placeholder?: string;
   numberOfLines?: number;
+  editable?: boolean;
   style?: ViewStyle;
 }
 
@@ -17,6 +18,7 @@ export function MultilineInputField({
   onChangeText,
   placeholder,
   numberOfLines,
+  editable,
   style,
 }: Props) {
   return (
@@ -31,6 +33,7 @@ export function MultilineInputField({
           multiline
           numberOfLines={numberOfLines}
           textAlignVertical="top"
+          editable={editable}
           style={styles.input}
         />
       </View>

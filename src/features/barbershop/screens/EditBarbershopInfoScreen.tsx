@@ -8,10 +8,11 @@ import {
   useBarbershopCurrent,
   useUpdateBarbershopSettings,
 } from "@/src/features/barbershop/hooks";
+import { useMemberRole } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 type Mode = "name" | "description" | "address";
 
@@ -67,6 +68,8 @@ export function EditBarbershopInfoScreen() {
   const { data: barbershop, isLoading: isFetching } = useBarbershopCurrent();
   const { mutate: updateSettings, isPending: isSaving } =
     useUpdateBarbershopSettings();
+  const { role } = useMemberRole();
+  const isOwner = role === "owner";
   const [value, setValue] = useState("");
   const [initialized, setInitialized] = useState(false);
 
@@ -116,6 +119,7 @@ export function EditBarbershopInfoScreen() {
           title={config.title}
           onBack={() => router.back()}
           onSave={isSaving ? undefined : handleSave}
+          hideSave={!isOwner}
         />
       }
       contentStyle={styles.content}
@@ -131,15 +135,22 @@ export function EditBarbershopInfoScreen() {
           placeholder={config.placeholder}
           value={value}
           onChangeText={setValue}
+          editable={isOwner}
         />
       ) : (
         <TextInputField
           placeholder={config.placeholder}
           value={value}
           onChangeText={setValue}
+          editable={isOwner}
         />
       )}
       <HelperCopy lines={config.helperLines} style={styles.helper} />
+      {!isOwner && (
+        <View style={styles.viewOnlyBanner}>
+          <Text style={styles.viewOnlyText}>Only the barbershop owner can edit this information</Text>
+        </View>
+      )}
     </ScreenShell>
   );
 }
@@ -153,5 +164,17 @@ const styles = StyleSheet.create({
   },
   helper: {
     marginTop: 16,
+  },
+  viewOnlyBanner: {
+    marginTop: 24,
+    padding: 12,
+    backgroundColor: Colors.bg.surface,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  viewOnlyText: {
+    fontSize: 13,
+    color: Colors.text.muted,
+    textAlign: "center",
   },
 });
