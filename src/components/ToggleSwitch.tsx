@@ -5,15 +5,17 @@ import { TouchableOpacity, View, StyleSheet, ViewStyle } from "react-native";
 interface Props {
   value: boolean;
   onValueChange: (v: boolean) => void;
+  disabled?: boolean;
   style?: ViewStyle;
 }
 
-export function ToggleSwitch({ value, onValueChange, style }: Props) {
+export function ToggleSwitch({ value, onValueChange, disabled, style }: Props) {
   return (
     <TouchableOpacity
       onPress={() => onValueChange(!value)}
       activeOpacity={0.8}
-      style={[styles.track, value ? styles.trackOn : styles.trackOff, style]}
+      disabled={disabled}
+      style={[styles.track, value ? styles.trackOn : styles.trackOff, disabled && styles.trackDisabled, style]}
     >
       <View style={[styles.thumb, value ? styles.thumbOn : styles.thumbOff]} />
     </TouchableOpacity>
@@ -33,6 +35,9 @@ const styles = StyleSheet.create({
   },
   trackOff: {
     backgroundColor: Colors.border.default,
+  },
+  trackDisabled: {
+    opacity: 0.5,
   },
   thumb: {
     width: 20,

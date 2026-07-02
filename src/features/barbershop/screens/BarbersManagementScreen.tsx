@@ -1,5 +1,6 @@
 import { Colors } from "@/src/theme/colors";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
+import { Permission } from "@/src/components/Permission";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
@@ -10,7 +11,7 @@ import {
   useCancelBarberInvitation,
   useRemoveBarber,
 } from "@/src/features/barbershop/hooks";
-import { useAuthUser } from "@/src/hooks";
+import { useAuthUser, useMemberRole } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -27,6 +28,8 @@ export function BarbersManagementScreen() {
   const router = useRouter();
   const toast = useToast();
   const { user: currentUser } = useAuthUser();
+  const { role } = useMemberRole();
+  const canManage = role === "owner" || role === "admin";
 
   const { data: members = [], isLoading: loadingMembers } = useBarbersList();
   const { data: invitations = [], isLoading: loadingInvitations } =
@@ -89,12 +92,15 @@ export function BarbersManagementScreen() {
                 role={inv.role}
                 status="Pending"
                 statusVariant="pending"
-                onRemove={() =>
-                  setRemoveTarget({
-                    id: inv.id,
-                    name: inv.email,
-                    type: "invitation",
-                  })
+                onRemove={
+                  canManage
+                    ? () =>
+                        setRemoveTarget({
+                          id: inv.id,
+                          name: inv.email,
+                          type: "invitation",
+                        })
+                    : undefined
                 }
                 style={
                   index < pendingInvitations.length - 1
@@ -123,7 +129,7 @@ export function BarbersManagementScreen() {
                   status="Active"
                   statusVariant="active"
                   onRemove={
-                    isOwner
+                    isOwner || !canManage
                       ? undefined
                       : () =>
                           setRemoveTarget({
@@ -147,11 +153,13 @@ export function BarbersManagementScreen() {
         <Text style={styles.empty}>No barbers yet. Invite one above.</Text>
       ) : null}
 
-      <PrimaryButton
-        label="Invite Barber"
-        onPress={() => router.push("/d/invite-barber")}
-        style={styles.inviteBtn}
-      />
+      <Permission roles={["owner", "admin"]}>
+        <PrimaryButton
+          label="Invite Barber"
+          onPress={() => router.push("/d/invite-barber")}
+          style={styles.inviteBtn}
+        />
+      </Permission>
 
       <ConfirmationModal
         visible={!!removeTarget}

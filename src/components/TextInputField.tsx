@@ -17,6 +17,7 @@ interface Props {
   placeholder?: string;
   keyboardType?: KeyboardTypeOptions;
   secureTextEntry?: boolean;
+  editable?: boolean;
   style?: ViewStyle;
   inputStyle?: import("react-native").TextStyle;
 }
@@ -29,6 +30,7 @@ export function TextInputField({
   placeholder,
   keyboardType,
   secureTextEntry,
+  editable,
   style,
   inputStyle,
 }: Props) {
@@ -48,6 +50,7 @@ export function TextInputField({
           placeholderTextColor={Colors.text.muted}
           keyboardType={keyboardType}
           secureTextEntry={secureTextEntry}
+          editable={editable}
           style={[styles.input, inputStyle]}
         />
       </View>

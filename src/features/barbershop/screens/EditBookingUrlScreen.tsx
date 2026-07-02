@@ -7,12 +7,12 @@ import {
   useBarbershopSlugCheck,
   useUpdateBarbershopSettings,
 } from "@/src/features/barbershop/hooks";
-import { useDebounce } from "@/src/hooks";
+import { useDebounce, useMemberRole } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
 import { useRouter } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 export function EditBookingUrlScreen() {
   const router = useRouter();
@@ -21,6 +21,8 @@ export function EditBookingUrlScreen() {
   const { data: barbershop, isLoading: isFetching } = useBarbershopCurrent();
   const { mutate: updateSettings, isPending: isSaving } =
     useUpdateBarbershopSettings();
+  const { role } = useMemberRole();
+  const isOwner = role === "owner";
 
   const [slug, setSlug] = useState("");
   const [initialized, setInitialized] = useState(false);
@@ -92,6 +94,7 @@ export function EditBookingUrlScreen() {
           title="Book Url"
           onBack={() => router.back()}
           onSave={canSave ? handleSave : undefined}
+          hideSave={!isOwner}
         />
       }
       contentStyle={styles.content}
@@ -108,6 +111,7 @@ export function EditBookingUrlScreen() {
             prefix="https://cukkr.com/"
             value={slug}
             onChangeText={setSlug}
+            editable={isOwner}
           />
           {slugFeedback && (
             <Text style={[styles.slugFeedback, { color: slugFeedback.color }]}>
@@ -126,6 +130,11 @@ export function EditBookingUrlScreen() {
             }
             style={styles.helper}
           />
+          {!isOwner && (
+            <View style={styles.viewOnlyBanner}>
+              <Text style={styles.viewOnlyText}>Only the barbershop owner can edit the booking URL</Text>
+            </View>
+          )}
         </>
       )}
     </ScreenShell>
@@ -145,5 +154,17 @@ const styles = StyleSheet.create({
   },
   helper: {
     marginTop: 16,
+  },
+  viewOnlyBanner: {
+    marginTop: 24,
+    padding: 12,
+    backgroundColor: Colors.bg.surface,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  viewOnlyText: {
+    fontSize: 13,
+    color: Colors.text.muted,
+    textAlign: "center",
   },
 });

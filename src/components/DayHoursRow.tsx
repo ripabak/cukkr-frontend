@@ -24,6 +24,7 @@ interface Props {
   closeTime: TimeValue;
   onOpenTimeChange: (t: TimeValue) => void;
   onCloseTimeChange: (t: TimeValue) => void;
+  editable?: boolean;
   isLast?: boolean;
   style?: ViewStyle;
 }
@@ -42,6 +43,7 @@ export function DayHoursRow({
   closeTime,
   onOpenTimeChange,
   onCloseTimeChange,
+  editable,
   isLast,
   style,
 }: Props) {
@@ -51,17 +53,17 @@ export function DayHoursRow({
   return (
     <View style={[styles.wrapper, !isLast && styles.borderBottom, style]}>
       <View style={styles.row}>
-        <ToggleSwitch value={enabled} onValueChange={onEnabledChange} />
+        <ToggleSwitch value={enabled} onValueChange={onEnabledChange} disabled={!editable} />
         <Text style={[styles.day, !enabled && styles.dayDisabled]}>{day}</Text>
         <View style={styles.times}>
           <TouchableOpacity
             onPress={() => setShowOpenPicker(true)}
             activeOpacity={0.7}
-            style={[styles.timePill, !enabled && styles.timePillDisabled]}
-            disabled={!enabled}
+            style={[styles.timePill, (!enabled || !editable) && styles.timePillDisabled]}
+            disabled={!enabled || !editable}
           >
             <Text
-              style={[styles.timeText, !enabled && styles.timeTextDisabled]}
+              style={[styles.timeText, (!enabled || !editable) && styles.timeTextDisabled]}
             >
               {formatTime(openTime)}
             </Text>
@@ -70,8 +72,8 @@ export function DayHoursRow({
           <TouchableOpacity
             onPress={() => setShowClosePicker(true)}
             activeOpacity={0.7}
-            style={[styles.timePill, !enabled && styles.timePillDisabled]}
-            disabled={!enabled}
+            style={[styles.timePill, (!enabled || !editable) && styles.timePillDisabled]}
+            disabled={!enabled || !editable}
           >
             <Text
               style={[styles.timeText, !enabled && styles.timeTextDisabled]}

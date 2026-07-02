@@ -6,15 +6,18 @@ import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { TextInputField } from "@/src/components/TextInputField";
 import { useInviteBarber } from "@/src/features/barbershop/hooks";
 import { validateEmail } from "@/src/features/barbershop/utils/form-validators";
+import { useMemberRole } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export function InviteBarberScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { role } = useMemberRole();
+  const canInvite = role === "owner" || role === "admin";
   const [contact, setContact] = useState("");
   const { mutate: invite, isPending } = useInviteBarber();
 
@@ -44,11 +47,13 @@ export function InviteBarberScreen() {
           title="Invite Barber"
           onBack={() => router.back()}
           rightAction={
-            <IconActionButton
-              iconName="paper-plane-outline"
-              onPress={isPending ? undefined : handleSend}
-              size={36}
-            />
+            canInvite ? (
+              <IconActionButton
+                iconName="paper-plane-outline"
+                onPress={isPending ? undefined : handleSend}
+                size={36}
+              />
+            ) : undefined
           }
         />
 
@@ -59,6 +64,7 @@ export function InviteBarberScreen() {
             value={contact}
             onChangeText={setContact}
             keyboardType="email-address"
+            editable={canInvite}
           />
           <HelperCopy
             lines={[
@@ -66,6 +72,11 @@ export function InviteBarberScreen() {
               "They will receive an invitation to join your barbershop.",
             ]}
           />
+          {!canInvite && (
+            <View style={styles.viewOnlyBanner}>
+              <Text style={styles.viewOnlyText}>Only the barbershop owner or admin can invite barbers</Text>
+            </View>
+          )}
         </View>
       </View>
     </SafeAreaView>
@@ -84,5 +95,17 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 20,
     paddingTop: 8,
+  },
+  viewOnlyBanner: {
+    marginTop: 24,
+    padding: 12,
+    backgroundColor: Colors.bg.surface,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  viewOnlyText: {
+    fontSize: 13,
+    color: Colors.text.muted,
+    textAlign: "center",
   },
 });
