@@ -123,9 +123,11 @@ export function ServiceDetailScreen() {
         >
           <View style={styles.imageWrapper}>
             <View style={styles.serviceImage}>
-              <View style={styles.cameraBadge}>
-                <Ionicons name="camera" size={14} color={Colors.text.primary} />
-              </View>
+              {canManage && (
+                <View style={styles.cameraBadge}>
+                  <Ionicons name="camera" size={14} color={Colors.text.primary} />
+                </View>
+              )}
             </View>
           </View>
 
@@ -158,13 +160,13 @@ export function ServiceDetailScreen() {
             />
           </View>
 
-          <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
-            Operational Details
-          </Text>
-          <Text style={styles.operationalSubtitle}>
-            Toggle activation and configure default service settings.
-          </Text>
           <Permission roles={["owner", "admin"]}>
+            <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+              Operational Details
+            </Text>
+            <Text style={styles.operationalSubtitle}>
+              Toggle activation and configure default service settings.
+            </Text>
             <View style={styles.card}>
               <ToggleRow
                 label="Active"
@@ -299,7 +301,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   card: {
-    backgroundColor: Colors.bg.default,
+    backgroundColor: Colors.bg.surface,
     borderRadius: 16,
   },
   operationalSubtitle: {
