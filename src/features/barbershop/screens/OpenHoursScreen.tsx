@@ -15,6 +15,7 @@ import {
   stringToTime,
   timeToString,
 } from "@/src/utils/time-format";
+import { useMemberRole } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -41,6 +42,8 @@ export function OpenHoursScreen() {
   const toast = useToast();
   const { data: apiDays, isLoading } = useOpenHours();
   const { mutate: updateHours, isPending: isSaving } = useUpdateOpenHours();
+  const { role } = useMemberRole();
+  const canManage = role === "owner" || role === "admin";
   const [days, setDays] = useState<DayConfig[]>(DEFAULT_DAYS);
   const [initialized, setInitialized] = useState(false);
 
@@ -103,17 +106,24 @@ export function OpenHoursScreen() {
             closeTime={day.close}
             onOpenTimeChange={(t) => updateDay(day.dayOfWeek, { open: t })}
             onCloseTimeChange={(t) => updateDay(day.dayOfWeek, { close: t })}
+            editable={canManage}
             isLast={index === days.length - 1}
           />
         ))}
       </View>
 
-      <PrimaryButton
-        label={isSaving ? "Saving..." : "Save Hours"}
-        onPress={handleSave}
-        disabled={isSaving || isLoading}
-        style={styles.saveBtn}
-      />
+      {canManage ? (
+        <PrimaryButton
+          label={isSaving ? "Saving..." : "Save Hours"}
+          onPress={handleSave}
+          disabled={isSaving || isLoading}
+          style={styles.saveBtn}
+        />
+      ) : (
+        <View style={styles.viewOnlyBanner}>
+          <Text style={styles.viewOnlyText}>Only the barbershop owner or admin can edit open hours</Text>
+        </View>
+      )}
     </ScreenShell>
   );
 }
@@ -137,4 +147,15 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   saveBtn: {},
+  viewOnlyBanner: {
+    padding: 12,
+    backgroundColor: Colors.bg.surface,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  viewOnlyText: {
+    fontSize: 13,
+    color: Colors.text.muted,
+    textAlign: "center",
+  },
 });
