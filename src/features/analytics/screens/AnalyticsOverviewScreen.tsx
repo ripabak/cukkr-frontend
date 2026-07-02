@@ -1,3 +1,4 @@
+import { Permission } from "@/src/components/Permission";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -36,6 +37,7 @@ export function AnalyticsOverviewScreen() {
   const highlights = data?.highlights;
 
   return (
+    <Permission roles={["owner", "admin"]}>
     <ScreenShell contentStyle={styles.scrollContent}>
       <View style={styles.topBar}>
         <Text style={styles.pageTitle}>Overview</Text>
@@ -218,6 +220,7 @@ export function AnalyticsOverviewScreen() {
         </>
       ) : null}
     </ScreenShell>
+    </Permission>
   );
 }
 

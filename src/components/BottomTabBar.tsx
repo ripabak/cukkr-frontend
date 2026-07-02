@@ -1,3 +1,4 @@
+import { useMemberRole } from "@/src/hooks";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import {
@@ -30,11 +31,13 @@ const TABS: {
 
 export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
   const insets = useSafeAreaInsets();
+  const { role } = useMemberRole();
+  const visibleTabs = role === "member" ? TABS.filter((t) => t.key !== "stats") : TABS;
   return (
     <View
       style={[styles.container, { paddingBottom: insets.bottom || 12 }, style]}
     >
-      {TABS.map((tab) => {
+      {visibleTabs.map((tab) => {
         const isActive = tab.key === activeTab;
         const color = isActive ? Colors.brand.primary : Colors.icon.muted;
         return (
