@@ -22,15 +22,17 @@ export function DangerButton({ label, onPress, style }: Props) {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: "#FFE4E4",
+    backgroundColor: Colors.bg.surface,
     borderRadius: 12,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
     paddingVertical: 14,
     width: "100%",
   },
   label: {
     fontSize: 15,
     fontWeight: "600",
-    color: "#E53E3E",
+    color: Colors.text.primary,
     textAlign: "center",
   },
 });
