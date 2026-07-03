@@ -1,7 +1,7 @@
 import { EditFieldHeader } from "@/src/components/EditFieldHeader";
 import { HelperCopy } from "@/src/components/HelperCopy";
-import { PrefixedInputField } from "@/src/components/PrefixedInputField";
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { TextInputField } from "@/src/components/TextInputField";
 import {
   useBarbershopCurrent,
   useBarbershopSlugCheck,
@@ -107,8 +107,9 @@ export function EditBookingUrlScreen() {
         />
       ) : (
         <>
-          <PrefixedInputField
-            prefix="https://cukkr.com/"
+          <TextInputField
+            label="https://cukkr.com/"
+            placeholder="your-barbershop"
             value={slug}
             onChangeText={setSlug}
             editable={isOwner}
