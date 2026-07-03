@@ -51,13 +51,19 @@ export function SelectionToolbar({
             />
           </TouchableOpacity>
         ) : null}
-        {hasContact !== false ? (
-          <TouchableOpacity onPress={onToggleSelect}>
-            <Text style={styles.selectText}>
-              {selectionMode ? "Cancel" : "Select"}
-            </Text>
-          </TouchableOpacity>
-        ) : null}
+        <TouchableOpacity
+          onPress={hasContact !== false ? onToggleSelect : undefined}
+          activeOpacity={hasContact !== false ? 0.8 : 1}
+        >
+          <Text
+            style={[
+              styles.selectText,
+              hasContact === false && styles.selectTextDisabled,
+            ]}
+          >
+            {selectionMode ? "Cancel" : "Select"}
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -93,6 +99,8 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     backgroundColor: Colors.bg.default,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -109,5 +117,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 18,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+  },
+  selectTextDisabled: {
+    color: Colors.text.muted,
+    opacity: 0.5,
   },
 });
