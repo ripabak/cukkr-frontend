@@ -37,3 +37,14 @@ export function useCancelBarberInvitation() {
     },
   });
 }
+
+export function useUpdateMemberRole() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ memberId, role }: { memberId: string; role: "admin" | "member" }) =>
+      barbersService.updateMemberRole(memberId, role),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: BARBERS_QUERY_KEYS.all });
+    },
+  });
+}

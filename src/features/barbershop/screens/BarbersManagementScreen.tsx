@@ -5,11 +5,13 @@ import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { MemberCard } from "@/src/features/barbershop/components/MemberCard";
+import { RoleChangeModal } from "@/src/features/barbershop/components/RoleChangeModal";
 import {
   useBarbersInvitations,
   useBarbersList,
   useCancelBarberInvitation,
   useRemoveBarber,
+  useUpdateMemberRole,
 } from "@/src/features/barbershop/hooks";
 import { useAuthUser, useMemberRole } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
@@ -22,6 +24,12 @@ interface RemoveTarget {
   name: string;
   type: "member" | "invitation";
   memberIdOrEmail?: string;
+}
+
+interface RoleChangeTarget {
+  memberId: string;
+  name: string;
+  currentRole: string;
 }
 
 export function BarbersManagementScreen() {
@@ -37,8 +45,12 @@ export function BarbersManagementScreen() {
   const { mutate: removeBarber, isPending: isRemoving } = useRemoveBarber();
   const { mutate: cancelInvite, isPending: isCanceling } =
     useCancelBarberInvitation();
+  const { mutate: updateRole, isPending: isUpdatingRole } =
+    useUpdateMemberRole();
 
   const [removeTarget, setRemoveTarget] = useState<RemoveTarget | null>(null);
+  const [roleChangeTarget, setRoleChangeTarget] =
+    useState<RoleChangeTarget | null>(null);
 
   const isPending = isRemoving || isCanceling;
   const pendingInvitations = invitations.filter(
@@ -71,6 +83,24 @@ export function BarbersManagementScreen() {
         },
       });
     }
+  };
+
+  const handleRoleChangeSave = (newRole: "admin" | "member") => {
+    if (!roleChangeTarget) return;
+
+    updateRole(
+      { memberId: roleChangeTarget.memberId, role: newRole },
+      {
+        onSuccess: () => {
+          toast.success("Role updated");
+          setRoleChangeTarget(null);
+        },
+        onError: (e) => {
+          toast.error(e.message || "Failed to update role");
+          setRoleChangeTarget(null);
+        },
+      },
+    );
   };
 
   const isLoading = loadingMembers || loadingInvitations;
@@ -120,6 +150,7 @@ export function BarbersManagementScreen() {
             {members.map((member, index) => {
               const isYou = member.userId === currentUser?.id;
               const isOwner = member.role === "owner";
+              const canChangeRole = canManage && !isOwner && !isYou;
               return (
                 <MemberCard
                   key={member.id}
@@ -128,6 +159,17 @@ export function BarbersManagementScreen() {
                   isYou={isYou}
                   status="Active"
                   statusVariant="active"
+                  roleChangeable={canChangeRole}
+                  onRoleChange={
+                    canChangeRole
+                      ? () =>
+                          setRoleChangeTarget({
+                            memberId: member.id,
+                            name: member.user.name,
+                            currentRole: member.role,
+                          })
+                      : undefined
+                  }
                   onRemove={
                     isOwner || !canManage
                       ? undefined
@@ -184,6 +226,14 @@ export function BarbersManagementScreen() {
         cancelLabel="Back"
         onConfirm={handleConfirmRemove}
         onCancel={() => setRemoveTarget(null)}
+      />
+
+      <RoleChangeModal
+        visible={!!roleChangeTarget}
+        memberName={roleChangeTarget?.name ?? ""}
+        currentRole={roleChangeTarget?.currentRole ?? "member"}
+        onSave={handleRoleChangeSave}
+        onCancel={() => setRoleChangeTarget(null)}
       />
     </ScreenShell>
   );

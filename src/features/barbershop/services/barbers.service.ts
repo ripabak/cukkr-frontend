@@ -45,4 +45,14 @@ export const barbersService = {
     if (error || !response) throw new Error("Failed to remove barber");
     return response;
   },
+
+  async updateMemberRole(memberId: string, role: "admin" | "member") {
+    const { data: response, error } =
+      await authClient.organization.updateMemberRole({
+        memberId,
+        role,
+      });
+    if (error || !response) throw new Error("Failed to update member role");
+    return response;
+  },
 };

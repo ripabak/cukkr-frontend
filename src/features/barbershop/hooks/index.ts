@@ -15,6 +15,7 @@ export {
   useInviteBarber,
   useRemoveBarber,
   useCancelBarberInvitation,
+  useUpdateMemberRole,
 } from "./useBarbersMutations";
 
 // Services

@@ -20,6 +20,8 @@ interface Props {
   status: string;
   statusVariant?: StatusVariant;
   onRemove?: () => void;
+  roleChangeable?: boolean;
+  onRoleChange?: () => void;
   style?: ViewStyle;
 }
 
@@ -28,11 +30,34 @@ export function MemberCard({
   nameSmall,
   role,
   isYou,
+  roleChangeable,
   status,
   statusVariant = "active",
   onRemove,
+  onRoleChange,
   style,
 }: Props) {
+  const useCompactLayout = roleChangeable !== undefined;
+
+  const roleElement = role ? (
+    roleChangeable ? (
+      <TouchableOpacity
+        key="role-btn"
+        onPress={onRoleChange}
+        activeOpacity={0.7}
+        style={styles.roleBtn}
+      >
+        <Text style={styles.roleBtnText}>
+          {role.charAt(0).toUpperCase() + role.slice(1)}
+        </Text>
+      </TouchableOpacity>
+    ) : (
+      <Text key="role-text" style={styles.role}>
+        {role}
+      </Text>
+    )
+  ) : null;
+
   return (
     <View style={[styles.card, style]}>
       <View style={styles.avatar} />
@@ -46,10 +71,12 @@ export function MemberCard({
           </Text>
           {isYou ? <Text style={styles.you}>(You)</Text> : null}
         </View>
-        {role ? <Text style={styles.role}>{role}</Text> : null}
+        {roleElement}
       </View>
       <View style={styles.actions}>
-        <StatusBadge label={status} variant={statusVariant} />
+        {!useCompactLayout ? (
+          <StatusBadge label={status} variant={statusVariant} />
+        ) : null}
         {onRemove ? (
           <TouchableOpacity
             onPress={onRemove}
@@ -116,6 +143,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
     flexShrink: 0,
+  },
+  roleBtn: {
+    alignSelf: "flex-start",
+    marginTop: 4,
+    backgroundColor: Colors.bg.surface,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+  },
+  roleBtnText: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: Colors.text.primary,
   },
   removeBtn: {
     width: 28,
