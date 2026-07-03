@@ -5,7 +5,7 @@ import {
   SCHEDULE_STATUS_OPTIONS,
   StatusFilterMenu,
 } from "@/src/components/StatusFilterMenu";
-import { ChartCard } from "@/src/features/barbershop/components/ChartCard";
+import { CustomerBookingChart } from "@/src/features/barbershop/components/CustomerBookingChart";
 import { IconActionButton } from "@/src/features/barbershop/components/IconActionButton";
 import {
   MessageItem,
@@ -16,6 +16,7 @@ import { StatCard } from "@/src/features/barbershop/components/StatCard";
 import {
   useCustomerBookings,
   useCustomerById,
+  useCustomerChart,
 } from "@/src/features/barbershop/hooks";
 import { formatCurrency } from "@/src/features/barbershop/utils/form-validators";
 import { Ionicons } from "@expo/vector-icons";
@@ -61,6 +62,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
     useCustomerById(customerId);
   const { data: bookings = [], isLoading: isLoadingBookings } =
     useCustomerBookings(customerId, { status: statusFilter });
+  const { data: chartData = [] } = useCustomerChart(customerId);
 
   if (isLoadingCustomer) {
     return (
@@ -140,9 +142,10 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
               style={styles.statCard}
             />
           </View>
-          <ChartCard
+          <CustomerBookingChart
             title="Book Stats"
             subtitle={`${customer.completedCount} completed · ${customer.cancelledCount} cancelled`}
+            data={chartData}
             style={styles.chartCard}
           />
         </View>

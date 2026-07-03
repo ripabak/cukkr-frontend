@@ -86,15 +86,14 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 14,
     color: Colors.text.primary,
-    flexShrink: 0,
-    marginRight: 12,
+    flex: 0.5,
   },
   valueRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
-    marginLeft: "auto",
-    flexShrink: 1,
+    flex: 0.5,
+    justifyContent: "flex-end",
   },
   value: {
     fontSize: 14,
@@ -105,8 +104,7 @@ const styles = StyleSheet.create({
   placeholder: {
     fontSize: 14,
     color: Colors.text.muted,
-    maxWidth: "50%",
-    marginLeft: "auto",
+    flex: 0.5,
     textAlign: "right",
   },
 });
