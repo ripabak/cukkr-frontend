@@ -37,4 +37,5 @@ export {
   useCustomersList,
   useCustomerById,
   useCustomerBookings,
+  useCustomerChart,
 } from "./useCustomersQueries";

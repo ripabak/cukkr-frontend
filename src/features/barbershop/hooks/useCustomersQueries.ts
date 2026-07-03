@@ -16,6 +16,7 @@ export const CUSTOMERS_QUERY_KEYS = {
   byId: (id: string) => [...CUSTOMERS_QUERY_KEYS.all, "detail", id] as const,
   bookings: (id: string) =>
     [...CUSTOMERS_QUERY_KEYS.all, "bookings", id] as const,
+  chart: (id: string) => [...CUSTOMERS_QUERY_KEYS.all, "chart", id] as const,
 };
 
 export function useCustomersList(options?: {
@@ -54,6 +55,14 @@ export function useCustomerBookings(id: string, options?: { status?: BookingStat
   return useQuery({
     queryKey: CUSTOMERS_QUERY_KEYS.bookings(id),
     queryFn: () => customersService.getBookings(id, options),
+    enabled: !!id,
+  });
+}
+
+export function useCustomerChart(id: string) {
+  return useQuery({
+    queryKey: CUSTOMERS_QUERY_KEYS.chart(id),
+    queryFn: () => customersService.getChart(id),
     enabled: !!id,
   });
 }

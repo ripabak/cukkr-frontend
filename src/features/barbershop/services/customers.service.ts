@@ -42,4 +42,15 @@ export const customersService = {
       );
     return response.data || [];
   },
+
+  async getChart(id: string) {
+    const { data: response, error } = await app.api
+      .customers({ id })
+      .chart.get();
+    if (error || !response)
+      throw new Error(
+        error?.value?.message || "Failed to fetch customer chart",
+      );
+    return response.data || [];
+  },
 };
