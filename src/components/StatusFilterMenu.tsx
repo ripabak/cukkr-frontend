@@ -25,6 +25,8 @@ interface Props {
 
 export const SCHEDULE_STATUS_OPTIONS: StatusOption[] = [
   { label: "All", value: "all" },
+  { label: "Pending", value: "pending", color: Colors.status.warning },
+  { label: "Requested", value: "requested" },
   { label: "Waiting", value: "waiting", color: Colors.status.waiting },
   {
     label: "In Progress",
