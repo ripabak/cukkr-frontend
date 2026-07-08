@@ -102,7 +102,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
       <Text style={styles.customerName}>{customer?.name ?? "—"}</Text>
       <Text style={styles.customerPhone}>
         {customer?.phone ?? customer?.email ?? "No contact"}
-        {customer?.isVerified ? " (verified)" : ""}
+        {customer?.emailVerified || customer?.phoneVerified ? " (verified)" : ""}
       </Text>
 
       <SegmentedTabs

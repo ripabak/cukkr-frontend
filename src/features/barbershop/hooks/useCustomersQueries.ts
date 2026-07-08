@@ -14,8 +14,8 @@ export const CUSTOMERS_QUERY_KEYS = {
       hasContact?.toString() ?? "",
     ] as const,
   byId: (id: string) => [...CUSTOMERS_QUERY_KEYS.all, "detail", id] as const,
-  bookings: (id: string) =>
-    [...CUSTOMERS_QUERY_KEYS.all, "bookings", id] as const,
+  bookings: (id: string, status?: string) =>
+    [...CUSTOMERS_QUERY_KEYS.all, "bookings", id, status ?? "all"] as const,
   chart: (id: string) => [...CUSTOMERS_QUERY_KEYS.all, "chart", id] as const,
 };
 
@@ -53,7 +53,7 @@ type BookingStatus =
 
 export function useCustomerBookings(id: string, options?: { status?: BookingStatus }) {
   return useQuery({
-    queryKey: CUSTOMERS_QUERY_KEYS.bookings(id),
+    queryKey: CUSTOMERS_QUERY_KEYS.bookings(id, options?.status),
     queryFn: () => customersService.getBookings(id, options),
     enabled: !!id,
   });
