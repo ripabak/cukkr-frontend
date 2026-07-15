@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.bg.default,
     borderRadius: 999,
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
     borderWidth: 1,
     borderColor: Colors.border.default,
     flexDirection: "row",

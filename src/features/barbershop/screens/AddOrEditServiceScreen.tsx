@@ -126,6 +126,7 @@ export function AddOrEditServiceScreen() {
 
   return (
     <ScreenShell
+      hideAppHeader
       keyboardAvoid
       headerSlot={
         <ScreenHeader
@@ -182,6 +183,6 @@ const styles = StyleSheet.create({
     marginTop: 80,
   },
   submitBtn: {
-    marginTop: 8,
+    marginTop: 16,
   },
 });

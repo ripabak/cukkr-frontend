@@ -26,11 +26,14 @@ import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
 import {
+  Image,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
+
+const NO_BOOKING_PLACEHOLDER = require("@/assets/images/no-booking-placeholder.png");
 
 interface RequestCardProps {
   id: string;
@@ -206,10 +209,29 @@ export function ScheduleActiveBookingsScreen() {
     router.push({ pathname: "/d/booking-detail", params: { id: bookingId } });
   };
 
+  const handleNewAppointment = () => {
+    router.push("/d/new-appointment");
+  };
+
+  const renderEmptyState = () => (
+    <View style={styles.emptyState}>
+      <Image
+        source={NO_BOOKING_PLACEHOLDER}
+        style={styles.emptyImage}
+        resizeMode="cover"
+      />
+      <AppText style={styles.emptyTitle}>No bookings for this date.</AppText>
+      <AppText style={styles.emptySubtitle}>
+        Ready to start? Tap the plus icon to add a new appointment manually.
+      </AppText>
+    </View>
+  );
+
   return (
     <ScreenShell
       backgroundColor={Colors.bg.default}
       contentStyle={styles.scrollContentPadding}
+      hideAppHeader
       headerSlot={
         <>
           <View style={styles.topBar}>
@@ -217,15 +239,6 @@ export function ScheduleActiveBookingsScreen() {
               label={formatDatePill(selectedDate)}
               onPress={() => setCalendarVisible(true)}
             />
-            <View style={styles.topActions}>
-              <TouchableOpacity
-                onPress={() => router.push("/d/new-appointment")}
-                activeOpacity={0.8}
-                style={[styles.iconBtn, styles.iconBtnDark]}
-              >
-                <Ionicons name="add" size={22} color={Colors.text.primary} />
-              </TouchableOpacity>
-            </View>
           </View>
           <View style={styles.dayChipsWrapper}>
             <DayChipRow
@@ -240,27 +253,36 @@ export function ScheduleActiveBookingsScreen() {
         </>
       }
       overlaySlot={
-        filterMenuVisible ? (
-          <View style={styles.menuOverlay}>
-            <StatusFilterMenu
-              visible
-              options={SCHEDULE_STATUS_OPTIONS}
-              selected={statusFilter}
-              onSelect={(value) =>
-                setStatusFilter(
-                  value as
-                    | "all"
-                    | "waiting"
-                    | "in_progress"
-                    | "completed"
-                    | "cancelled",
-                )
-              }
-              onClose={() => setFilterMenuVisible(false)}
-              style={{ top: menuTop, right: 20 }}
-            />
-          </View>
-        ) : null
+        <>
+          {filterMenuVisible ? (
+            <View style={styles.menuOverlay}>
+              <StatusFilterMenu
+                visible
+                options={SCHEDULE_STATUS_OPTIONS}
+                selected={statusFilter}
+                onSelect={(value) =>
+                  setStatusFilter(
+                    value as
+                      | "all"
+                      | "waiting"
+                      | "in_progress"
+                      | "completed"
+                      | "cancelled",
+                  )
+                }
+                onClose={() => setFilterMenuVisible(false)}
+                style={{ top: menuTop, right: 20 }}
+              />
+            </View>
+          ) : null}
+          <TouchableOpacity
+            onPress={handleNewAppointment}
+            activeOpacity={0.85}
+            style={styles.fab}
+          >
+            <Ionicons name="add" size={28} color={Colors.text.primary} />
+          </TouchableOpacity>
+        </>
       }
     >
       {requestedBookings.length > 0 && (
@@ -316,7 +338,8 @@ export function ScheduleActiveBookingsScreen() {
 
       <View style={styles.sectionHeader}>
         <AppText style={styles.sectionTitle}>
-          Bookings <AppText style={styles.sectionCount}>({bookings.length})</AppText>
+          Bookings{" "}
+          <AppText style={styles.sectionCount}>({bookings.length})</AppText>
         </AppText>
         <TouchableOpacity
           ref={filterBtnRef}
@@ -353,9 +376,7 @@ export function ScheduleActiveBookingsScreen() {
             />
           );
         })}
-        {!isLoading && bookings.length === 0 ? (
-          <AppText style={styles.emptyText}>No bookings for this date.</AppText>
-        ) : null}
+        {!isLoading && bookings.length === 0 ? renderEmptyState() : null}
       </View>
 
       <CalendarModal
@@ -375,75 +396,81 @@ const styles = StyleSheet.create({
   topBar: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     paddingHorizontal: 20,
-    paddingTop: 12,
-    paddingBottom: 8,
-  },
-  topActions: {
-    flexDirection: "row",
-    gap: 10,
-  },
-  iconBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: Colors.bg.default,
-    alignItems: "center",
-    justifyContent: "center",
-    boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.06)",
-    elevation: 2,
-  },
-  iconBtnDark: {
-    backgroundColor: Colors.brand.primary,
+    paddingTop: 36,
+    paddingBottom: 12,
   },
   dayChipsWrapper: {
     paddingHorizontal: 20,
-    paddingBottom: 8,
+    paddingBottom: 12,
   },
   sectionHeader: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 14,
-    marginTop: 8,
+    marginBottom: 16,
+    marginTop: 12,
   },
   sectionTitle: {
-    fontSize: 22,
+    fontSize: 32,
     fontWeight: "700",
     color: Colors.text.primary,
+    letterSpacing: -0.8,
   },
   sectionCount: {
-    fontWeight: "400",
-    color: Colors.text.secondary,
+    fontWeight: "500",
+    color: Colors.text.muted,
   },
   filterPill: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: Colors.bg.default,
     borderRadius: 999,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    gap: 4,
-    boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.05)",
-    elevation: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    gap: 6,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 2,
   },
   filterLabel: {
-    fontSize: 14,
-    fontWeight: "500",
+    fontSize: 15,
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   list: {
     gap: 0,
   },
   cardMargin: {
-    marginBottom: 12,
+    marginBottom: 16,
   },
-  emptyText: {
-    textAlign: "center",
+  emptyState: {
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 40,
-    fontSize: 14,
+    paddingHorizontal: 20,
+  },
+  emptyImage: {
+    width: 220,
+    height: 220,
+    borderRadius: 110,
+    marginBottom: 24,
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: Colors.text.primary,
+    textAlign: "center",
+    marginBottom: 8,
+  },
+  emptySubtitle: {
+    fontSize: 15,
+    fontWeight: "400",
     color: Colors.text.secondary,
+    textAlign: "center",
+    lineHeight: 22,
   },
   scrollContentPadding: {
     paddingBottom: 200,
@@ -457,30 +484,46 @@ const styles = StyleSheet.create({
     zIndex: 50,
   },
   requestsSection: {
-    marginBottom: 20,
+    marginBottom: 24,
   },
   requestsTitle: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 17,
+    fontWeight: "700",
     color: Colors.text.primary,
-    marginBottom: 10,
+    marginBottom: 12,
     marginTop: 8,
   },
   requestsScroll: {
-    gap: 10,
+    gap: 12,
     paddingRight: 4,
+  },
+  fab: {
+    position: "absolute",
+    right: 20,
+    bottom: 20,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: Colors.brand.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0px 6px 20px rgba(255, 200, 30, 0.45)",
+    elevation: 6,
+    zIndex: 40,
   },
 });
 
 const reqStyles = StyleSheet.create({
   card: {
-    width: 190,
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 16,
-    padding: 14,
-    gap: 6,
+    width: 200,
+    backgroundColor: Colors.bg.default,
+    borderRadius: 20,
+    padding: 16,
+    gap: 8,
     borderWidth: 1,
     borderColor: Colors.border.light,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 2,
   },
   iconRow: {
     flexDirection: "row",
@@ -488,22 +531,22 @@ const reqStyles = StyleSheet.create({
     gap: 6,
   },
   iconCircle: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: Colors.bg.default,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: Colors.bg.cream,
     borderWidth: 1,
     borderColor: Colors.border.light,
     alignItems: "center",
     justifyContent: "center",
   },
   time: {
-    fontSize: 12,
-    fontWeight: "500",
+    fontSize: 13,
+    fontWeight: "600",
     color: Colors.text.secondary,
   },
   customerName: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "700",
     color: Colors.text.primary,
   },
@@ -512,37 +555,37 @@ const reqStyles = StyleSheet.create({
     alignItems: "center",
   },
   barberName: {
-    fontSize: 12,
+    fontSize: 13,
     color: Colors.text.muted,
   },
   actions: {
     flexDirection: "row",
-    gap: 6,
-    marginTop: 4,
+    gap: 8,
+    marginTop: 6,
   },
   declineBtn: {
     flex: 1,
-    paddingVertical: 7,
-    borderRadius: 10,
+    paddingVertical: 10,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: Colors.border.default,
     alignItems: "center",
   },
   declineText: {
-    fontSize: 12,
-    fontWeight: "500",
+    fontSize: 13,
+    fontWeight: "600",
     color: Colors.text.muted,
   },
   acceptBtn: {
     flex: 1,
-    paddingVertical: 7,
-    borderRadius: 10,
+    paddingVertical: 10,
+    borderRadius: 12,
     backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   acceptText: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: "600",
     color: Colors.text.primary,
   },

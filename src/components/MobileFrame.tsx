@@ -27,11 +27,16 @@ const styles = StyleSheet.create({
   webOuter: {
     flex: 1,
     height: "100vh" as any,
-    backgroundColor: "#1A1A1A",
+    backgroundColor: "#FFFFFF",
     alignItems: "center",
   },
   webInner: {
     flex: 1,
     overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 6,
   },
 });

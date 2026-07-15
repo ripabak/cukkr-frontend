@@ -50,9 +50,9 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   iconBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
+    width: 40,
+    height: 40,
+    borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "transparent",

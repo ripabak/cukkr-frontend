@@ -55,6 +55,7 @@ export function SelectServicesScreen() {
 
   return (
     <ScreenShell
+      hideAppHeader
       headerSlot={
         <ScreenHeader
           title="Select Services"
@@ -119,17 +120,17 @@ export function SelectServicesScreen() {
 
 const styles = StyleSheet.create({
   content: {
-    paddingTop: 16,
+    paddingTop: 24,
     gap: 16,
-    paddingBottom: 40,
+    paddingBottom: 200,
   },
   list: {
-    gap: 10,
+    gap: 12,
   },
   confirmBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",

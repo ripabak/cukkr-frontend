@@ -115,6 +115,7 @@ export function EditBarbershopInfoScreen() {
 
   return (
     <ScreenShell
+      hideAppHeader
       headerSlot={
         <EditFieldHeader
           title={config.title}
@@ -158,7 +159,8 @@ export function EditBarbershopInfoScreen() {
 
 const styles = StyleSheet.create({
   content: {
-    paddingTop: 16,
+    paddingTop: 24,
+    paddingBottom: 200,
   },
   loader: {
     marginTop: 20,

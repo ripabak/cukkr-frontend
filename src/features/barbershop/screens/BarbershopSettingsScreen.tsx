@@ -64,7 +64,7 @@ export function BarbershopSettingsScreen() {
   };
 
   return (
-    <ScreenShell contentStyle={styles.scrollContentPadding}>
+    <ScreenShell contentStyle={styles.scrollContentPadding} hideAppHeader>
       <View style={styles.titleRow}>
         <AppText style={styles.title}>Barbershop Settings</AppText>
       </View>
@@ -237,22 +237,23 @@ const styles = StyleSheet.create({
   titleRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 8,
+    marginTop: 24,
     gap: 4,
   },
   backButton: {
     padding: 4,
   },
   title: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: "700",
     color: Colors.text.primary,
+    letterSpacing: -0.8,
   },
   subtitle: {
     fontSize: 14,
     color: Colors.text.secondary,
-    marginTop: 4,
-    marginBottom: 20,
+    marginTop: 6,
+    marginBottom: 24,
   },
   avatarWrapper: {
     alignSelf: "center",
@@ -294,20 +295,27 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontSize: 13,
+    fontWeight: "600",
     color: Colors.text.secondary,
     marginBottom: 8,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
   sectionLabelTop: {
-    marginTop: 16,
+    marginTop: 24,
   },
   card: {
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 16,
+    backgroundColor: Colors.bg.default,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 2,
   },
   dangerBtn: {
-    marginTop: 8,
+    marginTop: 16,
   },
   scrollContentPadding: {
-    paddingBottom: 100,
+    paddingBottom: 200,
   },
 });

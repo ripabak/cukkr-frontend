@@ -69,6 +69,7 @@ export function CustomerManagementScreen() {
   return (
     <ScreenShell
       backgroundColor={bgColor}
+      hideAppHeader
       headerSlot={
         <SelectionToolbar
           selectionMode={selectionMode}
@@ -162,12 +163,13 @@ export function CustomerManagementScreen() {
 }
 
 const styles = StyleSheet.create({
-  content: { paddingBottom: 40 },
+  content: { paddingBottom: 200 },
   title: {
-    fontSize: 34,
-    fontWeight: "800",
+    fontSize: 32,
+    fontWeight: "700",
     color: Colors.text.primary,
-    lineHeight: 40,
+    lineHeight: 38,
+    letterSpacing: -0.8,
     marginTop: 8,
   },
   subtitle: { fontSize: 14, color: Colors.text.secondary, marginTop: 8 },
@@ -179,6 +181,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 40,
   },
-  list: { gap: 10 },
+  list: { gap: 12 },
   sortMenu: { top: 100, right: 20, left: 20 },
 });

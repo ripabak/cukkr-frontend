@@ -184,6 +184,7 @@ export function NewAppointmentScreen() {
   return (
     <FormShell
       keyboardAvoid
+      hideAppHeader
       headerSlot={
         <ScreenHeader
           title="New Appointment"
@@ -206,7 +207,7 @@ export function NewAppointmentScreen() {
         </View>
       }
       backgroundColor={Colors.bg.default}
-      contentStyle={{ paddingTop: 20, gap: 14 }}
+      contentStyle={{ paddingTop: 24, gap: 14 }}
     >
       <BookingForm
         customerName={formData.customerName}
@@ -289,7 +290,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: Colors.status.danger,
     borderRadius: 12,
-    backgroundColor: "#fff5f5",
+    backgroundColor: Colors.status.dangerSurface,
     padding: 14,
   },
   closedText: {
@@ -304,8 +305,8 @@ const styles = StyleSheet.create({
   },
   slotBtn: {
     width: "22%",
-    paddingVertical: 10,
-    borderRadius: 10,
+    paddingVertical: 12,
+    borderRadius: 12,
     borderWidth: 1.5,
     borderColor: Colors.border.default,
     backgroundColor: Colors.bg.surface,
@@ -316,7 +317,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.brand.primary,
   },
   slotText: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "600",
     color: Colors.text.primary,
   },

@@ -30,6 +30,7 @@ export function SelectBarberScreen() {
 
   return (
     <ScreenShell
+      hideAppHeader
       headerSlot={
         <ScreenHeader title="Select Barber" onBack={() => router.back()} />
       }
@@ -67,26 +68,26 @@ export function SelectBarberScreen() {
 
 const styles = StyleSheet.create({
   content: {
-    paddingTop: 16,
+    paddingTop: 24,
     gap: 16,
-    paddingBottom: 40,
+    paddingBottom: 200,
   },
   list: {
-    gap: 10,
+    gap: 12,
   },
   barberRow: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: Colors.brand.primary,
-    borderRadius: 16,
+    borderRadius: 20,
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
     gap: 12,
   },
   avatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",

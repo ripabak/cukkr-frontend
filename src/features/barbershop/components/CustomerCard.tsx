@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: Colors.brand.primarySurface,
-    borderRadius: 16,
+    borderRadius: 20,
     paddingVertical: 14,
     paddingHorizontal: 16,
     gap: 12,

@@ -52,7 +52,7 @@ export function InviteBarberScreen() {
               <IconActionButton
                 iconName="paper-plane-outline"
                 onPress={isPending ? undefined : handleSend}
-                size={36}
+                size={40}
               />
             ) : undefined
           }
@@ -95,13 +95,13 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 20,
-    paddingTop: 8,
+    paddingTop: 24,
   },
   viewOnlyBanner: {
     marginTop: 24,
     padding: 12,
     backgroundColor: Colors.bg.surface,
-    borderRadius: 8,
+    borderRadius: 12,
     alignItems: "center",
   },
   viewOnlyText: {

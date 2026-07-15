@@ -257,9 +257,9 @@ const styles = StyleSheet.create({
     marginTop: 80,
   },
   overflowBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingBottom: 40,
+    paddingBottom: 200,
   },
   imageWrapper: {
     alignItems: "center",
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
   serviceImage: {
     width: 80,
     height: 80,
-    borderRadius: 12,
+    borderRadius: 16,
     backgroundColor: Colors.bg.surface,
   },
   cameraBadge: {
@@ -294,15 +294,22 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontSize: 13,
+    fontWeight: "600",
     color: Colors.text.secondary,
     marginBottom: 8,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
   sectionLabelTop: {
-    marginTop: 16,
+    marginTop: 24,
   },
   card: {
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 16,
+    backgroundColor: Colors.bg.default,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 2,
   },
   operationalSubtitle: {
     fontSize: 12,
@@ -321,7 +328,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
   },
   defaultLabel: {
     flex: 1,

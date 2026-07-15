@@ -124,7 +124,7 @@ export function ChartCard({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.bg.default,
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 16,
     gap: 4,
   },

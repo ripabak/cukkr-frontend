@@ -55,7 +55,7 @@ export function ServicesManagementScreen() {
   };
 
   return (
-    <ScreenShell
+    <ScreenShell hideAppHeader
       headerSlot={
         <ScreenHeader
           onBack={() => router.back()}
@@ -151,16 +151,17 @@ export function ServicesManagementScreen() {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: "700",
     color: Colors.text.primary,
     marginTop: 8,
+    letterSpacing: -0.8,
   },
   subtitle: {
     fontSize: 14,
     color: Colors.text.secondary,
     marginTop: 4,
-    marginBottom: 16,
+    marginBottom: 24,
   },
   search: {
     marginBottom: 16,
@@ -173,7 +174,7 @@ const styles = StyleSheet.create({
   },
   list: {},
   cardMargin: {
-    marginBottom: 12,
+    marginBottom: 16,
   },
   headerActions: {
     flexDirection: "row",
@@ -181,9 +182,9 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   headerIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     borderWidth: 1,
     borderColor: Colors.border.default,
     alignItems: "center",

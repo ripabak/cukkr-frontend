@@ -86,8 +86,8 @@ const styles = StyleSheet.create({
   wrapper: {
     borderWidth: 1,
     borderColor: Colors.border.default,
-    borderRadius: 16,
-    padding: 14,
+    borderRadius: 20,
+    padding: 16,
     gap: 10,
   },
   sectionLabel: {

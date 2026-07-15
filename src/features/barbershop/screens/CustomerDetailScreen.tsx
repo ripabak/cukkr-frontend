@@ -66,7 +66,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
 
   if (isLoadingCustomer) {
     return (
-      <ScreenShell>
+      <ScreenShell hideAppHeader>
         <ActivityIndicator
           size="large"
           color={Colors.brand.primary}
@@ -77,7 +77,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
   }
 
   return (
-    <ScreenShell contentStyle={styles.content}>
+    <ScreenShell hideAppHeader contentStyle={styles.content}>
       <View style={styles.topBar}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -231,7 +231,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
 
 const styles = StyleSheet.create({
   loader: { marginTop: 80 },
-  content: { paddingBottom: 40 },
+  content: { paddingBottom: 200 },
   topBar: {
     flexDirection: "row",
     alignItems: "center",
@@ -239,9 +239,9 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   backBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
@@ -250,10 +250,11 @@ const styles = StyleSheet.create({
   },
   topBarSpacer: { flex: 1 },
   customerName: {
-    fontSize: 30,
-    fontWeight: "800",
+    fontSize: 32,
+    fontWeight: "700",
     color: Colors.text.primary,
     marginTop: 8,
+    letterSpacing: -0.8,
   },
   customerPhone: {
     fontSize: 14,
@@ -263,7 +264,7 @@ const styles = StyleSheet.create({
   },
   tabs: { marginBottom: 20 },
   tabContent: { gap: 12 },
-  statRow: { flexDirection: "row", gap: 12 },
+  statRow: { flexDirection: "row", gap: 16 },
   statCard: { flex: 1 },
   chartCard: {},
   bookingHeader: {
@@ -272,22 +273,22 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 8,
   },
-  bookingTitle: { fontSize: 20, fontWeight: "700", color: Colors.text.primary },
+  bookingTitle: { fontSize: 22, fontWeight: "700", color: Colors.text.primary, letterSpacing: -0.5 },
   bookingCount: { color: Colors.icon.muted, fontWeight: "500" },
   filterPill: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: Colors.bg.default,
     borderRadius: 999,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    gap: 4,
-    boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.05)",
-    elevation: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    gap: 6,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 2,
   },
   filterLabel: {
-    fontSize: 14,
-    fontWeight: "500",
+    fontSize: 15,
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   bookingList: { gap: 10 },

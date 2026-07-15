@@ -25,7 +25,7 @@ export function EditFieldHeader({ title, onBack, onSave, hideSave, style }: Prop
         activeOpacity={0.7}
         style={styles.backButton}
       >
-        <Ionicons name="chevron-back" size={18} color={Colors.text.primary} />
+        <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
       </TouchableOpacity>
       <AppText style={styles.title}>{title}</AppText>
       {hideSave ? (
@@ -51,9 +51,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   backButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
@@ -66,15 +66,15 @@ const styles = StyleSheet.create({
     color: Colors.text.primary,
   },
   saveButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   placeholder: {
-    width: 36,
-    height: 36,
+    width: 40,
+    height: 40,
   },
 });

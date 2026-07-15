@@ -94,7 +94,7 @@ export function MemberCard({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.brand.primarySurface,
-    borderRadius: 16,
+    borderRadius: 20,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
@@ -160,9 +160,9 @@ const styles = StyleSheet.create({
     color: Colors.text.primary,
   },
   removeBtn: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",

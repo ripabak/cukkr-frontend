@@ -53,14 +53,14 @@ export function EditBookingUrlScreen() {
     if (!isValidSlug)
       return {
         text: "Only letters, numbers, and hyphens between words.",
-        color: "#FF3B30",
+        color: Colors.status.danger,
       };
-    if (isTyping) return { text: "Checking availability...", color: "#FF9500" };
+    if (isTyping) return { text: "Checking availability...", color: Colors.status.warning };
     if (isCheckingSlug)
-      return { text: "Checking availability...", color: "#FF9500" };
-    if (isAvailable === true) return { text: "Available ✓", color: "#34C759" };
+      return { text: "Checking availability...", color: Colors.status.warning };
+    if (isAvailable === true) return { text: "Available ✓", color: Colors.status.success };
     if (isAvailable === false)
-      return { text: "Slug not available", color: "#FF3B30" };
+      return { text: "Slug not available", color: Colors.status.danger };
     return null;
   }, [isChanged, isValidSlug, isTyping, isCheckingSlug, isAvailable]);
 
@@ -90,6 +90,7 @@ export function EditBookingUrlScreen() {
 
   return (
     <ScreenShell
+      hideAppHeader
       headerSlot={
         <EditFieldHeader
           title="Book Url"
@@ -145,7 +146,8 @@ export function EditBookingUrlScreen() {
 
 const styles = StyleSheet.create({
   content: {
-    paddingTop: 16,
+    paddingTop: 24,
+    paddingBottom: 200,
   },
   loader: {
     marginTop: 20,

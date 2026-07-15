@@ -24,10 +24,10 @@ export function DangerButton({ label, onPress, style }: Props) {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: Colors.bg.surface,
-    borderRadius: 12,
+    borderRadius: 14,
     borderWidth: 1,
     borderColor: Colors.border.default,
-    paddingVertical: 14,
+    paddingVertical: 16,
     width: "100%",
   },
   label: {

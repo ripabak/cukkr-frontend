@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   item: {
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
   },
   itemBorder: {
     borderBottomWidth: 1,
