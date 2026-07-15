@@ -24,13 +24,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import * as Clipboard from "expo-clipboard";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ActivityIndicator,
   Animated,
   Image,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -289,11 +289,11 @@ export function HomeDashboardScreen() {
           {/* Walk-In PIN + QR */}
           <View style={styles.checkInRow}>
             <View style={styles.pinCard}>
-              <Text style={styles.pinLabel}>Walk-In Check-In</Text>
+              <AppText style={styles.pinLabel}>Walk-In Check-In</AppText>
               <View style={styles.pinValueRow}>
-                <Text style={styles.pinValue} numberOfLines={1}>
+                <AppText style={styles.pinValue} numberOfLines={1}>
                   {activePin ?? "----"}
-                </Text>
+                </AppText>
                 <TouchableOpacity
                   onPress={handleGeneratePin}
                   disabled={isGenerating}
@@ -319,9 +319,9 @@ export function HomeDashboardScreen() {
                   activeOpacity={0.7}
                   style={styles.linkPill}
                 >
-                  <Text style={styles.linkText} numberOfLines={1}>
+                  <AppText style={styles.linkText} numberOfLines={1}>
                     {bookingUrl}
-                  </Text>
+                  </AppText>
                   <Ionicons
                     name="copy-outline"
                     size={14}
@@ -344,7 +344,7 @@ export function HomeDashboardScreen() {
                 activeOpacity={0.85}
                 onPress={() => router.push("/d/walkin-qr")}
               >
-                <Text style={styles.shareQrText}>Share QR</Text>
+                <AppText style={styles.shareQrText}>Share QR</AppText>
               </TouchableOpacity>
             </View>
           </View>
@@ -425,9 +425,9 @@ export function HomeDashboardScreen() {
 
           {/* Today's Queue */}
           <View style={styles.sectionRow}>
-            <Text style={styles.sectionTitle}>Today's Queue</Text>
+            <AppText style={styles.sectionTitle}>Today's Queue</AppText>
             <TouchableOpacity onPress={() => router.push("/d/schedule")}>
-              <Text style={styles.seeAll}>See All</Text>
+              <AppText style={styles.seeAll}>See All</AppText>
             </TouchableOpacity>
           </View>
           <View style={styles.statsRow}>
@@ -443,26 +443,26 @@ export function HomeDashboardScreen() {
                     color={s.valueColor}
                   />
                 </View>
-                <Text style={[styles.statValue, { color: s.valueColor }]}>
+                <AppText style={[styles.statValue, { color: s.valueColor }]}>
                   {statValues[s.key]}
-                </Text>
-                <Text
+                </AppText>
+                <AppText
                   style={[
                     styles.statLabel,
                     s.labelColor ? { color: s.labelColor } : undefined,
                   ]}
                 >
                   {s.label}
-                </Text>
+                </AppText>
               </View>
             ))}
           </View>
 
           {/* Today's Booking */}
           <View style={styles.sectionRow}>
-            <Text style={styles.sectionTitle}>Today's Booking</Text>
+            <AppText style={styles.sectionTitle}>Today's Booking</AppText>
             <TouchableOpacity onPress={() => router.push("/d/schedule")}>
-              <Text style={styles.seeAll}>See All</Text>
+              <AppText style={styles.seeAll}>See All</AppText>
             </TouchableOpacity>
           </View>
           {todayBookings.length > 0 ? (
@@ -488,7 +488,7 @@ export function HomeDashboardScreen() {
               );
             })
           ) : (
-            <Text style={styles.emptyText}>No active bookings today</Text>
+            <AppText style={styles.emptyText}>No active bookings today</AppText>
           )}
         </View>
       </Animated.ScrollView>
@@ -510,13 +510,13 @@ export function HomeDashboardScreen() {
           onPress={() => router.push("/d/user-profile")}
         >
           <View style={styles.avatar}>
-            <Text style={styles.avatarInitials}>{avatarInitials}</Text>
+            <AppText style={styles.avatarInitials}>{avatarInitials}</AppText>
           </View>
-          <Text style={styles.greetingSmall}>{getGreeting()}</Text>
-          <Text style={styles.greetingName}>{user?.name ?? "..."}</Text>
+          <AppText style={styles.greetingSmall}>{getGreeting()}</AppText>
+          <AppText style={styles.greetingName}>{user?.name ?? "..."}</AppText>
           {role ? (
             <View style={styles.rolePillContainer}>
-              <Text style={styles.rolePill}>{role}</Text>
+              <AppText style={styles.rolePill}>{role}</AppText>
             </View>
           ) : null}
         </TouchableOpacity>
@@ -567,9 +567,9 @@ export function HomeDashboardScreen() {
             activeOpacity={0.7}
             onPress={() => setSwitcherVisible(true)}
           >
-            <Text style={styles.shopName} numberOfLines={1}>
+            <AppText style={styles.shopName} numberOfLines={1}>
               {barbershop?.name ?? "..."}
-            </Text>
+            </AppText>
             <Ionicons
               name={switcherVisible ? "chevron-up" : "chevron-down"}
               size={14}

@@ -14,7 +14,8 @@ import { formatDateTime, toApiDate } from "@/src/utils/date";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 const SORT_OPTIONS = [
   { label: "Sort by Recently Added", value: "recently_added" },
@@ -158,19 +159,19 @@ export function HistoryBookingsScreen() {
       }
     >
       <View style={styles.sectionHeader}>
-        <Text style={styles.title}>
-          All Booking <Text style={styles.titleCount}>({bookings.length})</Text>
-        </Text>
+        <AppText style={styles.title}>
+          All Booking <AppText style={styles.titleCount}>({bookings.length})</AppText>
+        </AppText>
         <TouchableOpacity
           ref={statusBtnRef}
           onPress={handleOpenStatusMenu}
           activeOpacity={0.8}
           style={styles.filterPill}
         >
-          <Text style={styles.filterLabel}>
+          <AppText style={styles.filterLabel}>
             {HISTORY_STATUS_OPTIONS.find((o) => o.value === statusFilter)
               ?.label ?? "All"}
-          </Text>
+          </AppText>
           <Ionicons name="chevron-down" size={14} color={Colors.text.primary} />
         </TouchableOpacity>
       </View>
@@ -194,7 +195,7 @@ export function HistoryBookingsScreen() {
           />
         ))}
         {!isLoading && bookings.length === 0 ? (
-          <Text style={styles.emptyText}>No bookings for this date.</Text>
+          <AppText style={styles.emptyText}>No bookings for this date.</AppText>
         ) : null}
       </View>
 

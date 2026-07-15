@@ -1,7 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { OnboardingButton } from "../components/OnboardingButton";
 import { OnboardingCard } from "../components/OnboardingCard";
 import { OnboardingContainer } from "../components/OnboardingContainer";
@@ -43,12 +44,12 @@ export function OnboardingCustomerHappyScreen() {
         <OnboardingIndicator current={2} total={3} />
 
         <View style={styles.textContent}>
-          <Text style={styles.heading}>Customer Happy,{"\n"}Barber Happy</Text>
-          <Text style={styles.body}>
+          <AppText style={styles.heading}>Customer Happy,{"\n"}Barber Happy</AppText>
+          <AppText style={styles.body}>
             Smooth bookings for customers, clear schedules{"\n"}
             for barbers.{"\n"}
             Everyone knows what to do, every day.
-          </Text>
+          </AppText>
         </View>
 
         <View style={styles.spacer} />

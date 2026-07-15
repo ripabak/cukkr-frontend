@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { View, Text, Image, StyleSheet, ViewStyle } from "react-native";
+import { View, Image, StyleSheet, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { StatusBadge } from "@/src/components/StatusBadge";
 import { ToggleSwitch } from "@/src/components/ToggleSwitch";
 
@@ -43,18 +44,18 @@ export function ServiceCard({
         )}
       </View>
       <View style={styles.info}>
-        <Text style={styles.name} numberOfLines={1}>
+        <AppText style={styles.name} numberOfLines={1}>
           {name}
-        </Text>
+        </AppText>
         {discountPercent ? (
           <View style={styles.discountRow}>
             <View style={styles.discountBadge}>
-              <Text style={styles.discountText}>{discountPercent}% OFF</Text>
+              <AppText style={styles.discountText}>{discountPercent}% OFF</AppText>
             </View>
-            <Text style={styles.originalPrice}>{formatPrice(price)}</Text>
+            <AppText style={styles.originalPrice}>{formatPrice(price)}</AppText>
           </View>
         ) : null}
-        <Text style={styles.finalPrice}>{formatPrice(finalPrice)}</Text>
+        <AppText style={styles.finalPrice}>{formatPrice(finalPrice)}</AppText>
       </View>
       <View style={styles.right}>
         {isDefault ? (

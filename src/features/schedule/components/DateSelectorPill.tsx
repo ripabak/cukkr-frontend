@@ -1,7 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
+import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface Props {
   label: string;
@@ -22,7 +23,7 @@ export function DateSelectorPill({ label, onPress, style }: Props) {
         color={Colors.text.primary}
         style={styles.icon}
       />
-      <Text style={styles.label}>{label}</Text>
+      <AppText style={styles.label}>{label}</AppText>
       <Ionicons
         name="chevron-down"
         size={14}

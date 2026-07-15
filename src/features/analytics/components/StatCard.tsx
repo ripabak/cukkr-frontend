@@ -1,9 +1,9 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -50,7 +50,7 @@ export function TrendBadge({
       ]}
     >
       <Ionicons name={icon} size={11} color={color} />
-      <Text style={[trendStyles.text, { color }]}>{label}</Text>
+      <AppText style={[trendStyles.text, { color }]}>{label}</AppText>
     </View>
   );
 }
@@ -81,8 +81,8 @@ export function StatCard({ label, value, icon, stat, onPress, style }: Props) {
         <View style={styles.iconWrap}>{icon}</View>
         <TrendBadge direction={stat.direction} change={stat.change} />
       </View>
-      <Text style={styles.value}>{value}</Text>
-      <Text style={styles.label}>{label}</Text>
+      <AppText style={styles.value}>{value}</AppText>
+      <AppText style={styles.label}>{label}</AppText>
     </Container>
   );
 }

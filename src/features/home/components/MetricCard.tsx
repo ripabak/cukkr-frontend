@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { StyleSheet, Text, View, ViewStyle } from "react-native";
+import { StyleSheet, View, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface Props {
   label: string;
@@ -19,21 +20,21 @@ export function MetricCard({ label, value, icon, accentColor, style }: Props) {
         style,
       ]}
     >
-      <Text
+      <AppText
         style={[styles.label, accentColor ? { color: accentColor } : undefined]}
       >
         {label}
-      </Text>
+      </AppText>
       <View style={styles.valueRow}>
         {icon ? <View style={styles.iconWrap}>{icon}</View> : null}
-        <Text
+        <AppText
           style={[
             styles.value,
             accentColor ? { color: accentColor } : undefined,
           ]}
         >
           {value}
-        </Text>
+        </AppText>
       </View>
     </View>
   );

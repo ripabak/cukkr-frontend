@@ -11,7 +11,8 @@ import { useScheduleServices } from "@/src/features/schedule/hooks";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 export function SelectServicesScreen() {
   const router = useRouter();
@@ -78,7 +79,7 @@ export function SelectServicesScreen() {
       <SearchInput value={query} onChangeText={setQuery} placeholder="Search" />
 
       {!isLoading && filtered.length === 0 ? (
-        <Text style={styles.emptyText}>No services found.</Text>
+        <AppText style={styles.emptyText}>No services found.</AppText>
       ) : (
         <View style={styles.list}>
           {filtered.map((item) => (

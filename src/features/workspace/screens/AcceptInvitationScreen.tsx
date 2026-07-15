@@ -13,10 +13,10 @@ import { useToast } from "@/src/lib/providers";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -85,10 +85,10 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
         <View style={styles.iconWrapper}>
           <Ionicons name="mail-outline" size={56} color={Colors.text.primary} />
         </View>
-        <Text style={styles.title}>You're Invited!</Text>
-        <Text style={styles.subtitle}>
+        <AppText style={styles.title}>You're Invited!</AppText>
+        <AppText style={styles.subtitle}>
           Log in to your account to view and accept this barbershop invitation.
-        </Text>
+        </AppText>
         <PrimaryButton
           label="Log In to Continue"
           onPress={() =>
@@ -109,10 +109,10 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
           style={styles.registerLink}
           activeOpacity={0.7}
         >
-          <Text style={styles.registerLinkText}>
+          <AppText style={styles.registerLinkText}>
             Don't have an account?{" "}
-            <Text style={styles.registerLinkBold}>Register</Text>
-          </Text>
+            <AppText style={styles.registerLinkBold}>Register</AppText>
+          </AppText>
         </TouchableOpacity>
       </ScreenShell>
     );
@@ -123,7 +123,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
       <ScreenShell>
         <View style={styles.center}>
           <ActivityIndicator size="large" color={Colors.text.primary} />
-          <Text style={styles.loadingText}>Loading invitation...</Text>
+          <AppText style={styles.loadingText}>Loading invitation...</AppText>
         </View>
       </ScreenShell>
     );
@@ -144,23 +144,23 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
             size={56}
             color="#666666"
           />
-          <Text style={styles.errorTitle}>
+          <AppText style={styles.errorTitle}>
             {isEmailMismatchError ? "Wrong Account" : "Invitation Not Found"}
-          </Text>
-          <Text style={styles.errorSubtitle}>
+          </AppText>
+          <AppText style={styles.errorSubtitle}>
             {isEmailMismatchError
               ? "This invitation was sent to a different email address. Please sign in with the correct account to accept it."
               : "This invitation may have expired, already been used, or is not intended for your account."}
-          </Text>
+          </AppText>
           {isEmailMismatchError ? (
             <TouchableOpacity
               style={styles.backLink}
               onPress={handleSwitchAccount}
               activeOpacity={0.7}
             >
-              <Text style={styles.backLinkText}>
+              <AppText style={styles.backLinkText}>
                 Sign in with different account
-              </Text>
+              </AppText>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
@@ -168,7 +168,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
               onPress={() => router.replace("/")}
               activeOpacity={0.7}
             >
-              <Text style={styles.backLinkText}>Go to Home</Text>
+              <AppText style={styles.backLinkText}>Go to Home</AppText>
             </TouchableOpacity>
           )}
         </View>
@@ -182,17 +182,17 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
         <Ionicons name="cut-outline" size={48} color={Colors.text.primary} />
       </View>
 
-      <Text style={styles.title}>You're Invited!</Text>
-      <Text style={styles.subtitle}>
+      <AppText style={styles.title}>You're Invited!</AppText>
+      <AppText style={styles.subtitle}>
         You have been invited to join a barbershop team.
-      </Text>
+      </AppText>
 
       <View style={styles.card}>
         <View style={styles.cardRow}>
           <Ionicons name="storefront-outline" size={20} color="#666666" />
           <View style={styles.cardTextWrapper}>
-            <Text style={styles.cardLabel}>Barbershop</Text>
-            <Text style={styles.cardValue}>{invitation.organizationName}</Text>
+            <AppText style={styles.cardLabel}>Barbershop</AppText>
+            <AppText style={styles.cardValue}>{invitation.organizationName}</AppText>
           </View>
         </View>
 
@@ -201,8 +201,8 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
         <View style={styles.cardRow}>
           <Ionicons name="person-outline" size={20} color="#666666" />
           <View style={styles.cardTextWrapper}>
-            <Text style={styles.cardLabel}>Invited by</Text>
-            <Text style={styles.cardValue}>{invitation.inviterEmail}</Text>
+            <AppText style={styles.cardLabel}>Invited by</AppText>
+            <AppText style={styles.cardValue}>{invitation.inviterEmail}</AppText>
           </View>
         </View>
 
@@ -211,11 +211,11 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
         <View style={styles.cardRow}>
           <Ionicons name="ribbon-outline" size={20} color="#666666" />
           <View style={styles.cardTextWrapper}>
-            <Text style={styles.cardLabel}>Role</Text>
-            <Text style={styles.cardValue}>
+            <AppText style={styles.cardLabel}>Role</AppText>
+            <AppText style={styles.cardValue}>
               {invitation.role.charAt(0).toUpperCase() +
                 invitation.role.slice(1)}
-            </Text>
+            </AppText>
           </View>
         </View>
       </View>
@@ -232,9 +232,9 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
           activeOpacity={0.7}
           disabled={isPending}
         >
-          <Text style={styles.rejectLabel}>
+          <AppText style={styles.rejectLabel}>
             {isRejecting ? "Declining..." : "Decline"}
-          </Text>
+          </AppText>
         </TouchableOpacity>
       </View>
     </ScreenShell>

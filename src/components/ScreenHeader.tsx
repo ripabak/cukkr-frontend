@@ -1,9 +1,9 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -40,7 +40,7 @@ export function ScreenHeader({
       {titleSlot ? (
         <View style={styles.titleSpacer}>{titleSlot}</View>
       ) : title ? (
-        <Text style={styles.title}>{title}</Text>
+        <AppText style={styles.title}>{title}</AppText>
       ) : (
         <View style={styles.titleSpacer} />
       )}

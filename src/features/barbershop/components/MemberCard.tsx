@@ -1,8 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   ViewStyle,
@@ -47,14 +47,14 @@ export function MemberCard({
         activeOpacity={0.7}
         style={styles.roleBtn}
       >
-        <Text style={styles.roleBtnText}>
+        <AppText style={styles.roleBtnText}>
           {role.charAt(0).toUpperCase() + role.slice(1)}
-        </Text>
+        </AppText>
       </TouchableOpacity>
     ) : (
-      <Text key="role-text" style={styles.role}>
+      <AppText key="role-text" style={styles.role}>
         {role}
-      </Text>
+      </AppText>
     )
   ) : null;
 
@@ -63,13 +63,13 @@ export function MemberCard({
       <View style={styles.avatar} />
       <View style={styles.info}>
         <View style={styles.nameRow}>
-          <Text
+          <AppText
             style={[styles.name, nameSmall && styles.nameSmall]}
             numberOfLines={1}
           >
             {name}
-          </Text>
-          {isYou ? <Text style={styles.you}>(You)</Text> : null}
+          </AppText>
+          {isYou ? <AppText style={styles.you}>(You)</AppText> : null}
         </View>
         {roleElement}
       </View>

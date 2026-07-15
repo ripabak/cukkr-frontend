@@ -24,10 +24,10 @@ import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -63,17 +63,17 @@ function RequestCard({
         <View style={reqStyles.iconCircle}>
           <Ionicons name={iconName} size={16} color={Colors.text.secondary} />
         </View>
-        <Text style={reqStyles.time}>{timeLabel}</Text>
+        <AppText style={reqStyles.time}>{timeLabel}</AppText>
       </View>
-      <Text style={reqStyles.customerName} numberOfLines={1}>
+      <AppText style={reqStyles.customerName} numberOfLines={1}>
         {customerName}
-      </Text>
+      </AppText>
       <View style={reqStyles.barberRow}>
         <Ionicons name="cut" size={11} color={Colors.text.muted} />
-        <Text style={reqStyles.barberName} numberOfLines={1}>
+        <AppText style={reqStyles.barberName} numberOfLines={1}>
           {" "}
           {barberName}
-        </Text>
+        </AppText>
       </View>
       <View style={reqStyles.actions}>
         <TouchableOpacity
@@ -81,14 +81,14 @@ function RequestCard({
           activeOpacity={0.8}
           style={reqStyles.declineBtn}
         >
-          <Text style={reqStyles.declineText}>Decline</Text>
+          <AppText style={reqStyles.declineText}>Decline</AppText>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={onAccept}
           activeOpacity={0.8}
           style={reqStyles.acceptBtn}
         >
-          <Text style={reqStyles.acceptText}>Accept</Text>
+          <AppText style={reqStyles.acceptText}>Accept</AppText>
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
@@ -265,12 +265,12 @@ export function ScheduleActiveBookingsScreen() {
     >
       {requestedBookings.length > 0 && (
         <View style={styles.requestsSection}>
-          <Text style={styles.requestsTitle}>
+          <AppText style={styles.requestsTitle}>
             Requests{" "}
-            <Text style={styles.sectionCount}>
+            <AppText style={styles.sectionCount}>
               ({requestedBookings.length})
-            </Text>
-          </Text>
+            </AppText>
+          </AppText>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -315,19 +315,19 @@ export function ScheduleActiveBookingsScreen() {
       )}
 
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>
-          Bookings <Text style={styles.sectionCount}>({bookings.length})</Text>
-        </Text>
+        <AppText style={styles.sectionTitle}>
+          Bookings <AppText style={styles.sectionCount}>({bookings.length})</AppText>
+        </AppText>
         <TouchableOpacity
           ref={filterBtnRef}
           onPress={handleOpenFilterMenu}
           activeOpacity={0.8}
           style={styles.filterPill}
         >
-          <Text style={styles.filterLabel}>
+          <AppText style={styles.filterLabel}>
             {SCHEDULE_STATUS_OPTIONS.find((o) => o.value === statusFilter)
               ?.label ?? "All"}
-          </Text>
+          </AppText>
           <Ionicons name="chevron-down" size={14} color={Colors.text.primary} />
         </TouchableOpacity>
       </View>
@@ -354,7 +354,7 @@ export function ScheduleActiveBookingsScreen() {
           );
         })}
         {!isLoading && bookings.length === 0 ? (
-          <Text style={styles.emptyText}>No bookings for this date.</Text>
+          <AppText style={styles.emptyText}>No bookings for this date.</AppText>
         ) : null}
       </View>
 

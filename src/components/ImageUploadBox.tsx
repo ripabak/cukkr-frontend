@@ -1,10 +1,10 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   TouchableOpacity,
   View,
-  Text,
   Image,
   StyleSheet,
   ViewStyle,
@@ -29,7 +29,7 @@ export function ImageUploadBox({ onPress, imageUri, label, style }: Props) {
       ) : (
         <View style={styles.row}>
           <Ionicons name="image-outline" size={20} color={Colors.icon.muted} />
-          <Text style={styles.label}>{label ?? "Choose Image"}</Text>
+          <AppText style={styles.label}>{label ?? "Choose Image"}</AppText>
         </View>
       )}
     </TouchableOpacity>

@@ -1,7 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
-import { View } from "react-native";
+import { StyleSheet, TouchableOpacity, ViewStyle, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface Props {
   label: string;
@@ -28,7 +28,7 @@ export function ShortcutTile({ label, icon, onPress, style, iconBg, dotColor }: 
         {dotColor ? <View style={[styles.dot, { backgroundColor: dotColor }]} /> : null}
         {icon}
       </View>
-      <Text style={styles.label}>{label}</Text>
+      <AppText style={styles.label}>{label}</AppText>
     </TouchableOpacity>
   );
 }

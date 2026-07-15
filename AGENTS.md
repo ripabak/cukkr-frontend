@@ -173,6 +173,65 @@ function formatDate(d: Date) { ... }  // use src/utils/date.ts instead
 - **Global components in `src/components/`.** Shared across entire app (e.g., `PrimaryButton`, `ScreenHeader`).
 - **Presentational only.** Components receive data via props and call callbacks; they don't fetch data or manage async state.
 - **Example**: `AuthTextField` (feature-specific) wraps styling; screens pass `value`, `onChangeText`, `label` as props.
+- **Always use `AppText` instead of `Text` from react-native.** `src/components/AppText.tsx` is a wrapper that automatically applies the app font (Plus Jakarta Sans) based on `fontWeight`. Import from `@/src/components/AppText`, never use `Text` from react-native directly.
+
+```ts
+// ✅ Correct
+import { AppText } from "@/src/components/AppText";
+<AppText style={{ fontWeight: "700" }}>Heading</AppText>
+
+// ❌ Never use Text directly
+import { Text } from "react-native";
+<Text>Heading</Text>
+```
+
+`AppText` maps `fontWeight` to the correct font variant:
+
+| fontWeight | Font Family |
+|---|---|
+| `"400"` | `PlusJakartaSans_400Regular` |
+| `"500"` | `PlusJakartaSans_500Medium` |
+| `"600"` | `PlusJakartaSans_600SemiBold` |
+| `"700"` | `PlusJakartaSans_700Bold` |
+| `"800"` | `PlusJakartaSans_700Bold` |
+
+If an explicit `fontFamily` is passed, `AppText` respects it and skips the auto-mapping.
+
+- **Always use `AppTextInput` instead of `TextInput` from react-native.** `src/components/AppTextInput.tsx` is a wrapper that automatically applies `PlusJakartaSans_400Regular` font. Import from `@/src/components/AppTextInput`. `AppTextInput` supports `forwardRef<TextInput>`, so you can still use `useRef<TextInput>` for focus management.
+
+```ts
+// ✅ Correct
+import { AppTextInput } from "@/src/components/AppTextInput";
+<AppTextInput value={text} onChangeText={setText} />
+
+// Uses forwardRef for focus
+const ref = useRef<TextInput>(null);
+<AppTextInput ref={ref} ... />
+ref.current?.focus();
+
+// ❌ Never use TextInput directly
+import { TextInput } from "react-native";
+<TextInput ... />
+```
+
+> `TextInput` and `TextInputProps` may still be imported from react-native **for type annotations only** (e.g., `useRef<TextInput>`, `extends TextInputProps`), never for rendering.
+
+- **For multiline text input, use `MultilineInputField` from `@/src/components/MultilineInputField`.** It wraps `AppTextInput` with `multiline` prop and provides consistent styling (borderRadius 16, minHeight 100, textAlignVertical top). Never use raw `<TextInput multiline>`.
+
+```ts
+// ✅ Correct
+import { MultilineInputField } from "@/src/components/MultilineInputField";
+<MultilineInputField
+  label="Description"
+  value={desc}
+  onChangeText={setDesc}
+  placeholder="Enter description..."
+/>
+
+// ❌ Never use raw multiline TextInput
+<TextInput multiline ... />
+<textarea ... />
+```
 
 ### Hooks (TanStack Query)
 - **Only for data queries that need caching.** Use TanStack Query for reads where multiple screens share the same data and caching improves UX.

@@ -1,6 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { View, Text, TextInput, StyleSheet, ViewStyle } from "react-native";
+import { View, StyleSheet, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
+import { AppTextInput } from "@/src/components/AppTextInput";
 
 interface Props {
   label?: string;
@@ -23,9 +25,9 @@ export function MultilineInputField({
 }: Props) {
   return (
     <View style={style}>
-      {label ? <Text style={styles.label}>{label}</Text> : null}
+      {label ? <AppText style={styles.label}>{label}</AppText> : null}
       <View style={styles.inputContainer}>
-        <TextInput
+        <AppTextInput
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}

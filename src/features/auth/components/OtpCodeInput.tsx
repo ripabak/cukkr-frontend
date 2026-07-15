@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, TextInput, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
+import { AppTextInput } from "@/src/components/AppTextInput";
 
 import { authTheme } from "../auth-theme";
 
@@ -32,7 +34,7 @@ export function OtpCodeInput({
 
   return (
     <Pressable onPress={() => inputRef.current?.focus()} style={styles.wrapper}>
-      <TextInput
+      <AppTextInput
         autoFocus={autoFocus}
         keyboardType="number-pad"
         maxLength={length}
@@ -52,7 +54,7 @@ export function OtpCodeInput({
               key={index}
               style={[styles.cell, isActive && styles.activeCell]}
             >
-              <Text style={styles.cellText}>{digit}</Text>
+              <AppText style={styles.cellText}>{digit}</AppText>
             </View>
           );
         })}

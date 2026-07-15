@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
+import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface Props {
   label: string;
@@ -23,7 +24,7 @@ export function StickyCta({
       activeOpacity={0.85}
       style={[styles.cta, { backgroundColor: color }, style]}
     >
-      <Text style={[styles.label, { color: textColor }]}>{label}</Text>
+      <AppText style={[styles.label, { color: textColor }]}>{label}</AppText>
     </TouchableOpacity>
   );
 }

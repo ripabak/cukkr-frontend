@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface Props {
   count: number;
@@ -9,7 +10,7 @@ interface Props {
 export function SelectionFooter({ count }: Props) {
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Select Customers ({count})</Text>
+      <AppText style={styles.label}>Select Customers ({count})</AppText>
     </View>
   );
 }

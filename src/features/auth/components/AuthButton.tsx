@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 import { authTheme } from "../auth-theme";
 
@@ -26,14 +27,14 @@ export function AuthButton({
         disabled && styles.disabled,
       ]}
     >
-      <Text
+      <AppText
         style={[
           styles.label,
           variant === "secondary" ? styles.secondaryLabel : styles.primaryLabel,
         ]}
       >
         {label}
-      </Text>
+      </AppText>
     </Pressable>
   );
 }

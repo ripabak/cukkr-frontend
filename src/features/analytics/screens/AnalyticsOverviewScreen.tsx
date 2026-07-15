@@ -4,10 +4,10 @@ import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -40,10 +40,10 @@ export function AnalyticsOverviewScreen() {
     <Permission roles={["owner", "admin"]}>
     <ScreenShell contentStyle={styles.scrollContent}>
       <View style={styles.topBar}>
-        <Text style={styles.pageTitle}>Overview</Text>
-        <Text style={styles.pageSubtitle}>
+        <AppText style={styles.pageTitle}>Overview</AppText>
+        <AppText style={styles.pageSubtitle}>
           See your barbershop's performance
-        </Text>
+        </AppText>
       </View>
 
       <RangePicker value={range} onChange={setRange} />
@@ -127,7 +127,7 @@ export function AnalyticsOverviewScreen() {
             onPress={() => router.push(`/d/analytics-revenue?range=${range}`)}
           >
             <View style={styles.chartCardHeader}>
-              <Text style={styles.chartCardTitle}>Revenue</Text>
+              <AppText style={styles.chartCardTitle}>Revenue</AppText>
               <View style={styles.chartCardHeaderRight}>
                 <TrendBadge
                   direction={stats.totalSales?.direction ?? "neutral"}
@@ -140,10 +140,10 @@ export function AnalyticsOverviewScreen() {
                 />
               </View>
             </View>
-            <Text style={styles.chartCardValue}>
+            <AppText style={styles.chartCardValue}>
               {formatRupiah(stats.totalSales?.current ?? 0)}
-            </Text>
-            <Text style={styles.chartCardPeriod}>{getRangeLabel(range)}</Text>
+            </AppText>
+            <AppText style={styles.chartCardPeriod}>{getRangeLabel(range)}</AppText>
             {charts?.revenue ? (
               <View style={styles.chartWrap}>
                 <BarChart data={charts.revenue} />
@@ -158,7 +158,7 @@ export function AnalyticsOverviewScreen() {
             onPress={() => router.push(`/d/analytics-customers?range=${range}`)}
           >
             <View style={styles.chartCardHeader}>
-              <Text style={styles.chartCardTitle}>Customers</Text>
+              <AppText style={styles.chartCardTitle}>Customers</AppText>
               <View style={styles.chartCardHeaderRight}>
                 <TrendBadge
                   direction={stats.totalCustomers?.direction ?? "neutral"}
@@ -171,10 +171,10 @@ export function AnalyticsOverviewScreen() {
                 />
               </View>
             </View>
-            <Text style={styles.chartCardValue}>
+            <AppText style={styles.chartCardValue}>
               {stats.totalCustomers?.current ?? 0}
-            </Text>
-            <Text style={styles.chartCardPeriod}>{getRangeLabel(range)}</Text>
+            </AppText>
+            <AppText style={styles.chartCardPeriod}>{getRangeLabel(range)}</AppText>
             {charts?.customers ? (
               <View style={styles.chartWrap}>
                 <BarChart
@@ -189,7 +189,7 @@ export function AnalyticsOverviewScreen() {
           {highlights && (highlights.topBarber || highlights.topService) ? (
             <View style={styles.highlightsSection}>
               <View style={styles.sectionRow}>
-                <Text style={styles.sectionTitle}>Highlights</Text>
+                <AppText style={styles.sectionTitle}>Highlights</AppText>
               </View>
               {highlights.topBarber ? (
                 <HighlightRow

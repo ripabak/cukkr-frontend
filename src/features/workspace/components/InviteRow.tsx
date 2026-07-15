@@ -1,8 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   ViewStyle,
@@ -19,7 +19,7 @@ export function InviteRow({ email, onRemove, style }: Props) {
   return (
     <View style={[styles.container, style]}>
       <View style={styles.dot} />
-      <Text style={styles.email}>{email}</Text>
+      <AppText style={styles.email}>{email}</AppText>
       <TouchableOpacity
         onPress={onRemove}
         activeOpacity={0.7}

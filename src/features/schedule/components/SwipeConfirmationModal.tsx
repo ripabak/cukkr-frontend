@@ -1,9 +1,9 @@
 import { Colors } from "@/src/theme/colors";
 import React, { useRef, useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   Modal,
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   PanResponder,
@@ -89,9 +89,9 @@ export function SwipeConfirmationModal({
               style={styles.checkIcon}
             />
           </View>
-          <Text style={styles.title}>{title}</Text>
+          <AppText style={styles.title}>{title}</AppText>
           {description ? (
-            <Text style={styles.description}>{description}</Text>
+            <AppText style={styles.description}>{description}</AppText>
           ) : null}
 
           {/* Swipe track */}
@@ -102,9 +102,9 @@ export function SwipeConfirmationModal({
             >
               <Ionicons name="arrow-forward" size={22} color="#FFFFFF" />
             </Animated.View>
-            <Text style={styles.swipeLabel}>
+            <AppText style={styles.swipeLabel}>
               {completed ? "Completed!" : swipeLabel}
-            </Text>
+            </AppText>
           </View>
         </TouchableOpacity>
       </TouchableOpacity>

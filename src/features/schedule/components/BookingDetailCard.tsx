@@ -4,10 +4,10 @@ import { InfoRow } from "@/src/components/InfoRow";
 import { StatusBadge } from "@/src/components/StatusBadge";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -105,7 +105,7 @@ export function BookingDetailCard({
               onPress={onCustomerPress}
               activeOpacity={0.6}
             >
-              <Text style={styles.customerNameLink}>{customerName}</Text>
+              <AppText style={styles.customerNameLink}>{customerName}</AppText>
               <Ionicons
                 name="chevron-forward"
                 size={18}
@@ -113,9 +113,9 @@ export function BookingDetailCard({
               />
             </TouchableOpacity>
           ) : (
-            <Text style={styles.customerName}>{customerName}</Text>
+            <AppText style={styles.customerName}>{customerName}</AppText>
           )}
-          <Text style={styles.dateLabel}>{dateLabel}</Text>
+          <AppText style={styles.dateLabel}>{dateLabel}</AppText>
           <View style={styles.metaRow}>
             <Ionicons
               name={resolvedMetaIcon as any}
@@ -123,9 +123,9 @@ export function BookingDetailCard({
               color={Colors.text.secondary}
             />
             <View style={styles.metaText}>
-              <Text style={styles.metaLine}>{metaLine1}</Text>
+              <AppText style={styles.metaLine}>{metaLine1}</AppText>
               {metaLine2 ? (
-                <Text style={styles.metaLine}>{metaLine2}</Text>
+                <AppText style={styles.metaLine}>{metaLine2}</AppText>
               ) : null}
             </View>
           </View>
@@ -155,18 +155,18 @@ export function BookingDetailCard({
       {/* Services */}
       {services.length > 0 ? (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Services</Text>
+          <AppText style={styles.sectionTitle}>Services</AppText>
           {services.map((s, i) => (
             <View key={i} style={styles.serviceLine}>
-              <Text style={styles.serviceLabel}>{s.name}</Text>
-              <Text style={styles.servicePrice}>{s.price}</Text>
+              <AppText style={styles.serviceLabel}>{s.name}</AppText>
+              <AppText style={styles.servicePrice}>{s.price}</AppText>
             </View>
           ))}
           {notes ? (
             <>
               <View style={styles.divider} />
-              <Text style={styles.sectionTitle}>Notes</Text>
-              <Text style={styles.notes}>{notes}</Text>
+              <AppText style={styles.sectionTitle}>Notes</AppText>
+              <AppText style={styles.notes}>{notes}</AppText>
             </>
           ) : null}
         </View>
@@ -175,11 +175,11 @@ export function BookingDetailCard({
       {/* Payment Summary */}
       {paymentSummary.length > 0 ? (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Payment Summary</Text>
+          <AppText style={styles.sectionTitle}>Payment Summary</AppText>
           {paymentSummary.map((line, i) => (
             <View key={i} style={styles.paymentLine}>
-              <Text style={styles.paymentLabel}>{line.label}</Text>
-              <Text style={styles.paymentValue}>{line.value}</Text>
+              <AppText style={styles.paymentLabel}>{line.label}</AppText>
+              <AppText style={styles.paymentValue}>{line.value}</AppText>
             </View>
           ))}
         </View>

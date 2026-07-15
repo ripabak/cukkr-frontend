@@ -1,8 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   ViewStyle,
@@ -32,9 +32,9 @@ export function SegmentedTabs({ tabs, activeKey, onTabPress, style }: Props) {
             activeOpacity={0.8}
             style={[styles.tab, isActive && styles.tabActive]}
           >
-            <Text style={[styles.label, isActive && styles.labelActive]}>
+            <AppText style={[styles.label, isActive && styles.labelActive]}>
               {tab.label}
-            </Text>
+            </AppText>
           </TouchableOpacity>
         );
       })}

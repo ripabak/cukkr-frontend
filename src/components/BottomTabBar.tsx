@@ -1,9 +1,9 @@
 import { useMemberRole } from "@/src/hooks";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
+import { AppText } from "@/src/components/AppText";
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -48,7 +48,7 @@ export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
             style={styles.tab}
           >
             <Ionicons name={tab.icon} size={21} color={color} />
-            <Text style={[styles.label, { color }]}>{tab.label}</Text>
+            <AppText style={[styles.label, { color }]}>{tab.label}</AppText>
           </TouchableOpacity>
         );
       })}

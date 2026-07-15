@@ -10,13 +10,14 @@ import {
   Modal,
   ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
   useWindowDimensions,
 } from "react-native";
+import { AppText } from "@/src/components/AppText";
+import { AppTextInput } from "@/src/components/AppTextInput";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFrame } from "@/src/components/FrameContext";
 import {
@@ -127,8 +128,8 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
         <View style={styles.switchingOverlay}>
           <View style={[styles.switchingCard, { width: frameWidth * 0.72 }]}>
             <ActivityIndicator size="large" color={Colors.brand.primary} />
-            <Text style={styles.switchingTitle}>Switching workspace</Text>
-            <Text style={styles.switchingSubText}>Please wait a moment...</Text>
+            <AppText style={styles.switchingTitle}>Switching workspace</AppText>
+            <AppText style={styles.switchingSubText}>Please wait a moment...</AppText>
           </View>
         </View>
       </Modal>
@@ -173,7 +174,7 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
               size={16}
               color={Colors.icon.muted}
             />
-            <TextInput
+            <AppTextInput
               style={styles.searchInput}
               placeholder="Search barbershop..."
               placeholderTextColor={Colors.text.muted}
@@ -204,7 +205,7 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
                 style={styles.loader}
               />
             ) : filtered.length === 0 ? (
-              <Text style={styles.emptyText}>No barbershop found</Text>
+              <AppText style={styles.emptyText}>No barbershop found</AppText>
             ) : (
               filtered.map((shop) => {
                 const isActive =
@@ -226,18 +227,18 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
                     <View
                       style={[styles.avatar, isActive && styles.avatarActive]}
                     >
-                      <Text
+                      <AppText
                         style={[
                           styles.avatarText,
                           isActive && styles.avatarTextActive,
                         ]}
                       >
                         {initials}
-                      </Text>
+                      </AppText>
                     </View>
-                    <Text style={styles.itemName} numberOfLines={1}>
+                    <AppText style={styles.itemName} numberOfLines={1}>
                       {shop.name}
-                    </Text>
+                    </AppText>
                     {isActive && (
                       <Ionicons
                         name="checkmark-circle"
@@ -260,8 +261,8 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
               <Ionicons name="add" size={20} color={Colors.text.secondary} />
             </View>
             <View>
-              <Text style={styles.createLabel}>Add Barbershop</Text>
-              <Text style={styles.createSub}>Create a new workspace</Text>
+              <AppText style={styles.createLabel}>Add Barbershop</AppText>
+              <AppText style={styles.createSub}>Create a new workspace</AppText>
             </View>
           </TouchableOpacity>
         </Animated.View>

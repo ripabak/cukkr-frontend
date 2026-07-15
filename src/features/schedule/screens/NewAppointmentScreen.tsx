@@ -12,7 +12,8 @@ import { useToast } from "@/src/lib/providers";
 import { getErrorMessage } from "@/src/lib/utils/error-handler";
 import { useRouter } from "expo-router";
 import React, { useMemo, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 type BookingType = "appointment" | "walkin";
 
@@ -225,13 +226,13 @@ export function NewAppointmentScreen() {
         <View>
           {dayAvailability && !dayAvailability.isOpen ? (
             <View style={styles.closedBox}>
-              <Text style={styles.closedText}>
+              <AppText style={styles.closedText}>
                 Barbershop is closed on this date. Please choose another date.
-              </Text>
+              </AppText>
             </View>
           ) : timeSlots.length > 0 ? (
             <View>
-              <Text style={styles.timeSectionLabel}>Select a time</Text>
+              <AppText style={styles.timeSectionLabel}>Select a time</AppText>
               <View style={styles.slotsGrid}>
                 {timeSlots.map((slot) => (
                   <TouchableOpacity
@@ -243,14 +244,14 @@ export function NewAppointmentScreen() {
                     activeOpacity={0.7}
                     onPress={() => handleTimeSlotSelect(slot)}
                   >
-                    <Text
+                    <AppText
                       style={[
                         styles.slotText,
                         selectedTimeSlot === slot && styles.slotTextSelected,
                       ]}
                     >
                       {slot}
-                    </Text>
+                    </AppText>
                   </TouchableOpacity>
                 ))}
               </View>

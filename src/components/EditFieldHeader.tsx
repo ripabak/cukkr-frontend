@@ -1,9 +1,9 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   ViewStyle,
@@ -27,7 +27,7 @@ export function EditFieldHeader({ title, onBack, onSave, hideSave, style }: Prop
       >
         <Ionicons name="chevron-back" size={18} color={Colors.text.primary} />
       </TouchableOpacity>
-      <Text style={styles.title}>{title}</Text>
+      <AppText style={styles.title}>{title}</AppText>
       {hideSave ? (
         <View style={styles.placeholder} />
       ) : (

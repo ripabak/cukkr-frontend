@@ -15,7 +15,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 export function BarbershopSettingsScreen() {
   const router = useRouter();
@@ -65,9 +66,9 @@ export function BarbershopSettingsScreen() {
   return (
     <ScreenShell contentStyle={styles.scrollContentPadding}>
       <View style={styles.titleRow}>
-        <Text style={styles.title}>Barbershop Settings</Text>
+        <AppText style={styles.title}>Barbershop Settings</AppText>
       </View>
-      <Text style={styles.subtitle}>Setup based on your barbershop needs</Text>
+      <AppText style={styles.subtitle}>Setup based on your barbershop needs</AppText>
 
       <View style={styles.avatarWrapper}>
         {barbershop?.logoUrl ? (
@@ -78,7 +79,7 @@ export function BarbershopSettingsScreen() {
           />
         ) : (
           <View style={styles.avatar}>
-            <Text style={styles.avatarInitials}>
+            <AppText style={styles.avatarInitials}>
               {barbershop?.name
                 ? barbershop.name
                     .split(" ")
@@ -87,7 +88,7 @@ export function BarbershopSettingsScreen() {
                     .map((w: string) => w[0].toUpperCase())
                     .join("")
                 : "?"}
-            </Text>
+            </AppText>
           </View>
         )}
         <TouchableOpacity
@@ -103,7 +104,7 @@ export function BarbershopSettingsScreen() {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.sectionLabel}>Information</Text>
+      <AppText style={styles.sectionLabel}>Information</AppText>
       <View style={styles.card}>
         <InfoRow
           label="Name"
@@ -150,9 +151,9 @@ export function BarbershopSettingsScreen() {
         />
       </View>
 
-      <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+      <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
         Booking Web
-      </Text>
+      </AppText>
       <View style={styles.card}>
         <InfoRow
           label="Book Url"
@@ -169,9 +170,9 @@ export function BarbershopSettingsScreen() {
         />
       </View>
 
-      <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+      <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
         Operations
-      </Text>
+      </AppText>
       <View style={styles.card}>
         <OperationRow
           label="Barbers"
@@ -198,9 +199,9 @@ export function BarbershopSettingsScreen() {
         />
       </View>
 
-      <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+      <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
         {isOwner ? "Delete Barbershop" : "Leave Barbershop"}
-      </Text>
+      </AppText>
       <DangerButton
         label={isOwner ? "Delete This Barbershop" : "Leave This Barbershop"}
         onPress={isLoading ? undefined : () => setShowActionModal(true)}

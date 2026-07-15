@@ -4,10 +4,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -53,7 +53,7 @@ export function AnalyticsBarbersScreen() {
               color={Colors.text.primary}
             />
           </TouchableOpacity>
-          <Text style={styles.pageTitle}>Barbers</Text>
+          <AppText style={styles.pageTitle}>Barbers</AppText>
           <View style={styles.topBarRight} />
         </View>
       }
@@ -69,7 +69,7 @@ export function AnalyticsBarbersScreen() {
       {/* Revenue by barber chart */}
       {chartPoints.length > 0 ? (
         <View style={styles.chartCard}>
-          <Text style={styles.chartCardTitle}>Revenue by Barber</Text>
+          <AppText style={styles.chartCardTitle}>Revenue by Barber</AppText>
           <View style={styles.chartWrap}>
             <BarChart data={chartPoints} chartHeight={130} />
           </View>
@@ -80,13 +80,13 @@ export function AnalyticsBarbersScreen() {
       {barbers.length > 0 ? (
         <View style={styles.listSection}>
           <View style={styles.listHeader}>
-            <Text style={styles.sectionTitle}>
+            <AppText style={styles.sectionTitle}>
               All Barbers ({barbers.length})
-            </Text>
+            </AppText>
             {totalRevenue > 0 ? (
-              <Text style={styles.totalLabel}>
+              <AppText style={styles.totalLabel}>
                 {formatRupiah(totalRevenue)}
-              </Text>
+              </AppText>
             ) : null}
           </View>
 
@@ -97,7 +97,7 @@ export function AnalyticsBarbersScreen() {
               <View key={barber.barberId} style={styles.barberRow}>
                 <View style={styles.barberLeft}>
                   <View style={styles.rankBadge}>
-                    <Text style={styles.rankText}>{i + 1}</Text>
+                    <AppText style={styles.rankText}>{i + 1}</AppText>
                   </View>
                   <View style={styles.barberAvatar}>
                     {barber.imageUrl ? (
@@ -108,29 +108,29 @@ export function AnalyticsBarbersScreen() {
                       />
                     ) : (
                       <View style={styles.barberAvatarPlaceholder}>
-                        <Text style={styles.barberInitial}>
+                        <AppText style={styles.barberInitial}>
                           {barber.name?.[0]?.toUpperCase() ?? "?"}
-                        </Text>
+                        </AppText>
                       </View>
                     )}
                   </View>
                   <View style={styles.barberInfo}>
-                    <Text style={styles.barberName} numberOfLines={1}>
+                    <AppText style={styles.barberName} numberOfLines={1}>
                       {barber.name}
-                    </Text>
-                    <Text style={styles.barberMeta}>
+                    </AppText>
+                    <AppText style={styles.barberMeta}>
                       {barber.totalCustomers} customer
                       {barber.totalCustomers !== 1 ? "s" : ""}
-                    </Text>
+                    </AppText>
                   </View>
                 </View>
                 <View style={styles.barberRight}>
-                  <Text style={styles.barberRevenue}>
+                  <AppText style={styles.barberRevenue}>
                     {formatRupiah(barber.totalRevenue)}
-                  </Text>
-                  <Text style={styles.barberShare}>
+                  </AppText>
+                  <AppText style={styles.barberShare}>
                     {revenueShare.toFixed(0)}%
-                  </Text>
+                  </AppText>
                 </View>
               </View>
             );
@@ -138,7 +138,7 @@ export function AnalyticsBarbersScreen() {
 
           {/* Progress bars by revenue share */}
           <View style={styles.shareSection}>
-            <Text style={styles.shareSectionTitle}>Revenue Share</Text>
+            <AppText style={styles.shareSectionTitle}>Revenue Share</AppText>
             {barbers.map((barber) => {
               const share =
                 totalRevenue > 0
@@ -146,9 +146,9 @@ export function AnalyticsBarbersScreen() {
                   : 0;
               return (
                 <View key={barber.barberId} style={styles.shareRow}>
-                  <Text style={styles.shareName} numberOfLines={1}>
+                  <AppText style={styles.shareName} numberOfLines={1}>
                     {barber.name.split(" ")[0]}
-                  </Text>
+                  </AppText>
                   <View style={styles.shareBarWrap}>
                     <View
                       style={[
@@ -157,14 +157,14 @@ export function AnalyticsBarbersScreen() {
                       ]}
                     />
                   </View>
-                  <Text style={styles.sharePercent}>{share.toFixed(0)}%</Text>
+                  <AppText style={styles.sharePercent}>{share.toFixed(0)}%</AppText>
                 </View>
               );
             })}
           </View>
         </View>
       ) : !chartLoading && !listLoading ? (
-        <Text style={styles.emptyText}>No barber data for this period</Text>
+        <AppText style={styles.emptyText}>No barber data for this period</AppText>
       ) : null}
     </ScreenShell>
   );

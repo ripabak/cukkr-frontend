@@ -3,10 +3,10 @@ import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -66,7 +66,7 @@ export function AnalyticsServicesScreen() {
               color={Colors.text.primary}
             />
           </TouchableOpacity>
-          <Text style={styles.pageTitle}>Services</Text>
+          <AppText style={styles.pageTitle}>Services</AppText>
           <View style={styles.topBarRight} />
         </View>
       }
@@ -112,7 +112,7 @@ export function AnalyticsServicesScreen() {
 
       {chart.length > 0 ? (
         <View style={styles.chartCard}>
-          <Text style={styles.chartCardTitle}>Bookings by Service</Text>
+          <AppText style={styles.chartCardTitle}>Bookings by Service</AppText>
           <BarChart data={chart} chartHeight={130} maxBars={8} />
         </View>
       ) : null}
@@ -120,9 +120,9 @@ export function AnalyticsServicesScreen() {
       {/* Services list */}
       <View style={styles.listSection}>
         <View style={styles.listHeader}>
-          <Text style={styles.sectionTitle}>
+          <AppText style={styles.sectionTitle}>
             Services{meta ? ` (${meta.totalItems})` : ""}
-          </Text>
+          </AppText>
         </View>
 
         {listLoading && services.length === 0 ? (
@@ -132,9 +132,9 @@ export function AnalyticsServicesScreen() {
             style={styles.listLoader}
           />
         ) : services.length === 0 ? (
-          <Text style={styles.emptyText}>
+          <AppText style={styles.emptyText}>
             No services found for this period
-          </Text>
+          </AppText>
         ) : (
           services.map((svc, i) => (
             <TouchableOpacity
@@ -149,19 +149,19 @@ export function AnalyticsServicesScreen() {
               }
             >
               <View style={styles.serviceRank}>
-                <Text style={styles.serviceRankText}>
+                <AppText style={styles.serviceRankText}>
                   {i + 1 + (page - 1) * 20}
-                </Text>
+                </AppText>
               </View>
               <View style={styles.serviceInfo}>
                 <View style={styles.serviceNameRow}>
-                  <Text style={styles.serviceName} numberOfLines={1}>
+                  <AppText style={styles.serviceName} numberOfLines={1}>
                     {svc.serviceName}
-                  </Text>
+                  </AppText>
                   <View style={styles.serviceCountBadge}>
-                    <Text style={styles.serviceCountText}>
+                    <AppText style={styles.serviceCountText}>
                       {svc.totalBookings}×
-                    </Text>
+                    </AppText>
                   </View>
                 </View>
                 {/* Progress bar */}
@@ -173,9 +173,9 @@ export function AnalyticsServicesScreen() {
                     ]}
                   />
                 </View>
-                <Text style={styles.serviceMeta}>
+                <AppText style={styles.serviceMeta}>
                   {svc.percentage}% of bookings · {formatRupiah(svc.revenue)}
-                </Text>
+                </AppText>
               </View>
             </TouchableOpacity>
           ))
@@ -194,9 +194,9 @@ export function AnalyticsServicesScreen() {
                 color={meta.hasPrev ? Colors.text.primary : Colors.text.muted}
               />
             </TouchableOpacity>
-            <Text style={styles.pageLabel}>
+            <AppText style={styles.pageLabel}>
               {meta.page} / {meta.totalPages}
-            </Text>
+            </AppText>
             <TouchableOpacity
               disabled={!meta.hasNext}
               onPress={() => setPage((p) => p + 1)}

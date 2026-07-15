@@ -4,10 +4,10 @@ import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -135,7 +135,7 @@ export function AnalyticsRevenueScreen() {
         >
           <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
         </TouchableOpacity>
-        <Text style={styles.pageTitle}>Revenue</Text>
+        <AppText style={styles.pageTitle}>Revenue</AppText>
         <View style={styles.topBarRight} />
       </View>
 
@@ -194,7 +194,7 @@ export function AnalyticsRevenueScreen() {
       {chart && chart.length > 0 ? (
         <View style={styles.chartCard}>
           <View style={styles.chartCardHeader}>
-            <Text style={styles.chartCardTitle}>Revenue Trend</Text>
+            <AppText style={styles.chartCardTitle}>Revenue Trend</AppText>
             {stats ? (
               <TrendBadge
                 direction={stats.totalBookings?.direction ?? "neutral"}
@@ -209,18 +209,18 @@ export function AnalyticsRevenueScreen() {
       {/* Bookings list */}
       <View style={styles.listSection}>
         <View style={styles.listHeader}>
-          <Text style={styles.sectionTitle}>
+          <AppText style={styles.sectionTitle}>
             Transactions{meta ? ` (${meta.totalItems})` : ""}
-          </Text>
+          </AppText>
           <TouchableOpacity
             ref={filterBtnRef}
             style={styles.filterPill}
             onPress={handleOpenTypeMenu}
             activeOpacity={0.8}
           >
-            <Text style={styles.filterPillText}>
+            <AppText style={styles.filterPillText}>
               {TYPE_OPTIONS.find((o) => o.value === typeFilter)?.label ?? "All"}
-            </Text>
+            </AppText>
             <Ionicons
               name="chevron-down"
               size={13}
@@ -236,24 +236,24 @@ export function AnalyticsRevenueScreen() {
             style={styles.listLoader}
           />
         ) : bookings.length === 0 ? (
-          <Text style={styles.emptyText}>No transactions found</Text>
+          <AppText style={styles.emptyText}>No transactions found</AppText>
         ) : (
           bookings.map((bk) => (
             <View key={bk.bookingId} style={styles.bookingRow}>
               <View style={styles.bookingLeft}>
                 <View style={styles.bookingIconRow}>
                   <BookingTypeIcon type={bk.type} />
-                  <Text style={styles.bookingCustomer} numberOfLines={1}>
+                  <AppText style={styles.bookingCustomer} numberOfLines={1}>
                     {bk.customerName}
-                  </Text>
+                  </AppText>
                 </View>
-                <Text style={styles.bookingMeta} numberOfLines={1}>
+                <AppText style={styles.bookingMeta} numberOfLines={1}>
                   {bk.services.join(", ")} · {formatDate(bk.completedAt)}
-                </Text>
+                </AppText>
               </View>
-              <Text style={styles.bookingRevenue}>
+              <AppText style={styles.bookingRevenue}>
                 {formatRupiahFull(bk.revenue)}
-              </Text>
+              </AppText>
             </View>
           ))
         )}
@@ -271,9 +271,9 @@ export function AnalyticsRevenueScreen() {
                 color={meta.hasPrev ? Colors.text.primary : Colors.text.muted}
               />
             </TouchableOpacity>
-            <Text style={styles.pageLabel}>
+            <AppText style={styles.pageLabel}>
               {meta.page} / {meta.totalPages}
-            </Text>
+            </AppText>
             <TouchableOpacity
               disabled={!meta.hasNext}
               onPress={() => setPage((p) => p + 1)}

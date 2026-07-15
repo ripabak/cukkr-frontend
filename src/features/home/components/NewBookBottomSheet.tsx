@@ -3,11 +3,11 @@ import { useFrame } from "@/src/components/FrameContext";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   Animated,
   Modal,
   StyleSheet,
-  Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -102,7 +102,7 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
         }}
       >
         <View style={styles.handle} />
-        <Text style={styles.title}>New Booking</Text>
+        <AppText style={styles.title}>New Booking</AppText>
 
         <View style={styles.buttonsRow}>
           <TouchableOpacity
@@ -118,7 +118,7 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
               size={36}
               color={Colors.text.primary}
             />
-            <Text style={styles.btnLabel}>Walk-In</Text>
+            <AppText style={styles.btnLabel}>Walk-In</AppText>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -134,7 +134,7 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
               size={36}
               color={Colors.text.primary}
             />
-            <Text style={styles.btnLabel}>Appointment</Text>
+            <AppText style={styles.btnLabel}>Appointment</AppText>
           </TouchableOpacity>
         </View>
       </Animated.View>

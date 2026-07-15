@@ -22,10 +22,10 @@ import { formatCurrency } from "@/src/features/barbershop/utils/form-validators"
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -99,11 +99,11 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
         />
       </View>
 
-      <Text style={styles.customerName}>{customer?.name ?? "—"}</Text>
-      <Text style={styles.customerPhone}>
+      <AppText style={styles.customerName}>{customer?.name ?? "—"}</AppText>
+      <AppText style={styles.customerPhone}>
         {customer?.phone ?? customer?.email ?? "No contact"}
         {customer?.emailVerified || customer?.phoneVerified ? " (verified)" : ""}
-      </Text>
+      </AppText>
 
       <SegmentedTabs
         tabs={DETAIL_TABS}
@@ -154,19 +154,19 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
       {activeTab === "books" && (
         <View style={styles.tabContent}>
           <View style={styles.bookingHeader}>
-            <Text style={styles.bookingTitle}>
+            <AppText style={styles.bookingTitle}>
               Booking{" "}
-              <Text style={styles.bookingCount}>({bookings.length})</Text>
-            </Text>
+              <AppText style={styles.bookingCount}>({bookings.length})</AppText>
+            </AppText>
             <TouchableOpacity
               style={styles.filterPill}
               onPress={() => setFilterVisible(true)}
               activeOpacity={0.8}
             >
-              <Text style={styles.filterLabel}>
+              <AppText style={styles.filterLabel}>
                 {SCHEDULE_STATUS_OPTIONS.find((o) => o.value === statusFilter)
                   ?.label ?? "All"}
-              </Text>
+              </AppText>
               <Ionicons
                 name="chevron-down"
                 size={14}
@@ -222,7 +222,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
       {activeTab === "messages" && (
         <View style={styles.tabContent}>
           <MessageThread messages={EMPTY_MESSAGES} />
-          <Text style={styles.noMessages}>No messages sent yet.</Text>
+          <AppText style={styles.noMessages}>No messages sent yet.</AppText>
         </View>
       )}
     </ScreenShell>

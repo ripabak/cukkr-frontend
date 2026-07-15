@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Modal, View, TouchableOpacity, StyleSheet } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { useFrame } from "@/src/components/FrameContext";
 
 interface Props {
@@ -24,9 +25,9 @@ export function AlertModal({
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.overlay}>
         <View style={[styles.card, { width: frameWidth * 0.85 }]}>
-          <Text style={styles.title}>{title}</Text>
+          <AppText style={styles.title}>{title}</AppText>
           {description ? (
-            <Text style={styles.description}>{description}</Text>
+            <AppText style={styles.description}>{description}</AppText>
           ) : null}
           {actionLabel ? (
             <TouchableOpacity
@@ -34,7 +35,7 @@ export function AlertModal({
               activeOpacity={0.8}
               style={styles.btn}
             >
-              <Text style={styles.btnLabel}>{actionLabel}</Text>
+              <AppText style={styles.btnLabel}>{actionLabel}</AppText>
             </TouchableOpacity>
           ) : null}
         </View>

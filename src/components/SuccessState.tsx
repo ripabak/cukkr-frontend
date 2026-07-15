@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { View, Text, StyleSheet, ViewStyle } from "react-native";
+import { View, StyleSheet, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface Props {
   title: string;
@@ -11,8 +12,8 @@ interface Props {
 export function SuccessState({ title, subtitle, style }: Props) {
   return (
     <View style={[styles.container, style]}>
-      <Text style={styles.title}>{title}</Text>
-      {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+      <AppText style={styles.title}>{title}</AppText>
+      {subtitle ? <AppText style={styles.subtitle}>{subtitle}</AppText> : null}
     </View>
   );
 }

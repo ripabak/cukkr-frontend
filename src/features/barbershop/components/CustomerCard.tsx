@@ -1,8 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   ViewStyle,
@@ -51,14 +51,14 @@ export function CustomerCard({
         />
       </View>
       <View style={styles.info}>
-        <Text style={[styles.name, !hasContact && styles.textMuted]}>
+        <AppText style={[styles.name, !hasContact && styles.textMuted]}>
           {name}
-        </Text>
-        <Text style={styles.meta}>
-          Total Book <Text style={styles.metaBold}>{totalBook}</Text>
+        </AppText>
+        <AppText style={styles.meta}>
+          Total Book <AppText style={styles.metaBold}>{totalBook}</AppText>
           {"  ·  "}Book Value{" "}
-          <Text style={styles.metaBold}>{bookValue}</Text>
-        </Text>
+          <AppText style={styles.metaBold}>{bookValue}</AppText>
+        </AppText>
       </View>
       <Ionicons name="chevron-forward" size={18} color={Colors.icon.muted} />
     </TouchableOpacity>

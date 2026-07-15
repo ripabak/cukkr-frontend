@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { View, Text, ScrollView, StyleSheet, ViewStyle } from "react-native";
+import { View, ScrollView, StyleSheet, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 export interface MessageItem {
   id: string;
@@ -23,9 +24,9 @@ export function MessageThread({ messages, style }: Props) {
         {messages.map((msg) => (
           <View key={msg.id} style={styles.messageGroup}>
             <View style={styles.bubble}>
-              <Text style={styles.bubbleText}>{msg.text}</Text>
+              <AppText style={styles.bubbleText}>{msg.text}</AppText>
             </View>
-            <Text style={styles.timestamp}>{msg.timestamp}</Text>
+            <AppText style={styles.timestamp}>{msg.timestamp}</AppText>
           </View>
         ))}
       </ScrollView>

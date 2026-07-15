@@ -8,11 +8,11 @@ import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useGlobalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ActivityIndicator,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -125,7 +125,7 @@ export function EditUserProfileFieldsScreen() {
           keyboardShouldPersistTaps="handled"
         >
           <View>
-            <Text style={styles.fieldLabel}>Current Password</Text>
+            <AppText style={styles.fieldLabel}>Current Password</AppText>
             <View style={styles.passwordInputRow}>
               <TextInputField
                 value={currentPassword}
@@ -149,11 +149,11 @@ export function EditUserProfileFieldsScreen() {
               </TouchableOpacity>
             </View>
             {currentPwError ? (
-              <Text style={styles.errorText}>{currentPwError}</Text>
+              <AppText style={styles.errorText}>{currentPwError}</AppText>
             ) : null}
           </View>
           <View>
-            <Text style={styles.fieldLabel}>New Password</Text>
+            <AppText style={styles.fieldLabel}>New Password</AppText>
             <View style={styles.passwordInputRow}>
               <TextInputField
                 value={newPassword}
@@ -177,14 +177,14 @@ export function EditUserProfileFieldsScreen() {
               </TouchableOpacity>
             </View>
             {newPwError ? (
-              <Text style={styles.errorText}>{newPwError}</Text>
+              <AppText style={styles.errorText}>{newPwError}</AppText>
             ) : null}
           </View>
           <TouchableOpacity
             style={styles.forgotRow}
             onPress={() => router.push("/d/forgot-password")}
           >
-            <Text style={styles.forgotText}>Forgot Password</Text>
+            <AppText style={styles.forgotText}>Forgot Password</AppText>
           </TouchableOpacity>
           <HelperCopy
             lines={["Enter your current password, then set your new password."]}
@@ -225,7 +225,7 @@ export function EditUserProfileFieldsScreen() {
               }}
               placeholder="Bio"
             />
-            {bioError ? <Text style={styles.errorText}>{bioError}</Text> : null}
+            {bioError ? <AppText style={styles.errorText}>{bioError}</AppText> : null}
           </>
         ) : (
           <>
@@ -238,7 +238,7 @@ export function EditUserProfileFieldsScreen() {
               placeholder="Your Name"
             />
             {nameError ? (
-              <Text style={styles.errorText}>{nameError}</Text>
+              <AppText style={styles.errorText}>{nameError}</AppText>
             ) : null}
           </>
         )}

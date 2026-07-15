@@ -19,11 +19,11 @@ import { useToast } from "@/src/lib/providers";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ActivityIndicator,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -131,7 +131,7 @@ export function ServiceDetailScreen() {
             </View>
           </View>
 
-          <Text style={styles.sectionLabel}>General Information</Text>
+          <AppText style={styles.sectionLabel}>General Information</AppText>
           <View style={styles.card}>
             <InfoRow label="Name" value={service?.name ?? "—"} />
             <InfoRow
@@ -141,9 +141,9 @@ export function ServiceDetailScreen() {
             />
           </View>
 
-          <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+          <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
             Pricing & Duration
-          </Text>
+          </AppText>
           <View style={styles.card}>
             <InfoRow
               label="Duration"
@@ -161,12 +161,12 @@ export function ServiceDetailScreen() {
           </View>
 
           <Permission roles={["owner", "admin"]}>
-            <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+            <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
               Operational Details
-            </Text>
-            <Text style={styles.operationalSubtitle}>
+            </AppText>
+            <AppText style={styles.operationalSubtitle}>
               Toggle activation and configure default service settings.
-            </Text>
+            </AppText>
             <View style={styles.card}>
               <ToggleRow
                 label="Active"
@@ -175,7 +175,7 @@ export function ServiceDetailScreen() {
               />
               {service?.isDefault ? (
                 <View style={styles.defaultRow}>
-                  <Text style={styles.defaultLabel}>Set As Default</Text>
+                  <AppText style={styles.defaultLabel}>Set As Default</AppText>
                   <StatusBadge label="Default" variant="default" />
                 </View>
               ) : (

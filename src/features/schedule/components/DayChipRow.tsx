@@ -1,10 +1,10 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -49,16 +49,16 @@ export function DayChipRow({
             activeOpacity={0.8}
             style={[styles.chip, isSelected && styles.chipSelected]}
           >
-            <Text
+            <AppText
               style={[styles.dayLabel, isSelected && styles.dayLabelSelected]}
             >
               {day.dayLabel}
-            </Text>
-            <Text
+            </AppText>
+            <AppText
               style={[styles.dayNumber, isSelected && styles.dayNumberSelected]}
             >
               {day.dayNumber}
-            </Text>
+            </AppText>
             <View style={styles.dotsRow}>
               {hasRequest ? (
                 <View style={styles.requestDot} />

@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { StyleSheet, Text, View, ViewStyle } from "react-native";
+import { StyleSheet, View, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 type StatusVariant =
   | "active"
@@ -36,7 +37,7 @@ export function StatusBadge({ label, variant = "default", style }: Props) {
 
   return (
     <View style={[styles.badge, { borderColor: color }, style]}>
-      <Text style={[styles.text, { color }]}>{label}</Text>
+      <AppText style={[styles.text, { color }]}>{label}</AppText>
     </View>
   );
 }

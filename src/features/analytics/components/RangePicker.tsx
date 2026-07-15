@@ -1,9 +1,9 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -39,9 +39,9 @@ export function RangePicker({ value, onChange }: Props) {
               activeOpacity={0.75}
               style={[styles.pill, active && styles.pillActive]}
             >
-              <Text style={[styles.pillText, active && styles.pillTextActive]}>
+              <AppText style={[styles.pillText, active && styles.pillTextActive]}>
                 {opt.label}
-              </Text>
+              </AppText>
             </TouchableOpacity>
           );
         })}

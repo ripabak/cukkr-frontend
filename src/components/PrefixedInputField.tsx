@@ -1,6 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { View, Text, TextInput, StyleSheet, ViewStyle } from "react-native";
+import { View, StyleSheet, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
+import { AppTextInput } from "@/src/components/AppTextInput";
 
 interface Props {
   prefix: string;
@@ -21,8 +23,8 @@ export function PrefixedInputField({
 }: Props) {
   return (
     <View style={[styles.container, style]}>
-      <Text style={styles.prefix}>{prefix}</Text>
-      <TextInput
+      <AppText style={styles.prefix}>{prefix}</AppText>
+      <AppTextInput
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}

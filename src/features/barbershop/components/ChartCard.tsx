@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { View, Text, StyleSheet, ViewStyle } from "react-native";
+import { View, StyleSheet, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface ChartPoint {
   x: number;
@@ -56,19 +57,19 @@ export function ChartCard({
 
   return (
     <View style={[styles.card, style]}>
-      <Text style={styles.title}>{title}</Text>
+      <AppText style={styles.title}>{title}</AppText>
       {subtitle && (
-        <Text style={[styles.subtitle, { color: subtitleColor }]}>
+        <AppText style={[styles.subtitle, { color: subtitleColor }]}>
           {subtitle}
-        </Text>
+        </AppText>
       )}
 
       <View style={styles.chartArea}>
         <View style={styles.yAxis}>
           {yLabels.map((label) => (
-            <Text key={label} style={styles.axisLabel}>
+            <AppText key={label} style={styles.axisLabel}>
               {label}
-            </Text>
+            </AppText>
           ))}
         </View>
 
@@ -109,9 +110,9 @@ export function ChartCard({
 
           <View style={styles.xAxis}>
             {xLabels.map((label) => (
-              <Text key={label} style={styles.axisLabel}>
+              <AppText key={label} style={styles.axisLabel}>
                 {label}
-              </Text>
+              </AppText>
             ))}
           </View>
         </View>

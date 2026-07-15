@@ -4,7 +4,8 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
 import { useRouter } from "expo-router";
 import React from "react";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 export function CreateBarbershopSuccessScreen() {
   const router = useRouter();
@@ -25,10 +26,10 @@ export function CreateBarbershopSuccessScreen() {
         padding: 32,
       }}
     >
-      <Text style={styles.title}>Congratulation 🎉</Text>
-      <Text style={styles.subtitle}>
+      <AppText style={styles.title}>Congratulation 🎉</AppText>
+      <AppText style={styles.subtitle}>
         {`Your barbershop, "${barbershopName}," has been created.`}
-      </Text>
+      </AppText>
       <GradientButton
         label="Open My Barbershop"
         style={styles.button}

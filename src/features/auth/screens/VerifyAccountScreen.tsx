@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 import { useToast } from "@/src/lib/providers";
 import { authTheme } from "../auth-theme";
@@ -52,7 +53,7 @@ export function VerifyAccountScreen() {
       <OtpCodeInput onChange={setOtp} value={otp} length={4} />
 
       <View style={styles.metaBlock}>
-        <Text style={styles.timer}>{countdown.format()}</Text>
+        <AppText style={styles.timer}>{countdown.format()}</AppText>
       </View>
 
       <AuthButton

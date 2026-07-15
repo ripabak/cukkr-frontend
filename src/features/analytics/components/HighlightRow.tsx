@@ -2,7 +2,8 @@ import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { formatRupiah } from "../utils/format";
 
 interface Props {
@@ -47,15 +48,15 @@ export function HighlightRow({
         )}
       </View>
       <View style={styles.info}>
-        <Text style={styles.name} numberOfLines={1}>
+        <AppText style={styles.name} numberOfLines={1}>
           {name}
-        </Text>
-        <Text style={styles.subtitle} numberOfLines={1}>
+        </AppText>
+        <AppText style={styles.subtitle} numberOfLines={1}>
           {subtitle}
-        </Text>
+        </AppText>
       </View>
       <View style={styles.revenueBadge}>
-        <Text style={styles.revenueText}>{formatRupiah(revenue)}</Text>
+        <AppText style={styles.revenueText}>{formatRupiah(revenue)}</AppText>
       </View>
     </TouchableOpacity>
   );

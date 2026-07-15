@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
@@ -55,14 +56,14 @@ export function SelectionToolbar({
           onPress={hasContact !== false ? onToggleSelect : undefined}
           activeOpacity={hasContact !== false ? 0.8 : 1}
         >
-          <Text
+          <AppText
             style={[
               styles.selectText,
               hasContact === false && styles.selectTextDisabled,
             ]}
           >
             {selectionMode ? "Cancel" : "Select"}
-          </Text>
+          </AppText>
         </TouchableOpacity>
       </View>
     </View>

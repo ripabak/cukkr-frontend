@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from "react-native";
+import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { Ionicons } from "@expo/vector-icons";
 
 interface Props {
@@ -24,9 +25,9 @@ export function SelectionRow({
       activeOpacity={isActive ? 1 : 0.7}
       style={[styles.container, !isLast && styles.borderBottom, style]}
     >
-      <Text style={[styles.label, isActive && styles.labelDisabled]}>
+      <AppText style={[styles.label, isActive && styles.labelDisabled]}>
         {label}
-      </Text>
+      </AppText>
       <Ionicons
         name="chevron-forward"
         size={18}

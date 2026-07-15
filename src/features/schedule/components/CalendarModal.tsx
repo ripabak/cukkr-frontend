@@ -1,7 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Modal, StyleSheet, TouchableOpacity, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { useFrame } from "@/src/components/FrameContext";
 
 interface DayHourInfo {
@@ -161,9 +162,9 @@ export function CalendarModal({
                 color={Colors.text.primary}
               />
             </TouchableOpacity>
-            <Text style={styles.monthTitle}>
+            <AppText style={styles.monthTitle}>
               {MONTH_NAMES[viewMonth]} {viewYear}
-            </Text>
+            </AppText>
             <TouchableOpacity
               onPress={nextMonth}
               activeOpacity={0.7}
@@ -180,7 +181,7 @@ export function CalendarModal({
           {/* Day labels */}
           <View style={styles.dayLabelRow}>
             {DAY_LABELS.map((d, i) => (
-              <Text
+              <AppText
                 key={d}
                 style={[
                   styles.dayLabel,
@@ -188,7 +189,7 @@ export function CalendarModal({
                 ]}
               >
                 {d}
-              </Text>
+              </AppText>
             ))}
           </View>
 
@@ -224,7 +225,7 @@ export function CalendarModal({
                         todayMark && !selected && styles.dayBtnToday,
                       ]}
                     >
-                      <Text
+                      <AppText
                         style={[
                           styles.dayText,
                           selected && styles.dayTextSelected,
@@ -233,7 +234,7 @@ export function CalendarModal({
                         ]}
                       >
                         {day}
-                      </Text>
+                      </AppText>
                       {closed && !past && <View style={styles.closedDot} />}
                       <View style={styles.dotsRow}>
                         {hasRequest && <View style={styles.requestDot} />}
@@ -254,7 +255,7 @@ export function CalendarModal({
               {hasOpenHours && closedDaySet.size > 0 && (
                 <>
                   <View style={styles.legendDot} />
-                  <Text style={styles.legendText}>Closed Day</Text>
+                  <AppText style={styles.legendText}>Closed Day</AppText>
                 </>
               )}
               {highlightDates?.size ? (
@@ -267,13 +268,13 @@ export function CalendarModal({
                         : styles.legendDotFirst,
                     ]}
                   />
-                  <Text style={styles.legendText}>Has Requests</Text>
+                  <AppText style={styles.legendText}>Has Requests</AppText>
                 </>
               ) : null}
               {waitingDates?.size ? (
                 <>
                   <View style={styles.legendWaitingDot} />
-                  <Text style={styles.legendText}>Has Waiting</Text>
+                  <AppText style={styles.legendText}>Has Waiting</AppText>
                 </>
               ) : null}
             </View>

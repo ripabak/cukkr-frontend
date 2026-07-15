@@ -11,7 +11,8 @@ import { formatRelativeTime } from "@/src/utils/date";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import {
   useAcceptNotification,
   useDeclineNotification,
@@ -80,7 +81,7 @@ export function NotificationsListScreen() {
     >
       {!isLoading && isError ? (
         <View style={styles.centered}>
-          <Text style={styles.errorText}>Failed to load notifications</Text>
+          <AppText style={styles.errorText}>Failed to load notifications</AppText>
         </View>
       ) : null}
 
@@ -91,8 +92,8 @@ export function NotificationsListScreen() {
             size={48}
             color={Colors.icon.muted}
           />
-          <Text style={styles.emptyTitle}>No Notifications</Text>
-          <Text style={styles.emptySubtitle}>You're all caught up!</Text>
+          <AppText style={styles.emptyTitle}>No Notifications</AppText>
+          <AppText style={styles.emptySubtitle}>You're all caught up!</AppText>
         </View>
       ) : null}
 

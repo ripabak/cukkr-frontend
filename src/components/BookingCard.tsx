@@ -1,9 +1,9 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -73,15 +73,15 @@ export function BookingCard({
         <Ionicons name={iconName} size={22} color={color} />
       </View>
       <View style={styles.info}>
-        <Text style={styles.timeLabel}>{timeLabel}</Text>
+        <AppText style={styles.timeLabel}>{timeLabel}</AppText>
         <View style={styles.barberRow}>
           <Ionicons name="cut" size={12} color={Colors.icon.muted} />
-          <Text style={styles.barberName}> {barberName}</Text>
+          <AppText style={styles.barberName}> {barberName}</AppText>
         </View>
       </View>
       <View style={styles.right}>
-        <Text style={[styles.customerName, { color }]}>{customerName}</Text>
-        <Text style={styles.duration}>{duration}</Text>
+        <AppText style={[styles.customerName, { color }]}>{customerName}</AppText>
+        <AppText style={styles.duration}>{duration}</AppText>
       </View>
     </TouchableOpacity>
   );

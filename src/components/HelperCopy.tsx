@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { View, Text, StyleSheet, ViewStyle } from "react-native";
+import { View, StyleSheet, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface Props {
   lines: string[];
@@ -12,11 +13,11 @@ export function HelperCopy({ lines, style, errorLine }: Props) {
   return (
     <View style={style}>
       {lines.map((line, index) => (
-        <Text key={index} style={styles.line}>
+        <AppText key={index} style={styles.line}>
           {line}
-        </Text>
+        </AppText>
       ))}
-      {errorLine ? <Text style={styles.errorLine}>{errorLine}</Text> : null}
+      {errorLine ? <AppText style={styles.errorLine}>{errorLine}</AppText> : null}
     </View>
   );
 }

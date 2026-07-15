@@ -7,7 +7,8 @@ import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 export function SelectBarberScreen() {
   const router = useRouter();
@@ -37,7 +38,7 @@ export function SelectBarberScreen() {
       <SearchInput value={query} onChangeText={setQuery} placeholder="Search" />
 
       {!isLoading && filtered.length === 0 ? (
-        <Text style={styles.emptyText}>No barbers found.</Text>
+        <AppText style={styles.emptyText}>No barbers found.</AppText>
       ) : (
         <View style={styles.list}>
           {filtered.map((item) => (
@@ -50,7 +51,7 @@ export function SelectBarberScreen() {
               <View style={styles.avatar}>
                 <Ionicons name="person" size={22} color={Colors.text.primary} />
               </View>
-              <Text style={styles.barberName}>{item.name}</Text>
+              <AppText style={styles.barberName}>{item.name}</AppText>
               <Ionicons
                 name="chevron-forward"
                 size={18}

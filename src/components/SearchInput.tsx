@@ -1,7 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { View, TextInput, StyleSheet, ViewStyle } from "react-native";
+import { View, StyleSheet, ViewStyle } from "react-native";
+import { AppTextInput } from "@/src/components/AppTextInput";
 
 interface Props {
   value: string;
@@ -19,7 +20,7 @@ export function SearchInput({
   return (
     <View style={[styles.container, style]}>
       <Ionicons name="search" size={18} color={Colors.icon.muted} />
-      <TextInput
+      <AppTextInput
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}

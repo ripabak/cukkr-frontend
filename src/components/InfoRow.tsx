@@ -1,9 +1,9 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -35,7 +35,7 @@ export function InfoRow({
 
   const content = (
     <View style={[styles.container, !isLast && styles.borderBottom, style]}>
-      <Text style={styles.label}>{label}</Text>
+      <AppText style={styles.label}>{label}</AppText>
       {displayValue ? (
         <View style={styles.valueRow}>
           {valueIconName ? (
@@ -45,14 +45,14 @@ export function InfoRow({
               color={Colors.text.secondary}
             />
           ) : null}
-          <Text style={styles.value} numberOfLines={1} ellipsizeMode="tail">
+          <AppText style={styles.value} numberOfLines={1} ellipsizeMode="tail">
             {displayValue}
-          </Text>
+          </AppText>
         </View>
       ) : displayPlaceholder ? (
-        <Text style={styles.placeholder} numberOfLines={1}>
+        <AppText style={styles.placeholder} numberOfLines={1}>
           {displayPlaceholder}
-        </Text>
+        </AppText>
       ) : null}
       {showChevron ? (
         <Ionicons name="chevron-forward" size={16} color={Colors.icon.muted} />

@@ -15,7 +15,8 @@ import { useToast } from "@/src/lib/providers";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 type SortOption =
   | "name_asc"
@@ -96,8 +97,8 @@ export function ServicesManagementScreen() {
         ) : null
       }
     >
-      <Text style={styles.title}>Services Management</Text>
-      <Text style={styles.subtitle}>Manage your barbershop services</Text>
+      <AppText style={styles.title}>Services Management</AppText>
+      <AppText style={styles.subtitle}>Manage your barbershop services</AppText>
 
       <SearchInput
         value={search}
@@ -106,11 +107,11 @@ export function ServicesManagementScreen() {
       />
 
       {!isLoading && services.length === 0 ? (
-        <Text style={styles.empty}>
+        <AppText style={styles.empty}>
           {search
             ? "No services match your search."
             : "No services yet. Add one."}
-        </Text>
+        </AppText>
       ) : null}
       {services.length > 0 ? (
         <View style={styles.list}>

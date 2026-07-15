@@ -1,9 +1,9 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -34,10 +34,10 @@ export function ServiceSelectionCard({
 }: Props) {
   return (
     <View style={[styles.wrapper, style]}>
-      <Text style={styles.sectionLabel}>
+      <AppText style={styles.sectionLabel}>
         Service
-        {required ? <Text style={styles.asterisk}> *</Text> : null}
-      </Text>
+        {required ? <AppText style={styles.asterisk}> *</AppText> : null}
+      </AppText>
       {services.length === 0 ? (
         <TouchableOpacity
           onPress={onSelectPress}
@@ -49,7 +49,7 @@ export function ServiceSelectionCard({
             size={18}
             color={Colors.icon.muted}
           />
-          <Text style={styles.emptyText}>Select a service</Text>
+          <AppText style={styles.emptyText}>Select a service</AppText>
         </TouchableOpacity>
       ) : (
         <>
@@ -57,14 +57,14 @@ export function ServiceSelectionCard({
             <View key={idx} style={styles.serviceRow}>
               <View style={styles.imagePlaceholder} />
               <View style={styles.serviceInfo}>
-                <Text style={styles.serviceName}>{svc.name}</Text>
-                <Text style={styles.servicePrice}>
+                <AppText style={styles.serviceName}>{svc.name}</AppText>
+                <AppText style={styles.servicePrice}>
                   {formatPrice(svc.price)}
-                </Text>
+                </AppText>
               </View>
               {svc.isDefault ? (
                 <View style={styles.defaultBadge}>
-                  <Text style={styles.defaultText}>Default</Text>
+                  <AppText style={styles.defaultText}>Default</AppText>
                 </View>
               ) : null}
             </View>
@@ -74,7 +74,7 @@ export function ServiceSelectionCard({
             activeOpacity={0.7}
             style={styles.changeRow}
           >
-            <Text style={styles.changeText}>Change service</Text>
+            <AppText style={styles.changeText}>Change service</AppText>
           </TouchableOpacity>
         </>
       )}

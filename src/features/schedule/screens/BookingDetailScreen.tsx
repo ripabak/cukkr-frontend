@@ -25,10 +25,10 @@ import { formatDateLabel, formatTime12h } from "@/src/utils/date";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -171,7 +171,7 @@ export function BookingDetailScreen() {
     if (!booking) {
       return (
         <View style={styles.centered}>
-          <Text style={styles.errorText}>Booking not found.</Text>
+          <AppText style={styles.errorText}>Booking not found.</AppText>
         </View>
       );
     }

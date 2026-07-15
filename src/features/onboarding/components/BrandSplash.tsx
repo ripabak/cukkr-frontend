@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { StyleSheet, Text, View, ViewStyle } from "react-native";
+import { StyleSheet, View, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface BrandSplashProps {
   style?: ViewStyle;
@@ -12,7 +13,7 @@ export const BrandSplash: React.FC<BrandSplashProps> = ({ style }) => {
       <View style={styles.logoMark}>
         <View style={styles.logoAccent} />
       </View>
-      <Text style={styles.wordmark}>cukkr</Text>
+      <AppText style={styles.wordmark}>cukkr</AppText>
     </View>
   );
 };

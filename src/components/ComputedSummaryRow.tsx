@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { View, Text, StyleSheet, ViewStyle } from "react-native";
+import { View, StyleSheet, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface Props {
   label: string;
@@ -13,8 +14,8 @@ export function ComputedSummaryRow({ label, value, style }: Props) {
     <View style={[styles.container, style]}>
       <View style={styles.divider} />
       <View style={styles.row}>
-        <Text style={styles.label}>{label}</Text>
-        <Text style={styles.value}>{value}</Text>
+        <AppText style={styles.label}>{label}</AppText>
+        <AppText style={styles.value}>{value}</AppText>
       </View>
     </View>
   );
