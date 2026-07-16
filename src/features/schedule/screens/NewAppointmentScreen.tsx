@@ -1,7 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
-import { useOpenHours } from "@/src/features/barbershop/hooks";
+import { useOpenHours } from "@/src/hooks/useOpenHours";
 import { BookingForm } from "@/src/features/schedule/components/BookingForm";
 import { BookingTypeToggle } from "@/src/features/schedule/components/BookingTypeToggle";
 import { CalendarModal } from "@/src/features/schedule/components/CalendarModal";

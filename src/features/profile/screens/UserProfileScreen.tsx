@@ -59,6 +59,7 @@ export function UserProfileScreen() {
 
   return (
     <ScreenShell
+      hideAppHeader
       headerSlot={
         <ScreenHeader title="User Profile" onBack={() => router.back()} />
       }

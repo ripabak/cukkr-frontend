@@ -126,8 +126,8 @@ export function AddOrEditServiceScreen() {
 
   return (
     <ScreenShell
-      hideAppHeader
       keyboardAvoid
+      hideAppHeader
       headerSlot={
         <ScreenHeader
           title={isEdit ? "Edit Service" : "New Service"}

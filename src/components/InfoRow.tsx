@@ -17,6 +17,7 @@ interface Props {
   onPress?: () => void;
   showChevron?: boolean;
   isLast?: boolean;
+  multiline?: boolean;
   style?: ViewStyle;
 }
 
@@ -28,6 +29,7 @@ export function InfoRow({
   onPress,
   showChevron,
   isLast,
+  multiline,
   style,
 }: Props) {
   const displayValue = value || null;
@@ -35,9 +37,9 @@ export function InfoRow({
 
   const content = (
     <View style={[styles.container, !isLast && styles.borderBottom, style]}>
-      <AppText style={styles.label}>{label}</AppText>
+      <AppText style={styles.label} numberOfLines={1} ellipsizeMode="tail">{label}</AppText>
       {displayValue ? (
-        <View style={styles.valueRow}>
+        <View style={[styles.valueRow, multiline && styles.valueRowMultiline]}>
           {valueIconName ? (
             <Ionicons
               name={valueIconName as any}
@@ -45,12 +47,16 @@ export function InfoRow({
               color={Colors.text.secondary}
             />
           ) : null}
-          <AppText style={styles.value} numberOfLines={1} ellipsizeMode="tail">
+          <AppText
+            style={styles.value}
+            numberOfLines={multiline ? undefined : 1}
+            ellipsizeMode={multiline ? undefined : "head"}
+          >
             {displayValue}
           </AppText>
         </View>
       ) : displayPlaceholder ? (
-        <AppText style={styles.placeholder} numberOfLines={1}>
+        <AppText style={styles.placeholder} numberOfLines={1} ellipsizeMode="tail">
           {displayPlaceholder}
         </AppText>
       ) : null}
@@ -94,6 +100,9 @@ const styles = StyleSheet.create({
     gap: 4,
     flex: 0.5,
     justifyContent: "flex-end",
+  },
+  valueRowMultiline: {
+    alignItems: "flex-start",
   },
   value: {
     fontSize: 14,

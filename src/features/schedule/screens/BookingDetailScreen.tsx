@@ -1,4 +1,3 @@
-import AppTheme from "@/src/app-theme";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { OverflowMenu } from "@/src/components/OverflowMenu";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -413,7 +412,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: Colors.bg.default,
-    paddingTop: AppTheme.spacing.lg,
   },
   outer: {
     flex: 1,
@@ -428,9 +426,9 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
   },
   overflowBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",

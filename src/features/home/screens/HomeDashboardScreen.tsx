@@ -11,6 +11,8 @@ import {
   useGenerateWalkInPin,
   useHomeActiveBookings,
 } from "@/src/features/home/hooks";
+import { QueueStatCard } from "@/src/features/home/components/QueueStatCard";
+import { useOpenHours } from "@/src/hooks/useOpenHours";
 import { useUnreadNotificationsCount } from "@/src/features/notifications/hooks";
 import { notificationsService } from "@/src/features/notifications/services/notifications.service";
 import { pwaNotificationService } from "@/src/services/pwa-notification.service";
@@ -18,7 +20,8 @@ import { mapApiStatusToBookingStatus } from "@/src/features/schedule/utils/booki
 import { useAuthUser, useMemberRole } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
-import { formatTime12h, toApiDate } from "@/src/utils/date";
+import { formatTime12h, parseTime24, toApiDate } from "@/src/utils/date";
+import { formatTimeRange } from "@/src/utils/time-format";
 import { Ionicons } from "@expo/vector-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Clipboard from "expo-clipboard";
@@ -56,39 +59,16 @@ const STAT_CONFIG: {
   key: string;
   label: string;
   icon: React.ComponentProps<typeof Ionicons>["name"];
-  bg: string;
-  valueColor: string;
-  labelColor?: string;
 }[] = [
   {
     key: "walkIn",
     label: "Walk-In",
     icon: "walk",
-    bg: Colors.brand.primarySurface,
-    valueColor: Colors.brand.primaryDark,
   },
   {
     key: "appointment",
     label: "Appoint.",
-    icon: "calendar-outline",
-    bg: Colors.brand.primarySurface,
-    valueColor: Colors.brand.primaryDark,
-  },
-  {
-    key: "waiting",
-    label: "Waiting",
-    icon: "time-outline",
-    bg: Colors.brand.primarySurface,
-    valueColor: Colors.status.waiting,
-    labelColor: Colors.status.waiting,
-  },
-  {
-    key: "inProgress",
-    label: "In Progress",
-    icon: "sync-outline",
-    bg: Colors.brand.primarySurface,
-    valueColor: Colors.status.inProgress,
-    labelColor: Colors.status.inProgress,
+    icon: "calendar",
   },
 ];
 
@@ -108,6 +88,7 @@ export function HomeDashboardScreen() {
     useGenerateWalkInPin();
   const { role } = useMemberRole();
   const { data: unreadCount } = useUnreadNotificationsCount();
+  const { data: openHoursData } = useOpenHours();
 
   const [switcherVisible, setSwitcherVisible] = useState(false);
   const [newBookVisible, setNewBookVisible] = useState(false);
@@ -139,7 +120,7 @@ export function HomeDashboardScreen() {
   const [notifConsentVisible, setNotifConsentVisible] = useState(false);
   const [greetingInteractive, setGreetingInteractive] = useState(true);
   const [bannerSource, setBannerSource] = useState<number>(
-    require("@/assets/images/welcome-banner.avif"),
+    require("@/assets/images/bg-placeholder.png"),
   );
   const scrollY = useRef(new Animated.Value(0)).current;
 
@@ -172,13 +153,6 @@ export function HomeDashboardScreen() {
   const headerBgOpacity = scrollY.interpolate({
     inputRange: [0, spacerHeight * 0.35],
     outputRange: [0, 1],
-    extrapolate: "clamp",
-  });
-
-  // Logo crossfade: dark → brand yellow, in sync with the header background
-  const logoDarkOpacity = scrollY.interpolate({
-    inputRange: [0, spacerHeight * 0.35],
-    outputRange: [1, 0],
     extrapolate: "clamp",
   });
 
@@ -219,7 +193,49 @@ export function HomeDashboardScreen() {
     ? `${process.env.EXPO_PUBLIC_WEB_URL}/${barbershop.slug}`
     : null;
 
-  const todayBookings = activeBookings.slice(0, 5);
+  const todayOpenHours = openHoursData?.find(
+    (d) => d.dayOfWeek === new Date().getDay(),
+  );
+
+  const isCurrentlyOpen = React.useMemo(() => {
+    if (!todayOpenHours || !todayOpenHours.isOpen) return false;
+    const open = todayOpenHours.openTime
+      ? parseTime24(todayOpenHours.openTime)
+      : null;
+    const close = todayOpenHours.closeTime
+      ? parseTime24(todayOpenHours.closeTime)
+      : null;
+    if (!open || !close) return false;
+    const now = new Date();
+    const nowMinutes = now.getHours() * 60 + now.getMinutes();
+    const openMinutes = open.hour24 * 60 + open.minute;
+    const closeMinutes = close.hour24 * 60 + close.minute;
+    return nowMinutes >= openMinutes && nowMinutes < closeMinutes;
+  }, [todayOpenHours]);
+
+  const handleShareLink = async () => {
+    if (!bookingUrl) return;
+    const shareData = {
+      title: "Walk-in Check-In",
+      text: "Check in at our barbershop",
+      url: bookingUrl,
+    };
+    try {
+      if (typeof navigator !== "undefined" && navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await Clipboard.setStringAsync(bookingUrl);
+        toast.success("Link copied to clipboard");
+      }
+    } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") return;
+      toast.error("Failed to share link");
+    }
+  };
+
+  const waitingBookings = activeBookings
+    .filter((b) => b.status === "waiting")
+    .slice(0, 2);
 
   const handleBookingPress = (bookingId: string) => {
     router.push({ pathname: "/d/booking-detail", params: { id: bookingId } });
@@ -239,7 +255,7 @@ export function HomeDashboardScreen() {
         .filter(Boolean)
         .map((w: string) => w[0].toUpperCase())
         .join("")
-    : "?";
+    : "";
 
   return (
     <View style={styles.root}>
@@ -248,7 +264,7 @@ export function HomeDashboardScreen() {
         <Image
           source={bannerSource}
           onError={() =>
-            setBannerSource(require("@/assets/images/welcome-banner.jpg"))
+            setBannerSource(require("@/assets/images/bg-placeholder.png"))
           }
           style={{
             position: "absolute",
@@ -286,18 +302,15 @@ export function HomeDashboardScreen() {
         <View style={{ height: spacerHeight }} />
 
         <View style={[styles.contentCard, { paddingTop: stickyHeaderHeight }]}>
-          {/* Walk-In PIN + QR */}
-          <View style={styles.checkInRow}>
-            <View style={styles.pinCard}>
-              <AppText style={styles.pinLabel}>Walk-In Check-In</AppText>
-              <View style={styles.pinValueRow}>
-                <AppText style={styles.pinValue} numberOfLines={1}>
-                  {activePin ?? "----"}
-                </AppText>
+          {/* Walk-In Check-In */}
+          <View style={styles.walkInCard}>
+            <View style={styles.walkInHeader}>
+              <AppText style={styles.walkInLabel}>WALK-IN CHECK-IN</AppText>
+              <View style={styles.walkInActions}>
                 <TouchableOpacity
                   onPress={handleGeneratePin}
                   disabled={isGenerating}
-                  style={styles.pinActionBtn}
+                  style={styles.walkInIconBtn}
                 >
                   {isGenerating ? (
                     <ActivityIndicator
@@ -312,161 +325,136 @@ export function HomeDashboardScreen() {
                     />
                   )}
                 </TouchableOpacity>
-              </View>
-              {bookingUrl && (
                 <TouchableOpacity
-                  onPress={handleCopyLink}
-                  activeOpacity={0.7}
-                  style={styles.linkPill}
+                  onPress={() => router.push("/d/walkin-qr")}
+                  style={styles.walkInIconBtn}
                 >
-                  <AppText style={styles.linkText} numberOfLines={1}>
-                    {bookingUrl}
-                  </AppText>
                   <Ionicons
-                    name="copy-outline"
-                    size={14}
+                    name="qr-code-outline"
+                    size={20}
                     color={Colors.text.secondary}
                   />
                 </TouchableOpacity>
-              )}
+              </View>
             </View>
 
-            <View style={styles.qrCard}>
-              <View style={styles.qrPlaceholder}>
-                <Ionicons
-                  name="qr-code"
-                  size={72}
-                  color={Colors.text.primary}
-                />
-              </View>
+            <AppText style={styles.walkInPin} numberOfLines={1}>
+              {activePin ?? "----"}
+            </AppText>
+
+            {bookingUrl && (
               <TouchableOpacity
-                style={styles.shareQrBtn}
-                activeOpacity={0.85}
-                onPress={() => router.push("/d/walkin-qr")}
+                onPress={handleCopyLink}
+                activeOpacity={0.7}
+                style={styles.walkInLinkPill}
               >
-                <AppText style={styles.shareQrText}>Share QR</AppText>
+                <AppText style={styles.walkInLinkText} numberOfLines={1}>
+                  {bookingUrl}
+                </AppText>
+                <Ionicons
+                  name="copy-outline"
+                  size={18}
+                  color={Colors.text.secondary}
+                />
               </TouchableOpacity>
-            </View>
+            )}
+
+            <TouchableOpacity
+              onPress={handleShareLink}
+              activeOpacity={0.9}
+              style={styles.walkInShareBtn}
+            >
+              <Ionicons
+                name="share-outline"
+                size={20}
+                color={Colors.text.primary}
+              />
+              <AppText style={styles.walkInShareText}>
+                Share Walk-in Link
+              </AppText>
+            </TouchableOpacity>
           </View>
 
-          {/* Shortcuts */}
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.shortcutsRow}
-            contentContainerStyle={styles.shortcutsContent}
-          >
+          {/* Quick Actions */}
+          <View style={styles.quickActionsGrid}>
             <ShortcutTile
               label="New Book"
-              dotColor={Colors.brand.primary}
+              variant="large"
               icon={
                 <Ionicons
                   name="calendar-outline"
-                  size={22}
+                  size={28}
                   color={Colors.text.primary}
                 />
               }
               onPress={() => setNewBookVisible(true)}
-              style={styles.shortcutItem}
             />
             <ShortcutTile
               label="Barbers"
-              dotColor={Colors.brand.primary}
+              variant="large"
               icon={
                 <Ionicons
                   name="people-outline"
-                  size={22}
+                  size={28}
                   color={Colors.text.primary}
                 />
               }
               onPress={() => router.push("/d/barbers-management")}
-              style={styles.shortcutItem}
             />
             <ShortcutTile
               label="Customers"
-              dotColor={Colors.brand.primary}
+              variant="large"
               icon={
                 <Ionicons
                   name="person-outline"
-                  size={22}
+                  size={28}
                   color={Colors.text.primary}
                 />
               }
               onPress={() => router.push("/d/customer-management")}
-              style={styles.shortcutItem}
             />
             <ShortcutTile
               label="Services"
-              dotColor={Colors.brand.primary}
+              variant="large"
               icon={
                 <Ionicons
                   name="cut-outline"
-                  size={22}
+                  size={28}
                   color={Colors.text.primary}
                 />
               }
               onPress={() => router.push("/d/services-management")}
-              style={styles.shortcutItem}
             />
-            <ShortcutTile
-              label="Open Hours"
-              dotColor={Colors.brand.primary}
-              icon={
-                <Ionicons
-                  name="time-outline"
-                  size={22}
-                  color={Colors.text.primary}
-                />
-              }
-              onPress={() => router.push("/d/open-hours")}
-              style={styles.shortcutItem}
-            />
-          </ScrollView>
+          </View>
 
           {/* Today's Queue */}
           <View style={styles.sectionRow}>
-            <AppText style={styles.sectionTitle}>Today's Queue</AppText>
+            <AppText style={styles.sectionTitle}>Today's Live</AppText>
             <TouchableOpacity onPress={() => router.push("/d/schedule")}>
               <AppText style={styles.seeAll}>See All</AppText>
             </TouchableOpacity>
           </View>
-          <View style={styles.statsRow}>
+          <View style={styles.queueGrid}>
             {STAT_CONFIG.map((s) => (
-              <View
+              <QueueStatCard
                 key={s.key}
-                style={[styles.statCard, { backgroundColor: s.bg }]}
-              >
-                <View style={styles.statIconCircle}>
-                  <Ionicons
-                    name={s.icon}
-                    size={16}
-                    color={s.valueColor}
-                  />
-                </View>
-                <AppText style={[styles.statValue, { color: s.valueColor }]}>
-                  {statValues[s.key]}
-                </AppText>
-                <AppText
-                  style={[
-                    styles.statLabel,
-                    s.labelColor ? { color: s.labelColor } : undefined,
-                  ]}
-                >
-                  {s.label}
-                </AppText>
-              </View>
+                label={s.label}
+                icon={s.icon}
+                value={statValues[s.key]}
+                onPress={() => router.push("/d/schedule")}
+              />
             ))}
           </View>
 
-          {/* Today's Booking */}
+          {/* Up Next */}
           <View style={styles.sectionRow}>
-            <AppText style={styles.sectionTitle}>Today's Booking</AppText>
+            <AppText style={styles.sectionTitle}>Up Next</AppText>
             <TouchableOpacity onPress={() => router.push("/d/schedule")}>
               <AppText style={styles.seeAll}>See All</AppText>
             </TouchableOpacity>
           </View>
-          {todayBookings.length > 0 ? (
-            todayBookings.map((booking, i) => {
+          {waitingBookings.length > 0 ? (
+            waitingBookings.map((booking, i) => {
               const timeDate =
                 booking.type === "appointment" && booking.scheduledAt
                   ? new Date(booking.scheduledAt as Date)
@@ -482,7 +470,7 @@ export function HomeDashboardScreen() {
                   bookingType={booking.type}
                   onPress={() => handleBookingPress(booking.id)}
                   style={
-                    i < todayBookings.length - 1 ? styles.cardMargin : undefined
+                    i < waitingBookings.length - 1 ? styles.cardMargin : undefined
                   }
                 />
               );
@@ -505,21 +493,45 @@ export function HomeDashboardScreen() {
         ]}
         pointerEvents={greetingInteractive ? "box-none" : "none"}
       >
-        <TouchableOpacity
-          activeOpacity={0.85}
-          onPress={() => router.push("/d/user-profile")}
-        >
-          <View style={styles.avatar}>
-            <AppText style={styles.avatarInitials}>{avatarInitials}</AppText>
+        <View style={styles.greetingInner}>
+          <View>
+            <AppText style={styles.greetingSmall}>{getGreeting()}</AppText>
+            <AppText style={styles.greetingName}>{user?.name ?? "..."}</AppText>
+            {role ? (
+              <View style={styles.rolePillContainer}>
+                <AppText style={styles.rolePill}>{role}</AppText>
+              </View>
+            ) : null}
           </View>
-          <AppText style={styles.greetingSmall}>{getGreeting()}</AppText>
-          <AppText style={styles.greetingName}>{user?.name ?? "..."}</AppText>
-          {role ? (
-            <View style={styles.rolePillContainer}>
-              <AppText style={styles.rolePill}>{role}</AppText>
+
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={() => router.push("/d/open-hours")}
+            style={styles.openHoursCard}
+          >
+            <AppText style={styles.openHoursTitle}>Today&apos;s Hours</AppText>
+            <View style={styles.openHoursStatusRow}>
+              <View
+                style={[
+                  styles.openHoursDot,
+                  {
+                    backgroundColor: isCurrentlyOpen
+                      ? Colors.status.success
+                      : Colors.status.danger,
+                  },
+                ]}
+              />
+              <AppText style={styles.openHoursStatus}>
+                {isCurrentlyOpen ? "Open" : "Closed"}
+              </AppText>
             </View>
-          ) : null}
-        </TouchableOpacity>
+            <AppText style={styles.openHoursRange}>
+              {todayOpenHours
+                ? formatTimeRange(todayOpenHours.openTime, todayOpenHours.closeTime)
+                : "—"}
+            </AppText>
+          </TouchableOpacity>
+        </View>
       </Animated.View>
 
       {/*
@@ -544,24 +556,6 @@ export function HomeDashboardScreen() {
           ]}
         />
         <View style={styles.headerRow} pointerEvents="box-none">
-          <View style={styles.logoWrapper}>
-            <Animated.Image
-              source={require("@/public/cukkr-logo-trans.png")}
-              style={[styles.logo, { opacity: headerBgOpacity }]}
-              resizeMode="contain"
-              tintColor={Colors.brand.primary}
-            />
-            <Animated.Image
-              source={require("@/public/cukkr-logo-trans.png")}
-              style={[
-                StyleSheet.absoluteFill,
-                styles.logo,
-                { opacity: logoDarkOpacity },
-              ]}
-              resizeMode="contain"
-              tintColor={Colors.text.primary}
-            />
-          </View>
           <TouchableOpacity
             style={styles.shopSwitcher}
             activeOpacity={0.7}
@@ -625,6 +619,21 @@ export function HomeDashboardScreen() {
               color={Colors.text.primary}
             />
             {(unreadCount ?? 0) > 0 ? <View style={styles.notifDot} /> : null}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.profileBtn}
+            onPress={() => router.push("/d/user-profile")}
+          >
+            {user?.image ? (
+              <Image
+                source={{ uri: user.image }}
+                style={styles.profileAvatar}
+              />
+            ) : (
+              <AppText style={styles.profileInitials}>
+                {avatarInitials}
+              </AppText>
+            )}
           </TouchableOpacity>
         </View>
       </View>
@@ -721,22 +730,13 @@ const styles = StyleSheet.create({
   greetingLayer: {
     position: "absolute",
     left: 20,
-    gap: 2,
+    right: 20,
   },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "rgba(255,255,255,0.9)",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 6,
-  },
-  avatarInitials: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: Colors.brand.primaryDark,
-    letterSpacing: 0.5,
+  greetingInner: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    gap: 12,
   },
   greetingSmall: {
     fontSize: 12,
@@ -768,6 +768,42 @@ const styles = StyleSheet.create({
     color: Colors.brand.primaryDark,
     textTransform: "capitalize",
   },
+  openHoursCard: {
+    backgroundColor: Colors.bg.default,
+    borderRadius: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 2,
+    minWidth: 120,
+    alignItems: "flex-start",
+    gap: 4,
+  },
+  openHoursTitle: {
+    fontSize: 11,
+    fontWeight: "500",
+    color: Colors.text.muted,
+  },
+  openHoursStatusRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  openHoursDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  openHoursStatus: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: Colors.text.primary,
+  },
+  openHoursRange: {
+    fontSize: 12,
+    fontWeight: "500",
+    color: Colors.text.secondary,
+  },
 
   // Layer 4: Sticky header
   stickyHeader: {
@@ -793,14 +829,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     gap: 10,
-  },
-  logoWrapper: {
-    width: 26,
-    height: 26,
-  },
-  logo: {
-    width: 26,
-    height: 26,
   },
   shopSwitcher: {
     flex: 1,
@@ -834,97 +862,108 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: Colors.status.danger,
   },
-
-  // Check-in
-  checkInRow: {
-    flexDirection: "row",
-    gap: 12,
-    marginBottom: 24,
+  profileBtn: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    borderWidth: 1.5,
+    borderColor: Colors.border.default,
+    backgroundColor: "rgba(255,255,255,0.35)",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
   },
-  pinCard: {
-    flex: 1.3,
-    backgroundColor: Colors.bg.surface,
+  profileAvatar: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+  },
+  profileInitials: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: Colors.brand.primaryDark,
+  },
+
+  // Walk-In Check-In
+  walkInCard: {
+    backgroundColor: Colors.bg.default,
     borderRadius: 20,
     padding: 16,
-    gap: 4,
-  },
-  pinLabel: {
-    fontSize: 12,
-    color: Colors.text.secondary,
-    fontWeight: "500",
-    marginBottom: 2,
-  },
-  pinValueRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-  },
-  pinValue: {
-    flex: 1,
-    fontSize: 38,
-    fontWeight: "800",
-    color: Colors.text.primary,
-    letterSpacing: 6,
-  },
-  pinActionBtn: {
-    padding: 4,
-  },
-  linkPill: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 10,
-    backgroundColor: Colors.bg.default,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+    marginBottom: 24,
     borderWidth: 1,
-    borderColor: Colors.border.default,
-    gap: 6,
+    borderColor: Colors.border.light,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 2,
   },
-  linkText: {
-    flex: 1,
-    fontSize: 12,
-    color: Colors.text.secondary,
-    fontWeight: "500",
-  },
-  qrCard: {
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 20,
-    padding: 14,
+  walkInHeader: {
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: 12,
+    marginBottom: 8,
   },
-  qrPlaceholder: {
-    flex: 1,
+  walkInLabel: {
+    fontSize: 11,
+    fontWeight: "700",
+    color: Colors.text.secondary,
+    letterSpacing: 1,
+  },
+  walkInActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  walkInIconBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
   },
-  shareQrBtn: {
-    backgroundColor: Colors.brand.primary,
-    borderRadius: 12,
-    paddingVertical: 9,
-    paddingHorizontal: 16,
-    alignSelf: "stretch",
-    alignItems: "center",
+  walkInPin: {
+    fontSize: 48,
+    fontWeight: "800",
+    color: Colors.text.primary,
+    letterSpacing: 4,
+    marginBottom: 12,
   },
-  shareQrText: {
+  walkInLinkPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Colors.bg.surface,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    gap: 8,
+    marginBottom: 12,
+  },
+  walkInLinkText: {
+    flex: 1,
     fontSize: 13,
+    color: Colors.text.secondary,
+    fontWeight: "500",
+  },
+  walkInShareBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    backgroundColor: Colors.brand.primary,
+    borderRadius: 999,
+    paddingVertical: 14,
+  },
+  walkInShareText: {
+    fontSize: 15,
     fontWeight: "700",
     color: Colors.text.primary,
   },
 
-  // Shortcuts
-  shortcutsRow: {
+  // Quick Actions
+  quickActionsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
     marginBottom: 28,
-    marginHorizontal: -2,
-  },
-  shortcutsContent: {
-    gap: 4,
-    paddingHorizontal: 2,
-  },
-  shortcutItem: {
-    width: 76,
   },
 
   // Section
@@ -936,7 +975,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 24,
     fontWeight: "700",
     color: Colors.text.primary,
   },
@@ -946,38 +985,11 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
 
-  // Stats
-  statsRow: {
+  // Today's Queue
+  queueGrid: {
     flexDirection: "row",
-    gap: 8,
+    gap: 12,
     marginBottom: 28,
-  },
-  statCard: {
-    flex: 1,
-    borderRadius: 14,
-    paddingVertical: 14,
-    paddingHorizontal: 6,
-    alignItems: "center",
-    gap: 4,
-  },
-  statIconCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: Colors.bg.default,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 4,
-  },
-  statValue: {
-    fontSize: 26,
-    fontWeight: "800",
-  },
-  statLabel: {
-    fontSize: 9,
-    fontWeight: "600",
-    color: Colors.text.muted,
-    textAlign: "center",
   },
 
   cardMargin: {

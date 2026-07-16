@@ -196,23 +196,23 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 20,
-    paddingBottom: 120,
+    paddingBottom: 140,
     gap: 12,
+    paddingTop: 24,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    paddingTop: 8,
-    paddingBottom: 4,
   },
   headerLeft: {
     flex: 1,
   },
   customerName: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
+    letterSpacing: -0.8,
     marginBottom: 2,
   },
   customerNameRow: {
@@ -222,13 +222,14 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   customerNameLink: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: "700",
     color: Colors.brand.primaryDark,
+    letterSpacing: -0.8,
   },
   dateLabel: {
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
     marginBottom: 8,
   },
   metaRow: {
@@ -242,21 +243,25 @@ const styles = StyleSheet.create({
   },
   metaLine: {
     fontSize: 13,
-    color: "#444444",
+    color: Colors.text.secondary,
     lineHeight: 18,
   },
   badge: {
     marginTop: 4,
   },
   section: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
+    backgroundColor: Colors.bg.default,
+    borderRadius: 20,
     padding: 16,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 2,
   },
   sectionTitle: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
     marginBottom: 10,
   },
   serviceLine: {
@@ -266,25 +271,25 @@ const styles = StyleSheet.create({
   },
   serviceLabel: {
     fontSize: 14,
-    color: "#444444",
+    color: Colors.text.secondary,
     flex: 1,
     flexShrink: 1,
   },
   servicePrice: {
     fontSize: 14,
-    color: "#1A1A1A",
+    color: Colors.text.primary,
     fontWeight: "500",
     marginLeft: 12,
     flexShrink: 0,
   },
   divider: {
     height: 1,
-    backgroundColor: "#E8E5D8",
+    backgroundColor: Colors.border.light,
     marginVertical: 12,
   },
   notes: {
     fontSize: 13,
-    color: "#666666",
+    color: Colors.text.secondary,
     lineHeight: 18,
   },
   paymentLine: {
@@ -294,13 +299,13 @@ const styles = StyleSheet.create({
   },
   paymentLabel: {
     fontSize: 14,
-    color: "#666666",
+    color: Colors.text.secondary,
     flex: 1,
     flexShrink: 1,
   },
   paymentValue: {
     fontSize: 14,
-    color: "#1A1A1A",
+    color: Colors.text.primary,
     fontWeight: "500",
     marginLeft: 12,
   },

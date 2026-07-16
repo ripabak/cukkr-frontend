@@ -76,7 +76,7 @@ export function BookingCard({
         <AppText style={styles.timeLabel}>{timeLabel}</AppText>
         <View style={styles.barberRow}>
           <Ionicons name="cut" size={12} color={Colors.icon.muted} />
-          <AppText style={styles.barberName}> {barberName}</AppText>
+          <AppText style={styles.barberName} numberOfLines={1} ellipsizeMode="tail"> {barberName}</AppText>
         </View>
       </View>
       <View style={styles.right}>

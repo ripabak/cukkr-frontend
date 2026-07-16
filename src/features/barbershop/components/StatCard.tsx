@@ -40,10 +40,14 @@ export function StatCard({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.bg.default,
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 16,
     flex: 1,
     gap: 6,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 2,
   },
   label: {
     fontSize: 12,

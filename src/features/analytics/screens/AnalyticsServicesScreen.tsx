@@ -53,6 +53,7 @@ export function AnalyticsServicesScreen() {
   return (
     <ScreenShell
       contentStyle={styles.scrollContent}
+      hideAppHeader
       headerSlot={
         <View style={styles.topBar}>
           <TouchableOpacity

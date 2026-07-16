@@ -76,6 +76,7 @@ export function NotificationsListScreen() {
 
   return (
     <ScreenShell
+      hideAppHeader
       headerSlot={<ScreenHeader onBack={() => router.back()} />}
       contentStyle={styles.content}
     >

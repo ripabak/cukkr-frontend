@@ -51,7 +51,7 @@ const MODE_CONFIG: Record<
       "Enter the full address of your barbershop.",
       "This helps customers find your location.",
     ],
-    multiline: false,
+    multiline: true,
   },
 };
 

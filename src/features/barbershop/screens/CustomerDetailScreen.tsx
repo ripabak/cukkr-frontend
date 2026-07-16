@@ -178,11 +178,11 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
             <ActivityIndicator size="small" color={Colors.brand.primary} />
           ) : (
             <View style={styles.bookingList}>
-              {bookings.map((b: { id: string; referenceNumber: string; status: string; createdAt: Date; totalAmount: number }) => (
+              {bookings.map((b: { id: string; referenceNumber: string; status: string; type: string; handledByName: string | null; createdAt: Date; totalAmount: number }) => (
                 <BookingCard
                   key={b.id}
                   customerName={b.referenceNumber}
-                  barberName={customer?.name ?? ""}
+                  barberName={b.handledByName ?? "—"}
                   timeLabel={new Date(b.createdAt as Date).toLocaleDateString(
                     "id-ID",
                   )}
@@ -195,6 +195,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
                       | "cancelled"
                       | "requested"
                   }
+                  bookingType={b.type as "walk_in" | "appointment"}
                   onPress={() =>
                     router.push({
                       pathname: "/d/booking-detail",
@@ -291,7 +292,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: Colors.text.primary,
   },
-  bookingList: { gap: 10 },
+  bookingList: { gap: 12 },
   statusMenu: { top: 36, right: 0 },
   noMessages: {
     fontSize: 14,

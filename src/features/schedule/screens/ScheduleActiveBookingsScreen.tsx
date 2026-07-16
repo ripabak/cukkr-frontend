@@ -413,7 +413,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   sectionTitle: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "700",
     color: Colors.text.primary,
     letterSpacing: -0.8,

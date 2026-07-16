@@ -79,7 +79,12 @@ export function StatCard({ label, value, icon, stat, onPress, style }: Props) {
     >
       <View style={styles.topRow}>
         <View style={styles.iconWrap}>{icon}</View>
-        <TrendBadge direction={stat.direction} change={stat.change} />
+        <View style={styles.topRight}>
+          <TrendBadge direction={stat.direction} change={stat.change} />
+          {onPress ? (
+            <Ionicons name="chevron-forward" size={14} color={Colors.icon.muted} />
+          ) : null}
+        </View>
       </View>
       <AppText style={styles.value}>{value}</AppText>
       <AppText style={styles.label}>{label}</AppText>
@@ -104,6 +109,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 6,
+  },
+  topRight: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
   },
   iconWrap: {
     width: 36,

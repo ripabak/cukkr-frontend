@@ -355,7 +355,7 @@ export function AnalyticsCustomersScreen() {
 
 const styles = StyleSheet.create({
   scrollContent: {
-    paddingBottom: 100,
+    paddingBottom: 200,
   },
   topBar: {
     flexDirection: "row",
@@ -364,9 +364,9 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   backBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.bg.surface,
@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
     color: Colors.text.primary,
   },
   topBarRight: {
-    width: 36,
+    width: 40,
   },
   loadingWrap: {
     paddingVertical: 40,
@@ -388,8 +388,8 @@ const styles = StyleSheet.create({
   },
   statsRow: {
     flexDirection: "row",
-    gap: 8,
-    marginTop: 16,
+    gap: 12,
+    marginTop: 20,
   },
   statFlex: {
     flex: 1,
@@ -401,7 +401,7 @@ const styles = StyleSheet.create({
   splitCard: {
     flex: 1,
     backgroundColor: Colors.bg.default,
-    borderRadius: 12,
+    borderRadius: 16,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderWidth: 1,
@@ -426,11 +426,13 @@ const styles = StyleSheet.create({
   },
   chartCard: {
     marginTop: 14,
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 16,
+    backgroundColor: Colors.bg.default,
+    borderRadius: 20,
     padding: 16,
     borderWidth: 1,
     borderColor: Colors.border.light,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 2,
   },
   chartCardHeader: {
     flexDirection: "row",
@@ -453,7 +455,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "700",
     color: Colors.text.primary,
   },
@@ -461,16 +463,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: Colors.bg.default,
     borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     borderWidth: 1,
-    borderColor: Colors.border.default,
+    borderColor: Colors.border.light,
+    boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)",
+    elevation: 1,
   },
   filterPillText: {
-    fontSize: 13,
-    fontWeight: "500",
+    fontSize: 14,
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   listLoader: {
@@ -479,21 +483,26 @@ const styles = StyleSheet.create({
   emptyText: {
     textAlign: "center",
     marginTop: 32,
-    fontSize: 14,
-    color: Colors.text.muted,
+    fontSize: 15,
+    color: Colors.text.secondary,
   },
   customerRow: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 11,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border.light,
-    gap: 10,
+    padding: 14,
+    gap: 12,
+    backgroundColor: Colors.bg.default,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 2,
+    marginBottom: 8,
   },
   customerAvatar: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: Colors.brand.primarySurface,
     borderWidth: 1,
     borderColor: Colors.brand.primary,
@@ -515,7 +524,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   customerName: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "600",
     color: Colors.text.primary,
     flex: 1,
@@ -525,7 +534,7 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
   },
   customerRevenue: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "700",
     color: Colors.text.primary,
   },
@@ -537,9 +546,9 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   pageBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: Colors.bg.surface,
     borderWidth: 1,
     borderColor: Colors.border.default,
