@@ -1,9 +1,9 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -39,9 +39,9 @@ export function RangePicker({ value, onChange }: Props) {
               activeOpacity={0.75}
               style={[styles.pill, active && styles.pillActive]}
             >
-              <Text style={[styles.pillText, active && styles.pillTextActive]}>
+              <AppText style={[styles.pillText, active && styles.pillTextActive]}>
                 {opt.label}
-              </Text>
+              </AppText>
             </TouchableOpacity>
           );
         })}
@@ -62,15 +62,19 @@ const styles = StyleSheet.create({
   },
   pill: {
     paddingHorizontal: 18,
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderRadius: 999,
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: Colors.bg.default,
     borderWidth: 1,
-    borderColor: Colors.border.default,
+    borderColor: Colors.border.light,
+    boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)",
+    elevation: 1,
   },
   pillActive: {
     backgroundColor: Colors.brand.primary,
     borderColor: Colors.brand.primary,
+    boxShadow: "0px 4px 10px rgba(255, 200, 30, 0.35)",
+    elevation: 2,
   },
   pillText: {
     fontSize: 13,

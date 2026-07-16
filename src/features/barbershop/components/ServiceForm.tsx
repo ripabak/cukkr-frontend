@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { View, Text, StyleSheet, ViewStyle } from "react-native";
+import { View, StyleSheet, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { ImageUploadBox } from "@/src/components/ImageUploadBox";
 import { TextInputField } from "@/src/components/TextInputField";
 import { MultilineInputField } from "@/src/components/MultilineInputField";
@@ -68,7 +69,7 @@ export function ServiceForm({
         style={styles.field}
       />
 
-      <Text style={styles.fieldLabel}>Price</Text>
+      <AppText style={styles.fieldLabel}>Price</AppText>
       <PrefixedInputField
         prefix="Rp"
         placeholder="0"
@@ -77,7 +78,7 @@ export function ServiceForm({
         style={styles.prefixField}
       />
 
-      <Text style={styles.fieldLabel}>Duration</Text>
+      <AppText style={styles.fieldLabel}>Duration</AppText>
       <PrefixedInputField
         prefix="In Minutes"
         placeholder="0"
@@ -97,7 +98,7 @@ export function ServiceForm({
 
       {showDiscount && onDiscountChange ? (
         <>
-          <Text style={styles.fieldLabel}>Discount</Text>
+          <AppText style={styles.fieldLabel}>Discount</AppText>
           <PrefixedInputField
             prefix="%"
             placeholder="0"

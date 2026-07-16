@@ -1,7 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
+import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface Props {
   label: string;
@@ -22,7 +23,7 @@ export function DateSelectorPill({ label, onPress, style }: Props) {
         color={Colors.text.primary}
         style={styles.icon}
       />
-      <Text style={styles.label}>{label}</Text>
+      <AppText style={styles.label}>{label}</AppText>
       <Ionicons
         name="chevron-down"
         size={14}
@@ -37,23 +38,25 @@ const styles = StyleSheet.create({
   pill: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.bg.default,
     borderRadius: 999,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.06)",
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
     elevation: 2,
     alignSelf: "flex-start",
   },
   icon: {
-    marginRight: 6,
+    marginRight: 8,
   },
   label: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#1A1A1A",
+    fontSize: 15,
+    fontWeight: "600",
+    color: Colors.text.primary,
   },
   chevron: {
-    marginLeft: 6,
+    marginLeft: 8,
   },
 });

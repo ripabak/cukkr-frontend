@@ -1,7 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Modal, View, TouchableOpacity, StyleSheet } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { useFrame } from "./FrameContext";
 
 interface Props {
@@ -41,9 +42,9 @@ export function ConfirmationModal({
               />
             </View>
           ) : null}
-          <Text style={styles.title}>{title}</Text>
+          <AppText style={styles.title}>{title}</AppText>
           {description ? (
-            <Text style={styles.description}>{description}</Text>
+            <AppText style={styles.description}>{description}</AppText>
           ) : null}
           <View style={[styles.buttons, hasBoth && styles.buttonsRow]}>
             {cancelLabel ? (
@@ -52,7 +53,7 @@ export function ConfirmationModal({
                 activeOpacity={0.8}
                 style={[styles.btn, styles.btnDark, hasBoth && styles.btnFlex]}
               >
-                <Text style={styles.btnDarkLabel}>{cancelLabel}</Text>
+                <AppText style={styles.btnDarkLabel}>{cancelLabel}</AppText>
               </TouchableOpacity>
             ) : null}
             {confirmLabel ? (
@@ -65,7 +66,7 @@ export function ConfirmationModal({
                   hasBoth && styles.btnFlex,
                 ]}
               >
-                <Text style={styles.btnOutlineLabel}>{confirmLabel}</Text>
+                <AppText style={styles.btnOutlineLabel}>{confirmLabel}</AppText>
               </TouchableOpacity>
             ) : null}
           </View>

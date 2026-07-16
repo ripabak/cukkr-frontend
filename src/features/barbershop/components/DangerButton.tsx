@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from "react-native";
+import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface Props {
   label: string;
@@ -15,7 +16,7 @@ export function DangerButton({ label, onPress, style }: Props) {
       activeOpacity={0.8}
       style={[styles.button, style]}
     >
-      <Text style={styles.label}>{label}</Text>
+      <AppText style={styles.label}>{label}</AppText>
     </TouchableOpacity>
   );
 }
@@ -23,10 +24,10 @@ export function DangerButton({ label, onPress, style }: Props) {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: Colors.bg.surface,
-    borderRadius: 12,
+    borderRadius: 14,
     borderWidth: 1,
     borderColor: Colors.border.default,
-    paddingVertical: 14,
+    paddingVertical: 16,
     width: "100%",
   },
   label: {

@@ -1,4 +1,3 @@
-import AppTheme from "@/src/app-theme";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { OverflowMenu } from "@/src/components/OverflowMenu";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -25,10 +24,10 @@ import { formatDateLabel, formatTime12h } from "@/src/utils/date";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -171,7 +170,7 @@ export function BookingDetailScreen() {
     if (!booking) {
       return (
         <View style={styles.centered}>
-          <Text style={styles.errorText}>Booking not found.</Text>
+          <AppText style={styles.errorText}>Booking not found.</AppText>
         </View>
       );
     }
@@ -413,7 +412,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: Colors.bg.default,
-    paddingTop: AppTheme.spacing.lg,
   },
   outer: {
     flex: 1,
@@ -428,9 +426,9 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
   },
   overflowBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",

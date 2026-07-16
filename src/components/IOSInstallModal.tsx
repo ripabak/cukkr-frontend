@@ -1,8 +1,8 @@
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   Modal,
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   Pressable,
@@ -31,7 +31,7 @@ export function IOSInstallModal({ visible, onClose }: Props) {
           <View style={styles.handle} />
 
           <View style={styles.header}>
-            <Text style={styles.title}>Install Cukkr</Text>
+            <AppText style={styles.title}>Install Cukkr</AppText>
             <TouchableOpacity
               onPress={onClose}
               style={styles.closeBtn}
@@ -41,9 +41,9 @@ export function IOSInstallModal({ visible, onClose }: Props) {
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.subtitle}>
+          <AppText style={styles.subtitle}>
             Add Cukkr to your home screen for faster access.
-          </Text>
+          </AppText>
 
           <View style={styles.step}>
             <View style={styles.stepIcon}>
@@ -54,11 +54,11 @@ export function IOSInstallModal({ visible, onClose }: Props) {
               />
             </View>
             <View style={styles.stepText}>
-              <Text style={styles.stepTitle}>Tap the Share button</Text>
-              <Text style={styles.stepDesc}>
+              <AppText style={styles.stepTitle}>Tap the Share button</AppText>
+              <AppText style={styles.stepDesc}>
                 At the bottom of Safari browser, tap the share icon (box with
                 arrow up).
-              </Text>
+              </AppText>
             </View>
           </View>
 
@@ -73,15 +73,15 @@ export function IOSInstallModal({ visible, onClose }: Props) {
               />
             </View>
             <View style={styles.stepText}>
-              <Text style={styles.stepTitle}>Select "Add to Home Screen"</Text>
-              <Text style={styles.stepDesc}>
+              <AppText style={styles.stepTitle}>Select "Add to Home Screen"</AppText>
+              <AppText style={styles.stepDesc}>
                 Scroll down and tap "Add to Home Screen", then tap "Add".
-              </Text>
+              </AppText>
             </View>
           </View>
 
           <TouchableOpacity style={styles.doneBtn} onPress={onClose}>
-            <Text style={styles.doneBtnText}>Got it</Text>
+            <AppText style={styles.doneBtnText}>Got it</AppText>
           </TouchableOpacity>
         </Pressable>
       </Pressable>

@@ -1,10 +1,10 @@
 import { useFrame } from "@/src/components/FrameContext";
 import React, { useEffect, useRef } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   Animated,
   Platform,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -102,10 +102,10 @@ function AnimatedToast({
         onPress={handleDismiss}
         style={[styles.toast, { backgroundColor: getBackgroundColor() }]}
       >
-        <Text style={styles.icon}>{getIcon()}</Text>
-        <Text style={styles.message} numberOfLines={2}>
+        <AppText style={styles.icon}>{getIcon()}</AppText>
+        <AppText style={styles.message} numberOfLines={2}>
           {message}
-        </Text>
+        </AppText>
       </TouchableOpacity>
     </Animated.View>
   );

@@ -15,7 +15,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 export function BarbershopSettingsScreen() {
   const router = useRouter();
@@ -63,11 +64,11 @@ export function BarbershopSettingsScreen() {
   };
 
   return (
-    <ScreenShell contentStyle={styles.scrollContentPadding}>
+    <ScreenShell contentStyle={styles.scrollContentPadding} hideAppHeader>
       <View style={styles.titleRow}>
-        <Text style={styles.title}>Barbershop Settings</Text>
+        <AppText style={styles.title}>Barbershop Settings</AppText>
       </View>
-      <Text style={styles.subtitle}>Setup based on your barbershop needs</Text>
+      <AppText style={styles.subtitle}>Setup based on your barbershop needs</AppText>
 
       <View style={styles.avatarWrapper}>
         {barbershop?.logoUrl ? (
@@ -78,7 +79,7 @@ export function BarbershopSettingsScreen() {
           />
         ) : (
           <View style={styles.avatar}>
-            <Text style={styles.avatarInitials}>
+            <AppText style={styles.avatarInitials}>
               {barbershop?.name
                 ? barbershop.name
                     .split(" ")
@@ -87,7 +88,7 @@ export function BarbershopSettingsScreen() {
                     .map((w: string) => w[0].toUpperCase())
                     .join("")
                 : "?"}
-            </Text>
+            </AppText>
           </View>
         )}
         <TouchableOpacity
@@ -103,7 +104,7 @@ export function BarbershopSettingsScreen() {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.sectionLabel}>Information</Text>
+      <AppText style={styles.sectionLabel}>Information</AppText>
       <View style={styles.card}>
         <InfoRow
           label="Name"
@@ -150,9 +151,9 @@ export function BarbershopSettingsScreen() {
         />
       </View>
 
-      <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+      <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
         Booking Web
-      </Text>
+      </AppText>
       <View style={styles.card}>
         <InfoRow
           label="Book Url"
@@ -169,9 +170,9 @@ export function BarbershopSettingsScreen() {
         />
       </View>
 
-      <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+      <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
         Operations
-      </Text>
+      </AppText>
       <View style={styles.card}>
         <OperationRow
           label="Barbers"
@@ -198,9 +199,9 @@ export function BarbershopSettingsScreen() {
         />
       </View>
 
-      <Text style={[styles.sectionLabel, styles.sectionLabelTop]}>
+      <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
         {isOwner ? "Delete Barbershop" : "Leave Barbershop"}
-      </Text>
+      </AppText>
       <DangerButton
         label={isOwner ? "Delete This Barbershop" : "Leave This Barbershop"}
         onPress={isLoading ? undefined : () => setShowActionModal(true)}
@@ -236,22 +237,23 @@ const styles = StyleSheet.create({
   titleRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 8,
+    marginTop: 24,
     gap: 4,
   },
   backButton: {
     padding: 4,
   },
   title: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: "700",
     color: Colors.text.primary,
+    letterSpacing: -0.8,
   },
   subtitle: {
     fontSize: 14,
     color: Colors.text.secondary,
-    marginTop: 4,
-    marginBottom: 20,
+    marginTop: 6,
+    marginBottom: 24,
   },
   avatarWrapper: {
     alignSelf: "center",
@@ -293,20 +295,27 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontSize: 13,
+    fontWeight: "600",
     color: Colors.text.secondary,
     marginBottom: 8,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
   sectionLabelTop: {
-    marginTop: 16,
+    marginTop: 24,
   },
   card: {
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 16,
+    backgroundColor: Colors.bg.default,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 2,
   },
   dangerBtn: {
-    marginTop: 8,
+    marginTop: 16,
   },
   scrollContentPadding: {
-    paddingBottom: 100,
+    paddingBottom: 200,
   },
 });

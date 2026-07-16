@@ -22,18 +22,22 @@ export const OnboardingTheme = {
     heading: {
       fontSize: 28,
       fontWeight: "700" as const,
+      fontFamily: "PlusJakartaSans_700Bold" as const,
     },
     subheading: {
       fontSize: 18,
       fontWeight: "600" as const,
+      fontFamily: "PlusJakartaSans_600SemiBold" as const,
     },
     body: {
       fontSize: 16,
       fontWeight: "400" as const,
+      fontFamily: "PlusJakartaSans_400Regular" as const,
     },
     caption: {
       fontSize: 14,
       fontWeight: "400" as const,
+      fontFamily: "PlusJakartaSans_400Regular" as const,
     },
   },
   borderRadius: {

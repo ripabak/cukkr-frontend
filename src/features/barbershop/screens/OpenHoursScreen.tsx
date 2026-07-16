@@ -19,7 +19,8 @@ import { useMemberRole } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface DayConfig {
   dayOfWeek: number;
@@ -89,11 +90,11 @@ export function OpenHoursScreen() {
   };
 
   return (
-    <ScreenShell headerSlot={<ScreenHeader onBack={() => router.back()} />}>
-      <Text style={styles.title}>Open Hours</Text>
-      <Text style={styles.subtitle}>
+    <ScreenShell headerSlot={<ScreenHeader onBack={() => router.back()} />} hideAppHeader contentStyle={{ paddingBottom: 200 }}>
+      <AppText style={styles.title}>Open Hours</AppText>
+      <AppText style={styles.subtitle}>
         Set your barbershop operating hours for each day
-      </Text>
+      </AppText>
 
       <View style={styles.card}>
         {days.map((day, index) => (
@@ -121,7 +122,7 @@ export function OpenHoursScreen() {
         />
       ) : (
         <View style={styles.viewOnlyBanner}>
-          <Text style={styles.viewOnlyText}>Only the barbershop owner or admin can edit open hours</Text>
+          <AppText style={styles.viewOnlyText}>Only the barbershop owner or admin can edit open hours</AppText>
         </View>
       )}
     </ScreenShell>
@@ -130,20 +131,25 @@ export function OpenHoursScreen() {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: "700",
     color: Colors.text.primary,
     marginTop: 8,
+    letterSpacing: -0.8,
   },
   subtitle: {
     fontSize: 14,
     color: Colors.text.secondary,
     marginTop: 4,
-    marginBottom: 20,
+    marginBottom: 24,
   },
   card: {
-    backgroundColor: Colors.brand.primarySurface,
-    borderRadius: 16,
+    backgroundColor: Colors.bg.default,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 2,
     marginBottom: 24,
   },
   saveBtn: {},

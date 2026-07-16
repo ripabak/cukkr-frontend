@@ -68,6 +68,7 @@ export function NewWalkInScreen() {
   return (
     <FormShell
       keyboardAvoid
+      hideAppHeader
       headerSlot={
         <ScreenHeader
           title="New Walk-In"
@@ -90,7 +91,7 @@ export function NewWalkInScreen() {
         </View>
       }
       backgroundColor={Colors.bg.default}
-      contentStyle={{ paddingTop: 20 }}
+      contentStyle={{ paddingTop: 24 }}
     >
       <BookingForm
         customerName={formData.customerName}

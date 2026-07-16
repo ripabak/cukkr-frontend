@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface ChartPoint {
   label: string;
@@ -44,9 +45,9 @@ export function BarChart({
                 },
               ]}
             />
-            <Text style={styles.label} numberOfLines={1}>
+            <AppText style={styles.label} numberOfLines={1}>
               {point.label}
-            </Text>
+            </AppText>
           </View>
         );
       })}

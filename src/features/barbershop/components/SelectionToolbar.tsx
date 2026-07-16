@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
@@ -55,14 +56,14 @@ export function SelectionToolbar({
           onPress={hasContact !== false ? onToggleSelect : undefined}
           activeOpacity={hasContact !== false ? 0.8 : 1}
         >
-          <Text
+          <AppText
             style={[
               styles.selectText,
               hasContact === false && styles.selectTextDisabled,
             ]}
           >
             {selectionMode ? "Cancel" : "Select"}
-          </Text>
+          </AppText>
         </TouchableOpacity>
       </View>
     </View>
@@ -79,13 +80,13 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
   },
   spacer: {
-    width: 36,
+    width: 40,
   },
   backBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: Colors.bg.default,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -95,9 +96,9 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   filterBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: Colors.bg.default,
     borderWidth: 1,
     borderColor: Colors.border.light,
@@ -114,8 +115,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: Colors.text.primary,
     backgroundColor: Colors.bg.default,
-    paddingHorizontal: 14,
-    paddingVertical: 7,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     borderRadius: 18,
     borderWidth: 1,
     borderColor: Colors.border.light,

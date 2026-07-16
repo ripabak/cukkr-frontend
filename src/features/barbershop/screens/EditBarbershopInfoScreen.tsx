@@ -12,7 +12,8 @@ import { useMemberRole } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 type Mode = "name" | "description" | "address";
 
@@ -50,7 +51,7 @@ const MODE_CONFIG: Record<
       "Enter the full address of your barbershop.",
       "This helps customers find your location.",
     ],
-    multiline: false,
+    multiline: true,
   },
 };
 
@@ -114,6 +115,7 @@ export function EditBarbershopInfoScreen() {
 
   return (
     <ScreenShell
+      hideAppHeader
       headerSlot={
         <EditFieldHeader
           title={config.title}
@@ -148,7 +150,7 @@ export function EditBarbershopInfoScreen() {
       <HelperCopy lines={config.helperLines} style={styles.helper} />
       {!isOwner && (
         <View style={styles.viewOnlyBanner}>
-          <Text style={styles.viewOnlyText}>Only the barbershop owner can edit this information</Text>
+          <AppText style={styles.viewOnlyText}>Only the barbershop owner can edit this information</AppText>
         </View>
       )}
     </ScreenShell>
@@ -157,7 +159,8 @@ export function EditBarbershopInfoScreen() {
 
 const styles = StyleSheet.create({
   content: {
-    paddingTop: 16,
+    paddingTop: 24,
+    paddingBottom: 200,
   },
   loader: {
     marginTop: 20,

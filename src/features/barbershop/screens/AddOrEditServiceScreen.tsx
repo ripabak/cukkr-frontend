@@ -127,6 +127,7 @@ export function AddOrEditServiceScreen() {
   return (
     <ScreenShell
       keyboardAvoid
+      hideAppHeader
       headerSlot={
         <ScreenHeader
           title={isEdit ? "Edit Service" : "New Service"}
@@ -182,6 +183,6 @@ const styles = StyleSheet.create({
     marginTop: 80,
   },
   submitBtn: {
-    marginTop: 8,
+    marginTop: 16,
   },
 });

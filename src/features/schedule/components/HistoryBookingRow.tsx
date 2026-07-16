@@ -2,9 +2,9 @@ import { Colors } from "@/src/theme/colors";
 import { BookingStatus, BookingType } from "@/src/components/BookingCard";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -66,17 +66,17 @@ export function HistoryBookingRow({
         <Ionicons name={iconName} size={20} color={color} />
       </View>
       <View style={styles.info}>
-        <Text style={styles.dateTime} numberOfLines={1}>
+        <AppText style={styles.dateTime} numberOfLines={1}>
           {dateTimeLabel}
-        </Text>
+        </AppText>
         <View style={styles.barberRow}>
           <Ionicons name="cut" size={12} color={Colors.icon.muted} />
-          <Text style={styles.barberName}> {barberName}</Text>
+          <AppText style={styles.barberName}> {barberName}</AppText>
         </View>
       </View>
       <View style={styles.right}>
-        <Text style={[styles.customerName, { color }]}>{customerName}</Text>
-        <Text style={styles.duration}>{duration}</Text>
+        <AppText style={[styles.customerName, { color }]}>{customerName}</AppText>
+        <AppText style={styles.duration}>{duration}</AppText>
       </View>
     </TouchableOpacity>
   );

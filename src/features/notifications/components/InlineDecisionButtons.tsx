@@ -1,9 +1,9 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   View,
   TouchableOpacity,
-  Text,
   StyleSheet,
   ViewStyle,
 } from "react-native";
@@ -30,14 +30,14 @@ export function InlineDecisionButtons({
         activeOpacity={0.8}
         style={[styles.btn, styles.declineBtn]}
       >
-        <Text style={styles.declineLabel}>{declineLabel}</Text>
+        <AppText style={styles.declineLabel}>{declineLabel}</AppText>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={onAccept}
         activeOpacity={0.8}
         style={[styles.btn, styles.acceptBtn]}
       >
-        <Text style={styles.acceptLabel}>{acceptLabel}</Text>
+        <AppText style={styles.acceptLabel}>{acceptLabel}</AppText>
       </TouchableOpacity>
     </View>
   );

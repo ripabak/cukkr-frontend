@@ -1,7 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { OnboardingButton } from "../components/OnboardingButton";
 import { OnboardingCard } from "../components/OnboardingCard";
 import { OnboardingContainer } from "../components/OnboardingContainer";
@@ -47,12 +48,12 @@ export function OnboardingEasyBookingScreen() {
         <OnboardingIndicator current={0} total={3} />
 
         <View style={styles.textContent}>
-          <Text style={styles.heading}>Easy Booking with One Link</Text>
-          <Text style={styles.body}>
+          <AppText style={styles.heading}>Easy Booking with One Link</AppText>
+          <AppText style={styles.body}>
             Share your booking link on social media.{"\n"}
             Customers book by themselves — no chat,{"\n"}
             no back-and-forth.
-          </Text>
+          </AppText>
         </View>
 
         <View style={styles.spacer} />

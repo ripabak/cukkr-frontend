@@ -1,10 +1,10 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -49,16 +49,16 @@ export function DayChipRow({
             activeOpacity={0.8}
             style={[styles.chip, isSelected && styles.chipSelected]}
           >
-            <Text
+            <AppText
               style={[styles.dayLabel, isSelected && styles.dayLabelSelected]}
             >
-              {day.dayLabel}
-            </Text>
-            <Text
+              {day.dayLabel.toUpperCase()}
+            </AppText>
+            <AppText
               style={[styles.dayNumber, isSelected && styles.dayNumberSelected]}
             >
               {day.dayNumber}
-            </Text>
+            </AppText>
             <View style={styles.dotsRow}>
               {hasRequest ? (
                 <View style={styles.requestDot} />
@@ -94,37 +94,42 @@ export function DayChipRow({
 const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
-    gap: 8,
-    paddingVertical: 4,
+    gap: 10,
+    paddingVertical: 6,
   },
   chip: {
-    width: 58,
-    height: 72,
-    borderRadius: 16,
-    backgroundColor: Colors.bg.surface,
+    width: 66,
+    height: 84,
+    borderRadius: 20,
+    backgroundColor: Colors.bg.default,
     alignItems: "center",
     justifyContent: "center",
     gap: 2,
     borderWidth: 1,
     borderColor: Colors.border.light,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 1,
   },
   chipSelected: {
     backgroundColor: Colors.brand.primary,
     borderColor: Colors.brand.primary,
+    boxShadow: "0px 4px 12px rgba(255, 200, 30, 0.35)",
+    elevation: 3,
   },
   moreChip: {
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: Colors.bg.default,
   },
   dayLabel: {
     fontSize: 12,
-    fontWeight: "500",
-    color: Colors.icon.muted,
+    fontWeight: "600",
+    color: Colors.text.muted,
+    letterSpacing: 0.5,
   },
   dayLabelSelected: {
     color: Colors.text.primary,
   },
   dayNumber: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: "700",
     color: Colors.text.primary,
   },
@@ -134,12 +139,13 @@ const styles = StyleSheet.create({
   dotsRow: {
     flexDirection: "row",
     gap: 3,
+    marginTop: 4,
   },
   requestDot: {
     width: 5,
     height: 5,
     borderRadius: 3,
-    backgroundColor: "#E63030",
+    backgroundColor: Colors.status.danger,
   },
   waitingDot: {
     width: 5,

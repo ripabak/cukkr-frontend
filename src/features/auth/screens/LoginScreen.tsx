@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 import { useToast } from "@/src/lib/providers";
 import { authTheme } from "../auth-theme";
@@ -70,6 +71,15 @@ export function LoginScreen() {
         value={identifier}
       />
 
+      {/* <View style={styles.fontDemo}>
+        <Text style={styles.fontDemoInter}>
+          Inter - The quick brown fox jumps over the lazy dog
+        </Text>
+        <Text style={styles.fontDemoJakarta}>
+          Plus Jakarta Sans - The quick brown fox jumps over the lazy dog
+        </Text>
+      </View> */}
+
       <AuthTextField
         label="Password"
         onChangeText={setPassword}
@@ -88,7 +98,7 @@ export function LoginScreen() {
             })
           }
         >
-          <Text style={styles.forgotPasswordLink}>Forgot Password</Text>
+          <AppText style={styles.forgotPasswordLink}>Forgot Password</AppText>
         </Pressable>
       </View>
 
@@ -110,5 +120,17 @@ const styles = StyleSheet.create({
     color: authTheme.colors.accentDark,
     fontSize: 13,
     fontWeight: "600",
+  },
+  fontDemo: {
+    gap: 8,
+    paddingVertical: 12,
+  },
+  fontDemoInter: {
+    fontFamily: "Inter_400Regular",
+    fontSize: 16,
+  },
+  fontDemoJakarta: {
+    fontFamily: "PlusJakartaSans_400Regular",
+    fontSize: 16,
   },
 });

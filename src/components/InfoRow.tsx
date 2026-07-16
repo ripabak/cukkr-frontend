@@ -1,9 +1,9 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -17,6 +17,7 @@ interface Props {
   onPress?: () => void;
   showChevron?: boolean;
   isLast?: boolean;
+  multiline?: boolean;
   style?: ViewStyle;
 }
 
@@ -28,6 +29,7 @@ export function InfoRow({
   onPress,
   showChevron,
   isLast,
+  multiline,
   style,
 }: Props) {
   const displayValue = value || null;
@@ -35,9 +37,9 @@ export function InfoRow({
 
   const content = (
     <View style={[styles.container, !isLast && styles.borderBottom, style]}>
-      <Text style={styles.label}>{label}</Text>
+      <AppText style={styles.label} numberOfLines={1} ellipsizeMode="tail">{label}</AppText>
       {displayValue ? (
-        <View style={styles.valueRow}>
+        <View style={[styles.valueRow, multiline && styles.valueRowMultiline]}>
           {valueIconName ? (
             <Ionicons
               name={valueIconName as any}
@@ -45,14 +47,18 @@ export function InfoRow({
               color={Colors.text.secondary}
             />
           ) : null}
-          <Text style={styles.value} numberOfLines={1} ellipsizeMode="tail">
+          <AppText
+            style={styles.value}
+            numberOfLines={multiline ? undefined : 1}
+            ellipsizeMode={multiline ? undefined : "head"}
+          >
             {displayValue}
-          </Text>
+          </AppText>
         </View>
       ) : displayPlaceholder ? (
-        <Text style={styles.placeholder} numberOfLines={1}>
+        <AppText style={styles.placeholder} numberOfLines={1} ellipsizeMode="tail">
           {displayPlaceholder}
-        </Text>
+        </AppText>
       ) : null}
       {showChevron ? (
         <Ionicons name="chevron-forward" size={16} color={Colors.icon.muted} />
@@ -76,7 +82,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
   },
   borderBottom: {
     borderBottomWidth: 1,
@@ -94,6 +100,9 @@ const styles = StyleSheet.create({
     gap: 4,
     flex: 0.5,
     justifyContent: "flex-end",
+  },
+  valueRowMultiline: {
+    alignItems: "flex-start",
   },
   value: {
     fontSize: 14,

@@ -1,7 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { OnboardingButton } from "../components/OnboardingButton";
 import { OnboardingCard } from "../components/OnboardingCard";
 import { OnboardingContainer } from "../components/OnboardingContainer";
@@ -53,14 +54,14 @@ export function OnboardingRunBarbershopScreen() {
         <OnboardingIndicator current={1} total={3} />
 
         <View style={styles.textContent}>
-          <Text style={styles.heading}>
+          <AppText style={styles.heading}>
             Run Your Barbershop{"\n"}with Full Control
-          </Text>
-          <Text style={styles.body}>
+          </AppText>
+          <AppText style={styles.body}>
             Manage bookings, walk-ins, barbers, and services{"\n"}
             in one system.{"\n"}
             Everything is structured, nothing gets missed.
-          </Text>
+          </AppText>
         </View>
 
         <View style={styles.spacer} />

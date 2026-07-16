@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from "react-native";
+import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { Ionicons } from "@expo/vector-icons";
 
 interface Props {
@@ -15,7 +16,7 @@ export function LogoutRow({ onPress, style }: Props) {
       activeOpacity={0.7}
       style={[styles.container, style]}
     >
-      <Text style={styles.label}>Logout</Text>
+      <AppText style={styles.label}>Logout</AppText>
       <Ionicons name="exit-outline" size={20} color={Colors.text.primary} />
     </TouchableOpacity>
   );

@@ -1,8 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -80,7 +80,7 @@ export function StatusFilterMenu({
               index < options.length - 1 && styles.itemBorder,
             ]}
           >
-            <Text
+            <AppText
               style={[
                 styles.itemText,
                 opt.color ? { color: opt.color } : undefined,
@@ -88,7 +88,7 @@ export function StatusFilterMenu({
               ]}
             >
               {opt.label}
-            </Text>
+            </AppText>
           </TouchableOpacity>
         ))}
       </View>

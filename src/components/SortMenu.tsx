@@ -1,8 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -61,14 +61,14 @@ export function SortMenu({
               index < options.length - 1 && styles.itemBorder,
             ]}
           >
-            <Text
+            <AppText
               style={[
                 styles.itemText,
                 selected === opt.value && styles.itemTextSelected,
               ]}
             >
               {opt.label}
-            </Text>
+            </AppText>
           </TouchableOpacity>
         ))}
       </View>

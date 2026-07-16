@@ -1,3 +1,5 @@
+import { formatPickerTime } from "@/src/utils/date";
+
 export interface TimeValue {
   hour: number;
   minute: number;
@@ -35,3 +37,14 @@ export const DAY_LABELS: Record<number, string> = {
   5: "Fri",
   6: "Sat",
 };
+
+/** Format an open/close time range as "9:00 AM - 9:00 PM". */
+export function formatTimeRange(
+  openTime: string | null,
+  closeTime: string | null,
+): string {
+  if (!openTime || !closeTime) return "—";
+  const open = stringToTime(openTime);
+  const close = stringToTime(closeTime);
+  return `${formatPickerTime(open.hour, open.minute, open.amPm)} - ${formatPickerTime(close.hour, close.minute, close.amPm)}`;
+}

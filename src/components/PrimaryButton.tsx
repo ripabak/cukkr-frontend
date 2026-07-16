@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from "react-native";
+import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface Props {
   label: string;
@@ -17,7 +18,7 @@ export function PrimaryButton({ label, onPress, disabled, style }: Props) {
       activeOpacity={0.8}
       style={[styles.button, disabled && styles.disabled, style]}
     >
-      <Text style={styles.label}>{label}</Text>
+      <AppText style={styles.label}>{label}</AppText>
     </TouchableOpacity>
   );
 }

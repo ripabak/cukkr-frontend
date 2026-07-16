@@ -1,9 +1,9 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   ViewStyle,
@@ -25,9 +25,9 @@ export function EditFieldHeader({ title, onBack, onSave, hideSave, style }: Prop
         activeOpacity={0.7}
         style={styles.backButton}
       >
-        <Ionicons name="chevron-back" size={18} color={Colors.text.primary} />
+        <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
       </TouchableOpacity>
-      <Text style={styles.title}>{title}</Text>
+      <AppText style={styles.title}>{title}</AppText>
       {hideSave ? (
         <View style={styles.placeholder} />
       ) : (
@@ -51,9 +51,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   backButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
@@ -66,15 +66,15 @@ const styles = StyleSheet.create({
     color: Colors.text.primary,
   },
   saveButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   placeholder: {
-    width: 36,
-    height: 36,
+    width: 40,
+    height: 40,
   },
 });

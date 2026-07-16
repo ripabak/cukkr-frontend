@@ -3,11 +3,12 @@ import { useState } from "react";
 import {
   Pressable,
   StyleSheet,
-  Text,
   TextInput,
   type TextInputProps,
   View,
 } from "react-native";
+import { AppText } from "@/src/components/AppText";
+import { AppTextInput } from "@/src/components/AppTextInput";
 
 import { authTheme } from "../auth-theme";
 
@@ -27,10 +28,10 @@ export function AuthTextField({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+      <AppText style={styles.label}>{label}</AppText>
 
       <View style={styles.inputShell}>
-        <TextInput
+        <AppTextInput
           placeholderTextColor={authTheme.colors.textSecondary}
           style={[styles.input, style]}
           secureTextEntry={secureToggle ? isSecure : secureTextEntry}

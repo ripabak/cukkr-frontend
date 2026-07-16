@@ -1,7 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
+import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface Props {
   name: string;
@@ -16,9 +17,9 @@ export function WorkspacePill({ name, onPress, style }: Props) {
       activeOpacity={0.7}
       style={[styles.container, style]}
     >
-      <Text style={styles.name} numberOfLines={1}>
+      <AppText style={styles.name} numberOfLines={1}>
         {name}
-      </Text>
+      </AppText>
       <Ionicons
         name="chevron-down"
         size={16}

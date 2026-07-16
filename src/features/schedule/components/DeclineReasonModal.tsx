@@ -1,7 +1,8 @@
 import { MultilineInputField } from "@/src/components/MultilineInputField";
 import { Colors } from "@/src/theme/colors";
 import React, { useState } from "react";
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Modal, View, TouchableOpacity, StyleSheet } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { useFrame } from "@/src/components/FrameContext";
 
 interface Props {
@@ -38,10 +39,10 @@ export function DeclineReasonModal({
     >
       <View style={styles.overlay}>
         <View style={[styles.card, { width: frameWidth * 0.85 }]}>
-          <Text style={styles.title}>Decline this booking?</Text>
-          <Text style={styles.subtitle}>
+          <AppText style={styles.title}>Decline this booking?</AppText>
+          <AppText style={styles.subtitle}>
             You can add a reason for the customer (optional).
-          </Text>
+          </AppText>
           <MultilineInputField
             value={reason}
             onChangeText={setReason}
@@ -60,16 +61,16 @@ export function DeclineReasonModal({
                 isSending && styles.btnDisabled,
               ]}
             >
-              <Text style={styles.btnPrimaryLabel}>
+              <AppText style={styles.btnPrimaryLabel}>
                 {isSending ? "Sending..." : "Send"}
-              </Text>
+              </AppText>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={handleCancel}
               activeOpacity={0.8}
               style={[styles.btn, styles.btnOutline]}
             >
-              <Text style={styles.btnOutlineLabel}>Cancel</Text>
+              <AppText style={styles.btnOutlineLabel}>Cancel</AppText>
             </TouchableOpacity>
           </View>
         </View>

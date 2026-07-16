@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React, { useCallback, useState } from "react";
-import { View, Text, StyleSheet, ViewStyle, LayoutChangeEvent } from "react-native";
+import { View, StyleSheet, ViewStyle, LayoutChangeEvent } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { CartesianChart, Line, Scatter } from "victory-native";
 
 type ChartPoint = {
@@ -37,11 +38,11 @@ export default function CustomerBookingChart({
 
   return (
     <View style={[styles.card, style]}>
-      <Text style={styles.title}>{title}</Text>
+      <AppText style={styles.title}>{title}</AppText>
       {subtitle ? (
-        <Text style={[styles.subtitle, { color: subtitleColor }]}>
+        <AppText style={[styles.subtitle, { color: subtitleColor }]}>
           {subtitle}
-        </Text>
+        </AppText>
       ) : null}
 
       <View style={styles.chartContainer} onLayout={handleLayout}>
@@ -76,16 +77,16 @@ export default function CustomerBookingChart({
             </CartesianChart>
             <View style={styles.xLabels}>
               {data.map((d, i) => (
-                <Text key={i} style={styles.xLabel}>
+                <AppText key={i} style={styles.xLabel}>
                   {d.label as string}
-                </Text>
+                </AppText>
               ))}
             </View>
           </View>
         ) : hasData ? (
           <View style={styles.chartPlaceholder} />
         ) : (
-          <Text style={styles.emptyText}>No booking data yet</Text>
+          <AppText style={styles.emptyText}>No booking data yet</AppText>
         )}
       </View>
     </View>

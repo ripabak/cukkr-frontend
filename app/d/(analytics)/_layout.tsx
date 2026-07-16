@@ -3,7 +3,8 @@ import { Colors } from "@/src/theme/colors";
 import { WorkspaceRoute } from "@/src/components/WorkspaceRoute";
 import { Stack, useRouter } from "expo-router";
 import { useEffect } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 function AnalyticsGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();

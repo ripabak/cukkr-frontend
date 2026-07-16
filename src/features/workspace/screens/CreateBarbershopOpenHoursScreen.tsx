@@ -13,7 +13,8 @@ import {
 } from "@/src/utils/time-format";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { openHoursService } from "../services";
 import { getErrorMessage } from "../utils/error-handler";
 
@@ -68,10 +69,10 @@ export function CreateBarbershopOpenHoursScreen() {
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
       <WizardProgress totalSteps={2} currentStep={0} style={styles.wizard} />
-      <Text style={styles.title}>Set Open Hours</Text>
-      <Text style={styles.subtitle}>
+      <AppText style={styles.title}>Set Open Hours</AppText>
+      <AppText style={styles.subtitle}>
         Set your barbershop operating hours for each day
-      </Text>
+      </AppText>
 
       <View style={styles.card}>
         {days.map((day, index) => (

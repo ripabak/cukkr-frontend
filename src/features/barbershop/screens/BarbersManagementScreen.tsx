@@ -17,7 +17,8 @@ import { useAuthUser, useMemberRole } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface RemoveTarget {
   id: string;
@@ -106,13 +107,17 @@ export function BarbersManagementScreen() {
   const isLoading = loadingMembers || loadingInvitations;
 
   return (
-    <ScreenShell headerSlot={<ScreenHeader onBack={() => router.back()} />}>
-      <Text style={styles.title}>Barbers Management</Text>
-      <Text style={styles.subtitle}>Manage your barbershop team members</Text>
+    <ScreenShell
+      hideAppHeader
+      headerSlot={<ScreenHeader onBack={() => router.back()} />}
+      contentStyle={{ paddingBottom: 200 }}
+    >
+      <AppText style={styles.title}>Barbers Management</AppText>
+      <AppText style={styles.subtitle}>Manage your barbershop team members</AppText>
 
       {!isLoading && pendingInvitations.length > 0 ? (
         <>
-          <Text style={styles.sectionLabel}>Pending Invitations</Text>
+          <AppText style={styles.sectionLabel}>Pending Invitations</AppText>
           <View style={styles.list}>
             {pendingInvitations.map((inv, index) => (
               <MemberCard
@@ -145,7 +150,7 @@ export function BarbersManagementScreen() {
 
       {!isLoading && members.length > 0 ? (
         <>
-          <Text style={styles.sectionLabel}>Team</Text>
+          <AppText style={styles.sectionLabel}>Team</AppText>
           <View style={styles.list}>
             {members.map((member, index) => {
               const isYou = member.userId === currentUser?.id;
@@ -192,7 +197,7 @@ export function BarbersManagementScreen() {
       ) : null}
 
       {!isLoading && members.length === 0 && pendingInvitations.length === 0 ? (
-        <Text style={styles.empty}>No barbers yet. Invite one above.</Text>
+        <AppText style={styles.empty}>No barbers yet. Invite one above.</AppText>
       ) : null}
 
       <Permission roles={["owner", "admin"]}>
@@ -241,16 +246,17 @@ export function BarbersManagementScreen() {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: "700",
     color: Colors.text.primary,
     marginTop: 8,
+    letterSpacing: -0.8,
   },
   subtitle: {
     fontSize: 14,
     color: Colors.text.secondary,
     marginTop: 4,
-    marginBottom: 20,
+    marginBottom: 24,
   },
   inviteBtn: {
     marginBottom: 24,
@@ -264,7 +270,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   cardMargin: {
-    marginBottom: 12,
+    marginBottom: 16,
   },
   empty: {
     fontSize: 14,

@@ -1,7 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { Text, TouchableOpacity, StyleSheet, View, ViewStyle } from "react-native";
+import { TouchableOpacity, StyleSheet, View, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface Props {
   label?: string;
@@ -25,10 +26,10 @@ export function SelectorInput({
   return (
     <View>
       {label ? (
-        <Text style={styles.label}>
+        <AppText style={styles.label}>
           {label}
-          {required ? <Text style={styles.asterisk}> *</Text> : null}
-        </Text>
+          {required ? <AppText style={styles.asterisk}> *</AppText> : null}
+        </AppText>
       ) : null}
       <TouchableOpacity
         onPress={onPress}
@@ -43,7 +44,7 @@ export function SelectorInput({
             style={styles.icon}
           />
         ) : null}
-        <Text
+        <AppText
           style={[
             styles.text,
             value ? styles.textFilled : styles.textPlaceholder,
@@ -51,7 +52,7 @@ export function SelectorInput({
           numberOfLines={1}
         >
           {value || placeholder}
-        </Text>
+        </AppText>
         <Ionicons name="chevron-forward" size={16} color={Colors.icon.muted} />
       </TouchableOpacity>
     </View>
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.bg.default,
     borderRadius: 999,
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
     borderWidth: 1,
     borderColor: Colors.border.default,
     flexDirection: "row",

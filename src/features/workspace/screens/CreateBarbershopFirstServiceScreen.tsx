@@ -9,7 +9,8 @@ import { WizardProgress } from "@/src/features/workspace/components/WizardProgre
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
 import { useCreateOrganization, useSetActiveOrganization } from "../hooks";
 import { servicesService } from "../services";
@@ -117,11 +118,11 @@ export function CreateBarbershopFirstServiceScreen() {
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
       <WizardProgress totalSteps={2} currentStep={1} style={styles.wizard} />
-      <Text style={styles.title}>Create Your First Service</Text>
-      <Text style={styles.subtitle}>
+      <AppText style={styles.title}>Create Your First Service</AppText>
+      <AppText style={styles.subtitle}>
         This will be the default service for your barbershop. You can change it
         anytime.
-      </Text>
+      </AppText>
       <TextInputField
         label="Name"
         placeholder="Service Name"
@@ -135,9 +136,9 @@ export function CreateBarbershopFirstServiceScreen() {
         onChangeText={setDescription}
         style={styles.descInput}
       />
-      <Text style={styles.fieldLabel}>Price</Text>
+      <AppText style={styles.fieldLabel}>Price</AppText>
       <PrefixedInputField prefix="Rp" value={price} onChangeText={setPrice} />
-      <Text style={[styles.fieldLabel, styles.fieldLabelTop]}>Duration</Text>
+      <AppText style={[styles.fieldLabel, styles.fieldLabelTop]}>Duration</AppText>
       <PrefixedInputField
         prefix="Minutes"
         value={duration}

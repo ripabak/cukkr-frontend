@@ -7,7 +7,8 @@ import { TextInputField } from "@/src/components/TextInputField";
 import { WizardProgress } from "@/src/features/workspace/components/WizardProgress";
 import { useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { authClient } from "@/src/lib/auth-client";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
 import { validateBarbershopName } from "../utils/form-validators";
@@ -42,8 +43,8 @@ export function CreateBarbershopNameLogoScreen() {
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
       <WizardProgress totalSteps={2} currentStep={0} style={styles.wizard} />
-      <Text style={styles.title}>Create Barbershop</Text>
-      <Text style={styles.subtitle}>Set up your own barbershop</Text>
+      <AppText style={styles.title}>Create Barbershop</AppText>
+      <AppText style={styles.subtitle}>Set up your own barbershop</AppText>
 
       <TextInputField
         label="Barbershop Name"
@@ -52,7 +53,7 @@ export function CreateBarbershopNameLogoScreen() {
         onChangeText={handleNameChange}
       />
 
-      <Text style={styles.logoLabel}>Logo</Text>
+      <AppText style={styles.logoLabel}>Logo</AppText>
       <ImageUploadBox
         label="Choose Image"
         style={styles.imageUpload}

@@ -4,10 +4,10 @@ import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -38,12 +38,12 @@ export function AnalyticsOverviewScreen() {
 
   return (
     <Permission roles={["owner", "admin"]}>
-    <ScreenShell contentStyle={styles.scrollContent}>
+    <ScreenShell contentStyle={styles.scrollContent} hideAppHeader>
       <View style={styles.topBar}>
-        <Text style={styles.pageTitle}>Overview</Text>
-        <Text style={styles.pageSubtitle}>
+        <AppText style={styles.pageTitle}>Overview</AppText>
+        <AppText style={styles.pageSubtitle}>
           See your barbershop's performance
-        </Text>
+        </AppText>
       </View>
 
       <RangePicker value={range} onChange={setRange} />
@@ -127,7 +127,7 @@ export function AnalyticsOverviewScreen() {
             onPress={() => router.push(`/d/analytics-revenue?range=${range}`)}
           >
             <View style={styles.chartCardHeader}>
-              <Text style={styles.chartCardTitle}>Revenue</Text>
+              <AppText style={styles.chartCardTitle}>Revenue</AppText>
               <View style={styles.chartCardHeaderRight}>
                 <TrendBadge
                   direction={stats.totalSales?.direction ?? "neutral"}
@@ -140,10 +140,10 @@ export function AnalyticsOverviewScreen() {
                 />
               </View>
             </View>
-            <Text style={styles.chartCardValue}>
+            <AppText style={styles.chartCardValue}>
               {formatRupiah(stats.totalSales?.current ?? 0)}
-            </Text>
-            <Text style={styles.chartCardPeriod}>{getRangeLabel(range)}</Text>
+            </AppText>
+            <AppText style={styles.chartCardPeriod}>{getRangeLabel(range)}</AppText>
             {charts?.revenue ? (
               <View style={styles.chartWrap}>
                 <BarChart data={charts.revenue} />
@@ -158,7 +158,7 @@ export function AnalyticsOverviewScreen() {
             onPress={() => router.push(`/d/analytics-customers?range=${range}`)}
           >
             <View style={styles.chartCardHeader}>
-              <Text style={styles.chartCardTitle}>Customers</Text>
+              <AppText style={styles.chartCardTitle}>Customers</AppText>
               <View style={styles.chartCardHeaderRight}>
                 <TrendBadge
                   direction={stats.totalCustomers?.direction ?? "neutral"}
@@ -171,10 +171,10 @@ export function AnalyticsOverviewScreen() {
                 />
               </View>
             </View>
-            <Text style={styles.chartCardValue}>
+            <AppText style={styles.chartCardValue}>
               {stats.totalCustomers?.current ?? 0}
-            </Text>
-            <Text style={styles.chartCardPeriod}>{getRangeLabel(range)}</Text>
+            </AppText>
+            <AppText style={styles.chartCardPeriod}>{getRangeLabel(range)}</AppText>
             {charts?.customers ? (
               <View style={styles.chartWrap}>
                 <BarChart
@@ -189,7 +189,7 @@ export function AnalyticsOverviewScreen() {
           {highlights && (highlights.topBarber || highlights.topService) ? (
             <View style={styles.highlightsSection}>
               <View style={styles.sectionRow}>
-                <Text style={styles.sectionTitle}>Highlights</Text>
+                <AppText style={styles.sectionTitle}>Highlights</AppText>
               </View>
               {highlights.topBarber ? (
                 <HighlightRow
@@ -226,41 +226,45 @@ export function AnalyticsOverviewScreen() {
 
 const styles = StyleSheet.create({
   scrollContent: {
-    paddingBottom: 100,
+    paddingBottom: 200,
   },
   topBar: {
-    paddingTop: 16,
-    paddingBottom: 8,
+    paddingTop: 24,
+    paddingBottom: 12,
   },
   pageTitle: {
-    fontSize: 26,
+    fontSize: 32,
     fontWeight: "700",
     color: Colors.text.primary,
+    letterSpacing: -0.8,
   },
   pageSubtitle: {
-    fontSize: 13,
+    fontSize: 14,
+    fontWeight: "400",
     color: Colors.text.secondary,
-    marginTop: 2,
+    marginTop: 4,
   },
   loadingWrap: {
-    paddingVertical: 40,
+    paddingVertical: 48,
     alignItems: "center",
   },
   statGrid: {
     flexDirection: "row",
-    gap: 10,
-    marginTop: 16,
+    gap: 12,
+    marginTop: 20,
   },
   statGridGap: {
-    marginTop: 10,
+    marginTop: 12,
   },
   chartCard: {
-    marginTop: 14,
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 16,
+    marginTop: 16,
+    backgroundColor: Colors.bg.default,
+    borderRadius: 20,
     padding: 16,
     borderWidth: 1,
     borderColor: Colors.border.light,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 2,
   },
   chartCardHeader: {
     flexDirection: "row",
@@ -283,12 +287,13 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: Colors.text.primary,
     letterSpacing: -0.5,
-    marginTop: 2,
+    marginTop: 4,
   },
   chartCardPeriod: {
-    fontSize: 12,
+    fontSize: 13,
+    fontWeight: "400",
     color: Colors.text.muted,
-    marginBottom: 14,
+    marginBottom: 16,
     marginTop: 2,
     textTransform: "capitalize",
   },
@@ -296,16 +301,16 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   highlightsSection: {
-    marginTop: 14,
+    marginTop: 16,
   },
   sectionRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 10,
+    marginBottom: 12,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "700",
     color: Colors.text.primary,
   },

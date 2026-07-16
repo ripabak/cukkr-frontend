@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from "react-native";
+import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 interface Props {
   label: string;
@@ -20,9 +21,9 @@ export function SecondaryButton({ label, onPress, style, color }: Props) {
         style,
       ]}
     >
-      <Text style={[styles.label, color ? { color } : undefined]}>
+      <AppText style={[styles.label, color ? { color } : undefined]}>
         {label}
-      </Text>
+      </AppText>
     </TouchableOpacity>
   );
 }

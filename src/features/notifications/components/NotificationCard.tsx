@@ -1,8 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   ViewStyle,
@@ -63,9 +63,9 @@ export function NotificationCard({
       style={[styles.card, style]}
     >
       <View style={styles.topRow}>
-        <Text style={styles.typeLabel}>{title}</Text>
+        <AppText style={styles.typeLabel}>{title}</AppText>
         <View style={styles.topRight}>
-          <Text style={styles.timestamp}>{timestamp}</Text>
+          <AppText style={styles.timestamp}>{timestamp}</AppText>
           {isClickable ? (
             <Ionicons
               name="chevron-forward"
@@ -80,8 +80,8 @@ export function NotificationCard({
         <View style={styles.bodyLeft}>
           {status === "pending" ? <View style={styles.dot} /> : null}
           <View style={styles.bodyText}>
-            <Text style={styles.name}>{name}</Text>
-            {detail ? <Text style={styles.detail}>{detail}</Text> : null}
+            <AppText style={styles.name}>{name}</AppText>
+            {detail ? <AppText style={styles.detail}>{detail}</AppText> : null}
             {status === "accepted" ? (
               <StatusBadge
                 label="Accepted"

@@ -1,8 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import React, { useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   ViewStyle,
@@ -54,7 +54,7 @@ export function DayHoursRow({
     <View style={[styles.wrapper, !isLast && styles.borderBottom, style]}>
       <View style={styles.row}>
         <ToggleSwitch value={enabled} onValueChange={onEnabledChange} disabled={!editable} />
-        <Text style={[styles.day, !enabled && styles.dayDisabled]}>{day}</Text>
+        <AppText style={[styles.day, !enabled && styles.dayDisabled]}>{day}</AppText>
         <View style={styles.times}>
           <TouchableOpacity
             onPress={() => setShowOpenPicker(true)}
@@ -62,24 +62,24 @@ export function DayHoursRow({
             style={[styles.timePill, (!enabled || !editable) && styles.timePillDisabled]}
             disabled={!enabled || !editable}
           >
-            <Text
+            <AppText
               style={[styles.timeText, (!enabled || !editable) && styles.timeTextDisabled]}
             >
               {formatTime(openTime)}
-            </Text>
+            </AppText>
           </TouchableOpacity>
-          <Text style={styles.dash}>–</Text>
+          <AppText style={styles.dash}>–</AppText>
           <TouchableOpacity
             onPress={() => setShowClosePicker(true)}
             activeOpacity={0.7}
             style={[styles.timePill, (!enabled || !editable) && styles.timePillDisabled]}
             disabled={!enabled || !editable}
           >
-            <Text
+            <AppText
               style={[styles.timeText, !enabled && styles.timeTextDisabled]}
             >
               {formatTime(closeTime)}
-            </Text>
+            </AppText>
           </TouchableOpacity>
         </View>
       </View>

@@ -4,10 +4,10 @@ import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -40,14 +40,14 @@ function CustomerStatusPill({ status }: { status: "new" | "return" }) {
         isNew ? statusStyles.new : statusStyles.return,
       ]}
     >
-      <Text
+      <AppText
         style={[
           statusStyles.text,
           isNew ? statusStyles.newText : statusStyles.returnText,
         ]}
       >
         {isNew ? "New" : "Return"}
-      </Text>
+      </AppText>
     </View>
   );
 }
@@ -140,7 +140,7 @@ export function AnalyticsCustomersScreen() {
         >
           <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
         </TouchableOpacity>
-        <Text style={styles.pageTitle}>Customers</Text>
+        <AppText style={styles.pageTitle}>Customers</AppText>
         <View style={styles.topBarRight} />
       </View>
 
@@ -177,11 +177,11 @@ export function AnalyticsCustomersScreen() {
                     size={12}
                     color={Colors.text.secondary}
                   />
-                  <Text style={styles.splitLabel}>Walk-in</Text>
+                  <AppText style={styles.splitLabel}>Walk-in</AppText>
                 </View>
-                <Text style={styles.splitValue}>
+                <AppText style={styles.splitValue}>
                   {stats.totalWalkIn?.current ?? 0}
-                </Text>
+                </AppText>
               </View>
               <View style={styles.splitCard}>
                 <View style={styles.splitCardHeader}>
@@ -190,11 +190,11 @@ export function AnalyticsCustomersScreen() {
                     size={12}
                     color={Colors.text.secondary}
                   />
-                  <Text style={styles.splitLabel}>Appt</Text>
+                  <AppText style={styles.splitLabel}>Appt</AppText>
                 </View>
-                <Text style={styles.splitValue}>
+                <AppText style={styles.splitValue}>
                   {stats.totalAppointment?.current ?? 0}
-                </Text>
+                </AppText>
               </View>
             </View>
           </View>
@@ -234,7 +234,7 @@ export function AnalyticsCustomersScreen() {
       {chart && chart.length > 0 ? (
         <View style={styles.chartCard}>
           <View style={styles.chartCardHeader}>
-            <Text style={styles.chartCardTitle}>Customer Trend</Text>
+            <AppText style={styles.chartCardTitle}>Customer Trend</AppText>
             {stats ? (
               <TrendBadge
                 direction={stats.totalCustomers?.direction ?? "neutral"}
@@ -253,19 +253,19 @@ export function AnalyticsCustomersScreen() {
       {/* Customers list */}
       <View style={styles.listSection}>
         <View style={styles.listHeader}>
-          <Text style={styles.sectionTitle}>
+          <AppText style={styles.sectionTitle}>
             Customers{meta ? ` (${meta.totalItems})` : ""}
-          </Text>
+          </AppText>
           <TouchableOpacity
             ref={filterBtnRef}
             style={styles.filterPill}
             onPress={handleOpenStatusMenu}
             activeOpacity={0.8}
           >
-            <Text style={styles.filterPillText}>
+            <AppText style={styles.filterPillText}>
               {STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ??
                 "All"}
-            </Text>
+            </AppText>
             <Ionicons
               name="chevron-down"
               size={13}
@@ -281,7 +281,7 @@ export function AnalyticsCustomersScreen() {
             style={styles.listLoader}
           />
         ) : customers.length === 0 ? (
-          <Text style={styles.emptyText}>No customers found</Text>
+          <AppText style={styles.emptyText}>No customers found</AppText>
         ) : (
           customers.map((c) => (
             <TouchableOpacity
@@ -296,25 +296,25 @@ export function AnalyticsCustomersScreen() {
               }
             >
               <View style={styles.customerAvatar}>
-                <Text style={styles.customerInitial}>
+                <AppText style={styles.customerInitial}>
                   {c.customerName?.[0]?.toUpperCase() ?? "?"}
-                </Text>
+                </AppText>
               </View>
               <View style={styles.customerInfo}>
                 <View style={styles.customerNameRow}>
-                  <Text style={styles.customerName} numberOfLines={1}>
+                  <AppText style={styles.customerName} numberOfLines={1}>
                     {c.customerName}
-                  </Text>
+                  </AppText>
                   <CustomerStatusPill status={c.status} />
                 </View>
-                <Text style={styles.customerMeta}>
+                <AppText style={styles.customerMeta}>
                   {c.totalVisits} visit{c.totalVisits !== 1 ? "s" : ""}
                   {c.lastVisitDate ? ` · ${formatDate(c.lastVisitDate)}` : ""}
-                </Text>
+                </AppText>
               </View>
-              <Text style={styles.customerRevenue}>
+              <AppText style={styles.customerRevenue}>
                 {formatRupiah(c.totalRevenue)}
-              </Text>
+              </AppText>
             </TouchableOpacity>
           ))
         )}
@@ -332,9 +332,9 @@ export function AnalyticsCustomersScreen() {
                 color={meta.hasPrev ? Colors.text.primary : Colors.text.muted}
               />
             </TouchableOpacity>
-            <Text style={styles.pageLabel}>
+            <AppText style={styles.pageLabel}>
               {meta.page} / {meta.totalPages}
-            </Text>
+            </AppText>
             <TouchableOpacity
               disabled={!meta.hasNext}
               onPress={() => setPage((p) => p + 1)}
@@ -355,7 +355,7 @@ export function AnalyticsCustomersScreen() {
 
 const styles = StyleSheet.create({
   scrollContent: {
-    paddingBottom: 100,
+    paddingBottom: 200,
   },
   topBar: {
     flexDirection: "row",
@@ -364,9 +364,9 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   backBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.bg.surface,
@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
     color: Colors.text.primary,
   },
   topBarRight: {
-    width: 36,
+    width: 40,
   },
   loadingWrap: {
     paddingVertical: 40,
@@ -388,8 +388,8 @@ const styles = StyleSheet.create({
   },
   statsRow: {
     flexDirection: "row",
-    gap: 8,
-    marginTop: 16,
+    gap: 12,
+    marginTop: 20,
   },
   statFlex: {
     flex: 1,
@@ -401,7 +401,7 @@ const styles = StyleSheet.create({
   splitCard: {
     flex: 1,
     backgroundColor: Colors.bg.default,
-    borderRadius: 12,
+    borderRadius: 16,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderWidth: 1,
@@ -426,11 +426,13 @@ const styles = StyleSheet.create({
   },
   chartCard: {
     marginTop: 14,
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 16,
+    backgroundColor: Colors.bg.default,
+    borderRadius: 20,
     padding: 16,
     borderWidth: 1,
     borderColor: Colors.border.light,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 2,
   },
   chartCardHeader: {
     flexDirection: "row",
@@ -453,7 +455,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "700",
     color: Colors.text.primary,
   },
@@ -461,16 +463,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: Colors.bg.default,
     borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     borderWidth: 1,
-    borderColor: Colors.border.default,
+    borderColor: Colors.border.light,
+    boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)",
+    elevation: 1,
   },
   filterPillText: {
-    fontSize: 13,
-    fontWeight: "500",
+    fontSize: 14,
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   listLoader: {
@@ -479,21 +483,26 @@ const styles = StyleSheet.create({
   emptyText: {
     textAlign: "center",
     marginTop: 32,
-    fontSize: 14,
-    color: Colors.text.muted,
+    fontSize: 15,
+    color: Colors.text.secondary,
   },
   customerRow: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 11,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border.light,
-    gap: 10,
+    padding: 14,
+    gap: 12,
+    backgroundColor: Colors.bg.default,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 2,
+    marginBottom: 8,
   },
   customerAvatar: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: Colors.brand.primarySurface,
     borderWidth: 1,
     borderColor: Colors.brand.primary,
@@ -515,7 +524,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   customerName: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "600",
     color: Colors.text.primary,
     flex: 1,
@@ -525,7 +534,7 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
   },
   customerRevenue: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "700",
     color: Colors.text.primary,
   },
@@ -537,9 +546,9 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   pageBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: Colors.bg.surface,
     borderWidth: 1,
     borderColor: Colors.border.default,

@@ -1,8 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
+import { AppText } from "@/src/components/AppText";
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -36,18 +36,18 @@ export function ActivityCard({ item, style, onPress }: Props) {
       <View style={styles.circle}>
         <Ionicons name="people" size={22} color={accentColor} />
       </View>
-      <Text style={[styles.time, { color: accentColor }]}>{item.time}</Text>
+      <AppText style={[styles.time, { color: accentColor }]}>{item.time}</AppText>
       {item.name ? (
         <View style={styles.rightStack}>
-          <Text style={[styles.name, { color: accentColor }]}>{item.name}</Text>
-          <Text style={[styles.duration, { color: Colors.text.secondary }]}>
+          <AppText style={[styles.name, { color: accentColor }]}>{item.name}</AppText>
+          <AppText style={[styles.duration, { color: Colors.text.secondary }]}>
             {item.duration}
-          </Text>
+          </AppText>
         </View>
       ) : (
-        <Text style={[styles.duration, { color: Colors.text.secondary }]}>
+        <AppText style={[styles.duration, { color: Colors.text.secondary }]}>
           {item.duration}
-        </Text>
+        </AppText>
       )}
     </TouchableOpacity>
   );

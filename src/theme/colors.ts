@@ -22,6 +22,7 @@ export const Colors = {
   bg: {
     default: "#ffffff", // main screen background
     surface: "#f9f9f9", // cards, sections on white backgrounds
+    cream: "#FAF9F6", // warm off-white schedule screen background
     overlay: "rgba(0,0,0,0.45)",
   },
 

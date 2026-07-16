@@ -11,7 +11,8 @@ import { useScheduleServices } from "@/src/features/schedule/hooks";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 export function SelectServicesScreen() {
   const router = useRouter();
@@ -54,6 +55,7 @@ export function SelectServicesScreen() {
 
   return (
     <ScreenShell
+      hideAppHeader
       headerSlot={
         <ScreenHeader
           title="Select Services"
@@ -78,7 +80,7 @@ export function SelectServicesScreen() {
       <SearchInput value={query} onChangeText={setQuery} placeholder="Search" />
 
       {!isLoading && filtered.length === 0 ? (
-        <Text style={styles.emptyText}>No services found.</Text>
+        <AppText style={styles.emptyText}>No services found.</AppText>
       ) : (
         <View style={styles.list}>
           {filtered.map((item) => (
@@ -118,17 +120,17 @@ export function SelectServicesScreen() {
 
 const styles = StyleSheet.create({
   content: {
-    paddingTop: 16,
+    paddingTop: 24,
     gap: 16,
-    paddingBottom: 40,
+    paddingBottom: 200,
   },
   list: {
-    gap: 10,
+    gap: 12,
   },
   confirmBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",

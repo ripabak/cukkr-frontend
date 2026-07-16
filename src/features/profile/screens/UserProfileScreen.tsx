@@ -10,10 +10,10 @@ import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -52,13 +52,14 @@ export function UserProfileScreen() {
   if (error || !profile) {
     return (
       <ScreenShell backgroundColor={Colors.bg.default}>
-        <Text style={styles.errorText}>Failed to load profile</Text>
+        <AppText style={styles.errorText}>Failed to load profile</AppText>
       </ScreenShell>
     );
   }
 
   return (
     <ScreenShell
+      hideAppHeader
       headerSlot={
         <ScreenHeader title="User Profile" onBack={() => router.back()} />
       }
@@ -67,7 +68,7 @@ export function UserProfileScreen() {
     >
       <View style={styles.avatarWrapper}>
         <View style={styles.avatar}>
-          <Text style={styles.avatarInitials}>
+          <AppText style={styles.avatarInitials}>
             {profile.name
               ? profile.name
                   .split(" ")
@@ -76,7 +77,7 @@ export function UserProfileScreen() {
                   .map((w: string) => w[0].toUpperCase())
                   .join("")
               : "?"}
-          </Text>
+          </AppText>
         </View>
         <TouchableOpacity style={styles.editAvatarBtn} activeOpacity={0.8}>
           <Ionicons
@@ -87,7 +88,7 @@ export function UserProfileScreen() {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.sectionLabel}>General Information</Text>
+      <AppText style={styles.sectionLabel}>General Information</AppText>
       <ProfileSummaryCard style={styles.card}>
         <InfoRow
           label="Your Name"
@@ -112,7 +113,7 @@ export function UserProfileScreen() {
         />
       </ProfileSummaryCard>
 
-      <Text style={styles.sectionLabel}>Account</Text>
+      <AppText style={styles.sectionLabel}>Account</AppText>
       <ProfileSummaryCard style={styles.card}>
         <InfoRow label="Email" value={profile.email} />
         <InfoRow
@@ -128,7 +129,7 @@ export function UserProfileScreen() {
         />
       </ProfileSummaryCard>
 
-      <Text style={styles.sectionLabel}>Logout</Text>
+      <AppText style={styles.sectionLabel}>Logout</AppText>
       <LogoutRow onPress={() => setShowLogoutConfirm(true)} />
       <ConfirmationModal
         visible={showLogoutConfirm}

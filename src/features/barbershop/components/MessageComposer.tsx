@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
-import { View, TextInput, StyleSheet, ViewStyle } from "react-native";
+import { View, StyleSheet, ViewStyle } from "react-native";
+import { AppTextInput } from "@/src/components/AppTextInput";
 
 interface Props {
   value: string;
@@ -17,7 +18,7 @@ export function MessageComposer({
 }: Props) {
   return (
     <View style={[styles.container, style]}>
-      <TextInput
+      <AppTextInput
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}

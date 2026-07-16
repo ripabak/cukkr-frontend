@@ -10,7 +10,8 @@ import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
 import { validateEmail } from "../utils/form-validators";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Alert } from "react-native";
+import { StyleSheet, View, Alert } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 export function CreateBarbershopInviteBarberEmptyScreen() {
   const router = useRouter();
@@ -81,8 +82,8 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
       <WizardProgress totalSteps={2} currentStep={1} style={styles.wizard} />
-      <Text style={styles.title}>Invite Barber</Text>
-      <Text style={styles.subtitle}>Inviting barber to your barbershop</Text>
+      <AppText style={styles.title}>Invite Barber</AppText>
+      <AppText style={styles.subtitle}>Inviting barber to your barbershop</AppText>
       <TextInputField
         label="Add Barber"
         placeholder="email"

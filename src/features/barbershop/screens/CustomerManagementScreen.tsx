@@ -10,7 +10,8 @@ import { useCustomersList } from "@/src/features/barbershop/hooks";
 import { formatCurrency } from "@/src/features/barbershop/utils/form-validators";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 type CustomerSort = "name_asc" | "recent" | "bookings_desc" | "spend_desc";
 
@@ -68,6 +69,7 @@ export function CustomerManagementScreen() {
   return (
     <ScreenShell
       backgroundColor={bgColor}
+      hideAppHeader
       headerSlot={
         <SelectionToolbar
           selectionMode={selectionMode}
@@ -107,16 +109,16 @@ export function CustomerManagementScreen() {
       }
       contentStyle={styles.content}
     >
-      <Text style={styles.title}>Customer{"\n"}Management</Text>
-      <Text style={styles.subtitle}>
+      <AppText style={styles.title}>Customer{"\n"}Management</AppText>
+      <AppText style={styles.subtitle}>
         Manage all your customers in one place.
-      </Text>
+      </AppText>
       {!selectionMode && (
-        <Text style={styles.hint}>
+        <AppText style={styles.hint}>
           {hasContact
             ? "Only customers with valid contact information will appear here."
             : "Showing all customers including those without contact info."}
-        </Text>
+        </AppText>
       )}
 
       <View style={styles.searchWrapper}>
@@ -128,9 +130,9 @@ export function CustomerManagementScreen() {
       </View>
 
       {!isLoading && customers.length === 0 ? (
-        <Text style={styles.empty}>
+        <AppText style={styles.empty}>
           {search ? "No customers match your search." : "No customers yet."}
-        </Text>
+        </AppText>
       ) : null}
 
       {customers.length > 0 ? (
@@ -161,12 +163,13 @@ export function CustomerManagementScreen() {
 }
 
 const styles = StyleSheet.create({
-  content: { paddingBottom: 40 },
+  content: { paddingBottom: 200 },
   title: {
-    fontSize: 34,
-    fontWeight: "800",
+    fontSize: 32,
+    fontWeight: "700",
     color: Colors.text.primary,
-    lineHeight: 40,
+    lineHeight: 38,
+    letterSpacing: -0.8,
     marginTop: 8,
   },
   subtitle: { fontSize: 14, color: Colors.text.secondary, marginTop: 8 },
@@ -178,6 +181,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 40,
   },
-  list: { gap: 10 },
+  list: { gap: 12 },
   sortMenu: { top: 100, right: 20, left: 20 },
 });

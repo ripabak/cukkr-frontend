@@ -3,10 +3,10 @@ import { formatTime12h } from "@/src/utils/date";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   Animated,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -107,17 +107,17 @@ export function InProgressFloatingCard({
       <View style={styles.left}>
         <Animated.View style={[styles.dot, { opacity: dotOpacity }]} />
         <View style={styles.textGroup}>
-          <Text style={styles.label}>In Progress</Text>
-          <Text style={styles.name} numberOfLines={1}>
+          <AppText style={styles.label}>In Progress</AppText>
+          <AppText style={styles.name} numberOfLines={1}>
             {customerName}
-          </Text>
+          </AppText>
         </View>
       </View>
 
       <View style={styles.right}>
-        <Text style={styles.startTime}>{formatStartTime(startedAt)} → now</Text>
+        <AppText style={styles.startTime}>{formatStartTime(startedAt)} → now</AppText>
         <View style={styles.elapsedRow}>
-          <Text style={styles.elapsed}>{elapsed}</Text>
+          <AppText style={styles.elapsed}>{elapsed}</AppText>
           <Ionicons
             name="chevron-forward"
             size={14}

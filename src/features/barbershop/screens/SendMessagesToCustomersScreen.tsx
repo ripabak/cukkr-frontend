@@ -60,7 +60,7 @@ export function SendMessagesToCustomersScreen() {
               onPress={handleSend}
               activeOpacity={0.7}
             >
-              <Ionicons name="send" size={18} color={Colors.text.primary} />
+              <Ionicons name="send" size={20} color={Colors.text.primary} />
             </TouchableOpacity>
           }
         />
@@ -90,12 +90,12 @@ const styles = StyleSheet.create({
   safe: { flex: 1 },
   container: { flex: 1 },
   sendBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
   },
-  content: { paddingHorizontal: 20, paddingTop: 8, gap: 16 },
+  content: { paddingHorizontal: 20, paddingTop: 24, gap: 16 },
   helper: { marginTop: 4 },
 });

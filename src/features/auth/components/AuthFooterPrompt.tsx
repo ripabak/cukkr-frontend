@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 import { authTheme } from "../auth-theme";
 
@@ -15,9 +16,9 @@ export function AuthFooterPrompt({
 }: AuthFooterPromptProps) {
   return (
     <View style={styles.row}>
-      <Text style={styles.prompt}>{prompt}</Text>
+      <AppText style={styles.prompt}>{prompt}</AppText>
       <Pressable onPress={onPress}>
-        <Text style={styles.link}>{actionLabel}</Text>
+        <AppText style={styles.link}>{actionLabel}</AppText>
       </Pressable>
     </View>
   );

@@ -23,15 +23,15 @@ export function FloatingActionButton({ onPress, style }: Props) {
 const styles = StyleSheet.create({
   btn: {
     position: "absolute",
-    bottom: 28,
+    bottom: 20,
     right: 20,
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
-    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+    boxShadow: "0px 6px 20px rgba(255, 200, 30, 0.45)",
     elevation: 6,
   },
 });

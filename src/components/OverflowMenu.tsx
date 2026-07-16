@@ -1,8 +1,8 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -42,11 +42,11 @@ export function OverflowMenu({ visible, items, onClose, style }: Props) {
             activeOpacity={0.7}
             style={[styles.item, index < items.length - 1 && styles.itemBorder]}
           >
-            <Text
+            <AppText
               style={[styles.itemText, item.danger && styles.itemTextDanger]}
             >
               {item.label}
-            </Text>
+            </AppText>
           </TouchableOpacity>
         ))}
       </View>
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   item: {
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
   },
   itemBorder: {
     borderBottomWidth: 1,

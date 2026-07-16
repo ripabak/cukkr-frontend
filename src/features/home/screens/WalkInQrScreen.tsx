@@ -5,7 +5,8 @@ import { useCurrentBarbershop, useCurrentPin } from "@/src/features/home/hooks";
 import { Colors } from "@/src/theme/colors";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Share, StyleSheet, Text, View } from "react-native";
+import { Share, StyleSheet, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import QRCode from "react-native-qrcode-svg";
 
 export function WalkInQrScreen() {
@@ -45,24 +46,24 @@ export function WalkInQrScreen() {
           />
         ) : (
           <View style={styles.qrPlaceholder}>
-            <Text style={styles.placeholderText}>
+            <AppText style={styles.placeholderText}>
               No booking URL configured
-            </Text>
+            </AppText>
           </View>
         )}
       </View>
 
       {pinData?.pin ? (
         <View style={styles.pinRow}>
-          <Text style={styles.pinLabel}>PIN</Text>
-          <Text style={styles.pinValue}>{pinData.pin}</Text>
+          <AppText style={styles.pinLabel}>PIN</AppText>
+          <AppText style={styles.pinValue}>{pinData.pin}</AppText>
         </View>
       ) : null}
 
-      <Text style={styles.hint}>
+      <AppText style={styles.hint}>
         Customer scan this QR code to check-in as a walk-in. PIN will be
         auto-filled on the booking page.
-      </Text>
+      </AppText>
 
       <PrimaryButton
         label="Share"

@@ -20,11 +20,11 @@ export const AppTheme = {
   spacing: { xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32 },
   borderRadius: { sm: 6, md: 12, lg: 16, xl: 24, full: 999 },
   typography: {
-    heading: { fontSize: 28, fontWeight: "700" as const },
-    subheading: { fontSize: 20, fontWeight: "700" as const },
-    body: { fontSize: 14, fontWeight: "400" as const },
-    caption: { fontSize: 12, fontWeight: "400" as const },
-    label: { fontSize: 13, fontWeight: "500" as const },
+    heading: { fontSize: 28, fontWeight: "700" as const, fontFamily: "PlusJakartaSans_700Bold" as const },
+    subheading: { fontSize: 20, fontWeight: "700" as const, fontFamily: "PlusJakartaSans_700Bold" as const },
+    body: { fontSize: 14, fontWeight: "400" as const, fontFamily: "PlusJakartaSans_400Regular" as const },
+    caption: { fontSize: 12, fontWeight: "400" as const, fontFamily: "PlusJakartaSans_400Regular" as const },
+    label: { fontSize: 13, fontWeight: "500" as const, fontFamily: "PlusJakartaSans_500Medium" as const },
   },
 };
 export default AppTheme;

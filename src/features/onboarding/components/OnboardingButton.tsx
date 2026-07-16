@@ -1,7 +1,7 @@
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   StyleSheet,
-  Text,
   TextStyle,
   TouchableOpacity,
   ViewStyle,
@@ -31,7 +31,7 @@ export const OnboardingButton: React.FC<OnboardingButtonProps> = ({
       onPress={onPress}
       activeOpacity={0.8}
     >
-      <Text
+      <AppText
         style={[
           styles.buttonText,
           isSecondary && styles.buttonTextSecondary,
@@ -39,7 +39,7 @@ export const OnboardingButton: React.FC<OnboardingButtonProps> = ({
         ]}
       >
         {label}
-      </Text>
+      </AppText>
     </TouchableOpacity>
   );
 };

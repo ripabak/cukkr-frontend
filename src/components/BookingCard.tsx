@@ -1,9 +1,9 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -73,15 +73,15 @@ export function BookingCard({
         <Ionicons name={iconName} size={22} color={color} />
       </View>
       <View style={styles.info}>
-        <Text style={styles.timeLabel}>{timeLabel}</Text>
+        <AppText style={styles.timeLabel}>{timeLabel}</AppText>
         <View style={styles.barberRow}>
           <Ionicons name="cut" size={12} color={Colors.icon.muted} />
-          <Text style={styles.barberName}> {barberName}</Text>
+          <AppText style={styles.barberName} numberOfLines={1} ellipsizeMode="tail"> {barberName}</AppText>
         </View>
       </View>
       <View style={styles.right}>
-        <Text style={[styles.customerName, { color }]}>{customerName}</Text>
-        <Text style={styles.duration}>{duration}</Text>
+        <AppText style={[styles.customerName, { color }]}>{customerName}</AppText>
+        <AppText style={styles.duration}>{duration}</AppText>
       </View>
     </TouchableOpacity>
   );
@@ -92,16 +92,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: Colors.bg.default,
-    borderRadius: 16,
-    padding: 14,
-    gap: 12,
-    boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.05)",
-    elevation: 1,
+    borderRadius: 20,
+    padding: 16,
+    gap: 14,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 2,
   },
   iconCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -110,7 +112,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   timeLabel: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "600",
     color: Colors.text.primary,
   },
@@ -119,7 +121,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   barberName: {
-    fontSize: 12,
+    fontSize: 13,
     color: Colors.icon.muted,
   },
   right: {
@@ -127,11 +129,11 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   customerName: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "600",
   },
   duration: {
-    fontSize: 12,
+    fontSize: 13,
     color: Colors.icon.muted,
   },
 });

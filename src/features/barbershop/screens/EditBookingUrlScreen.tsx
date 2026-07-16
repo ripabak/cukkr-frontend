@@ -12,7 +12,8 @@ import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
 import { useRouter } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 export function EditBookingUrlScreen() {
   const router = useRouter();
@@ -52,14 +53,14 @@ export function EditBookingUrlScreen() {
     if (!isValidSlug)
       return {
         text: "Only letters, numbers, and hyphens between words.",
-        color: "#FF3B30",
+        color: Colors.status.danger,
       };
-    if (isTyping) return { text: "Checking availability...", color: "#FF9500" };
+    if (isTyping) return { text: "Checking availability...", color: Colors.status.warning };
     if (isCheckingSlug)
-      return { text: "Checking availability...", color: "#FF9500" };
-    if (isAvailable === true) return { text: "Available ✓", color: "#34C759" };
+      return { text: "Checking availability...", color: Colors.status.warning };
+    if (isAvailable === true) return { text: "Available ✓", color: Colors.status.success };
     if (isAvailable === false)
-      return { text: "Slug not available", color: "#FF3B30" };
+      return { text: "Slug not available", color: Colors.status.danger };
     return null;
   }, [isChanged, isValidSlug, isTyping, isCheckingSlug, isAvailable]);
 
@@ -89,6 +90,7 @@ export function EditBookingUrlScreen() {
 
   return (
     <ScreenShell
+      hideAppHeader
       headerSlot={
         <EditFieldHeader
           title="Book Url"
@@ -115,9 +117,9 @@ export function EditBookingUrlScreen() {
             editable={isOwner}
           />
           {slugFeedback && (
-            <Text style={[styles.slugFeedback, { color: slugFeedback.color }]}>
+            <AppText style={[styles.slugFeedback, { color: slugFeedback.color }]}>
               {slugFeedback.text}
-            </Text>
+            </AppText>
           )}
           <HelperCopy
             lines={[
@@ -133,7 +135,7 @@ export function EditBookingUrlScreen() {
           />
           {!isOwner && (
             <View style={styles.viewOnlyBanner}>
-              <Text style={styles.viewOnlyText}>Only the barbershop owner can edit the booking URL</Text>
+              <AppText style={styles.viewOnlyText}>Only the barbershop owner can edit the booking URL</AppText>
             </View>
           )}
         </>
@@ -144,7 +146,8 @@ export function EditBookingUrlScreen() {
 
 const styles = StyleSheet.create({
   content: {
-    paddingTop: 16,
+    paddingTop: 24,
+    paddingBottom: 200,
   },
   loader: {
     marginTop: 20,

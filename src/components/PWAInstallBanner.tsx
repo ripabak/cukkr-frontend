@@ -1,7 +1,7 @@
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   Platform,
@@ -45,8 +45,8 @@ export function PWAInstallBanner() {
             />
           </View>
           <View style={styles.textWrap}>
-            <Text style={styles.appName}>Cukkr</Text>
-            <Text style={styles.desc}>Install now for quick access</Text>
+            <AppText style={styles.appName}>Cukkr</AppText>
+            <AppText style={styles.desc}>Install now for quick access</AppText>
           </View>
         </View>
         <View style={styles.right}>
@@ -55,7 +55,7 @@ export function PWAInstallBanner() {
             onPress={handleInstall}
             activeOpacity={0.8}
           >
-            <Text style={styles.installBtnText}>Install</Text>
+            <AppText style={styles.installBtnText}>Install</AppText>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={dismiss}

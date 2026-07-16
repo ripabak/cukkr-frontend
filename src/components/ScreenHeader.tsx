@@ -1,9 +1,9 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -40,7 +40,7 @@ export function ScreenHeader({
       {titleSlot ? (
         <View style={styles.titleSpacer}>{titleSlot}</View>
       ) : title ? (
-        <Text style={styles.title}>{title}</Text>
+        <AppText style={styles.title}>{title}</AppText>
       ) : (
         <View style={styles.titleSpacer} />
       )}
@@ -62,21 +62,21 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   backButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
   },
   placeholder: {
-    width: 36,
-    height: 36,
+    width: 40,
+    height: 40,
   },
   title: {
     flex: 1,
     textAlign: "center",
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "700",
     color: Colors.text.primary,
   },

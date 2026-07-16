@@ -10,7 +10,8 @@ import { useMemberRole } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export function InviteBarberScreen() {
@@ -51,7 +52,7 @@ export function InviteBarberScreen() {
               <IconActionButton
                 iconName="paper-plane-outline"
                 onPress={isPending ? undefined : handleSend}
-                size={36}
+                size={40}
               />
             ) : undefined
           }
@@ -74,7 +75,7 @@ export function InviteBarberScreen() {
           />
           {!canInvite && (
             <View style={styles.viewOnlyBanner}>
-              <Text style={styles.viewOnlyText}>Only the barbershop owner or admin can invite barbers</Text>
+              <AppText style={styles.viewOnlyText}>Only the barbershop owner or admin can invite barbers</AppText>
             </View>
           )}
         </View>
@@ -94,13 +95,13 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 20,
-    paddingTop: 8,
+    paddingTop: 24,
   },
   viewOnlyBanner: {
     marginTop: 24,
     padding: 12,
     backgroundColor: Colors.bg.surface,
-    borderRadius: 8,
+    borderRadius: 12,
     alignItems: "center",
   },
   viewOnlyText: {

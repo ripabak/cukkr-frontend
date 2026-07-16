@@ -4,9 +4,9 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 import { authTheme } from "../auth-theme";
 
@@ -35,8 +35,8 @@ export function AuthScreenShell({
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.header}>
-            <Text style={styles.title}>{title}</Text>
-            <Text style={styles.description}>{description}</Text>
+            <AppText style={styles.title}>{title}</AppText>
+            <AppText style={styles.description}>{description}</AppText>
           </View>
 
           <View style={styles.content}>{children}</View>
@@ -70,11 +70,13 @@ const styles = StyleSheet.create({
     color: authTheme.colors.textPrimary,
     fontSize: 34,
     fontWeight: "800",
+    fontFamily: "PlusJakartaSans_700Bold",
   },
   description: {
     color: authTheme.colors.textSecondary,
     fontSize: 14,
     lineHeight: 20,
+    fontFamily: "PlusJakartaSans_400Regular",
   },
   content: {
     gap: authTheme.spacing.md,

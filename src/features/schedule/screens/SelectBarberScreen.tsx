@@ -7,7 +7,8 @@ import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 export function SelectBarberScreen() {
   const router = useRouter();
@@ -29,6 +30,7 @@ export function SelectBarberScreen() {
 
   return (
     <ScreenShell
+      hideAppHeader
       headerSlot={
         <ScreenHeader title="Select Barber" onBack={() => router.back()} />
       }
@@ -37,7 +39,7 @@ export function SelectBarberScreen() {
       <SearchInput value={query} onChangeText={setQuery} placeholder="Search" />
 
       {!isLoading && filtered.length === 0 ? (
-        <Text style={styles.emptyText}>No barbers found.</Text>
+        <AppText style={styles.emptyText}>No barbers found.</AppText>
       ) : (
         <View style={styles.list}>
           {filtered.map((item) => (
@@ -50,7 +52,7 @@ export function SelectBarberScreen() {
               <View style={styles.avatar}>
                 <Ionicons name="person" size={22} color={Colors.text.primary} />
               </View>
-              <Text style={styles.barberName}>{item.name}</Text>
+              <AppText style={styles.barberName}>{item.name}</AppText>
               <Ionicons
                 name="chevron-forward"
                 size={18}
@@ -66,26 +68,26 @@ export function SelectBarberScreen() {
 
 const styles = StyleSheet.create({
   content: {
-    paddingTop: 16,
+    paddingTop: 24,
     gap: 16,
-    paddingBottom: 40,
+    paddingBottom: 200,
   },
   list: {
-    gap: 10,
+    gap: 12,
   },
   barberRow: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: Colors.brand.primary,
-    borderRadius: 16,
+    borderRadius: 20,
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 16,
     gap: 12,
   },
   avatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",

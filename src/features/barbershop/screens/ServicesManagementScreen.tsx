@@ -15,7 +15,8 @@ import { useToast } from "@/src/lib/providers";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { AppText } from "@/src/components/AppText";
 
 type SortOption =
   | "name_asc"
@@ -54,7 +55,7 @@ export function ServicesManagementScreen() {
   };
 
   return (
-    <ScreenShell
+    <ScreenShell hideAppHeader
       headerSlot={
         <ScreenHeader
           onBack={() => router.back()}
@@ -96,8 +97,8 @@ export function ServicesManagementScreen() {
         ) : null
       }
     >
-      <Text style={styles.title}>Services Management</Text>
-      <Text style={styles.subtitle}>Manage your barbershop services</Text>
+      <AppText style={styles.title}>Services Management</AppText>
+      <AppText style={styles.subtitle}>Manage your barbershop services</AppText>
 
       <SearchInput
         value={search}
@@ -106,11 +107,11 @@ export function ServicesManagementScreen() {
       />
 
       {!isLoading && services.length === 0 ? (
-        <Text style={styles.empty}>
+        <AppText style={styles.empty}>
           {search
             ? "No services match your search."
             : "No services yet. Add one."}
-        </Text>
+        </AppText>
       ) : null}
       {services.length > 0 ? (
         <View style={styles.list}>
@@ -150,16 +151,17 @@ export function ServicesManagementScreen() {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: "700",
     color: Colors.text.primary,
     marginTop: 8,
+    letterSpacing: -0.8,
   },
   subtitle: {
     fontSize: 14,
     color: Colors.text.secondary,
     marginTop: 4,
-    marginBottom: 16,
+    marginBottom: 24,
   },
   search: {
     marginBottom: 16,
@@ -172,7 +174,7 @@ const styles = StyleSheet.create({
   },
   list: {},
   cardMargin: {
-    marginBottom: 12,
+    marginBottom: 16,
   },
   headerActions: {
     flexDirection: "row",
@@ -180,9 +182,9 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   headerIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     borderWidth: 1,
     borderColor: Colors.border.default,
     alignItems: "center",

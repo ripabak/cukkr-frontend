@@ -1,13 +1,13 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { AppText } from "@/src/components/AppText";
 import {
   Modal,
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -145,14 +145,14 @@ function ScrollPicker({
             }}
             style={pickerStyles.item}
           >
-            <Text
+            <AppText
               style={[
                 pickerStyles.itemText,
                 index === selectedIndex && pickerStyles.itemTextSelected,
               ]}
             >
               {renderItem(item)}
-            </Text>
+            </AppText>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -318,12 +318,12 @@ export function TimePickerModal({
         >
           {/* Header */}
           <View style={styles.header}>
-            <Text style={styles.title}>Select Time</Text>
+            <AppText style={styles.title}>Select Time</AppText>
             {minTime && maxTime && (
               <View style={styles.rangeChip}>
-                <Text style={styles.rangeText}>
+                <AppText style={styles.rangeText}>
                   {formatTimePoint(minTime)} – {formatTimePoint(maxTime)}
-                </Text>
+                </AppText>
               </View>
             )}
           </View>
@@ -337,7 +337,7 @@ export function TimePickerModal({
               onSelect={handleHourChange}
               renderItem={(h) => pad(h as number)}
             />
-            <Text style={styles.separator}>:</Text>
+            <AppText style={styles.separator}>:</AppText>
             <ScrollPicker
               key={`m-${currentHour}-${currentAmPm}`}
               items={validMinutes}
@@ -366,7 +366,7 @@ export function TimePickerModal({
             style={styles.confirmBtn}
           >
             <Ionicons name="checkmark" size={18} color="#FFFFFF" />
-            <Text style={styles.confirmText}>Confirm</Text>
+            <AppText style={styles.confirmText}>Confirm</AppText>
           </TouchableOpacity>
         </TouchableOpacity>
       </TouchableOpacity>
