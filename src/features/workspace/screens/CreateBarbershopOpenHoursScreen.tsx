@@ -85,6 +85,7 @@ export function CreateBarbershopOpenHoursScreen() {
             closeTime={day.close}
             onOpenTimeChange={(t) => updateDay(day.dayOfWeek, { open: t })}
             onCloseTimeChange={(t) => updateDay(day.dayOfWeek, { close: t })}
+            editable
             isLast={index === days.length - 1}
           />
         ))}

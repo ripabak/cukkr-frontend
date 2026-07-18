@@ -76,7 +76,7 @@ export function DayHoursRow({
             disabled={!enabled || !editable}
           >
             <AppText
-              style={[styles.timeText, !enabled && styles.timeTextDisabled]}
+              style={[styles.timeText, (!enabled || !editable) && styles.timeTextDisabled]}
             >
               {formatTime(closeTime)}
             </AppText>
