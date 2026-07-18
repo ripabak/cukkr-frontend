@@ -55,7 +55,6 @@ export function useUpdateBookingStatus() {
     }: {
       id: string;
       status:
-        | "pending"
         | "requested"
         | "waiting"
         | "in_progress"

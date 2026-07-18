@@ -2,7 +2,6 @@ import type { BookingStatus } from "@/src/components/BookingCard";
 import type { BookingDetailStatus } from "@/src/features/schedule/components/BookingDetailCard";
 
 type ApiStatus =
-  | "pending"
   | "requested"
   | "waiting"
   | "in_progress"
@@ -10,7 +9,6 @@ type ApiStatus =
   | "cancelled";
 
 const API_TO_BOOKING_STATUS: Record<string, BookingStatus> = {
-  pending: "waiting",
   requested: "requested",
   waiting: "waiting",
   in_progress: "in_progress",
@@ -19,7 +17,6 @@ const API_TO_BOOKING_STATUS: Record<string, BookingStatus> = {
 };
 
 const API_TO_DETAIL_STATUS: Record<string, BookingDetailStatus> = {
-  pending: "waiting",
   requested: "requested",
   waiting: "waiting",
   in_progress: "in_progress",
@@ -65,7 +62,7 @@ type QueueBooking = {
 export function sortBookingsQueue<T extends QueueBooking>(bookings: T[]): T[] {
   const inProgress = bookings.filter((b) => b.status === "in_progress");
   const waiting = bookings.filter(
-    (b) => b.status === "waiting" || b.status === "pending",
+    (b) => b.status === "waiting",
   );
   const completed = bookings
     .filter((b) => b.status === "completed")

@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { bookingsService } from "../services/bookings.service";
 
 type BookingApiStatus =
-  | "pending"
   | "requested"
   | "waiting"
   | "in_progress"

@@ -1,7 +1,6 @@
 import { app } from "@/src/lib/eden-app";
 
 type BookingApiStatus =
-  | "pending"
   | "requested"
   | "waiting"
   | "in_progress"

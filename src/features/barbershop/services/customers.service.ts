@@ -4,7 +4,6 @@ type CustomerSort = "name_asc" | "recent" | "bookings_desc" | "spend_desc";
 
 type BookingStatus =
   | "all"
-  | "pending"
   | "requested"
   | "waiting"
   | "in_progress"
