@@ -6,6 +6,7 @@ import { ImageUploadBox } from "@/src/components/ImageUploadBox";
 import { TextInputField } from "@/src/components/TextInputField";
 import { MultilineInputField } from "@/src/components/MultilineInputField";
 import { PrefixedInputField } from "@/src/components/PrefixedInputField";
+import { PriceInput } from "@/src/components/PriceInput";
 import { ToggleRow } from "@/src/features/barbershop/components/ToggleRow";
 
 interface Props {
@@ -69,21 +70,19 @@ export function ServiceForm({
         style={styles.field}
       />
 
-      <AppText style={styles.fieldLabel}>Price</AppText>
-      <PrefixedInputField
-        prefix="Rp"
-        placeholder="0"
+      <PriceInput
         value={price}
         onChangeText={onPriceChange}
         style={styles.prefixField}
       />
 
-      <AppText style={styles.fieldLabel}>Duration</AppText>
       <PrefixedInputField
-        prefix="In Minutes"
+        prefix="Minutes"
+        label="Duration"
         placeholder="0"
         value={duration}
         onChangeText={onDurationChange}
+        keyboardType="numeric"
         style={styles.prefixField}
       />
 
@@ -97,16 +96,15 @@ export function ServiceForm({
       </View>
 
       {showDiscount && onDiscountChange ? (
-        <>
-          <AppText style={styles.fieldLabel}>Discount</AppText>
-          <PrefixedInputField
-            prefix="%"
-            placeholder="0"
-            value={discount ?? ""}
-            onChangeText={onDiscountChange}
-            style={styles.prefixField}
-          />
-        </>
+        <PrefixedInputField
+          prefix="%"
+          label="Discount"
+          placeholder="0"
+          value={discount ?? ""}
+          onChangeText={onDiscountChange}
+          keyboardType="numeric"
+          style={styles.prefixField}
+        />
       ) : null}
     </View>
   );
@@ -122,12 +120,6 @@ const styles = StyleSheet.create({
   },
   field: {
     marginBottom: 16,
-  },
-  fieldLabel: {
-    fontSize: 13,
-    color: Colors.text.secondary,
-    marginBottom: 6,
-    marginTop: 4,
   },
   prefixField: {
     marginBottom: 16,
