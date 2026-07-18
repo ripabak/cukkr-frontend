@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import { MultilineInputField } from "@/src/components/MultilineInputField";
 import { PrefixedInputField } from "@/src/components/PrefixedInputField";
+import { PriceInput } from "@/src/components/PriceInput";
 import { BackButton } from "@/src/components/BackButton";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
@@ -136,13 +137,18 @@ export function CreateBarbershopFirstServiceScreen() {
         onChangeText={setDescription}
         style={styles.descInput}
       />
-      <AppText style={styles.fieldLabel}>Price</AppText>
-      <PrefixedInputField prefix="Rp" value={price} onChangeText={setPrice} />
-      <AppText style={[styles.fieldLabel, styles.fieldLabelTop]}>Duration</AppText>
+      <PriceInput
+        value={price}
+        onChangeText={setPrice}
+        style={styles.fieldSpacing}
+      />
       <PrefixedInputField
         prefix="Minutes"
+        label="Duration"
         value={duration}
         onChangeText={setDuration}
+        keyboardType="numeric"
+        style={styles.fieldSpacing}
       />
       <View style={styles.flex} />
       <View style={styles.buttonRow}>
@@ -180,13 +186,7 @@ const styles = StyleSheet.create({
   descInput: {
     marginTop: 16,
   },
-  fieldLabel: {
-    fontSize: 13,
-    color: Colors.text.secondary,
-    marginBottom: 6,
-    marginTop: 16,
-  },
-  fieldLabelTop: {
+  fieldSpacing: {
     marginTop: 16,
   },
   flex: {

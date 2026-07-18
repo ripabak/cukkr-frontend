@@ -90,9 +90,9 @@ export function RegisterScreen() {
       <AuthTextField
         autoCapitalize="none"
         keyboardType="email-address"
-        label="Email / Phone Number*"
+        label="Email*"
         onChangeText={setIdentifier}
-        placeholder="Email / Phone number*"
+        placeholder="Email"
         value={identifier}
       />
 
