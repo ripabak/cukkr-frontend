@@ -3,9 +3,9 @@ import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
 import { ImageUploadBox } from "@/src/components/ImageUploadBox";
+import { LabeledInput } from "@/src/components/LabeledInput";
 import { TextInputField } from "@/src/components/TextInputField";
 import { MultilineInputField } from "@/src/components/MultilineInputField";
-import { PrefixedInputField } from "@/src/components/PrefixedInputField";
 import { PriceInput } from "@/src/components/PriceInput";
 import { ToggleRow } from "@/src/features/barbershop/components/ToggleRow";
 
@@ -76,9 +76,8 @@ export function ServiceForm({
         style={styles.prefixField}
       />
 
-      <PrefixedInputField
-        prefix="Minutes"
-        label="Duration"
+      <LabeledInput
+        label="Duration (in minutes)"
         placeholder="0"
         value={duration}
         onChangeText={onDurationChange}
@@ -96,9 +95,8 @@ export function ServiceForm({
       </View>
 
       {showDiscount && onDiscountChange ? (
-        <PrefixedInputField
-          prefix="%"
-          label="Discount"
+        <LabeledInput
+          label="Discount (%)"
           placeholder="0"
           value={discount ?? ""}
           onChangeText={onDiscountChange}

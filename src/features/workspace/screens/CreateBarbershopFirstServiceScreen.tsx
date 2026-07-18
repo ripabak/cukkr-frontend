@@ -1,6 +1,6 @@
 import { Colors } from "@/src/theme/colors";
 import { MultilineInputField } from "@/src/components/MultilineInputField";
-import { PrefixedInputField } from "@/src/components/PrefixedInputField";
+import { LabeledInput } from "@/src/components/LabeledInput";
 import { PriceInput } from "@/src/components/PriceInput";
 import { BackButton } from "@/src/components/BackButton";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
@@ -142,9 +142,8 @@ export function CreateBarbershopFirstServiceScreen() {
         onChangeText={setPrice}
         style={styles.fieldSpacing}
       />
-      <PrefixedInputField
-        prefix="Minutes"
-        label="Duration"
+      <LabeledInput
+        label="Duration (in minutes)"
         value={duration}
         onChangeText={setDuration}
         keyboardType="numeric"

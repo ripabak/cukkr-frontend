@@ -1,6 +1,6 @@
 import React from "react";
 import { ViewStyle } from "react-native";
-import { PrefixedInputField } from "@/src/components/PrefixedInputField";
+import { LabeledInput } from "@/src/components/LabeledInput";
 
 function formatPriceDisplay(raw: string): string {
   const digits = raw.replace(/\D/g, "");
@@ -15,7 +15,6 @@ function unformatPrice(input: string): string {
 interface Props {
   value: string;
   onChangeText: (rawValue: string) => void;
-  label?: string;
   placeholder?: string;
   editable?: boolean;
   style?: ViewStyle;
@@ -24,20 +23,18 @@ interface Props {
 export function PriceInput({
   value,
   onChangeText,
-  label = "Price",
   placeholder = "0",
   editable,
   style,
 }: Props) {
   return (
-    <PrefixedInputField
-      prefix="Rp"
+    <LabeledInput
+      label="Price (Rp)"
       value={formatPriceDisplay(value)}
       onChangeText={(text) => onChangeText(unformatPrice(text))}
       placeholder={placeholder}
-      editable={editable}
-      label={label}
       keyboardType="numeric"
+      editable={editable}
       style={style}
     />
   );
