@@ -25,6 +25,7 @@ import {
   useSetActiveOrganization,
 } from "@/src/features/workspace/hooks";
 import { WORKSPACE_SCOPED_KEYS } from "@/src/features/workspace/hooks/useOrganizationMutations";
+import { useUnreadCountByOrg } from "@/src/features/notifications/hooks/useNotificationsQueries";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
@@ -45,6 +46,11 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
   const { data: barbershops = [], isLoading } = useBarbershopList();
   const { mutate: setActive } = useSetActiveOrganization();
   const { data: sessionData } = authClient.useSession();
+  const { data: unreadByOrg = [] } = useUnreadCountByOrg();
+
+  const unreadCountMap = Object.fromEntries(
+    unreadByOrg.map((item) => [item.organizationId, item.count]),
+  );
 
   const [isSwitchingWorkspace, setIsSwitchingWorkspace] = useState(false);
 
@@ -216,6 +222,7 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
                   .map((w: string) => w[0])
                   .join("")
                   .toUpperCase();
+                const unreadCount = unreadCountMap[shop.id] ?? 0;
                 return (
                   <TouchableOpacity
                     key={shop.id}
@@ -236,9 +243,16 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
                         {initials}
                       </AppText>
                     </View>
-                    <AppText style={styles.itemName} numberOfLines={1}>
-                      {shop.name}
-                    </AppText>
+                    <View style={styles.itemTexts}>
+                      <AppText style={styles.itemName} numberOfLines={1}>
+                        {shop.name}
+                      </AppText>
+                      {!isActive && unreadCount > 0 && (
+                        <AppText style={styles.unreadLabel}>
+                          {unreadCount} Notifications
+                        </AppText>
+                      )}
+                    </View>
                     {isActive && (
                       <Ionicons
                         name="checkmark-circle"
@@ -362,6 +376,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "500",
     color: Colors.text.primary,
+  },
+  itemTexts: {
+    flex: 1,
+  },
+  unreadLabel: {
+    fontSize: 12,
+    fontWeight: "500",
+    color: Colors.status.danger,
+    marginTop: 2,
   },
   createRow: {
     flexDirection: "row",

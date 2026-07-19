@@ -23,6 +23,7 @@ interface Props {
   name: string;
   detail?: string;
   timestamp: string;
+  organizationName?: string;
   status?: "pending" | "declined" | "accepted";
   showActions?: boolean;
   isClickable?: boolean;
@@ -48,6 +49,7 @@ export function NotificationCard({
   name,
   detail,
   timestamp,
+  organizationName,
   status,
   showActions,
   isClickable,
@@ -63,7 +65,9 @@ export function NotificationCard({
       style={[styles.card, style]}
     >
       <View style={styles.topRow}>
-        <AppText style={styles.typeLabel}>{title}</AppText>
+        <AppText style={styles.typeLabel}>
+          {organizationName || title}
+        </AppText>
         <View style={styles.topRight}>
           <AppText style={styles.timestamp}>{timestamp}</AppText>
           {isClickable ? (

@@ -1,19 +1,15 @@
 function getNotifOptions(data) {
   const isBooking = data.referenceType === "booking";
-  const isWalkIn = data.type === "walk_in_arrival";
-  const isAppointment = data.type === "appointment_requested";
 
-  const title = isWalkIn
-    ? "🚶 Walk-In Arrival"
-    : isAppointment
-      ? "📅 New Appointment"
-      : data.title || "Cukkr";
+  const title = data.title || "Cukkr";
 
   let body = data.body || "";
-  if (isWalkIn && data.customerName) {
-    body = `${data.customerName} has arrived and is waiting.`;
-  } else if (isAppointment && data.customerName) {
-    body = `${data.customerName} requested an appointment.`;
+  if (data.customerName) {
+    if (data.type === "walk_in_arrival") {
+      body = `${data.customerName} has arrived and is waiting.`;
+    } else if (data.type === "appointment_requested") {
+      body = `${data.customerName} requested an appointment.`;
+    }
   }
 
   return {
@@ -56,8 +52,15 @@ self.addEventListener("notificationclick", (event) => {
   const notifData = event.notification.data || {};
   let url;
   if (notifData.referenceType === "booking" && notifData.referenceId) {
-    url =
-      self.location.origin + "/d/booking-detail?id=" + notifData.referenceId;
+    const params = new URLSearchParams();
+    params.set("id", notifData.referenceId);
+    if (notifData.organizationId) {
+      params.set("orgId", notifData.organizationId);
+    }
+    if (notifData.title) {
+      params.set("orgName", notifData.title);
+    }
+    url = self.location.origin + "/d/booking-detail?" + params.toString();
   } else {
     url = self.location.origin + "/";
   }

@@ -106,6 +106,7 @@ export function NotificationsListScreen() {
               type={API_TYPE_MAP[notif.type] ?? "general"}
               title={notif.title}
               name={notif.body}
+              organizationName={notif.organizationName}
               timestamp={formatRelativeTime(notif.createdAt)}
               status={
                 notif.actionedAs === "accepted"

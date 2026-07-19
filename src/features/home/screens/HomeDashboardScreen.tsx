@@ -14,10 +14,12 @@ import {
 import { QueueStatCard } from "@/src/features/home/components/QueueStatCard";
 import { useOpenHours } from "@/src/hooks/useOpenHours";
 import { useUnreadNotificationsCount } from "@/src/features/notifications/hooks";
+import { useUnreadCountByOrg } from "@/src/features/notifications/hooks/useNotificationsQueries";
 import { notificationsService } from "@/src/features/notifications/services/notifications.service";
 import { pwaNotificationService } from "@/src/services/pwa-notification.service";
 import { mapApiStatusToBookingStatus } from "@/src/features/schedule/utils/booking-formatters";
 import { useAuthUser, useMemberRole } from "@/src/hooks";
+import { authClient } from "@/src/lib/auth-client";
 import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
 import { formatTime12h, parseTime24, toApiDate } from "@/src/utils/date";
@@ -82,6 +84,14 @@ export function HomeDashboardScreen() {
     useGenerateWalkInPin();
   const { role } = useMemberRole();
   const { data: unreadCount } = useUnreadNotificationsCount();
+  const { data: unreadByOrg = [] } = useUnreadCountByOrg();
+  const { data: sessionData } = authClient.useSession();
+
+  const otherOrgHasUnread = unreadByOrg.some(
+    (item) =>
+      item.organizationId !== sessionData?.session?.activeOrganizationId &&
+      item.count > 0,
+  );
   const { data: openHoursData } = useOpenHours();
 
   const [switcherVisible, setSwitcherVisible] = useState(false);
@@ -501,11 +511,14 @@ export function HomeDashboardScreen() {
             <AppText style={styles.shopName} numberOfLines={1}>
               {barbershop?.name ?? "..."}
             </AppText>
-            <Ionicons
-              name={switcherVisible ? "chevron-up" : "chevron-down"}
-              size={14}
-              color={Colors.text.primary}
-            />
+            <View style={styles.shopSwitcherRight}>
+              {otherOrgHasUnread && <View style={styles.shopDot} />}
+              <Ionicons
+                name={switcherVisible ? "chevron-up" : "chevron-down"}
+                size={14}
+                color={Colors.text.primary}
+              />
+            </View>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.notifBtn}
@@ -740,6 +753,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
+  },
+  shopSwitcherRight: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  shopDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: Colors.status.danger,
   },
   shopName: {
     maxWidth: 120,
