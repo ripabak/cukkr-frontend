@@ -50,6 +50,16 @@ export const notificationsService = {
     return response.data.count;
   },
 
+  async getUnreadCountByOrg() {
+    const { data: response, error } =
+      await app.api.notifications["unread-count-by-org"].get();
+    if (error || !response)
+      throw new Error(
+        error?.value?.message || "Failed to fetch unread count by org",
+      );
+    return response.data;
+  },
+
   async markAsRead(id: string) {
     const { data: response, error } = await app.api
       .notifications({ id })

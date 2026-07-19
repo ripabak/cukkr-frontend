@@ -32,7 +32,6 @@ import {
 
 type BookingStatus =
   | "all"
-  | "pending"
   | "requested"
   | "waiting"
   | "in_progress"

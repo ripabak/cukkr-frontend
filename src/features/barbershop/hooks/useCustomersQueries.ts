@@ -44,7 +44,6 @@ export function useCustomerById(id: string) {
 
 type BookingStatus =
   | "all"
-  | "pending"
   | "requested"
   | "waiting"
   | "in_progress"

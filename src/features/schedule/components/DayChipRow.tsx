@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useHorizontalScrollDrag } from "@/src/hooks";
 
 export interface DayChip {
   dayLabel: string;
@@ -32,8 +33,11 @@ export function DayChipRow({
   highlightDates,
   waitingDates,
 }: Props) {
+  const scrollRef = useHorizontalScrollDrag();
+
   return (
     <ScrollView
+      ref={scrollRef}
       horizontal
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={styles.row}

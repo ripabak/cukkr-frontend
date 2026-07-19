@@ -1,4 +1,5 @@
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
+import { CrossOrgNotificationModal } from "@/src/components/CrossOrgNotificationModal";
 import { OverflowMenu } from "@/src/components/OverflowMenu";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { BookingDetailCard } from "@/src/features/schedule/components/BookingDetailCard";
@@ -32,18 +33,68 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { authClient } from "@/src/lib/auth-client";
+import { organizationService } from "@/src/features/workspace/services/organization.service";
+import { WORKSPACE_SCOPED_KEYS } from "@/src/features/workspace/hooks/useOrganizationMutations";
+import { useQueryClient } from "@tanstack/react-query";
 
 type ModalType = "accept" | "decline" | "start" | "takeover" | "cancel" | null;
 
 export function BookingDetailScreen() {
   const router = useRouter();
-  const { id, action } = useLocalSearchParams<{
+  const { id, action, orgId, orgName } = useLocalSearchParams<{
     id: string;
     action?: string;
+    orgId?: string;
+    orgName?: string;
   }>();
   const toast = useToast();
+  const queryClient = useQueryClient();
 
-  const { data: booking, isLoading } = useBookingById(id ?? "");
+  const [orgReady, setOrgReady] = useState(!orgId);
+  const [showSwitchModal, setShowSwitchModal] = useState(false);
+
+  useEffect(() => {
+    if (!orgId) return;
+
+    const session = authClient.getSession();
+    session.then(({ data }) => {
+      if (data?.session?.activeOrganizationId === orgId) {
+        setOrgReady(true);
+        return;
+      }
+      setShowSwitchModal(true);
+    });
+  }, [orgId]);
+
+  const handleSwitchOrg = () => {
+    if (!orgId) return;
+    setShowSwitchModal(false);
+    organizationService
+      .setActive(orgId)
+      .then(() => authClient.getSession())
+      .then(() => {
+        WORKSPACE_SCOPED_KEYS.forEach((key) => {
+          queryClient.resetQueries({ queryKey: key });
+        });
+        setOrgReady(true);
+      })
+      .catch(() => {
+        toast.error(
+          "Unable to switch barbershop. You may no longer be a member.",
+        );
+        setOrgReady(true);
+      });
+  };
+
+  const handleDismissSwitch = () => {
+    setShowSwitchModal(false);
+    setOrgReady(true);
+  };
+
+  const { data: booking, isLoading } = useBookingById(
+    orgReady ? (id ?? "") : "",
+  );
   const { mutate: acceptBooking, isPending: isAccepting } = useAcceptBooking();
   const { mutate: declineBooking, isPending: isDeclining } =
     useDeclineBooking();
@@ -402,6 +453,14 @@ export function BookingDetailScreen() {
           swipeLabel="Swipe to complete"
           onComplete={handleComplete}
           onCancel={() => setSwipeModalVisible(false)}
+        />
+        <CrossOrgNotificationModal
+          visible={showSwitchModal}
+          organizationName={
+            typeof orgName === "string" ? orgName : "another barbershop"
+          }
+          onSwitch={handleSwitchOrg}
+          onDismiss={handleDismissSwitch}
         />
       </View>
     </SafeAreaView>

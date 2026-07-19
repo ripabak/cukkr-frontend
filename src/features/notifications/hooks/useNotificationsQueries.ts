@@ -11,6 +11,8 @@ export const NOTIFICATIONS_QUERY_KEYS = {
     unreadOnly?: boolean;
   }) => [...NOTIFICATIONS_QUERY_KEYS.all, "list", options ?? {}] as const,
   unreadCount: () => [...NOTIFICATIONS_QUERY_KEYS.all, "unread-count"] as const,
+  unreadCountByOrg: () =>
+    [...NOTIFICATIONS_QUERY_KEYS.all, "unread-count-by-org"] as const,
 };
 
 export function useNotificationsList(options?: {
@@ -37,4 +39,11 @@ export function useUnreadNotificationsCount() {
   }, [query.data]);
 
   return query;
+}
+
+export function useUnreadCountByOrg() {
+  return useQuery({
+    queryKey: NOTIFICATIONS_QUERY_KEYS.unreadCountByOrg(),
+    queryFn: () => notificationsService.getUnreadCountByOrg(),
+  });
 }
