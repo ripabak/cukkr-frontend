@@ -14,6 +14,7 @@ import {
   validatePrice,
   validateServiceName,
 } from "@/src/features/barbershop/utils/form-validators";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -22,6 +23,7 @@ import { ActivityIndicator, StyleSheet } from "react-native";
 export function AddOrEditServiceScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const params = useLocalSearchParams<{
     serviceId?: string;
     isEdit?: string;
@@ -97,10 +99,10 @@ export function AddOrEditServiceScreen() {
         },
         {
           onSuccess: () => {
-            toast.success("Service updated");
+            toast.success(t("services.editSuccess"));
             router.back();
           },
-          onError: (e) => toast.error(e.message || "Failed to update service"),
+          onError: (e) => toast.error(e.message || t("toast.unknownError")),
         },
       );
     } else {
@@ -115,10 +117,10 @@ export function AddOrEditServiceScreen() {
         },
         {
           onSuccess: () => {
-            toast.success("Service created");
+            toast.success(t("services.addSuccess"));
             router.back();
           },
-          onError: (e) => toast.error(e.message || "Failed to create service"),
+          onError: (e) => toast.error(e.message || t("toast.unknownError")),
         },
       );
     }
@@ -130,7 +132,7 @@ export function AddOrEditServiceScreen() {
       hideAppHeader
       headerSlot={
         <ScreenHeader
-          title={isEdit ? "Edit Service" : "New Service"}
+          title={isEdit ? t("services.editService") : t("services.addService")}
           onBack={() => router.back()}
         />
       }
@@ -163,10 +165,10 @@ export function AddOrEditServiceScreen() {
           <PrimaryButton
             label={
               isPending
-                ? "Saving..."
+                ? t("common.saving")
                 : isEdit
-                  ? "Save Service"
-                  : "Create Service"
+                  ? t("common.save")
+                  : t("common.create")
             }
             onPress={handleSubmit}
             disabled={isPending}

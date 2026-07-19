@@ -9,6 +9,7 @@ import {
   useUpdateBarbershopSettings,
 } from "@/src/features/barbershop/hooks";
 import { useMemberRole } from "@/src/hooks";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -17,7 +18,7 @@ import { AppText } from "@/src/components/AppText";
 
 type Mode = "name" | "description" | "address";
 
-const MODE_CONFIG: Record<
+function getModeConfig(t: (key: string, params?: Record<string, string>) => string): Record<
   Mode,
   {
     title: string;
@@ -25,39 +26,42 @@ const MODE_CONFIG: Record<
     helperLines: string[];
     multiline: boolean;
   }
-> = {
-  name: {
-    title: "Name",
-    placeholder: "Barbershop Name",
-    helperLines: [
-      "Enter your barbershop name as you want it to appear to customers.",
-      "This name will be shown on the booking page, notifications, and reports.",
-    ],
-    multiline: false,
-  },
-  description: {
-    title: "Description",
-    placeholder: "Barbershop Description",
-    helperLines: [
-      "Describe your barbershop to attract customers.",
-      "This will appear on your public booking page.",
-    ],
-    multiline: true,
-  },
-  address: {
-    title: "Address",
-    placeholder: "Barbershop Address",
-    helperLines: [
-      "Enter the full address of your barbershop.",
-      "This helps customers find your location.",
-    ],
-    multiline: true,
-  },
-};
+> {
+  return {
+    name: {
+      title: t("barbershop.nameLabel"),
+      placeholder: t("barbershop.editNamePlaceholder"),
+      helperLines: [
+        t("barbershop.editNameHelper1"),
+        t("barbershop.editNameHelper2"),
+      ],
+      multiline: false,
+    },
+    description: {
+      title: t("barbershop.description") || "Description",
+      placeholder: t("barbershop.editDescPlaceholder"),
+      helperLines: [
+        t("barbershop.editDescHelper1"),
+        t("barbershop.editDescHelper2"),
+      ],
+      multiline: true,
+    },
+    address: {
+      title: t("barbershop.addressLabel"),
+      placeholder: t("barbershop.editAddressPlaceholder"),
+      helperLines: [
+        t("barbershop.editAddressHelper1"),
+        t("barbershop.editAddressHelper2"),
+      ],
+      multiline: true,
+    },
+  };
+}
 
 export function EditBarbershopInfoScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const params = useLocalSearchParams<{ mode?: string }>();
   const mode: Mode =
     params.mode === "name" ||
@@ -89,7 +93,7 @@ export function EditBarbershopInfoScreen() {
 
   const handleSave = () => {
     if (mode === "name" && !value.trim()) {
-      toast.error("Name cannot be empty");
+      toast.error(t("common.error"));
       return;
     }
 
@@ -102,16 +106,16 @@ export function EditBarbershopInfoScreen() {
 
     updateSettings(payload, {
       onSuccess: () => {
-        toast.success(`${MODE_CONFIG[mode].title} updated`);
+        toast.success(t("toast.updateSuccess"));
         router.back();
       },
       onError: (error) => {
-        toast.error(error.message || "Failed to update");
+        toast.error(error.message || t("toast.unknownError"));
       },
     });
   };
 
-  const config = MODE_CONFIG[mode];
+  const config = getModeConfig(t)[mode];
 
   return (
     <ScreenShell
@@ -150,7 +154,7 @@ export function EditBarbershopInfoScreen() {
       <HelperCopy lines={config.helperLines} style={styles.helper} />
       {!isOwner && (
         <View style={styles.viewOnlyBanner}>
-          <AppText style={styles.viewOnlyText}>Only the barbershop owner can edit this information</AppText>
+          <AppText style={styles.viewOnlyText}>{t("common.noPermission")}</AppText>
         </View>
       )}
     </ScreenShell>

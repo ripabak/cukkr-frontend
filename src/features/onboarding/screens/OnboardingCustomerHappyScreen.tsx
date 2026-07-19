@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { OnboardingButton } from "../components/OnboardingButton";
 import { OnboardingCard } from "../components/OnboardingCard";
 import { OnboardingContainer } from "../components/OnboardingContainer";
@@ -14,6 +15,7 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 export function OnboardingCustomerHappyScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const markOnboardingSeen = useOnboardingStore((s) => s.markOnboardingSeen);
 
   return (
@@ -44,18 +46,16 @@ export function OnboardingCustomerHappyScreen() {
         <OnboardingIndicator current={2} total={3} />
 
         <View style={styles.textContent}>
-          <AppText style={styles.heading}>Customer Happy,{"\n"}Barber Happy</AppText>
+          <AppText style={styles.heading}>{t("common.success")}</AppText>
           <AppText style={styles.body}>
-            Smooth bookings for customers, clear schedules{"\n"}
-            for barbers.{"\n"}
-            Everyone knows what to do, every day.
+            {t("onboarding.customerHappyBody")}
           </AppText>
         </View>
 
         <View style={styles.spacer} />
 
         <OnboardingButton
-          label="Get Started"
+          label={t("auth.register")}
           onPress={() => {
             markOnboardingSeen();
             router.replace("/d/login");

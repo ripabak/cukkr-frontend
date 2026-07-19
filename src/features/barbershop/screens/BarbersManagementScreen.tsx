@@ -15,6 +15,7 @@ import {
 } from "@/src/features/barbershop/hooks";
 import { useAuthUser, useMemberRole } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -36,6 +37,7 @@ interface RoleChangeTarget {
 export function BarbersManagementScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const { user: currentUser } = useAuthUser();
   const { role } = useMemberRole();
   const canManage = role === "owner" || role === "admin";
@@ -64,22 +66,22 @@ export function BarbersManagementScreen() {
     if (removeTarget.type === "invitation") {
       cancelInvite(removeTarget.id, {
         onSuccess: () => {
-          toast.success("Invitation cancelled");
+          toast.success(t("toast.deleteSuccess"));
           setRemoveTarget(null);
         },
         onError: (e) => {
-          toast.error(e.message || "Failed to cancel invitation");
+          toast.error(e.message || t("toast.unknownError"));
           setRemoveTarget(null);
         },
       });
     } else {
       removeBarber(removeTarget.memberIdOrEmail ?? removeTarget.id, {
         onSuccess: () => {
-          toast.success(`${removeTarget.name} removed`);
+          toast.success(t("toast.memberRemoved"));
           setRemoveTarget(null);
         },
         onError: (e) => {
-          toast.error(e.message || "Failed to remove barber");
+          toast.error(e.message || t("toast.unknownError"));
           setRemoveTarget(null);
         },
       });
@@ -93,11 +95,11 @@ export function BarbersManagementScreen() {
       { memberId: roleChangeTarget.memberId, role: newRole },
       {
         onSuccess: () => {
-          toast.success("Role updated");
+          toast.success(t("toast.updateSuccess"));
           setRoleChangeTarget(null);
         },
         onError: (e) => {
-          toast.error(e.message || "Failed to update role");
+          toast.error(e.message || t("toast.unknownError"));
           setRoleChangeTarget(null);
         },
       },
@@ -112,12 +114,12 @@ export function BarbersManagementScreen() {
       headerSlot={<ScreenHeader onBack={() => router.back()} />}
       contentStyle={{ paddingBottom: 200 }}
     >
-      <AppText style={styles.title}>Barbers Management</AppText>
-      <AppText style={styles.subtitle}>Manage your barbershop team members</AppText>
+      <AppText style={styles.title}>{t("barbers.title")}</AppText>
+      <AppText style={styles.subtitle}>{t("barbers.title")}</AppText>
 
       {!isLoading && pendingInvitations.length > 0 ? (
         <>
-          <AppText style={styles.sectionLabel}>Pending Invitations</AppText>
+          <AppText style={styles.sectionLabel}>{t("barbers.inviteBarber")}</AppText>
           <View style={styles.list}>
             {pendingInvitations.map((inv, index) => (
               <MemberCard
@@ -125,7 +127,7 @@ export function BarbersManagementScreen() {
                 name={inv.email}
                 nameSmall
                 role={inv.role}
-                status="Pending"
+                status={t("schedule.status.waiting")}
                 statusVariant="pending"
                 onRemove={
                   canManage
@@ -150,7 +152,7 @@ export function BarbersManagementScreen() {
 
       {!isLoading && members.length > 0 ? (
         <>
-          <AppText style={styles.sectionLabel}>Team</AppText>
+          <AppText style={styles.sectionLabel}>{t("barbers.addBarber")}</AppText>
           <View style={styles.list}>
             {members.map((member, index) => {
               const isYou = member.userId === currentUser?.id;
@@ -162,7 +164,7 @@ export function BarbersManagementScreen() {
                   name={member.user.name}
                   role={member.role}
                   isYou={isYou}
-                  status="Active"
+                  status={t("services.active")}
                   statusVariant="active"
                   roleChangeable={canChangeRole}
                   onRoleChange={
@@ -197,12 +199,12 @@ export function BarbersManagementScreen() {
       ) : null}
 
       {!isLoading && members.length === 0 && pendingInvitations.length === 0 ? (
-        <AppText style={styles.empty}>No barbers yet. Invite one above.</AppText>
+        <AppText style={styles.empty}>{t("barbers.noBarbers")}</AppText>
       ) : null}
 
       <Permission roles={["owner", "admin"]}>
         <PrimaryButton
-          label="Invite Barber"
+          label={t("barbers.inviteBarber")}
           onPress={() => router.push("/d/invite-barber")}
           style={styles.inviteBtn}
         />
@@ -213,22 +215,22 @@ export function BarbersManagementScreen() {
         icon="person-remove-outline"
         title={
           removeTarget?.type === "invitation"
-            ? "Cancel Invitation"
-            : "Remove Barber"
+            ? t("barbers.inviteBarber")
+            : t("common.delete")
         }
         description={
           removeTarget?.type === "invitation"
-            ? `Cancel the invitation for ${removeTarget?.name}?`
-            : `Are you sure you want to remove ${removeTarget?.name} from your barbershop?`
+            ? t("barbers.inviteBarber")
+            : t("barbers.removeConfirm")
         }
         confirmLabel={
           isPending
-            ? "Processing..."
+            ? t("common.saving")
             : removeTarget?.type === "invitation"
-              ? "Cancel Invite"
-              : "Remove"
+              ? t("common.delete")
+              : t("common.delete")
         }
-        cancelLabel="Back"
+        cancelLabel={t("common.cancel")}
         onConfirm={handleConfirmRemove}
         onCancel={() => setRemoveTarget(null)}
       />

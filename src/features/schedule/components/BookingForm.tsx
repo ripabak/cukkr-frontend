@@ -1,5 +1,6 @@
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { TextInputField } from "@/src/components/TextInputField";
 import { SelectorInput } from "@/src/features/schedule/components/SelectorInput";
 import { ServiceSelectionCard } from "@/src/features/schedule/components/ServiceSelectionCard";
@@ -41,35 +42,36 @@ export function BookingForm({
   onServicePress,
   style,
 }: Props) {
+  const { t } = useI18nContext();
   return (
     <View style={[styles.container, style]}>
       <TextInputField
-        label="Customer Name"
+        label={t("schedule.bookingForm.customerName")}
         required
         value={customerName}
         onChangeText={onCustomerNameChange}
-        placeholder="Customer Name"
+        placeholder={t("schedule.bookingForm.customerName")}
       />
       <TextInputField
-        label={`Email${emailRequired ? '' : ' (Optional)'}`}
+        label={emailRequired ? t("schedule.bookingForm.email") : t("schedule.bookingForm.emailOptional")}
         required={emailRequired}
         value={email}
         onChangeText={onEmailChange}
-        placeholder="email"
+        placeholder={t("schedule.bookingForm.email")}
         keyboardType="email-address"
       />
       <SelectorInput
-        label="Barber"
-        placeholder="Select preferred barber"
+        label={t("schedule.bookingForm.barber")}
+        placeholder={t("schedule.bookingForm.selectBarber")}
         value={selectedBarber}
         iconName="person-outline"
         onPress={onBarberPress}
       />
       {showDateTimeSelector ? (
         <SelectorInput
-          label="Date & Time"
+          label={t("schedule.bookingForm.dateTime")}
           required
-          placeholder="Select your date and time"
+          placeholder={t("schedule.bookingForm.selectDateTime")}
           value={selectedDateTime}
           iconName="calendar-outline"
           onPress={onDateTimePress}

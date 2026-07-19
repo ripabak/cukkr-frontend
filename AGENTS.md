@@ -580,5 +580,58 @@ backgroundColor: Colors.brand.primary
 backgroundColor: '#ffc81e'
 ```
 
+## Multi-Language (i18n)
+
+Cukkr frontend supports two languages: Indonesian (`id`) as default and English (`en`).
+
+### Architecture
+
+```
+src/lib/i18n/
+├── index.ts            # Types (Language), SUPPORTED_LANGUAGES, resolveKey, interpolate
+├── provider.tsx        # I18nProvider (React Context), useI18nContext()
+├── hooks.ts            # useI18n() hook — { t, language, setLanguage, isChanging }
+├── locales/
+│   ├── id.ts           # Indonesian UI strings (common, auth, home, schedule, bookings, etc.)
+│   └── en.ts           # English UI strings (identical key structure)
+src/services/
+└── language.service.ts # updateLanguage(lang) — calls authClient.updateUser()
+src/components/
+└── LanguageSwitcher.tsx # Language toggle component (Indonesia / English buttons)
+```
+
+### Setup
+
+The app is wrapped with `<I18nProvider>` in `app/_layout.tsx`. Language is sourced from `authClient.useSession()?.user?.language` and defaults to `'id'`.
+
+### Rules
+
+- **Never hardcode user-facing strings.** Always use `t()` from the i18n context.
+- **Use `useI18nContext()` in components** for read-only translation: `const { t } = useI18nContext();`
+- **Use `useI18n()` hook** when you need to change language: `const { t, language, setLanguage } = useI18n();`
+- **Locale keys** are dot-notated: `t("common.save")`, `t("auth.login")`, `t("schedule.status.waiting")`, `t("toast.saveSuccess")`.
+- **Interpolation**: `t("home.greeting", { name: "Budi" })` — replaces `{name}` in the string.
+- **Fallback**: If a key is not found in the current language, falls back to Indonesian (`id`), then returns the key itself.
+- **When adding a new screen**: Add all new strings to both `locales/id.ts` and `locales/en.ts` with identical key structure.
+- **Auth-client setup**: `inferAdditionalFields({ user: { language: { type: "string", required: false } } })` must be in the auth-client plugins for `updateUser({ language })` to work.
+- **Updating language**: Call `authClient.updateUser({ language })` via `src/services/language.service.ts`. The provider re-renders automatically via the session.
+
+### Example
+
+```typescript
+import { useI18nContext } from "@/src/lib/i18n/provider";
+
+function MyScreen() {
+  const { t } = useI18nContext();
+
+  return (
+    <View>
+      <AppText>{t("home.greeting", { name: "Budi" })}</AppText>
+      <Button title={t("common.save")} />
+    </View>
+  );
+}
+```
+
 ## Constraints
 - don't use `any` or `as any` as much as possible, use them with proper TypeScript types, use any when the options are just any or unknown, if you can make proper typescript types, make it.

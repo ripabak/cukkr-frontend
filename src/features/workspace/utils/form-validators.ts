@@ -3,13 +3,13 @@ export function validateBarbershopName(name: string): {
   message: string;
 } {
   if (!name.trim()) {
-    return { isValid: false, message: "Barbershop name is required" };
+    return { isValid: false, message: "createBarbershop.validation.nameRequired" };
   }
   if (name.length < 3) {
-    return { isValid: false, message: "Name must be at least 3 characters" };
+    return { isValid: false, message: "createBarbershop.validation.nameMinLength" };
   }
   if (name.length > 100) {
-    return { isValid: false, message: "Name must be less than 100 characters" };
+    return { isValid: false, message: "createBarbershop.validation.nameMaxLength" };
   }
   return { isValid: true, message: "" };
 }
@@ -19,10 +19,10 @@ export function validateServiceName(name: string): {
   message: string;
 } {
   if (!name.trim()) {
-    return { isValid: false, message: "Service name is required" };
+    return { isValid: false, message: "createBarbershop.validation.serviceNameRequired" };
   }
   if (name.length < 2) {
-    return { isValid: false, message: "Name must be at least 2 characters" };
+    return { isValid: false, message: "createBarbershop.validation.serviceNameMinLength" };
   }
   return { isValid: true, message: "" };
 }
@@ -32,10 +32,10 @@ export function validatePrice(price: number): {
   message: string;
 } {
   if (price <= 0) {
-    return { isValid: false, message: "Price must be greater than 0" };
+    return { isValid: false, message: "createBarbershop.validation.priceRequired" };
   }
   if (price > 10000000) {
-    return { isValid: false, message: "Price is too high" };
+    return { isValid: false, message: "createBarbershop.validation.priceMax" };
   }
   return { isValid: true, message: "" };
 }
@@ -45,10 +45,10 @@ export function validateDuration(minutes: number): {
   message: string;
 } {
   if (minutes < 5) {
-    return { isValid: false, message: "Duration must be at least 5 minutes" };
+    return { isValid: false, message: "createBarbershop.validation.durationMin" };
   }
   if (minutes > 480) {
-    return { isValid: false, message: "Duration must be less than 8 hours" };
+    return { isValid: false, message: "createBarbershop.validation.durationMax" };
   }
   return { isValid: true, message: "" };
 }
@@ -59,10 +59,10 @@ export function validateEmail(email: string): {
 } {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!email.trim()) {
-    return { isValid: false, message: "Email is required" };
+    return { isValid: false, message: "createBarbershop.validation.emailRequired" };
   }
   if (!emailRegex.test(email)) {
-    return { isValid: false, message: "Invalid email format" };
+    return { isValid: false, message: "createBarbershop.validation.invalidEmail" };
   }
   return { isValid: true, message: "" };
 }

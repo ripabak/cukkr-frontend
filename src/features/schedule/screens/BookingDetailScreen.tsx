@@ -23,6 +23,7 @@ import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
 import { formatDateLabel, formatTime12h } from "@/src/utils/date";
 import { Ionicons } from "@expo/vector-icons";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
@@ -42,6 +43,7 @@ type ModalType = "accept" | "decline" | "start" | "takeover" | "cancel" | null;
 
 export function BookingDetailScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const { id, action, orgId, orgName } = useLocalSearchParams<{
     id: string;
     action?: string;
@@ -122,7 +124,7 @@ export function BookingDetailScreen() {
     if (!id) return;
     setModalType(null);
     acceptBooking(id, {
-      onSuccess: () => toast.success("Booking accepted"),
+      onSuccess: () => toast.success(t("toast.bookingAccepted")),
       onError: (error) => toast.error(getErrorMessage(error)),
     });
   };
@@ -133,7 +135,7 @@ export function BookingDetailScreen() {
     declineBooking(
       { id, reason },
       {
-        onSuccess: () => toast.success("Booking declined"),
+        onSuccess: () => toast.success(t("toast.bookingDeclined")),
         onError: (error) => toast.error(getErrorMessage(error)),
       },
     );
@@ -145,7 +147,7 @@ export function BookingDetailScreen() {
     updateStatus(
       { id, status: "in_progress" },
       {
-        onSuccess: () => toast.success("Booking started"),
+        onSuccess: () => toast.success(t("toast.bookingStarted")),
         onError: (error) => toast.error(getErrorMessage(error)),
       },
     );
@@ -157,7 +159,7 @@ export function BookingDetailScreen() {
     updateStatus(
       { id, status: "completed" },
       {
-        onSuccess: () => toast.success("Booking completed"),
+        onSuccess: () => toast.success(t("toast.bookingCompleted")),
         onError: (error) => toast.error(getErrorMessage(error)),
       },
     );
@@ -169,7 +171,7 @@ export function BookingDetailScreen() {
     updateStatus(
       { id, status: "waiting" },
       {
-        onSuccess: () => toast.success("Booking set back to waiting"),
+        onSuccess: () => toast.success(t("bookings.setBackToWaiting")),
         onError: (error) => toast.error(getErrorMessage(error)),
       },
     );
@@ -179,10 +181,10 @@ export function BookingDetailScreen() {
     if (!id) return;
     setModalType(null);
     updateStatus(
-      { id, status: "cancelled", cancelReason: "Cancelled by barber" },
+      { id, status: "cancelled", cancelReason: t("bookings.cancelReasonBarber") },
       {
         onSuccess: () => {
-          toast.success("Booking cancelled");
+          toast.success(t("toast.bookingCancelled"));
           router.back();
         },
         onError: (error) => toast.error(getErrorMessage(error)),
@@ -194,7 +196,7 @@ export function BookingDetailScreen() {
     if (booking?.status === "waiting") {
       return [
         {
-          label: "Cancel Book",
+          label: t("bookings.actionCancel"),
           danger: true,
           onPress: () => {
             setOverflowVisible(false);
@@ -204,7 +206,7 @@ export function BookingDetailScreen() {
       ];
     }
     if (booking?.status === "in_progress") {
-      return [{ label: "Mark as Waiting", onPress: handleMarkWaiting }];
+      return [{ label: t("bookings.markAsWaiting"), onPress: handleMarkWaiting }];
     }
     return [];
   })();
@@ -221,7 +223,7 @@ export function BookingDetailScreen() {
     if (!booking) {
       return (
         <View style={styles.centered}>
-          <AppText style={styles.errorText}>Booking not found.</AppText>
+          <AppText style={styles.errorText}>{t("bookings.bookingNotFound")}</AppText>
         </View>
       );
     }
@@ -239,10 +241,10 @@ export function BookingDetailScreen() {
           : new Date(booking.createdAt as Date);
 
     const scheduledLabel = booking.scheduledAt
-      ? `Scheduled at ${formatTime12h(timeDate)}`
+      ? t("bookings.scheduledAt", { time: formatTime12h(timeDate) })
       : booking.status === "in_progress"
-        ? `Started at ${formatTime12h(timeDate)}`
-        : `Arrived at ${formatTime12h(timeDate)}`;
+        ? t("bookings.startedAt", { time: formatTime12h(timeDate) })
+        : t("bookings.arrivedAt", { time: formatTime12h(timeDate) });
 
     const showHandledBy =
       booking.status === "in_progress" ||
@@ -255,11 +257,11 @@ export function BookingDetailScreen() {
       booking.requestedBarber.memberId !== booking.handledByBarber.memberId;
 
     const infoRows = [
-      { label: "Book No", value: `#${booking.referenceNumber}` },
+      { label: t("bookings.bookNo"), value: `#${booking.referenceNumber}` },
       ...(booking.requestedBarber
         ? [
             {
-              label: "Requested",
+              label: t("bookings.requested"),
               value: booking.requestedBarber.name,
               valueIconName: "cut",
             },
@@ -268,20 +270,20 @@ export function BookingDetailScreen() {
       ...(showHandledBy && booking.handledByBarber
         ? [
             {
-              label: "Handled By",
+              label: t("bookings.handledBy"),
               value: booking.handledByBarber.name,
               valueIconName: "cut",
             },
           ]
         : []),
       {
-        label: "Source",
+        label: t("bookings.source"),
         value:
           booking.source === "customer"
-            ? "Customer"
+            ? t("bookings.customer")
             : booking.createdByName
-              ? `Staff · ${booking.createdByName}`
-              : "Staff",
+              ? t("bookings.staffBy", { name: booking.createdByName })
+              : t("bookings.staff"),
       },
     ];
 
@@ -299,11 +301,11 @@ export function BookingDetailScreen() {
 
     const paymentSummary = [
       {
-        label: `Services (${booking.services.length})`,
+        label: `${t("bookings.services")} (${booking.services.length})`,
         value: formatPrice(totalOriginal),
       },
       ...(discount > 0
-        ? [{ label: "Discount", value: `-${formatPrice(discount)}` }]
+        ? [{ label: t("bookings.discount"), value: `-${formatPrice(discount)}` }]
         : []),
     ];
 
@@ -319,7 +321,7 @@ export function BookingDetailScreen() {
       if (booking.status === "waiting") {
         return (
           <StickyCta
-            label={isMismatchedBarber ? "Take Over" : "Handle this"}
+            label={isMismatchedBarber ? t("bookings.takeOver") : t("bookings.handleThis")}
             onPress={() =>
               setModalType(isMismatchedBarber ? "takeover" : "start")
             }
@@ -329,7 +331,7 @@ export function BookingDetailScreen() {
       if (booking.status === "in_progress") {
         return (
           <StickyCta
-            label="Complete"
+            label={t("bookings.complete")}
             onPress={() => setSwipeModalVisible(true)}
             color={Colors.status.success}
             textColor={Colors.text.primary}
@@ -346,7 +348,7 @@ export function BookingDetailScreen() {
           dateLabel={formatDateLabel(timeDate)}
           bookingType={booking.type}
           metaLine1={scheduledLabel}
-          metaLine2={`Duration ${formatDuration(totalDuration)}`}
+          metaLine2={t("bookings.duration", { duration: formatDuration(totalDuration) })}
           status={mapApiStatusToDetailStatus(booking.status)}
           infoRows={infoRows}
           services={services}
@@ -401,10 +403,10 @@ export function BookingDetailScreen() {
         <ConfirmationModal
           visible={modalType === "accept"}
           icon="checkmark-circle-outline"
-          title="Accept this booking?"
-          description="The customer will be notified and the booking will be moved to the queue."
-          confirmLabel={isAccepting ? "Accepting..." : "Accept"}
-          cancelLabel="Cancel"
+          title={t("bookings.confirmAccept")}
+          description={t("bookings.acceptDesc")}
+          confirmLabel={isAccepting ? t("bookings.accepting") : t("bookings.actionAccept")}
+          cancelLabel={t("common.cancel")}
           onConfirm={handleAccept}
           onCancel={() => setModalType(null)}
         />
@@ -417,40 +419,38 @@ export function BookingDetailScreen() {
         <ConfirmationModal
           visible={modalType === "start"}
           icon="cut"
-          title="Start this booking?"
-          description="This will mark the booking as In Progress. Please make sure you are ready to serve the customer before continuing."
-          confirmLabel="Yes"
-          cancelLabel="No, Not Yet"
+          title={t("bookings.confirmStart")}
+          description={t("bookings.startDesc")}
+          confirmLabel={t("common.yes")}
+          cancelLabel={t("bookings.noNotYet")}
           onConfirm={handleStart}
           onCancel={() => setModalType(null)}
         />
         <ConfirmationModal
           visible={modalType === "takeover"}
           icon="warning"
-          title="Take Over This Booking?"
-          description="The preferred barber differs. Do you want to take over this booking?"
-          confirmLabel="Yes, Take Over"
-          cancelLabel="No"
+          title={t("bookings.takeOverTitle")}
+          description={t("bookings.takeOverDesc")}
+          confirmLabel={t("bookings.takeOverConfirm")}
+          cancelLabel={t("common.no")}
           onConfirm={handleStart}
           onCancel={() => setModalType(null)}
         />
         <ConfirmationModal
           visible={modalType === "cancel"}
           icon="close-circle"
-          title="Cancel this booking?"
-          description="This action cannot be undone. The customer will be notified."
-          confirmLabel="Yes, Cancel"
-          cancelLabel="No"
+          title={t("bookings.confirmCancel")}
+          description={t("bookings.cancelDesc")}
+          confirmLabel={t("bookings.cancelConfirm")}
+          cancelLabel={t("common.no")}
           onConfirm={handleCancel}
           onCancel={() => setModalType(null)}
         />
         <SwipeConfirmationModal
           visible={swipeModalVisible}
-          title="Complete Booking?"
-          description={
-            "This action will finalize the booking and cannot be undone.\n\nPlease make sure the service and details are correct before continuing."
-          }
-          swipeLabel="Swipe to complete"
+          title={t("bookings.completeTitle")}
+          description={t("bookings.completeDesc")}
+          swipeLabel={t("bookings.swipeToComplete")}
           onComplete={handleComplete}
           onCancel={() => setSwipeModalVisible(false)}
         />

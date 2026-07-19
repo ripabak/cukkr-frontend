@@ -1,3 +1,4 @@
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
 import { formatTime12h } from "@/src/utils/date";
 import { Ionicons } from "@expo/vector-icons";
@@ -54,6 +55,7 @@ export function InProgressFloatingCard({
   customerName,
   startedAt,
 }: Props) {
+  const { t } = useI18nContext();
   const router = useRouter();
   const elapsed = useElapsedTime(startedAt);
   const pulseAnim = useRef(new Animated.Value(0)).current;
@@ -107,7 +109,7 @@ export function InProgressFloatingCard({
       <View style={styles.left}>
         <Animated.View style={[styles.dot, { opacity: dotOpacity }]} />
         <View style={styles.textGroup}>
-          <AppText style={styles.label}>In Progress</AppText>
+          <AppText style={styles.label}>{t("schedule.inProgressLabel")}</AppText>
           <AppText style={styles.name} numberOfLines={1}>
             {customerName}
           </AppText>
@@ -115,7 +117,7 @@ export function InProgressFloatingCard({
       </View>
 
       <View style={styles.right}>
-        <AppText style={styles.startTime}>{formatStartTime(startedAt)} → now</AppText>
+        <AppText style={styles.startTime}>{formatStartTime(startedAt)} {t("schedule.nowLabel")}</AppText>
         <View style={styles.elapsedRow}>
           <AppText style={styles.elapsed}>{elapsed}</AppText>
           <Ionicons

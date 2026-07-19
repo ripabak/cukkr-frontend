@@ -4,6 +4,7 @@ import { useToast } from "@/src/lib/providers";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   ActivityIndicator,
   Animated,
@@ -34,6 +35,7 @@ interface Props {
 }
 
 export function BarbershopSwitcherModal({ visible, onClose }: Props) {
+  const { t } = useI18nContext();
   const router = useRouter();
   const toast = useToast();
   const insets = useSafeAreaInsets();
@@ -112,7 +114,7 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
         },
         onError: (error) => {
           setIsSwitchingWorkspace(false);
-          toast.error("Failed to switch barbershop: " + error.message);
+          toast.error(t("toast.switchFailed") + ": " + error.message);
         },
       });
     }, 200);
@@ -134,8 +136,8 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
         <View style={styles.switchingOverlay}>
           <View style={[styles.switchingCard, { width: frameWidth * 0.72 }]}>
             <ActivityIndicator size="large" color={Colors.brand.primary} />
-            <AppText style={styles.switchingTitle}>Switching workspace</AppText>
-            <AppText style={styles.switchingSubText}>Please wait a moment...</AppText>
+            <AppText style={styles.switchingTitle}>{t("barbershop.switchingWorkspace")}</AppText>
+            <AppText style={styles.switchingSubText}>{t("barbershop.pleaseWait")}</AppText>
           </View>
         </View>
       </Modal>
@@ -182,7 +184,7 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
             />
             <AppTextInput
               style={styles.searchInput}
-              placeholder="Search barbershop..."
+              placeholder={t("barbershop.searchPlaceholder")}
               placeholderTextColor={Colors.text.muted}
               value={search}
               onChangeText={setSearch}
@@ -211,7 +213,7 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
                 style={styles.loader}
               />
             ) : filtered.length === 0 ? (
-              <AppText style={styles.emptyText}>No barbershop found</AppText>
+              <AppText style={styles.emptyText}>{t("barbershop.noBarbershopFound")}</AppText>
             ) : (
               filtered.map((shop) => {
                 const isActive =
@@ -249,7 +251,7 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
                       </AppText>
                       {!isActive && unreadCount > 0 && (
                         <AppText style={styles.unreadLabel}>
-                          {unreadCount} Notifications
+                          {t("barbershop.unreadCount", { count: String(unreadCount) })}
                         </AppText>
                       )}
                     </View>
@@ -275,8 +277,8 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
               <Ionicons name="add" size={20} color={Colors.text.secondary} />
             </View>
             <View>
-              <AppText style={styles.createLabel}>Add Barbershop</AppText>
-              <AppText style={styles.createSub}>Create a new workspace</AppText>
+              <AppText style={styles.createLabel}>{t("barbershop.addBarbershop")}</AppText>
+              <AppText style={styles.createSub}>{t("barbershop.createNewWorkspace")}</AppText>
             </View>
           </TouchableOpacity>
         </Animated.View>

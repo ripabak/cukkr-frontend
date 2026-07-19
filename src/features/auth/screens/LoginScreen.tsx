@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
 
 import { useToast } from "@/src/lib/providers";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { authTheme } from "../auth-theme";
 import { AuthButton } from "../components/AuthButton";
 import { AuthFooterPrompt } from "../components/AuthFooterPrompt";
@@ -13,6 +14,7 @@ import { useSignIn, useSendVerificationOtp } from "../hooks";
 import { getErrorMessage } from "../utils/error-handler";
 
 export function LoginScreen() {
+  const { t } = useI18nContext();
   const router = useRouter();
   const toast = useToast();
   const { redirect } = useLocalSearchParams<{ redirect?: string }>();
@@ -47,12 +49,12 @@ export function LoginScreen() {
 
   return (
     <AuthScreenShell
-      title="Login"
-      description="Enter your email and password to securely access your account and manage your services."
+      title={t("auth.login")}
+      description={t("auth.loginTitle")}
       footer={
         <AuthFooterPrompt
-          prompt="Don't have an account?"
-          actionLabel="Sign Up here"
+          prompt={t("auth.signUpInstead")}
+          actionLabel={t("auth.register")}
           onPress={() =>
             router.push({
               pathname: "/d/register",
@@ -65,25 +67,16 @@ export function LoginScreen() {
       <AuthTextField
         autoCapitalize="none"
         keyboardType="email-address"
-        label="Email*"
+        label={t("auth.email") + "*"}
         onChangeText={setIdentifier}
-        placeholder="Email"
+        placeholder={t("auth.email")}
         value={identifier}
       />
 
-      {/* <View style={styles.fontDemo}>
-        <Text style={styles.fontDemoInter}>
-          Inter - The quick brown fox jumps over the lazy dog
-        </Text>
-        <Text style={styles.fontDemoJakarta}>
-          Plus Jakarta Sans - The quick brown fox jumps over the lazy dog
-        </Text>
-      </View> */}
-
       <AuthTextField
-        label="Password"
+        label={t("auth.password")}
         onChangeText={setPassword}
-        placeholder="Password"
+        placeholder={t("auth.password")}
         secureTextEntry
         secureToggle
         value={password}
@@ -98,12 +91,12 @@ export function LoginScreen() {
             })
           }
         >
-          <AppText style={styles.forgotPasswordLink}>Forgot Password</AppText>
+          <AppText style={styles.forgotPasswordLink}>{t("auth.forgotPassword")}</AppText>
         </Pressable>
       </View>
 
       <AuthButton
-        label={isPending ? "Logging in..." : "Login"}
+        label={isPending ? t("common.saving") : t("auth.login")}
         onPress={handleLogin}
         disabled={isPending}
       />

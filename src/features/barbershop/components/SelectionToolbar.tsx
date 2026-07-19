@@ -1,3 +1,4 @@
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
 import React from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
@@ -20,6 +21,7 @@ export function SelectionToolbar({
   hasContact,
   onContactFilterPress,
 }: Props) {
+  const { t } = useI18nContext();
   const router = useRouter();
 
   return (
@@ -62,7 +64,7 @@ export function SelectionToolbar({
               hasContact === false && styles.selectTextDisabled,
             ]}
           >
-            {selectionMode ? "Cancel" : "Select"}
+            {selectionMode ? t("common.cancel") : t("common.select")}
           </AppText>
         </TouchableOpacity>
       </View>

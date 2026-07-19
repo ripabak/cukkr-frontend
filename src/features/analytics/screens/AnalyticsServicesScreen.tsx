@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   ActivityIndicator,
   StyleSheet,
@@ -26,6 +27,7 @@ const EMPTY_STAT = {
 
 export function AnalyticsServicesScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const { range: rangeParam } = useLocalSearchParams<{
     range?: AnalyticsRange;
   }>();
@@ -67,7 +69,7 @@ export function AnalyticsServicesScreen() {
               color={Colors.text.primary}
             />
           </TouchableOpacity>
-          <AppText style={styles.pageTitle}>Services</AppText>
+          <AppText style={styles.pageTitle}>{t("services.title")}</AppText>
           <View style={styles.topBarRight} />
         </View>
       }
@@ -82,8 +84,8 @@ export function AnalyticsServicesScreen() {
 
       {stats ? (
         <View style={styles.statsRow}>
-          <StatCard
-            label="Total Bookings"
+            <StatCard
+              label={t("home.totalBookings")}
             value={String(stats.totalBookings?.current ?? 0)}
             icon={
               <Ionicons
@@ -95,8 +97,8 @@ export function AnalyticsServicesScreen() {
             stat={stats.totalBookings ?? EMPTY_STAT}
             style={styles.statFlex}
           />
-          <StatCard
-            label="Total Revenue"
+            <StatCard
+              label={t("services.price")}
             value={formatRupiah(stats.totalRevenue?.current ?? 0)}
             icon={
               <Ionicons
@@ -113,7 +115,7 @@ export function AnalyticsServicesScreen() {
 
       {chart.length > 0 ? (
         <View style={styles.chartCard}>
-          <AppText style={styles.chartCardTitle}>Bookings by Service</AppText>
+          <AppText style={styles.chartCardTitle}>{t("services.title")}</AppText>
           <BarChart data={chart} chartHeight={130} maxBars={8} />
         </View>
       ) : null}
@@ -134,7 +136,7 @@ export function AnalyticsServicesScreen() {
           />
         ) : services.length === 0 ? (
           <AppText style={styles.emptyText}>
-            No services found for this period
+            {t("components.emptyState.defaultMessage")}
           </AppText>
         ) : (
           services.map((svc, i) => (

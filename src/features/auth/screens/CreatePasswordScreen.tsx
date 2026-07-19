@@ -2,6 +2,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 
 import { useToast } from "@/src/lib/providers";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { AuthButton } from "../components/AuthButton";
 import { AuthFooterPrompt } from "../components/AuthFooterPrompt";
 import { AuthScreenShell } from "../components/AuthScreenShell";
@@ -15,6 +16,7 @@ const MIN_PASSWORD_LENGTH = 8;
 export function CreatePasswordScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const { email, otp, redirect } = useLocalSearchParams<{
     email: string;
     otp: string;
@@ -26,30 +28,30 @@ export function CreatePasswordScreen() {
 
   const handleContinue = async () => {
     if (!password || !confirmPassword) {
-      toast.error("Please fill in all fields");
+      toast.error(t("common.error"));
       return;
     }
 
     const passwordResult = validatePassword(password, MIN_PASSWORD_LENGTH);
     if (!passwordResult.isValid) {
-      toast.error(passwordResult.message);
+      toast.error(t(passwordResult.message, passwordResult.params));
       return;
     }
 
     const matchResult = validatePasswordsMatch(password, confirmPassword);
     if (!matchResult.isValid) {
-      toast.error(matchResult.message);
+      toast.error(t(matchResult.message));
       return;
     }
 
     if (!email || !otp) {
-      toast.error("Missing email or OTP. Please try again.");
+      toast.error(t("common.error"));
       return;
     }
 
     try {
       await resetPassword({ email, otp, password });
-      toast.success("Password reset successfully");
+      toast.success(t("auth.passwordReset"));
       router.replace({
         pathname: "/d/login",
         params: redirect ? { redirect } : {},
@@ -64,12 +66,12 @@ export function CreatePasswordScreen() {
 
   return (
     <AuthScreenShell
-      title="Create New Password"
-      description="Enter a strong password to secure your account."
+      title={t("auth.createPasswordTitle")}
+      description={t("auth.createPasswordDescription")}
       footer={
         <AuthFooterPrompt
-          prompt="Remember your password?"
-          actionLabel="Sign In here"
+          prompt={t("auth.rememberPassword")}
+          actionLabel={t("auth.login")}
           onPress={() =>
             router.replace({
               pathname: "/d/login",
@@ -80,25 +82,25 @@ export function CreatePasswordScreen() {
       }
     >
       <AuthTextField
-        label="New Password"
+        label={t("auth.createPassword")}
         onChangeText={setPassword}
-        placeholder="At least 8 characters"
+        placeholder={t("auth.password")}
         secureTextEntry
         secureToggle
         value={password}
       />
 
       <AuthTextField
-        label="Confirm Password"
+        label={t("auth.confirmPassword")}
         onChangeText={setConfirmPassword}
-        placeholder="Confirm password"
+        placeholder={t("auth.confirmPassword")}
         secureTextEntry
         secureToggle
         value={confirmPassword}
       />
 
       <AuthButton
-        label={isPending ? "Resetting..." : "Reset Password"}
+        label={isPending ? t("common.saving") : t("auth.createPassword")}
         onPress={handleContinue}
         disabled={isPending || !isFormValid}
       />

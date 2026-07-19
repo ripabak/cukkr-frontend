@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useSignOut } from "@/src/features/auth/hooks";
 import {
   useAcceptInvitation,
@@ -28,6 +29,7 @@ interface Props {
 export function AcceptInvitationScreen({ invitationId }: Props) {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const { data: session, isPending: sessionLoading } = authClient.useSession();
 
   const {
@@ -48,11 +50,11 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
   const handleAccept = () => {
     accept(invitationId, {
       onSuccess: () => {
-        toast.success("You've joined the barbershop!");
+        toast.success(t("common.success"));
         router.replace("/");
       },
       onError: (e) => {
-        toast.error(e.message || "Failed to accept invitation");
+        toast.error(e.message || t("common.error"));
       },
     });
   };
@@ -60,11 +62,11 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
   const handleReject = () => {
     reject(invitationId, {
       onSuccess: () => {
-        toast.success("Invitation declined");
+        toast.success(t("common.success"));
         router.replace("/");
       },
       onError: (e) => {
-        toast.error(e.message || "Failed to decline invitation");
+        toast.error(e.message || t("common.error"));
       },
     });
   };
@@ -85,12 +87,12 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
         <View style={styles.iconWrapper}>
           <Ionicons name="mail-outline" size={56} color={Colors.text.primary} />
         </View>
-        <AppText style={styles.title}>You're Invited!</AppText>
+        <AppText style={styles.title}>{t("notifications.types.invitation")}</AppText>
         <AppText style={styles.subtitle}>
-          Log in to your account to view and accept this barbershop invitation.
+          {t("barbers.inviteViaEmail")}
         </AppText>
         <PrimaryButton
-          label="Log In to Continue"
+          label={t("auth.login")}
           onPress={() =>
             router.push({
               pathname: "/d/(auth)/login",
@@ -110,8 +112,8 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
           activeOpacity={0.7}
         >
           <AppText style={styles.registerLinkText}>
-            Don't have an account?{" "}
-            <AppText style={styles.registerLinkBold}>Register</AppText>
+            {t("auth.register")}{" "}
+            <AppText style={styles.registerLinkBold}>{t("auth.signUpInstead")}</AppText>
           </AppText>
         </TouchableOpacity>
       </ScreenShell>
@@ -123,7 +125,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
       <ScreenShell>
         <View style={styles.center}>
           <ActivityIndicator size="large" color={Colors.text.primary} />
-          <AppText style={styles.loadingText}>Loading invitation...</AppText>
+          <AppText style={styles.loadingText}>{t("common.loading")}</AppText>
         </View>
       </ScreenShell>
     );
@@ -145,12 +147,12 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
             color="#666666"
           />
           <AppText style={styles.errorTitle}>
-            {isEmailMismatchError ? "Wrong Account" : "Invitation Not Found"}
+            {isEmailMismatchError ? t("common.error") : t("common.noData")}
           </AppText>
           <AppText style={styles.errorSubtitle}>
             {isEmailMismatchError
-              ? "This invitation was sent to a different email address. Please sign in with the correct account to accept it."
-              : "This invitation may have expired, already been used, or is not intended for your account."}
+              ? t("createBarbershop.wrongEmailMessage")
+              : t("createBarbershop.expiredInviteMessage")}
           </AppText>
           {isEmailMismatchError ? (
             <TouchableOpacity
@@ -159,7 +161,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
               activeOpacity={0.7}
             >
               <AppText style={styles.backLinkText}>
-                Sign in with different account
+                {t("auth.login")}
               </AppText>
             </TouchableOpacity>
           ) : (
@@ -168,7 +170,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
               onPress={() => router.replace("/")}
               activeOpacity={0.7}
             >
-              <AppText style={styles.backLinkText}>Go to Home</AppText>
+              <AppText style={styles.backLinkText}>{t("home.viewSchedule")}</AppText>
             </TouchableOpacity>
           )}
         </View>
@@ -182,16 +184,16 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
         <Ionicons name="cut-outline" size={48} color={Colors.text.primary} />
       </View>
 
-      <AppText style={styles.title}>You're Invited!</AppText>
+      <AppText style={styles.title}>{t("notifications.types.invitation")}</AppText>
       <AppText style={styles.subtitle}>
-        You have been invited to join a barbershop team.
+        {t("barbers.inviteViaEmail")}
       </AppText>
 
       <View style={styles.card}>
         <View style={styles.cardRow}>
           <Ionicons name="storefront-outline" size={20} color="#666666" />
           <View style={styles.cardTextWrapper}>
-            <AppText style={styles.cardLabel}>Barbershop</AppText>
+            <AppText style={styles.cardLabel}>{t("barbershop.nameLabel")}</AppText>
             <AppText style={styles.cardValue}>{invitation.organizationName}</AppText>
           </View>
         </View>
@@ -201,7 +203,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
         <View style={styles.cardRow}>
           <Ionicons name="person-outline" size={20} color="#666666" />
           <View style={styles.cardTextWrapper}>
-            <AppText style={styles.cardLabel}>Invited by</AppText>
+            <AppText style={styles.cardLabel}>{t("barbers.inviteBarber")}</AppText>
             <AppText style={styles.cardValue}>{invitation.inviterEmail}</AppText>
           </View>
         </View>
@@ -211,7 +213,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
         <View style={styles.cardRow}>
           <Ionicons name="ribbon-outline" size={20} color="#666666" />
           <View style={styles.cardTextWrapper}>
-            <AppText style={styles.cardLabel}>Role</AppText>
+            <AppText style={styles.cardLabel}>{t("barbers.role")}</AppText>
             <AppText style={styles.cardValue}>
               {invitation.role.charAt(0).toUpperCase() +
                 invitation.role.slice(1)}
@@ -222,7 +224,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
 
       <View style={styles.actions}>
         <PrimaryButton
-          label={isAccepting ? "Accepting..." : "Accept Invitation"}
+          label={isAccepting ? t("common.saving") : t("bookings.actionAccept")}
           onPress={handleAccept}
           disabled={isPending}
         />
@@ -233,7 +235,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
           disabled={isPending}
         >
           <AppText style={styles.rejectLabel}>
-            {isRejecting ? "Declining..." : "Decline"}
+            {isRejecting ? t("common.saving") : t("common.cancel")}
           </AppText>
         </TouchableOpacity>
       </View>

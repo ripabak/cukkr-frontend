@@ -49,11 +49,15 @@ export function ChartCard({
   title,
   subtitle,
   subtitleColor = Colors.brand.primary,
-  xLabels = ["Jan", "Jun", "Dec"],
+  xLabels: xLabelsProp,
   yLabels = ["100K", "50K", "00"],
   style,
 }: Props) {
   const CHART_HEIGHT = 100;
+  const defaultXLabels = [0, 5, 11].map(
+    (m) => new Intl.DateTimeFormat(undefined, { month: "short" }).format(new Date(2024, m, 1)),
+  );
+  const xLabels = xLabelsProp ?? defaultXLabels;
 
   return (
     <View style={[styles.card, style]}>

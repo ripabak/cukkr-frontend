@@ -1,5 +1,6 @@
 import React from "react";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   Modal,
   View,
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export function IOSInstallModal({ visible, onClose }: Props) {
+  const { t } = useI18nContext();
   if (Platform.OS !== "web") return null;
 
   return (
@@ -31,7 +33,7 @@ export function IOSInstallModal({ visible, onClose }: Props) {
           <View style={styles.handle} />
 
           <View style={styles.header}>
-            <AppText style={styles.title}>Install Cukkr</AppText>
+            <AppText style={styles.title}>{t("components.pwaInstall.modalTitle")}</AppText>
             <TouchableOpacity
               onPress={onClose}
               style={styles.closeBtn}
@@ -42,7 +44,7 @@ export function IOSInstallModal({ visible, onClose }: Props) {
           </View>
 
           <AppText style={styles.subtitle}>
-            Add Cukkr to your home screen for faster access.
+            {t("components.pwaInstall.modalSubtitle")}
           </AppText>
 
           <View style={styles.step}>
@@ -54,10 +56,9 @@ export function IOSInstallModal({ visible, onClose }: Props) {
               />
             </View>
             <View style={styles.stepText}>
-              <AppText style={styles.stepTitle}>Tap the Share button</AppText>
+              <AppText style={styles.stepTitle}>{t("components.pwaInstall.step1Title")}</AppText>
               <AppText style={styles.stepDesc}>
-                At the bottom of Safari browser, tap the share icon (box with
-                arrow up).
+                {t("components.pwaInstall.step1Desc")}
               </AppText>
             </View>
           </View>
@@ -73,15 +74,15 @@ export function IOSInstallModal({ visible, onClose }: Props) {
               />
             </View>
             <View style={styles.stepText}>
-              <AppText style={styles.stepTitle}>Select "Add to Home Screen"</AppText>
+              <AppText style={styles.stepTitle}>{t("components.pwaInstall.step2Title")}</AppText>
               <AppText style={styles.stepDesc}>
-                Scroll down and tap "Add to Home Screen", then tap "Add".
+                {t("components.pwaInstall.step2Desc")}
               </AppText>
             </View>
           </View>
 
           <TouchableOpacity style={styles.doneBtn} onPress={onClose}>
-            <AppText style={styles.doneBtnText}>Got it</AppText>
+            <AppText style={styles.doneBtnText}>{t("components.pwaInstall.gotIt")}</AppText>
           </TouchableOpacity>
         </Pressable>
       </Pressable>

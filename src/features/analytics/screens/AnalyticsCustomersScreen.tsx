@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   ActivityIndicator,
   StyleSheet,
@@ -25,13 +26,15 @@ const EMPTY_STAT = {
   direction: "neutral" as const,
 };
 
-const STATUS_OPTIONS = [
-  { label: "All", value: "all" },
-  { label: "New", value: "new", color: Colors.status.success },
-  { label: "Return", value: "return", color: Colors.status.info },
-];
+function getStatusOptions(t: (key: string) => string) {
+  return [
+    { label: t("analytics.all"), value: "all" },
+    { label: t("analytics.newCustomer"), value: "new", color: Colors.status.success },
+    { label: t("analytics.returnCustomer"), value: "return", color: Colors.status.info },
+  ];
+}
 
-function CustomerStatusPill({ status }: { status: "new" | "return" }) {
+function CustomerStatusPill({ status, t }: { status: "new" | "return"; t: (key: string) => string }) {
   const isNew = status === "new";
   return (
     <View
@@ -46,7 +49,7 @@ function CustomerStatusPill({ status }: { status: "new" | "return" }) {
           isNew ? statusStyles.newText : statusStyles.returnText,
         ]}
       >
-        {isNew ? "New" : "Return"}
+        {isNew ? t("analytics.newCustomer") : t("analytics.returnCustomer")}
       </AppText>
     </View>
   );
@@ -63,6 +66,7 @@ const statusStyles = StyleSheet.create({
 
 export function AnalyticsCustomersScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const { range: rangeParam } = useLocalSearchParams<{
     range?: AnalyticsRange;
   }>();
@@ -122,7 +126,7 @@ export function AnalyticsCustomersScreen() {
           <View style={styles.menuOverlay}>
             <StatusFilterMenu
               visible
-              options={STATUS_OPTIONS}
+              options={getStatusOptions(t)}
               selected={statusFilter}
               onSelect={handleStatusChange}
               onClose={() => setStatusMenuVisible(false)}
@@ -140,7 +144,7 @@ export function AnalyticsCustomersScreen() {
         >
           <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
         </TouchableOpacity>
-        <AppText style={styles.pageTitle}>Customers</AppText>
+        <AppText style={styles.pageTitle}>{t("customers.title")}</AppText>
         <View style={styles.topBarRight} />
       </View>
 
@@ -157,7 +161,7 @@ export function AnalyticsCustomersScreen() {
           {/* Top row: total + split */}
           <View style={styles.statsRow}>
             <StatCard
-              label="Customers"
+              label={t("customers.title")}
               value={String(stats.totalCustomers?.current ?? 0)}
               icon={
                 <Ionicons
@@ -177,7 +181,7 @@ export function AnalyticsCustomersScreen() {
                     size={12}
                     color={Colors.text.secondary}
                   />
-                  <AppText style={styles.splitLabel}>Walk-in</AppText>
+                  <AppText style={styles.splitLabel}>{t("home.walkIn")}</AppText>
                 </View>
                 <AppText style={styles.splitValue}>
                   {stats.totalWalkIn?.current ?? 0}
@@ -190,7 +194,7 @@ export function AnalyticsCustomersScreen() {
                     size={12}
                     color={Colors.text.secondary}
                   />
-                  <AppText style={styles.splitLabel}>Appt</AppText>
+                  <AppText style={styles.splitLabel}>{t("home.appointment")}</AppText>
                 </View>
                 <AppText style={styles.splitValue}>
                   {stats.totalAppointment?.current ?? 0}
@@ -202,7 +206,7 @@ export function AnalyticsCustomersScreen() {
           {/* New / Return */}
           <View style={[styles.statsRow, { marginTop: 10 }]}>
             <StatCard
-              label="New Customers"
+              label={t("customers.title")}
               value={String(stats.totalNew?.current ?? 0)}
               icon={
                 <Ionicons
@@ -215,7 +219,7 @@ export function AnalyticsCustomersScreen() {
               style={styles.statFlex}
             />
             <StatCard
-              label="Returning"
+              label={t("customers.title")}
               value={String(stats.totalReturn?.current ?? 0)}
               icon={
                 <Ionicons
@@ -234,7 +238,7 @@ export function AnalyticsCustomersScreen() {
       {chart && chart.length > 0 ? (
         <View style={styles.chartCard}>
           <View style={styles.chartCardHeader}>
-            <AppText style={styles.chartCardTitle}>Customer Trend</AppText>
+            <AppText style={styles.chartCardTitle}>{t("customers.title")}</AppText>
             {stats ? (
               <TrendBadge
                 direction={stats.totalCustomers?.direction ?? "neutral"}
@@ -254,7 +258,7 @@ export function AnalyticsCustomersScreen() {
       <View style={styles.listSection}>
         <View style={styles.listHeader}>
           <AppText style={styles.sectionTitle}>
-            Customers{meta ? ` (${meta.totalItems})` : ""}
+            {t("customers.title")}{meta ? ` (${meta.totalItems})` : ""}
           </AppText>
           <TouchableOpacity
             ref={filterBtnRef}
@@ -263,8 +267,8 @@ export function AnalyticsCustomersScreen() {
             activeOpacity={0.8}
           >
             <AppText style={styles.filterPillText}>
-              {STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ??
-                "All"}
+              {getStatusOptions(t).find((o) => o.value === statusFilter)?.label ??
+                t("analytics.all")}
             </AppText>
             <Ionicons
               name="chevron-down"
@@ -281,7 +285,7 @@ export function AnalyticsCustomersScreen() {
             style={styles.listLoader}
           />
         ) : customers.length === 0 ? (
-          <AppText style={styles.emptyText}>No customers found</AppText>
+          <AppText style={styles.emptyText}>{t("components.emptyState.defaultMessage")}</AppText>
         ) : (
           customers.map((c) => (
             <TouchableOpacity
@@ -305,10 +309,10 @@ export function AnalyticsCustomersScreen() {
                   <AppText style={styles.customerName} numberOfLines={1}>
                     {c.customerName}
                   </AppText>
-                  <CustomerStatusPill status={c.status} />
+                  <CustomerStatusPill status={c.status} t={t} />
                 </View>
                 <AppText style={styles.customerMeta}>
-                  {c.totalVisits} visit{c.totalVisits !== 1 ? "s" : ""}
+                  {c.totalVisits} {t("customers.visit", { count: String(c.totalVisits) })}
                   {c.lastVisitDate ? ` · ${formatDate(c.lastVisitDate)}` : ""}
                 </AppText>
               </View>

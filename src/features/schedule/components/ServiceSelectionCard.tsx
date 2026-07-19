@@ -2,6 +2,7 @@ import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -32,10 +33,11 @@ export function ServiceSelectionCard({
   style,
   required,
 }: Props) {
+  const { t } = useI18nContext();
   return (
     <View style={[styles.wrapper, style]}>
       <AppText style={styles.sectionLabel}>
-        Service
+        {t("bookings.services")}
         {required ? <AppText style={styles.asterisk}> *</AppText> : null}
       </AppText>
       {services.length === 0 ? (
@@ -49,7 +51,7 @@ export function ServiceSelectionCard({
             size={18}
             color={Colors.icon.muted}
           />
-          <AppText style={styles.emptyText}>Select a service</AppText>
+          <AppText style={styles.emptyText}>{t("services.selectService")}</AppText>
         </TouchableOpacity>
       ) : (
         <>
@@ -64,7 +66,7 @@ export function ServiceSelectionCard({
               </View>
               {svc.isDefault ? (
                 <View style={styles.defaultBadge}>
-                  <AppText style={styles.defaultText}>Default</AppText>
+                  <AppText style={styles.defaultText}>{t("services.defaultService")}</AppText>
                 </View>
               ) : null}
             </View>
@@ -74,7 +76,7 @@ export function ServiceSelectionCard({
             activeOpacity={0.7}
             style={styles.changeRow}
           >
-            <AppText style={styles.changeText}>Change service</AppText>
+            <AppText style={styles.changeText}>{t("services.changeService")}</AppText>
           </TouchableOpacity>
         </>
       )}

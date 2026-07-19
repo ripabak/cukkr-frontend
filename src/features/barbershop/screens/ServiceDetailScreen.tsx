@@ -15,6 +15,7 @@ import {
   useSetServiceDefault,
   useToggleServiceActive,
 } from "@/src/features/barbershop/hooks";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -36,6 +37,7 @@ function formatPrice(amount: number): string {
 export function ServiceDetailScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const { role } = useMemberRole();
   const canManage = role === "owner" || role === "admin";
   const { serviceId = "" } = useLocalSearchParams<{ serviceId?: string }>();
@@ -52,18 +54,18 @@ export function ServiceDetailScreen() {
 
   const handleToggleActive = () => {
     toggleActive(serviceId, {
-      onError: (e) => toast.error(e.message || "Failed to toggle service"),
+      onError: (e) => toast.error(e.message || t("toast.unknownError")),
     });
   };
 
   const handleSetDefault = () => {
     setDefault(serviceId, {
       onSuccess: () => {
-        toast.success("Default service updated");
+        toast.success(t("toast.updateSuccess"));
         setShowSetDefaultModal(false);
       },
       onError: (e) => {
-        toast.error(e.message || "Failed to set default");
+        toast.error(e.message || t("toast.unknownError"));
         setShowSetDefaultModal(false);
       },
     });
@@ -72,11 +74,11 @@ export function ServiceDetailScreen() {
   const handleDelete = () => {
     deleteService(serviceId, {
       onSuccess: () => {
-        toast.success("Service deleted");
+        toast.success(t("toast.deleteSuccess"));
         router.back();
       },
       onError: (e) => {
-        toast.error(e.message || "Failed to delete service");
+        toast.error(e.message || t("toast.unknownError"));
         setShowDeleteModal(false);
       },
     });
@@ -131,9 +133,9 @@ export function ServiceDetailScreen() {
             </View>
           </View>
 
-          <AppText style={styles.sectionLabel}>General Information</AppText>
+          <AppText style={styles.sectionLabel}>{t("services.management")}</AppText>
           <View style={styles.card}>
-            <InfoRow label="Name" value={service?.name ?? "—"} />
+            <InfoRow label={t("services.serviceName")} value={service?.name ?? "—"} />
             <InfoRow
               label="Description"
               value={service?.description ?? "—"}
@@ -142,19 +144,19 @@ export function ServiceDetailScreen() {
           </View>
 
           <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
-            Pricing & Duration
+            {t("services.price")} & {t("services.duration")}
           </AppText>
           <View style={styles.card}>
             <InfoRow
-              label="Duration"
+              label={t("services.duration")}
               value={service ? `${service.duration} minutes` : "—"}
             />
             <InfoRow
-              label="Price"
+              label={t("services.price")}
               value={service ? formatPrice(service.price) : "—"}
             />
             <InfoRow
-              label="Discount"
+              label={t("services.discount")}
               value={service ? `${service.discount}%` : "—"}
               isLast
             />
@@ -162,25 +164,25 @@ export function ServiceDetailScreen() {
 
           <Permission roles={["owner", "admin"]}>
             <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
-              Operational Details
+              {t("services.active")}
             </AppText>
             <AppText style={styles.operationalSubtitle}>
-              Toggle activation and configure default service settings.
+              {t("services.toggleActive")}
             </AppText>
             <View style={styles.card}>
               <ToggleRow
-                label="Active"
+                label={t("services.active")}
                 value={service?.isActive ?? false}
                 onValueChange={handleToggleActive}
               />
               {service?.isDefault ? (
                 <View style={styles.defaultRow}>
-                  <AppText style={styles.defaultLabel}>Set As Default</AppText>
-                  <StatusBadge label="Default" variant="default" />
+                  <AppText style={styles.defaultLabel}>{t("services.setDefault")}</AppText>
+                  <StatusBadge label={t("services.defaultService")} variant="default" />
                 </View>
               ) : (
                 <OperationRow
-                  label="Set As Default"
+                  label={t("services.setDefault")}
                   onPress={() => setShowSetDefaultModal(true)}
                   isLast
                 />
@@ -195,7 +197,7 @@ export function ServiceDetailScreen() {
               visible
               items={[
                 {
-                  label: "Edit Service",
+                  label: t("services.editService"),
                   onPress: () => {
                     setOverflowVisible(false);
                     router.push({
@@ -205,7 +207,7 @@ export function ServiceDetailScreen() {
                   },
                 },
                 {
-                  label: "Delete this Service",
+                  label: t("common.delete"),
                   danger: true,
                   onPress: () => {
                     setOverflowVisible(false);
@@ -221,10 +223,10 @@ export function ServiceDetailScreen() {
         <ConfirmationModal
           visible={showSetDefaultModal}
           icon="checkmark-circle-outline"
-          title="Set as Default Service"
-          description="This service will become the default for your barbershop."
-          confirmLabel={isSettingDefault ? "Setting..." : "Set Default"}
-          cancelLabel="Cancel"
+          title={t("services.setDefault")}
+          description={t("services.defaultService")}
+          confirmLabel={isSettingDefault ? t("common.saving") : t("services.setDefault")}
+          cancelLabel={t("common.cancel")}
           onConfirm={handleSetDefault}
           onCancel={() => setShowSetDefaultModal(false)}
         />
@@ -232,10 +234,10 @@ export function ServiceDetailScreen() {
         <ConfirmationModal
           visible={showDeleteModal}
           icon="trash-outline"
-          title="Delete Service"
-          description={`Delete "${service?.name}"? This cannot be undone.`}
-          confirmLabel={isDeleting ? "Deleting..." : "Delete"}
-          cancelLabel="Cancel"
+          title={t("common.delete")}
+          description={t("services.deleteConfirm")}
+          confirmLabel={isDeleting ? t("common.saving") : t("common.delete")}
+          cancelLabel={t("common.cancel")}
           onConfirm={handleDelete}
           onCancel={() => setShowDeleteModal(false)}
         />

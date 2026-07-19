@@ -5,6 +5,7 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { SecondaryButton } from "@/src/components/SecondaryButton";
 import { TextInputField } from "@/src/components/TextInputField";
 import { WizardProgress } from "@/src/features/workspace/components/WizardProgress";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -15,6 +16,7 @@ import { validateBarbershopName } from "../utils/form-validators";
 
 export function CreateBarbershopNameLogoScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const { formData, updateFormData } = useCreateBarbershopForm();
   const [name, setName] = useState(formData.name || "");
   const { data: session } = authClient.useSession();
@@ -43,19 +45,19 @@ export function CreateBarbershopNameLogoScreen() {
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
       <WizardProgress totalSteps={2} currentStep={0} style={styles.wizard} />
-      <AppText style={styles.title}>Create Barbershop</AppText>
-      <AppText style={styles.subtitle}>Set up your own barbershop</AppText>
+      <AppText style={styles.title}>{t("createBarbershop.title")}</AppText>
+      <AppText style={styles.subtitle}>{t("createBarbershop.subtitle")}</AppText>
 
       <TextInputField
-        label="Barbershop Name"
-        placeholder="Barbershop name"
+        label={t("createBarbershop.nameLabel")}
+        placeholder={t("createBarbershop.namePlaceholder")}
         value={name}
         onChangeText={handleNameChange}
       />
 
-      <AppText style={styles.logoLabel}>Logo</AppText>
+      <AppText style={styles.logoLabel}>{t("barbershop.logoUpload")}</AppText>
       <ImageUploadBox
-        label="Choose Image"
+        label={t("createBarbershop.chooseImage")}
         style={styles.imageUpload}
         onPress={() => {
           console.log("TODO: Open image picker");
@@ -66,13 +68,13 @@ export function CreateBarbershopNameLogoScreen() {
       {hasActiveOrg ? (
         <View style={styles.buttonRow}>
           <SecondaryButton
-            label="Cancel"
+            label={t("common.cancel")}
             onPress={handleCancel}
             color={Colors.status.danger}
             style={styles.cancelButton}
           />
           <PrimaryButton
-            label="Next"
+            label={t("common.next")}
             style={styles.nextButton}
             onPress={handleCreate}
             disabled={!isValid}
@@ -80,7 +82,7 @@ export function CreateBarbershopNameLogoScreen() {
         </View>
       ) : (
         <PrimaryButton
-          label="Next"
+          label={t("common.next")}
           style={styles.button}
           onPress={handleCreate}
           disabled={!isValid}

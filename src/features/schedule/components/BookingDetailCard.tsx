@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { BookingType } from "@/src/components/BookingCard";
 import { InfoRow } from "@/src/components/InfoRow";
 import { StatusBadge } from "@/src/components/StatusBadge";
@@ -58,13 +59,13 @@ const STATUS_TO_BADGE: Record<BookingDetailStatus, string> = {
   declined: "declined",
 };
 
-const STATUS_LABEL: Record<BookingDetailStatus, string> = {
-  waiting: "Waiting",
-  in_progress: "In Progress",
-  completed: "Completed",
-  cancelled: "Cancelled",
-  requested: "Requested",
-  declined: "Declined",
+const STATUS_I18N_KEY: Record<BookingDetailStatus, string> = {
+  waiting: "schedule.status.waiting",
+  in_progress: "schedule.status.inProgress",
+  completed: "schedule.status.completed",
+  cancelled: "schedule.status.cancelled",
+  requested: "schedule.status.requested",
+  declined: "schedule.status.declined",
 };
 
 export function BookingDetailCard({
@@ -83,6 +84,7 @@ export function BookingDetailCard({
   children,
   onCustomerPress,
 }: Props) {
+  const { t } = useI18nContext();
   const resolvedMetaIcon = bookingType
     ? bookingType === "walk_in"
       ? "walk"
@@ -130,7 +132,7 @@ export function BookingDetailCard({
             </View>
           </View>
           <StatusBadge
-            label={STATUS_LABEL[status]}
+            label={t(STATUS_I18N_KEY[status])}
             variant={STATUS_TO_BADGE[status] as any}
             style={styles.badge}
           />
@@ -155,7 +157,7 @@ export function BookingDetailCard({
       {/* Services */}
       {services.length > 0 ? (
         <View style={styles.section}>
-          <AppText style={styles.sectionTitle}>Services</AppText>
+          <AppText style={styles.sectionTitle}>{t("bookings.services")}</AppText>
           {services.map((s, i) => (
             <View key={i} style={styles.serviceLine}>
               <AppText style={styles.serviceLabel}>{s.name}</AppText>
@@ -165,7 +167,7 @@ export function BookingDetailCard({
           {notes ? (
             <>
               <View style={styles.divider} />
-              <AppText style={styles.sectionTitle}>Notes</AppText>
+              <AppText style={styles.sectionTitle}>{t("bookings.notes")}</AppText>
               <AppText style={styles.notes}>{notes}</AppText>
             </>
           ) : null}
@@ -175,7 +177,7 @@ export function BookingDetailCard({
       {/* Payment Summary */}
       {paymentSummary.length > 0 ? (
         <View style={styles.section}>
-          <AppText style={styles.sectionTitle}>Payment Summary</AppText>
+          <AppText style={styles.sectionTitle}>{t("bookings.paymentSummary")}</AppText>
           {paymentSummary.map((line, i) => (
             <View key={i} style={styles.paymentLine}>
               <AppText style={styles.paymentLabel}>{line.label}</AppText>

@@ -1,3 +1,4 @@
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
@@ -58,6 +59,7 @@ export function NotificationCard({
   onPress,
   style,
 }: Props) {
+  const { t } = useI18nContext();
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -88,14 +90,14 @@ export function NotificationCard({
             {detail ? <AppText style={styles.detail}>{detail}</AppText> : null}
             {status === "accepted" ? (
               <StatusBadge
-                label="Accepted"
+                label={t("notifications.actions.accepted")}
                 variant="active"
                 style={styles.declinedBadge}
               />
             ) : null}
             {status === "declined" ? (
               <StatusBadge
-                label="Declined"
+                label={t("notifications.actions.declined")}
                 variant="declined"
                 style={styles.declinedBadge}
               />

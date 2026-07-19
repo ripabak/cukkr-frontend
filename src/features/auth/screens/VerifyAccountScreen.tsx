@@ -4,6 +4,7 @@ import { StyleSheet, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
 
 import { useToast } from "@/src/lib/providers";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { authTheme } from "../auth-theme";
 import { AuthButton } from "../components/AuthButton";
 import { AuthScreenShell } from "../components/AuthScreenShell";
@@ -14,6 +15,7 @@ import { getErrorMessage } from "../utils/error-handler";
 export function VerifyAccountScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const { email, redirect } = useLocalSearchParams<{
     email: string;
     redirect?: string;
@@ -39,7 +41,7 @@ export function VerifyAccountScreen() {
     try {
       await sendOtp({ email, type: "email-verification" });
       countdown.reset();
-      toast.success("OTP sent successfully");
+      toast.success(t("auth.otpSent"));
     } catch (error) {
       toast.error(getErrorMessage(error));
     }
@@ -47,8 +49,8 @@ export function VerifyAccountScreen() {
 
   return (
     <AuthScreenShell
-      title="Verify Your Account"
-      description={`Enter your OTP sent to ${email || "your email"} to verify your identity and continue securely.`}
+      title={t("auth.verifyAccount")}
+      description={t("auth.verifyAccountDescription", { email: email || t("auth.email") })}
     >
       <OtpCodeInput onChange={setOtp} value={otp} length={4} />
 
@@ -57,13 +59,13 @@ export function VerifyAccountScreen() {
       </View>
 
       <AuthButton
-        label={resending ? "Sending..." : "Send Again"}
+        label={resending ? t("common.saving") : t("auth.resendOtp")}
         variant="secondary"
         onPress={handleResend}
         disabled={resending || verifying || countdown.isActive}
       />
       <AuthButton
-        label={verifying ? "Verifying..." : "Verify"}
+        label={verifying ? t("common.saving") : t("auth.verifyOtp")}
         onPress={handleVerify}
         disabled={verifying || resending || otp.length < 4}
       />

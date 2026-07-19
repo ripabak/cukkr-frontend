@@ -1,3 +1,4 @@
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
@@ -17,12 +18,15 @@ interface Props {
 }
 
 export function DualActionFooter({
-  declineLabel = "Decline",
-  acceptLabel = "Accept",
+  declineLabel,
+  acceptLabel,
   onDecline,
   onAccept,
   style,
 }: Props) {
+  const { t } = useI18nContext();
+  const resolvedDecline = declineLabel ?? t("bookings.actionDecline");
+  const resolvedAccept = acceptLabel ?? t("bookings.actionAccept");
   return (
     <View style={[styles.footer, style]}>
       <TouchableOpacity
@@ -30,14 +34,14 @@ export function DualActionFooter({
         activeOpacity={0.8}
         style={[styles.btn, styles.declineBtn]}
       >
-        <AppText style={styles.declineLabel}>{declineLabel}</AppText>
+        <AppText style={styles.declineLabel}>{resolvedDecline}</AppText>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={onAccept}
         activeOpacity={0.8}
         style={[styles.btn, styles.acceptBtn]}
       >
-        <AppText style={styles.acceptLabel}>{acceptLabel}</AppText>
+        <AppText style={styles.acceptLabel}>{resolvedAccept}</AppText>
       </TouchableOpacity>
     </View>
   );

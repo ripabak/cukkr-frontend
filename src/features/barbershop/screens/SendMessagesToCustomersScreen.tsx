@@ -2,6 +2,7 @@ import { Colors } from "@/src/theme/colors";
 import { HelperCopy } from "@/src/components/HelperCopy";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { MessageComposer } from "@/src/features/barbershop/components/MessageComposer";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -12,6 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export function SendMessagesToCustomersScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const params = useLocalSearchParams<{
     count?: string;
     recipientName?: string;
@@ -22,18 +24,18 @@ export function SendMessagesToCustomersScreen() {
   const [message, setMessage] = useState("");
 
   const title = recipientName
-    ? `Send Message to ${recipientName}`
-    : `Send Messages (${count})`;
+    ? t("customers.sendMessageTo", { name: recipientName })
+    : t("customers.sendMessages", { count: String(count) });
 
   const selectionMode = !recipientName;
   const bgColor = selectionMode ? Colors.brand.primary : Colors.bg.default;
 
   const handleSend = () => {
     if (!message.trim()) {
-      toast.error("Please write a message first");
+      toast.error(t("common.error"));
       return;
     }
-    toast.info("Messaging feature coming soon");
+    toast.info(t("customers.msgComingSoon"));
   };
 
   const canSend = message.trim().length > 0;
@@ -69,14 +71,14 @@ export function SendMessagesToCustomersScreen() {
           <MessageComposer
             value={message}
             onChangeText={setMessage}
-            placeholder="Messages to selected customers"
+            placeholder={t("customers.searchPlaceholder")}
           />
           <HelperCopy
             lines={[
-              "Send messages or announcements to your customers.",
-              "Keep them informed about promotions, new services, or important updates.",
+              t("customers.msgHelper1"),
+              t("customers.msgHelper2"),
               "",
-              "It will send the message through registered email or mobile phone.",
+              t("customers.msgHelper3"),
             ]}
             style={styles.helper}
           />

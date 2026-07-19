@@ -12,12 +12,12 @@ export async function validateSlug(slug: string): Promise<{
   message: string;
 }> {
   if (slug.length < 3) {
-    return { isValid: false, message: "Slug must be at least 3 characters" };
+    return { isValid: false, message: "createBarbershop.validation.slugMinLength" };
   }
   if (!/^[a-z0-9-]+$/.test(slug)) {
     return {
       isValid: false,
-      message: "Slug can only contain letters, numbers and hyphens",
+      message: "createBarbershop.validation.slugInvalid",
     };
   }
   return { isValid: true, message: "" };

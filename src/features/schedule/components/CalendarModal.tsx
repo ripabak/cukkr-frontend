@@ -1,3 +1,4 @@
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
@@ -21,7 +22,6 @@ interface Props {
   onClose: () => void;
 }
 
-const DAY_LABELS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 const MONTH_NAMES = [
   "January",
   "February",
@@ -55,9 +55,25 @@ export function CalendarModal({
   onSelect,
   onClose,
 }: Props) {
+  const { t, language } = useI18nContext();
   const { frameWidth } = useFrame();
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
+
+  const locale = language === 'id' ? 'id-ID' : 'en-US';
+
+  const DAY_LABELS = React.useMemo(() =>
+    Array.from({ length: 7 }, (_, i) =>
+      new Intl.DateTimeFormat(locale, { weekday: 'short' })
+        .format(new Date(2024, 0, i + 1))
+        .toUpperCase(),
+    ),
+  [locale]);
+
+  const localizedMonths = React.useMemo(() =>
+    Array.from({ length: 12 }, (_, i) =>
+      new Intl.DateTimeFormat(locale, { month: 'long' }).format(new Date(2024, i, 1)),
+    ),
+  [locale]);
 
   const [viewYear, setViewYear] = useState(
     selectedDate?.getFullYear() ?? today.getFullYear(),
@@ -163,7 +179,7 @@ export function CalendarModal({
               />
             </TouchableOpacity>
             <AppText style={styles.monthTitle}>
-              {MONTH_NAMES[viewMonth]} {viewYear}
+              {localizedMonths[viewMonth]} {viewYear}
             </AppText>
             <TouchableOpacity
               onPress={nextMonth}
@@ -255,7 +271,7 @@ export function CalendarModal({
               {hasOpenHours && closedDaySet.size > 0 && (
                 <>
                   <View style={styles.legendDot} />
-                  <AppText style={styles.legendText}>Closed Day</AppText>
+                  <AppText style={styles.legendText}>{t("calendar.closedDay")}</AppText>
                 </>
               )}
               {highlightDates?.size ? (
@@ -268,13 +284,13 @@ export function CalendarModal({
                         : styles.legendDotFirst,
                     ]}
                   />
-                  <AppText style={styles.legendText}>Has Requests</AppText>
+                  <AppText style={styles.legendText}>{t("calendar.hasRequests")}</AppText>
                 </>
               ) : null}
               {waitingDates?.size ? (
                 <>
                   <View style={styles.legendWaitingDot} />
-                  <AppText style={styles.legendText}>Has Waiting</AppText>
+                  <AppText style={styles.legendText}>{t("calendar.hasWaiting")}</AppText>
                 </>
               ) : null}
             </View>

@@ -20,6 +20,7 @@ import { pwaNotificationService } from "@/src/services/pwa-notification.service"
 import { mapApiStatusToBookingStatus } from "@/src/features/schedule/utils/booking-formatters";
 import { useAuthUser, useMemberRole } from "@/src/hooks";
 import { authClient } from "@/src/lib/auth-client";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
 import { formatTime12h, parseTime24, toApiDate } from "@/src/utils/date";
@@ -44,31 +45,27 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const TOP_BAR_HEIGHT = 52;
 
-function getGreeting() {
-  const hour = new Date().getHours();
-  if (hour < 12) return "Good Morning,";
-  if (hour < 18) return "Good Afternoon,";
-  return "Good Evening,";
-}
-
-const STAT_CONFIG: {
+function getStatConfig(t: (key: string) => string): {
   key: string;
   label: string;
   icon: React.ComponentProps<typeof Ionicons>["name"];
-}[] = [
-  {
-    key: "walkIn",
-    label: "Walk-In",
-    icon: "walk",
-  },
-  {
-    key: "appointment",
-    label: "Appoint.",
-    icon: "calendar",
-  },
-];
+}[] {
+  return [
+    {
+      key: "walkIn",
+      label: t("home.walkInShort"),
+      icon: "walk",
+    },
+    {
+      key: "appointment",
+      label: t("home.appointShort"),
+      icon: "calendar",
+    },
+  ];
+}
 
 export function HomeDashboardScreen() {
+  const { t } = useI18nContext();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const today = toApiDate(new Date());
@@ -217,8 +214,8 @@ export function HomeDashboardScreen() {
   const handleShareLink = async () => {
     if (!bookingUrl) return;
     const shareData = {
-      title: "Walk-in Check-In",
-      text: "Check in at our barbershop",
+      title: t("home.walkinCheckinTitle"),
+      text: t("home.walkinCheckinText"),
       url: bookingUrl,
     };
     try {
@@ -226,11 +223,11 @@ export function HomeDashboardScreen() {
         await navigator.share(shareData);
       } else {
         await Clipboard.setStringAsync(bookingUrl);
-        toast.success("Link copied to clipboard");
+        toast.success(t("home.linkCopied"));
       }
     } catch (err) {
       if (err instanceof Error && err.name === "AbortError") return;
-      toast.error("Failed to share link");
+      toast.error(t("home.shareLinkFailed"));
     }
   };
 
@@ -274,8 +271,7 @@ export function HomeDashboardScreen() {
           {/* Greeting + Today&apos;s Hours */}
           <View style={styles.greetingSection}>
             <View style={styles.greetingLeft}>
-              <AppText style={styles.greetingSmall}>{getGreeting()}</AppText>
-              <AppText style={styles.greetingName}>{user?.name ?? "..."}</AppText>
+              <AppText style={styles.greetingName}>{t("home.greeting", { name: user?.name ?? "..." })}</AppText>
               {role ? (
                 <View style={styles.rolePillContainer}>
                   <AppText style={styles.rolePill}>{role}</AppText>
@@ -288,7 +284,7 @@ export function HomeDashboardScreen() {
               onPress={() => router.push("/d/open-hours")}
               style={styles.openHoursCard}
             >
-              <AppText style={styles.openHoursTitle}>Today&apos;s Hours</AppText>
+              <AppText style={styles.openHoursTitle}>{t("home.todayHours")}</AppText>
               <View style={styles.openHoursStatusRow}>
                 <View
                   style={[
@@ -301,7 +297,7 @@ export function HomeDashboardScreen() {
                   ]}
                 />
                 <AppText style={styles.openHoursStatus}>
-                  {isCurrentlyOpen ? "Open" : "Closed"}
+                  {isCurrentlyOpen ? t("barbershop.open") : t("barbershop.closed")}
                 </AppText>
               </View>
               <AppText style={styles.openHoursRange}>
@@ -315,7 +311,7 @@ export function HomeDashboardScreen() {
           {/* Quick Actions */}
           <View style={styles.quickActionsRow}>
             <ShortcutTile
-              label="New Book"
+              label={t("home.newBooking")}
               variant="small"
               icon={
                 <Ionicons
@@ -327,7 +323,7 @@ export function HomeDashboardScreen() {
               onPress={() => setNewBookVisible(true)}
             />
             <ShortcutTile
-              label="Barbers"
+              label={t("barbers.title")}
               variant="small"
               icon={
                 <Ionicons
@@ -339,7 +335,7 @@ export function HomeDashboardScreen() {
               onPress={() => router.push("/d/barbers-management")}
             />
             <ShortcutTile
-              label="Customers"
+              label={t("customers.title")}
               variant="small"
               icon={
                 <Ionicons
@@ -351,7 +347,7 @@ export function HomeDashboardScreen() {
               onPress={() => router.push("/d/customer-management")}
             />
             <ShortcutTile
-              label="Services"
+              label={t("services.title")}
               variant="small"
               icon={
                 <Ionicons
@@ -367,7 +363,7 @@ export function HomeDashboardScreen() {
           {/* Walk-In Check-In */}
           <View style={styles.walkInCard}>
             <View style={styles.walkInHeader}>
-              <AppText style={styles.walkInLabel}>WALK-IN CHECK-IN</AppText>
+              <AppText style={styles.walkInLabel}>{t("home.walkinCheckin")}</AppText>
               <View style={styles.walkInActions}>
                 <TouchableOpacity
                   onPress={handleGeneratePin}
@@ -432,20 +428,20 @@ export function HomeDashboardScreen() {
                 color={Colors.text.primary}
               />
               <AppText style={styles.walkInShareText}>
-                Share Walk-in Link
+                {t("home.shareWalkinLink")}
               </AppText>
             </TouchableOpacity>
           </View>
 
           {/* Today&apos;s Queue */}
           <View style={styles.sectionRow}>
-            <AppText style={styles.sectionTitle}>Today&apos;s Live</AppText>
+            <AppText style={styles.sectionTitle}>{t("home.todayOverview")}</AppText>
             <TouchableOpacity onPress={() => router.push("/d/schedule")}>
-              <AppText style={styles.seeAll}>See All</AppText>
+              <AppText style={styles.seeAll}>{t("common.all")}</AppText>
             </TouchableOpacity>
           </View>
           <View style={styles.queueGrid}>
-            {STAT_CONFIG.map((s) => (
+            {getStatConfig(t).map((s) => (
               <QueueStatCard
                 key={s.key}
                 label={s.label}
@@ -458,9 +454,9 @@ export function HomeDashboardScreen() {
 
           {/* Up Next */}
           <View style={styles.sectionRow}>
-            <AppText style={styles.sectionTitle}>Up Next</AppText>
+            <AppText style={styles.sectionTitle}>{t("home.upNext")}</AppText>
             <TouchableOpacity onPress={() => router.push("/d/schedule")}>
-              <AppText style={styles.seeAll}>See All</AppText>
+              <AppText style={styles.seeAll}>{t("home.seeAll")}</AppText>
             </TouchableOpacity>
           </View>
           {waitingBookings.length > 0 ? (
@@ -486,7 +482,7 @@ export function HomeDashboardScreen() {
               );
             })
           ) : (
-            <AppText style={styles.emptyText}>No active bookings today</AppText>
+            <AppText style={styles.emptyText}>{t("home.noBookingsToday")}</AppText>
           )}
         </View>
       </Animated.ScrollView>
@@ -557,7 +553,7 @@ export function HomeDashboardScreen() {
                 const msg =
                   err instanceof Error
                     ? err.message
-                    : "Failed to set up notifications";
+                    : t("home.notifSetupFailed");
                 toast.error(msg);
                 setTimeout(() => router.push("/d/notifications-list"), 1500);
               }
@@ -600,10 +596,10 @@ export function HomeDashboardScreen() {
       <ConfirmationModal
         visible={notifConsentVisible}
         icon="notifications"
-        title="Stay Updated"
-        description="Get notified about new booking requests and walk-in arrivals in real time."
-        cancelLabel="Enable"
-        confirmLabel="Not Now"
+        title={t("home.stayUpdated")}
+        description={t("home.notifConsentDesc")}
+        cancelLabel={t("home.enable")}
+        confirmLabel={t("home.notNow")}
         onCancel={() => {
           setNotifConsentVisible(false);
           // Defer until after the modal overlay is fully removed from DOM,
@@ -627,9 +623,8 @@ export function HomeDashboardScreen() {
               const msg =
                 err instanceof Error
                   ? err.message
-                  : "Failed to set up notifications";
+                  : t("home.notifSetupFailed");
               toast.error(msg);
-              // Delay navigation so the toast is visible before screen change
               setTimeout(() => router.push("/d/notifications-list"), 1500);
             }
           }, 300);

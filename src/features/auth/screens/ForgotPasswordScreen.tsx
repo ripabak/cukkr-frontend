@@ -5,6 +5,7 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useToast } from "@/src/lib/providers";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
 import { AuthButton } from "../components/AuthButton";
 import { AuthScreenShell } from "../components/AuthScreenShell";
@@ -16,6 +17,7 @@ import { validateEmail } from "../utils/validation";
 export function ForgotPasswordScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const insets = useSafeAreaInsets();
   const { redirect } = useLocalSearchParams<{ redirect?: string }>();
   const [email, setEmail] = useState("");
@@ -23,13 +25,13 @@ export function ForgotPasswordScreen() {
 
   const handleContinue = async () => {
     if (!email.trim()) {
-      toast.error("Please enter your email address");
+      toast.error(t("auth.emailRequired"));
       return;
     }
 
     const emailResult = validateEmail(email);
     if (!emailResult.isValid) {
-      toast.error(emailResult.message);
+      toast.error(t(emailResult.message));
       return;
     }
 
@@ -53,20 +55,20 @@ export function ForgotPasswordScreen() {
         <Ionicons name="chevron-back" size={24} color={Colors.text.primary} />
       </TouchableOpacity>
       <AuthScreenShell
-        title="Forgot Password"
-        description="Enter your email address to receive a code to reset your password and regain access to your account."
+        title={t("auth.forgotPasswordTitle")}
+        description={t("auth.forgotPasswordDescription")}
       >
         <AuthTextField
           autoCapitalize="none"
           keyboardType="email-address"
-          label="Email Address*"
+          label={t("auth.email")}
           onChangeText={setEmail}
-          placeholder="Email address*"
+          placeholder={t("auth.email")}
           value={email}
         />
 
         <AuthButton
-          label={isPending ? "Sending..." : "Continue"}
+          label={isPending ? t("common.saving") : t("common.next")}
           onPress={handleContinue}
           disabled={isPending || !email.trim()}
         />

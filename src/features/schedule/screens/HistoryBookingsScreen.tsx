@@ -2,7 +2,7 @@ import { Colors } from "@/src/theme/colors";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SortMenu } from "@/src/components/SortMenu";
 import {
-  HISTORY_STATUS_OPTIONS,
+  getHistoryStatusOptions,
   StatusFilterMenu,
 } from "@/src/components/StatusFilterMenu";
 import { CalendarModal } from "@/src/features/schedule/components/CalendarModal";
@@ -15,12 +15,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { AppText } from "@/src/components/AppText";
 
-const SORT_OPTIONS = [
-  { label: "Sort by Recently Added", value: "recently_added" },
-  { label: "Sort by Oldest First", value: "oldest_first" },
-];
+function getSortOptions(t: (key: string) => string) {
+  return [
+    { label: t("schedule.history.sortByRecentlyAdded"), value: "recently_added" },
+    { label: t("schedule.history.sortByOldestFirst"), value: "oldest_first" },
+  ];
+}
 
 function formatDatePill(date: Date): string {
   const monthShort = [
@@ -42,6 +45,7 @@ function formatDatePill(date: Date): string {
 
 export function HistoryBookingsScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState(today);
   const [calendarVisible, setCalendarVisible] = useState(false);
@@ -135,7 +139,7 @@ export function HistoryBookingsScreen() {
             <View style={styles.menuOverlay}>
               <StatusFilterMenu
                 visible
-                options={HISTORY_STATUS_OPTIONS}
+                options={getHistoryStatusOptions(t)}
                 selected={statusFilter}
                 onSelect={setStatusFilter}
                 onClose={() => setStatusMenuVisible(false)}
@@ -147,7 +151,7 @@ export function HistoryBookingsScreen() {
             <View style={styles.menuOverlay}>
               <SortMenu
                 visible
-                options={SORT_OPTIONS}
+                options={getSortOptions(t)}
                 selected={sortValue}
                 onSelect={setSortValue}
                 onClose={() => setSortMenuVisible(false)}
@@ -160,7 +164,7 @@ export function HistoryBookingsScreen() {
     >
       <View style={styles.sectionHeader}>
         <AppText style={styles.title}>
-          All Booking <AppText style={styles.titleCount}>({bookings.length})</AppText>
+          {t("schedule.history.allBooking")} <AppText style={styles.titleCount}>({bookings.length})</AppText>
         </AppText>
         <TouchableOpacity
           ref={statusBtnRef}
@@ -169,8 +173,8 @@ export function HistoryBookingsScreen() {
           style={styles.filterPill}
         >
           <AppText style={styles.filterLabel}>
-            {HISTORY_STATUS_OPTIONS.find((o) => o.value === statusFilter)
-              ?.label ?? "All"}
+            {getHistoryStatusOptions(t).find((o) => o.value === statusFilter)
+              ?.label ?? t("common.all")}
           </AppText>
           <Ionicons name="chevron-down" size={14} color={Colors.text.primary} />
         </TouchableOpacity>
@@ -195,7 +199,7 @@ export function HistoryBookingsScreen() {
           />
         ))}
         {!isLoading && bookings.length === 0 ? (
-          <AppText style={styles.emptyText}>No bookings for this date.</AppText>
+          <AppText style={styles.emptyText}>{t("schedule.noBookings")}</AppText>
         ) : null}
       </View>
 

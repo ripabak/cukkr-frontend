@@ -5,6 +5,7 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { SecondaryButton } from "@/src/components/SecondaryButton";
 import { TextInputField } from "@/src/components/TextInputField";
 import { WizardProgress } from "@/src/features/workspace/components/WizardProgress";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useInviteBarber } from "../hooks";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
 import { validateEmail } from "../utils/form-validators";
@@ -15,6 +16,7 @@ import { AppText } from "@/src/components/AppText";
 
 export function CreateBarbershopInviteBarberEmptyScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const { formData, updateFormData } = useCreateBarbershopForm();
   const [barber, setBarber] = useState("");
   const { mutate: inviteBarber, isPending: isInviting } = useInviteBarber();
@@ -39,8 +41,8 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
     const parsed = parseBarberInput(barber);
     if (!parsed) {
       Alert.alert(
-        "Invalid Input",
-        "Please enter a valid email address",
+        t("common.error"),
+        t("common.error"),
       );
       return;
     }
@@ -51,7 +53,7 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
     );
 
     if (isDuplicate) {
-      Alert.alert("Duplicate", "This barber is already in the invite list");
+      Alert.alert(t("createBarbershop.duplicateTitle"), t("createBarbershop.duplicateMessage"));
       return;
     }
 
@@ -68,7 +70,7 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
           }
         },
         onError: (error) => {
-          Alert.alert("Error", error.message || "Failed to invite barber");
+          Alert.alert(t("common.error"), error.message || t("common.error"));
         },
       },
     );
@@ -82,17 +84,17 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
       <WizardProgress totalSteps={2} currentStep={1} style={styles.wizard} />
-      <AppText style={styles.title}>Invite Barber</AppText>
-      <AppText style={styles.subtitle}>Inviting barber to your barbershop</AppText>
+      <AppText style={styles.title}>{t("barbers.inviteBarber")}</AppText>
+      <AppText style={styles.subtitle}>{t("barbers.inviteViaEmail")}</AppText>
       <TextInputField
-        label="Add Barber"
-        placeholder="email"
+        label={t("barbers.addBarber")}
+        placeholder={t("auth.email")}
         value={barber}
         onChangeText={setBarber}
         keyboardType="email-address"
       />
       <SecondaryButton
-        label="Invite"
+        label={t("barbers.inviteBarber")}
         style={styles.inviteBtn}
         onPress={handleAddBarber}
       />
@@ -100,7 +102,7 @@ export function CreateBarbershopInviteBarberEmptyScreen() {
       <View style={styles.buttonRow}>
         <BackButton onPress={() => router.back()} />
         <View style={styles.primaryButtonWrapper}>
-          <PrimaryButton label="Continue" onPress={handleSkip} />
+          <PrimaryButton label={t("common.next")} onPress={handleSkip} />
         </View>
       </View>
     </ScreenShell>

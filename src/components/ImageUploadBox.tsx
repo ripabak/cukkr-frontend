@@ -2,6 +2,7 @@ import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   TouchableOpacity,
   View,
@@ -18,6 +19,7 @@ interface Props {
 }
 
 export function ImageUploadBox({ onPress, imageUri, label, style }: Props) {
+  const { t } = useI18nContext();
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -29,7 +31,7 @@ export function ImageUploadBox({ onPress, imageUri, label, style }: Props) {
       ) : (
         <View style={styles.row}>
           <Ionicons name="image-outline" size={20} color={Colors.icon.muted} />
-          <AppText style={styles.label}>{label ?? "Choose Image"}</AppText>
+          <AppText style={styles.label}>{label ?? t("createBarbershop.chooseImage")}</AppText>
         </View>
       )}
     </TouchableOpacity>

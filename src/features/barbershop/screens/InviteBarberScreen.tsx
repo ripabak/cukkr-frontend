@@ -7,6 +7,7 @@ import { TextInputField } from "@/src/components/TextInputField";
 import { useInviteBarber } from "@/src/features/barbershop/hooks";
 import { validateEmail } from "@/src/features/barbershop/utils/form-validators";
 import { useMemberRole } from "@/src/hooks";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -17,6 +18,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export function InviteBarberScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const { role } = useMemberRole();
   const canInvite = role === "owner" || role === "admin";
   const [contact, setContact] = useState("");
@@ -32,11 +34,11 @@ export function InviteBarberScreen() {
 
     invite(email, {
       onSuccess: () => {
-        toast.success("Invitation sent");
+        toast.success(t("toast.inviteSent"));
         router.back();
       },
       onError: (e) => {
-        toast.error(e.message || "Failed to send invitation");
+        toast.error(e.message || t("toast.unknownError"));
       },
     });
   };
@@ -45,7 +47,7 @@ export function InviteBarberScreen() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <ScreenHeader
-          title="Invite Barber"
+          title={t("barbers.inviteBarber")}
           onBack={() => router.back()}
           rightAction={
             canInvite ? (
@@ -60,8 +62,8 @@ export function InviteBarberScreen() {
 
         <View style={styles.content}>
           <TextInputField
-            label="Email"
-            placeholder="Enter barber email address"
+            label={t("auth.email")}
+            placeholder={t("barbers.inviteViaEmail")}
             value={contact}
             onChangeText={setContact}
             keyboardType="email-address"
@@ -69,13 +71,13 @@ export function InviteBarberScreen() {
           />
           <HelperCopy
             lines={[
-              "Enter the email address of the barber you want to invite.",
-              "They will receive an invitation to join your barbershop.",
+              t("barbers.inviteHelper1"),
+              t("barbers.inviteHelper2"),
             ]}
           />
           {!canInvite && (
             <View style={styles.viewOnlyBanner}>
-              <AppText style={styles.viewOnlyText}>Only the barbershop owner or admin can invite barbers</AppText>
+              <AppText style={styles.viewOnlyText}>{t("common.noPermission")}</AppText>
             </View>
           )}
         </View>

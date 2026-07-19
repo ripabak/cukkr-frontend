@@ -8,10 +8,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { AppText } from "@/src/components/AppText";
 
 export function SelectBarberScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const { setBarber } = useNewBookingForm();
   const [query, setQuery] = useState("");
 
@@ -32,14 +34,14 @@ export function SelectBarberScreen() {
     <ScreenShell
       hideAppHeader
       headerSlot={
-        <ScreenHeader title="Select Barber" onBack={() => router.back()} />
+        <ScreenHeader title={t("schedule.selectBarber")} onBack={() => router.back()} />
       }
       contentStyle={styles.content}
     >
-      <SearchInput value={query} onChangeText={setQuery} placeholder="Search" />
+      <SearchInput value={query} onChangeText={setQuery} placeholder={t("common.search")} />
 
       {!isLoading && filtered.length === 0 ? (
-        <AppText style={styles.emptyText}>No barbers found.</AppText>
+        <AppText style={styles.emptyText}>{t("barbers.noBarbers")}</AppText>
       ) : (
         <View style={styles.list}>
           {filtered.map((item) => (

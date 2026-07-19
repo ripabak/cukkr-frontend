@@ -1,3 +1,4 @@
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useMemberRole } from "@/src/hooks";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -18,20 +19,22 @@ interface Props {
   style?: ViewStyle;
 }
 
-const TABS: {
-  key: Tab;
-  label: string;
-  icon: React.ComponentProps<typeof Ionicons>["name"];
-}[] = [
-  { key: "home", label: "Home", icon: "home" },
-  { key: "schedule", label: "Schedule", icon: "calendar" },
-  { key: "stats", label: "Stats", icon: "bar-chart" },
-  { key: "barbershop", label: "Barbershop", icon: "storefront" },
-];
-
 export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
+  const { t } = useI18nContext();
   const insets = useSafeAreaInsets();
   const { role } = useMemberRole();
+
+  const TABS: {
+    key: Tab;
+    label: string;
+    icon: React.ComponentProps<typeof Ionicons>["name"];
+  }[] = [
+    { key: "home", label: t("tabs.home"), icon: "home" },
+    { key: "schedule", label: t("tabs.schedule"), icon: "calendar" },
+    { key: "stats", label: t("tabs.analytics"), icon: "bar-chart" },
+    { key: "barbershop", label: t("tabs.settings"), icon: "storefront" },
+  ];
+
   const visibleTabs = role === "member" ? TABS.filter((t) => t.key !== "stats") : TABS;
   return (
     <View

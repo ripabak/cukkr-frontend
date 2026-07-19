@@ -4,6 +4,7 @@ import { MultilineInputField } from "@/src/components/MultilineInputField";
 import { TextInputField } from "@/src/components/TextInputField";
 import { useChangePassword } from "@/src/features/auth/hooks";
 import { useToast } from "@/src/lib/providers/toast";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useGlobalSearchParams, useRouter } from "expo-router";
@@ -27,6 +28,7 @@ export function EditUserProfileFieldsScreen() {
   const router = useRouter();
   const toast = useToast();
   const insets = useSafeAreaInsets();
+  const { t } = useI18nContext();
   const rawMode = useGlobalSearchParams().mode;
   const modeStr = Array.isArray(rawMode) ? rawMode[0] : rawMode;
   const mode: EditMode = (modeStr as EditMode) ?? "name";
@@ -67,7 +69,7 @@ export function EditUserProfileFieldsScreen() {
 
     try {
       await updateProfile({ name: name.trim(), bio: bio.trim() || null });
-      toast.success("Profile updated successfully");
+      toast.success(t("common.saveSuccess"));
       router.back();
     } catch (error) {
       toast.error(getErrorMessage(error));
@@ -85,7 +87,7 @@ export function EditUserProfileFieldsScreen() {
 
     try {
       await changePassword({ currentPassword, newPassword });
-      toast.success("Password changed successfully");
+      toast.success(t("common.saveSuccess"));
       router.back();
     } catch (error) {
       toast.error(getErrorMessage(error));
@@ -116,7 +118,7 @@ export function EditUserProfileFieldsScreen() {
         ]}
       >
         <EditFieldHeader
-          title="Change Password"
+          title={t("profile.changePassword")}
           onBack={() => router.back()}
           onSave={handleChangePassword}
         />
@@ -125,7 +127,7 @@ export function EditUserProfileFieldsScreen() {
           keyboardShouldPersistTaps="handled"
         >
           <View>
-            <AppText style={styles.fieldLabel}>Current Password</AppText>
+            <AppText style={styles.fieldLabel}>{t("profile.currentPassword")}</AppText>
             <View style={styles.passwordInputRow}>
               <TextInputField
                 value={currentPassword}
@@ -133,7 +135,7 @@ export function EditUserProfileFieldsScreen() {
                   setCurrentPassword(text);
                   setCurrentPwError("");
                 }}
-                placeholder="Current Password"
+                placeholder={t("profile.currentPassword")}
                 secureTextEntry={!showCurrentPw}
                 inputStyle={{ paddingRight: 40 }}
               />
@@ -153,7 +155,7 @@ export function EditUserProfileFieldsScreen() {
             ) : null}
           </View>
           <View>
-            <AppText style={styles.fieldLabel}>New Password</AppText>
+            <AppText style={styles.fieldLabel}>{t("profile.newPassword")}</AppText>
             <View style={styles.passwordInputRow}>
               <TextInputField
                 value={newPassword}
@@ -161,7 +163,7 @@ export function EditUserProfileFieldsScreen() {
                   setNewPassword(text);
                   setNewPwError("");
                 }}
-                placeholder="New Password"
+                placeholder={t("profile.newPassword")}
                 secureTextEntry={!showNewPw}
                 inputStyle={{ paddingRight: 40 }}
               />
@@ -184,10 +186,10 @@ export function EditUserProfileFieldsScreen() {
             style={styles.forgotRow}
             onPress={() => router.push("/d/forgot-password")}
           >
-            <AppText style={styles.forgotText}>Forgot Password</AppText>
+            <AppText style={styles.forgotText}>{t("auth.forgotPassword")}</AppText>
           </TouchableOpacity>
           <HelperCopy
-            lines={["Enter your current password, then set your new password."]}
+            lines={[t("profile.passwordHelper")]}
           />
         </ScrollView>
         {changingPassword && (
@@ -207,7 +209,7 @@ export function EditUserProfileFieldsScreen() {
       ]}
     >
       <EditFieldHeader
-        title={mode === "bio" ? "Bio" : "Your Name"}
+        title={mode === "bio" ? t("profile.bio") : t("profile.yourName")}
         onBack={() => router.back()}
         onSave={handleSaveNameBio}
       />
@@ -223,7 +225,7 @@ export function EditUserProfileFieldsScreen() {
                 setBio(text);
                 setBioError("");
               }}
-              placeholder="Bio"
+              placeholder={t("profile.bioPlaceholder")}
             />
             {bioError ? <AppText style={styles.errorText}>{bioError}</AppText> : null}
           </>
@@ -235,7 +237,7 @@ export function EditUserProfileFieldsScreen() {
                 setName(text);
                 setNameError("");
               }}
-              placeholder="Your Name"
+              placeholder={t("profile.namePlaceholder")}
             />
             {nameError ? (
               <AppText style={styles.errorText}>{nameError}</AppText>
@@ -245,8 +247,8 @@ export function EditUserProfileFieldsScreen() {
         <HelperCopy
           lines={[
             mode === "bio"
-              ? "Tell customers and colleagues a little about yourself."
-              : "Enter your name, it will be shown in detail of barber & list of barber in barbershop booking website",
+              ? t("profile.bioHelper1")
+              : t("profile.nameHelper1"),
           ]}
         />
       </ScrollView>

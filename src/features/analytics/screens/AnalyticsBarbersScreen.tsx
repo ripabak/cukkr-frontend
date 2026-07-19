@@ -5,6 +5,7 @@ import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   ActivityIndicator,
   StyleSheet,
@@ -19,6 +20,7 @@ import { RangePicker } from "../components/RangePicker";
 
 export function AnalyticsBarbersScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const { range: rangeParam } = useLocalSearchParams<{
     range?: AnalyticsRange;
   }>();
@@ -54,7 +56,7 @@ export function AnalyticsBarbersScreen() {
               color={Colors.text.primary}
             />
           </TouchableOpacity>
-          <AppText style={styles.pageTitle}>Barbers</AppText>
+          <AppText style={styles.pageTitle}>{t("barbers.title")}</AppText>
           <View style={styles.topBarRight} />
         </View>
       }
@@ -70,7 +72,7 @@ export function AnalyticsBarbersScreen() {
       {/* Revenue by barber chart */}
       {chartPoints.length > 0 ? (
         <View style={styles.chartCard}>
-          <AppText style={styles.chartCardTitle}>Revenue by Barber</AppText>
+          <AppText style={styles.chartCardTitle}>{t("services.price")}</AppText>
           <View style={styles.chartWrap}>
             <BarChart data={chartPoints} chartHeight={130} />
           </View>
@@ -82,7 +84,7 @@ export function AnalyticsBarbersScreen() {
         <View style={styles.listSection}>
           <View style={styles.listHeader}>
             <AppText style={styles.sectionTitle}>
-              All Barbers ({barbers.length})
+              {t("barbers.title")} ({barbers.length})
             </AppText>
             {totalRevenue > 0 ? (
               <AppText style={styles.totalLabel}>
@@ -120,8 +122,7 @@ export function AnalyticsBarbersScreen() {
                       {barber.name}
                     </AppText>
                     <AppText style={styles.barberMeta}>
-                      {barber.totalCustomers} customer
-                      {barber.totalCustomers !== 1 ? "s" : ""}
+                      {t("barbers.customersCount", { count: String(barber.totalCustomers) })}
                     </AppText>
                   </View>
                 </View>
@@ -139,7 +140,7 @@ export function AnalyticsBarbersScreen() {
 
           {/* Progress bars by revenue share */}
           <View style={styles.shareSection}>
-            <AppText style={styles.shareSectionTitle}>Revenue Share</AppText>
+            <AppText style={styles.shareSectionTitle}>{t("services.price")}</AppText>
             {barbers.map((barber) => {
               const share =
                 totalRevenue > 0
@@ -165,7 +166,7 @@ export function AnalyticsBarbersScreen() {
           </View>
         </View>
       ) : !chartLoading && !listLoading ? (
-        <AppText style={styles.emptyText}>No barber data for this period</AppText>
+          <AppText style={styles.emptyText}>{t("components.emptyState.defaultMessage")}</AppText>
       ) : null}
     </ScreenShell>
   );

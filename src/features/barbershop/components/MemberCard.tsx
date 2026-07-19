@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   View,
   TouchableOpacity,
@@ -37,6 +38,7 @@ export function MemberCard({
   onRoleChange,
   style,
 }: Props) {
+  const { t } = useI18nContext();
   const useCompactLayout = roleChangeable !== undefined;
 
   const roleElement = role ? (
@@ -69,7 +71,7 @@ export function MemberCard({
           >
             {name}
           </AppText>
-          {isYou ? <AppText style={styles.you}>(You)</AppText> : null}
+          {isYou ? <AppText style={styles.you}>{t("components.memberCard.youLabel")}</AppText> : null}
         </View>
         {roleElement}
       </View>

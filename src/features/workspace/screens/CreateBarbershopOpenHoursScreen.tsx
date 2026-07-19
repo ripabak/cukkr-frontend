@@ -4,6 +4,7 @@ import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { WizardProgress } from "@/src/features/workspace/components/WizardProgress";
 import { useToast } from "@/src/lib/providers";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   DAY_LABELS,
   DEFAULT_CLOSE,
@@ -37,6 +38,7 @@ const DEFAULT_DAYS: DayConfig[] = [1, 2, 3, 4, 5, 6, 0].map((day) => ({
 export function CreateBarbershopOpenHoursScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const [days, setDays] = useState<DayConfig[]>(DEFAULT_DAYS);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -69,9 +71,9 @@ export function CreateBarbershopOpenHoursScreen() {
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
       <WizardProgress totalSteps={2} currentStep={0} style={styles.wizard} />
-      <AppText style={styles.title}>Set Open Hours</AppText>
+      <AppText style={styles.title}>{t("barbershop.openHours")}</AppText>
       <AppText style={styles.subtitle}>
-        Set your barbershop operating hours for each day
+        {t("createBarbershop.openHoursSubtitle")}
       </AppText>
 
       <View style={styles.card}>
@@ -93,7 +95,7 @@ export function CreateBarbershopOpenHoursScreen() {
 
       <View style={styles.flex} />
       <PrimaryButton
-        label={isSaving ? "Saving..." : "Save & Continue"}
+        label={isSaving ? t("common.saving") : t("common.save")}
         onPress={handleSave}
         disabled={isSaving}
         style={styles.button}

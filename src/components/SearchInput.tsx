@@ -1,3 +1,4 @@
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
@@ -14,16 +15,18 @@ interface Props {
 export function SearchInput({
   value,
   onChangeText,
-  placeholder = "Search",
+  placeholder,
   style,
 }: Props) {
+  const { t } = useI18nContext();
+  const resolvedPlaceholder = placeholder ?? t("common.search");
   return (
     <View style={[styles.container, style]}>
       <Ionicons name="search" size={18} color={Colors.icon.muted} />
       <AppTextInput
         value={value}
         onChangeText={onChangeText}
-        placeholder={placeholder}
+        placeholder={resolvedPlaceholder}
         placeholderTextColor={Colors.text.muted}
         style={styles.input}
       />

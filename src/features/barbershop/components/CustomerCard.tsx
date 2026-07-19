@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   View,
   TouchableOpacity,
@@ -30,6 +31,7 @@ export function CustomerCard({
   onPress,
   style,
 }: Props) {
+  const { t } = useI18nContext();
   const selectable = !selectionMode || hasContact;
 
   return (
@@ -55,8 +57,8 @@ export function CustomerCard({
           {name}
         </AppText>
         <AppText style={styles.meta}>
-          Total Book <AppText style={styles.metaBold}>{totalBook}</AppText>
-          {"  ·  "}Book Value{" "}
+          {t("customers.totalBook")} <AppText style={styles.metaBold}>{totalBook}</AppText>
+          {"  ·  "}{t("customers.bookValue")}{" "}
           <AppText style={styles.metaBold}>{bookValue}</AppText>
         </AppText>
       </View>

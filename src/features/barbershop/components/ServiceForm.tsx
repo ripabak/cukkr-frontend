@@ -1,3 +1,4 @@
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
@@ -46,6 +47,7 @@ export function ServiceForm({
   showDiscount = false,
   style,
 }: Props) {
+  const { t } = useI18nContext();
   return (
     <View style={[styles.container, style]}>
       <ImageUploadBox
@@ -55,16 +57,16 @@ export function ServiceForm({
       />
 
       <TextInputField
-        label="Name"
-        placeholder="Service Name"
+        label={t("services.serviceName")}
+        placeholder={t("services.namePlaceholder")}
         value={name}
         onChangeText={onNameChange}
         style={styles.field}
       />
 
       <MultilineInputField
-        label="Description (Optional)"
-        placeholder="Service Description"
+        label={t("services.descriptionLabel")}
+        placeholder={t("services.descriptionPlaceholder")}
         value={description}
         onChangeText={onDescriptionChange}
         style={styles.field}
@@ -77,8 +79,8 @@ export function ServiceForm({
       />
 
       <LabeledInput
-        label="Duration (in minutes)"
-        placeholder="0"
+        label={t("services.duration")}
+        placeholder={t("services.durationPlaceholder")}
         value={duration}
         onChangeText={onDurationChange}
         keyboardType="numeric"
@@ -87,7 +89,7 @@ export function ServiceForm({
 
       <View style={styles.card}>
         <ToggleRow
-          label="Active"
+          label={t("services.active")}
           value={isActive}
           onValueChange={onActiveChange}
           isLast
@@ -96,7 +98,7 @@ export function ServiceForm({
 
       {showDiscount && onDiscountChange ? (
         <LabeledInput
-          label="Discount (%)"
+          label={t("services.discount")}
           placeholder="0"
           value={discount ?? ""}
           onChangeText={onDiscountChange}

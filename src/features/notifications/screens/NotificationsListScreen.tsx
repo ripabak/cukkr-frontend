@@ -7,6 +7,7 @@ import {
 } from "@/src/features/notifications/components/NotificationCard";
 import { pwaNotificationService } from "@/src/services/pwa-notification.service";
 import { Colors } from "@/src/theme/colors";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { formatRelativeTime } from "@/src/utils/date";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -31,6 +32,7 @@ type NotifItem = NonNullable<
 
 export function NotificationsListScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const { data, isLoading, isError } = useNotificationsList();
   const acceptMutation = useAcceptNotification();
   const declineMutation = useDeclineNotification();
@@ -82,7 +84,7 @@ export function NotificationsListScreen() {
     >
       {!isLoading && isError ? (
         <View style={styles.centered}>
-          <AppText style={styles.errorText}>Failed to load notifications</AppText>
+          <AppText style={styles.errorText}>{t("common.loadFailed")}</AppText>
         </View>
       ) : null}
 
@@ -93,8 +95,8 @@ export function NotificationsListScreen() {
             size={48}
             color={Colors.icon.muted}
           />
-          <AppText style={styles.emptyTitle}>No Notifications</AppText>
-          <AppText style={styles.emptySubtitle}>You're all caught up!</AppText>
+          <AppText style={styles.emptyTitle}>{t("notifications.empty")}</AppText>
+          <AppText style={styles.emptySubtitle}>{t("components.emptyState.defaultMessage")}</AppText>
         </View>
       ) : null}
 
@@ -154,8 +156,8 @@ export function NotificationsListScreen() {
         icon="person-add"
         title={invitationModal?.title ?? ""}
         description={invitationModal?.body}
-        cancelLabel="Accept"
-        confirmLabel="Decline"
+        cancelLabel={t("bookings.actionAccept")}
+        confirmLabel={t("bookings.actionDecline")}
         onCancel={handleAcceptInvitation}
         onConfirm={handleDeclineInvitation}
       />

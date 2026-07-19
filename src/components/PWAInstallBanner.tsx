@@ -1,5 +1,6 @@
 import React from "react";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   View,
   TouchableOpacity,
@@ -13,6 +14,7 @@ import { usePWAInstall } from "@/src/hooks/usePWAInstall";
 import { IOSInstallModal } from "./IOSInstallModal";
 
 export function PWAInstallBanner() {
+  const { t } = useI18nContext();
   const {
     showBanner,
     isIOS,
@@ -46,7 +48,7 @@ export function PWAInstallBanner() {
           </View>
           <View style={styles.textWrap}>
             <AppText style={styles.appName}>Cukkr</AppText>
-            <AppText style={styles.desc}>Install now for quick access</AppText>
+            <AppText style={styles.desc}>{t("components.pwaInstall.installDesc")}</AppText>
           </View>
         </View>
         <View style={styles.right}>
@@ -55,7 +57,7 @@ export function PWAInstallBanner() {
             onPress={handleInstall}
             activeOpacity={0.8}
           >
-            <AppText style={styles.installBtnText}>Install</AppText>
+            <AppText style={styles.installBtnText}>{t("components.pwaInstall.install")}</AppText>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={dismiss}

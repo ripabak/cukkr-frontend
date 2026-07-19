@@ -1,7 +1,9 @@
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { InfoRow } from "@/src/components/InfoRow";
+import { LanguageSwitcher } from "@/src/components/LanguageSwitcher";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useSignOut } from "@/src/features/auth/hooks";
 import { LogoutRow } from "@/src/features/profile/components/LogoutRow";
 import { ProfileSummaryCard } from "@/src/features/profile/components/ProfileSummaryCard";
@@ -21,6 +23,7 @@ import { useProfile } from "../hooks";
 import { getErrorMessage } from "../utils/error-handler";
 
 export function UserProfileScreen() {
+  const { t } = useI18nContext();
   const router = useRouter();
   const toast = useToast();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -52,7 +55,7 @@ export function UserProfileScreen() {
   if (error || !profile) {
     return (
       <ScreenShell backgroundColor={Colors.bg.default}>
-        <AppText style={styles.errorText}>Failed to load profile</AppText>
+        <AppText style={styles.errorText}>{t("profile.loadFailed")}</AppText>
       </ScreenShell>
     );
   }
@@ -61,7 +64,7 @@ export function UserProfileScreen() {
     <ScreenShell
       hideAppHeader
       headerSlot={
-        <ScreenHeader title="User Profile" onBack={() => router.back()} />
+        <ScreenHeader title={t("profile.title")} onBack={() => router.back()} />
       }
       backgroundColor={Colors.bg.default}
       contentStyle={{ paddingTop: 20, gap: 12 }}
@@ -88,10 +91,10 @@ export function UserProfileScreen() {
         </TouchableOpacity>
       </View>
 
-      <AppText style={styles.sectionLabel}>General Information</AppText>
+      <AppText style={styles.sectionLabel}>{t("profile.generalInfo")}</AppText>
       <ProfileSummaryCard style={styles.card}>
         <InfoRow
-          label="Your Name"
+          label={t("profile.yourName")}
           value={profile.name}
           onPress={() =>
             router.push({
@@ -101,8 +104,8 @@ export function UserProfileScreen() {
           }
         />
         <InfoRow
-          label="Bio"
-          value={profile.bio || "Add a bio"}
+          label={t("profile.bio")}
+          value={profile.bio || t("profile.addBio")}
           isLast
           onPress={() =>
             router.push({
@@ -113,11 +116,11 @@ export function UserProfileScreen() {
         />
       </ProfileSummaryCard>
 
-      <AppText style={styles.sectionLabel}>Account</AppText>
+      <AppText style={styles.sectionLabel}>{t("profile.account")}</AppText>
       <ProfileSummaryCard style={styles.card}>
-        <InfoRow label="Email" value={profile.email} />
+        <InfoRow label={t("profile.email")} value={profile.email} />
         <InfoRow
-          label="Change Password"
+          label={t("profile.changePassword")}
           showChevron
           onPress={() =>
             router.push({
@@ -129,14 +132,19 @@ export function UserProfileScreen() {
         />
       </ProfileSummaryCard>
 
-      <AppText style={styles.sectionLabel}>Logout</AppText>
+      <AppText style={styles.sectionLabel}>{t("profile.language")}</AppText>
+      <ProfileSummaryCard style={styles.card}>
+        <LanguageSwitcher />
+      </ProfileSummaryCard>
+
+      <AppText style={styles.sectionLabel}>{t("profile.logout")}</AppText>
       <LogoutRow onPress={() => setShowLogoutConfirm(true)} />
       <ConfirmationModal
         visible={showLogoutConfirm}
-        title="Confirm Log out?"
-        description="You will be signed out of your account."
-        confirmLabel={signingOut ? "Logging out..." : "Log Out"}
-        cancelLabel="Cancel"
+        title={t("profile.confirmLogout")}
+        description={t("profile.confirmLogoutDesc")}
+        confirmLabel={signingOut ? t("profile.loggingOut") : t("profile.logout")}
+        cancelLabel={t("common.cancel")}
         onConfirm={handleLogout}
         onCancel={() => setShowLogoutConfirm(false)}
       />

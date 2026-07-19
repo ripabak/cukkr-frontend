@@ -13,6 +13,7 @@ import {
 } from "@/src/features/barbershop/hooks";
 import { useToast } from "@/src/lib/providers";
 import { Ionicons } from "@expo/vector-icons";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
@@ -36,6 +37,7 @@ const SORT_OPTIONS = [
 export function ServicesManagementScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const { role } = useMemberRole();
   const canManage = role === "owner" || role === "admin";
   const [search, setSearch] = useState("");
@@ -50,7 +52,7 @@ export function ServicesManagementScreen() {
 
   const handleToggle = (id: string) => {
     toggleActive(id, {
-      onError: (e) => toast.error(e.message || "Failed to toggle service"),
+      onError: (e) => toast.error(e.message || t("toast.unknownError")),
     });
   };
 
@@ -97,8 +99,8 @@ export function ServicesManagementScreen() {
         ) : null
       }
     >
-      <AppText style={styles.title}>Services Management</AppText>
-      <AppText style={styles.subtitle}>Manage your barbershop services</AppText>
+      <AppText style={styles.title}>{t("services.management")}</AppText>
+      <AppText style={styles.subtitle}>{t("services.management")}</AppText>
 
       <SearchInput
         value={search}
@@ -109,8 +111,8 @@ export function ServicesManagementScreen() {
       {!isLoading && services.length === 0 ? (
         <AppText style={styles.empty}>
           {search
-            ? "No services match your search."
-            : "No services yet. Add one."}
+            ? t("common.noData")
+            : t("services.noServices")}
         </AppText>
       ) : null}
       {services.length > 0 ? (

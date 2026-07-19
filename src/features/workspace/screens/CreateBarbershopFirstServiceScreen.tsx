@@ -8,6 +8,7 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { TextInputField } from "@/src/components/TextInputField";
 import { WizardProgress } from "@/src/features/workspace/components/WizardProgress";
 import { useToast } from "@/src/lib/providers";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -26,6 +27,7 @@ import { generateSlug } from "../utils/slug-generator";
 export function CreateBarbershopFirstServiceScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const { formData, updateFormData } = useCreateBarbershopForm();
   const [serviceName, setServiceName] = useState(formData.serviceName || "");
   const [description, setDescription] = useState(formData.description || "");
@@ -41,21 +43,21 @@ export function CreateBarbershopFirstServiceScreen() {
   const handleFinish = () => {
     const nameValidation = validateServiceName(serviceName);
     if (!nameValidation.isValid) {
-      toast.error(nameValidation.message);
+      toast.error(t(nameValidation.message));
       return;
     }
 
     const priceNum = parseInt(price, 10);
     const priceValidation = validatePrice(priceNum);
     if (!priceValidation.isValid) {
-      toast.error(priceValidation.message);
+      toast.error(t(priceValidation.message));
       return;
     }
 
     const durationNum = parseInt(duration, 10);
     const durationValidation = validateDuration(durationNum);
     if (!durationValidation.isValid) {
-      toast.error(durationValidation.message);
+      toast.error(t(durationValidation.message));
       return;
     }
 
@@ -98,14 +100,12 @@ export function CreateBarbershopFirstServiceScreen() {
               }
             },
             onError: (error) => {
-              toast.error(
-                "Failed to set active organization: " + error.message,
-              );
+              toast.error(t("createBarbershop.failedSetActiveOrg") + ": " + error.message);
             },
           });
         },
         onError: (error) => {
-          toast.error("Failed to create organization: " + error.message);
+          toast.error(t("createBarbershop.failedCreateOrg") + ": " + error.message);
         },
       },
     );
@@ -119,20 +119,19 @@ export function CreateBarbershopFirstServiceScreen() {
   return (
     <ScreenShell contentStyle={{ flexGrow: 1, padding: 24 }}>
       <WizardProgress totalSteps={2} currentStep={1} style={styles.wizard} />
-      <AppText style={styles.title}>Create Your First Service</AppText>
+      <AppText style={styles.title}>{t("services.addService")}</AppText>
       <AppText style={styles.subtitle}>
-        This will be the default service for your barbershop. You can change it
-        anytime.
+        {t("createBarbershop.firstServiceSubtitle")}
       </AppText>
       <TextInputField
-        label="Name"
-        placeholder="Service Name"
+        label={t("services.serviceName")}
+        placeholder={t("services.namePlaceholder")}
         value={serviceName}
         onChangeText={setServiceName}
       />
       <MultilineInputField
-        label="Description (Optional)"
-        placeholder="Service Description"
+        label={t("createBarbershop.descriptionLabel")}
+        placeholder={t("createBarbershop.descriptionPlaceholder")}
         value={description}
         onChangeText={setDescription}
         style={styles.descInput}
@@ -143,7 +142,7 @@ export function CreateBarbershopFirstServiceScreen() {
         style={styles.fieldSpacing}
       />
       <LabeledInput
-        label="Duration (in minutes)"
+        label={t("services.duration")}
         value={duration}
         onChangeText={setDuration}
         keyboardType="numeric"
@@ -155,7 +154,7 @@ export function CreateBarbershopFirstServiceScreen() {
         <View style={styles.primaryButtonWrapper}>
           <PrimaryButton
             label={
-              isCreatingOrg || isSettingActive ? "Setting up..." : "Finish Setup"
+              isCreatingOrg || isSettingActive ? t("common.saving") : t("common.save")
             }
             onPress={handleFinish}
             disabled={!isValid || isCreatingOrg || isSettingActive}

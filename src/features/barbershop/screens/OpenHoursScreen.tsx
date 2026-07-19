@@ -16,6 +16,7 @@ import {
   timeToString,
 } from "@/src/utils/time-format";
 import { useMemberRole } from "@/src/hooks";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -41,6 +42,7 @@ const DEFAULT_DAYS: DayConfig[] = [1, 2, 3, 4, 5, 6, 0].map((day) => ({
 export function OpenHoursScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const { data: apiDays, isLoading } = useOpenHours();
   const { mutate: updateHours, isPending: isSaving } = useUpdateOpenHours();
   const { role } = useMemberRole();
@@ -82,18 +84,18 @@ export function OpenHoursScreen() {
 
     updateHours(payload, {
       onSuccess: () => {
-        toast.success("Open hours saved");
+        toast.success(t("toast.saveSuccess"));
         router.back();
       },
-      onError: (e) => toast.error(e.message || "Failed to save open hours"),
+      onError: (e) => toast.error(e.message || t("toast.unknownError")),
     });
   };
 
   return (
     <ScreenShell headerSlot={<ScreenHeader onBack={() => router.back()} />} hideAppHeader contentStyle={{ paddingBottom: 200 }}>
-      <AppText style={styles.title}>Open Hours</AppText>
+      <AppText style={styles.title}>{t("barbershop.openHours")}</AppText>
       <AppText style={styles.subtitle}>
-        Set your barbershop operating hours for each day
+        {t("createBarbershop.openHoursSubtitle")}
       </AppText>
 
       <View style={styles.card}>
@@ -115,14 +117,14 @@ export function OpenHoursScreen() {
 
       {canManage ? (
         <PrimaryButton
-          label={isSaving ? "Saving..." : "Save Hours"}
+          label={isSaving ? t("common.saving") : t("common.save")}
           onPress={handleSave}
           disabled={isSaving || isLoading}
           style={styles.saveBtn}
         />
       ) : (
         <View style={styles.viewOnlyBanner}>
-          <AppText style={styles.viewOnlyText}>Only the barbershop owner or admin can edit open hours</AppText>
+          <AppText style={styles.viewOnlyText}>{t("common.noPermission")}</AppText>
         </View>
       )}
     </ScreenShell>

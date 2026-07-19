@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   ActivityIndicator,
   StyleSheet,
@@ -28,6 +29,7 @@ const EMPTY_STAT = {
 
 export function AnalyticsOverviewScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const [range, setRange] = useState<AnalyticsRange>("month");
 
   const { data, isLoading } = useAnalyticsOverview(range);
@@ -40,9 +42,9 @@ export function AnalyticsOverviewScreen() {
     <Permission roles={["owner", "admin"]}>
     <ScreenShell contentStyle={styles.scrollContent} hideAppHeader>
       <View style={styles.topBar}>
-        <AppText style={styles.pageTitle}>Overview</AppText>
+        <AppText style={styles.pageTitle}>{t("tabs.analytics")}</AppText>
         <AppText style={styles.pageSubtitle}>
-          See your barbershop's performance
+          {t("analytics.performance")}
         </AppText>
       </View>
 
@@ -59,7 +61,7 @@ export function AnalyticsOverviewScreen() {
           {/* Stat cards 2x2 */}
           <View style={styles.statGrid}>
             <StatCard
-              label="Revenue"
+              label={t("services.price")}
               value={formatRupiah(stats.totalSales?.current ?? 0)}
               icon={
                 <Ionicons
@@ -72,7 +74,7 @@ export function AnalyticsOverviewScreen() {
               onPress={() => router.push(`/d/analytics-revenue?range=${range}`)}
             />
             <StatCard
-              label="Customers"
+              label={t("customers.title")}
               value={String(stats.totalCustomers?.current ?? 0)}
               icon={
                 <Ionicons
@@ -89,7 +91,7 @@ export function AnalyticsOverviewScreen() {
           </View>
           <View style={[styles.statGrid, styles.statGridGap]}>
             <StatCard
-              label="Walk-in"
+              label={t("home.walkIn")}
               value={String(stats.walkIns?.current ?? 0)}
               icon={
                 <Ionicons
@@ -104,7 +106,7 @@ export function AnalyticsOverviewScreen() {
               }
             />
             <StatCard
-              label="Appointment"
+              label={t("home.appointment")}
               value={String(stats.appointments?.current ?? 0)}
               icon={
                 <Ionicons
@@ -127,7 +129,7 @@ export function AnalyticsOverviewScreen() {
             onPress={() => router.push(`/d/analytics-revenue?range=${range}`)}
           >
             <View style={styles.chartCardHeader}>
-              <AppText style={styles.chartCardTitle}>Revenue</AppText>
+              <AppText style={styles.chartCardTitle}>{t("services.price")}</AppText>
               <View style={styles.chartCardHeaderRight}>
                 <TrendBadge
                   direction={stats.totalSales?.direction ?? "neutral"}
@@ -158,7 +160,7 @@ export function AnalyticsOverviewScreen() {
             onPress={() => router.push(`/d/analytics-customers?range=${range}`)}
           >
             <View style={styles.chartCardHeader}>
-              <AppText style={styles.chartCardTitle}>Customers</AppText>
+              <AppText style={styles.chartCardTitle}>{t("customers.title")}</AppText>
               <View style={styles.chartCardHeaderRight}>
                 <TrendBadge
                   direction={stats.totalCustomers?.direction ?? "neutral"}
@@ -189,13 +191,13 @@ export function AnalyticsOverviewScreen() {
           {highlights && (highlights.topBarber || highlights.topService) ? (
             <View style={styles.highlightsSection}>
               <View style={styles.sectionRow}>
-                <AppText style={styles.sectionTitle}>Highlights</AppText>
+                <AppText style={styles.sectionTitle}>{t("customers.title")}</AppText>
               </View>
               {highlights.topBarber ? (
                 <HighlightRow
                   imageUrl={highlights.topBarber.imageUrl}
                   name={highlights.topBarber.name}
-                  subtitle={`Top barber · ${highlights.topBarber.count} cuts`}
+                  subtitle={`Top barber · ${highlights.topBarber.count} ${t("customers.title")}`}
                   revenue={highlights.topBarber.revenue}
                   onPress={() =>
                     router.push(`/d/analytics-barbers?range=${range}`)
@@ -207,7 +209,7 @@ export function AnalyticsOverviewScreen() {
                 <HighlightRow
                   imageUrl={highlights.topService.imageUrl}
                   name={highlights.topService.name}
-                  subtitle={`Top service · ${highlights.topService.count} books`}
+                  subtitle={`Top service · ${highlights.topService.count} ${t("services.title")}`}
                   revenue={highlights.topService.revenue}
                   onPress={() =>
                     router.push(`/d/analytics-services?range=${range}`)

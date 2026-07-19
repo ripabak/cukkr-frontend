@@ -1,3 +1,4 @@
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
 import React from "react";
 import { View, Image, StyleSheet, ViewStyle } from "react-native";
@@ -17,7 +18,12 @@ interface Props {
 }
 
 function formatPrice(amount: number): string {
-  return `Rp ${amount.toLocaleString("id-ID")}`;
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
 }
 
 export function ServiceCard({
@@ -30,6 +36,7 @@ export function ServiceCard({
   onToggleActive,
   style,
 }: Props) {
+  const { t } = useI18nContext();
   const finalPrice = discountPercent
     ? Math.round(price * (1 - discountPercent / 100))
     : price;
@@ -50,7 +57,7 @@ export function ServiceCard({
         {discountPercent ? (
           <View style={styles.discountRow}>
             <View style={styles.discountBadge}>
-              <AppText style={styles.discountText}>{discountPercent}% OFF</AppText>
+              <AppText style={styles.discountText}>{t("services.percentOff", { percent: String(discountPercent) })}</AppText>
             </View>
             <AppText style={styles.originalPrice}>{formatPrice(price)}</AppText>
           </View>
@@ -60,7 +67,7 @@ export function ServiceCard({
       <View style={styles.right}>
         {isDefault ? (
           <StatusBadge
-            label="Default"
+            label={t("services.defaultService")}
             variant="default"
             style={styles.defaultBadge}
           />

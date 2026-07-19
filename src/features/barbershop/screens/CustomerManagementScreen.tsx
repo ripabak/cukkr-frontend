@@ -8,6 +8,7 @@ import { SortMenu } from "@/src/components/SortMenu";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useCustomersList } from "@/src/features/barbershop/hooks";
 import { formatCurrency } from "@/src/features/barbershop/utils/form-validators";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -15,15 +16,18 @@ import { AppText } from "@/src/components/AppText";
 
 type CustomerSort = "name_asc" | "recent" | "bookings_desc" | "spend_desc";
 
-const SORT_OPTIONS = [
-  { label: "Sort by Name", value: "name_asc" },
-  { label: "Sort by Total Bookings", value: "bookings_desc" },
-  { label: "Sort by Spend", value: "spend_desc" },
-  { label: "Recently Added", value: "recent" },
-];
+function getSortOptions(t: (key: string) => string) {
+  return [
+    { label: t("customers.sortByName"), value: "name_asc" },
+    { label: t("customers.sortByTotalBookings"), value: "bookings_desc" },
+    { label: t("customers.sortBySpend"), value: "spend_desc" },
+    { label: t("customers.recentlyAdded"), value: "recent" },
+  ];
+}
 
 export function CustomerManagementScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const [search, setSearch] = useState("");
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -100,7 +104,7 @@ export function CustomerManagementScreen() {
       overlaySlot={
         <SortMenu
           visible={sortVisible}
-          options={SORT_OPTIONS}
+          options={getSortOptions(t)}
           selected={sortValue}
           onSelect={(v) => setSortValue(v as CustomerSort)}
           onClose={() => setSortVisible(false)}
@@ -109,15 +113,15 @@ export function CustomerManagementScreen() {
       }
       contentStyle={styles.content}
     >
-      <AppText style={styles.title}>Customer{"\n"}Management</AppText>
+      <AppText style={styles.title}>{t("customers.title")}</AppText>
       <AppText style={styles.subtitle}>
-        Manage all your customers in one place.
+        {t("customers.noCustomers")}
       </AppText>
       {!selectionMode && (
         <AppText style={styles.hint}>
           {hasContact
-            ? "Only customers with valid contact information will appear here."
-            : "Showing all customers including those without contact info."}
+            ? t("customers.onlyWithContact")
+            : t("customers.showingAll")}
         </AppText>
       )}
 
@@ -125,13 +129,13 @@ export function CustomerManagementScreen() {
         <SearchInput
           value={search}
           onChangeText={setSearch}
-          placeholder="Search"
+          placeholder={t("customers.searchPlaceholder")}
         />
       </View>
 
       {!isLoading && customers.length === 0 ? (
         <AppText style={styles.empty}>
-          {search ? "No customers match your search." : "No customers yet."}
+          {search ? t("common.noData") : t("customers.noCustomers")}
         </AppText>
       ) : null}
 

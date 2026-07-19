@@ -1,7 +1,7 @@
 import { BookingCard } from "@/src/components/BookingCard";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import {
-  SCHEDULE_STATUS_OPTIONS,
+  getScheduleStatusOptions,
   StatusFilterMenu,
 } from "@/src/components/StatusFilterMenu";
 import { useHorizontalScrollDrag } from "@/src/hooks";
@@ -24,6 +24,7 @@ import {
 import { formatTime12h, toApiDate } from "@/src/utils/date";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
@@ -57,6 +58,7 @@ function RequestCard({
   onAccept,
   onDecline,
 }: RequestCardProps) {
+  const { t } = useI18nContext();
   const iconName = bookingType === "walk_in" ? "walk" : "calendar";
   return (
     <TouchableOpacity
@@ -86,22 +88,25 @@ function RequestCard({
           activeOpacity={0.8}
           style={reqStyles.declineBtn}
         >
-          <AppText style={reqStyles.declineText}>Decline</AppText>
+          <AppText style={reqStyles.declineText}>{t("bookings.actionDecline")}</AppText>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={onAccept}
           activeOpacity={0.8}
           style={reqStyles.acceptBtn}
         >
-          <AppText style={reqStyles.acceptText}>Accept</AppText>
+          <AppText style={reqStyles.acceptText}>{t("bookings.actionAccept")}</AppText>
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );
 }
 
-function generateDayChips(baseDate: Date): DayChip[] {
-  const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+function generateDayChips(baseDate: Date, language: string): DayChip[] {
+  const locale = language === 'id' ? 'id-ID' : 'en-US';
+  const dayLabels = Array.from({ length: 7 }, (_, i) =>
+    new Intl.DateTimeFormat(locale, { weekday: 'short' }).format(new Date(2024, 0, i + 1))
+  );
   return Array.from({ length: 30 }, (_, i) => {
     const d = new Date(
       baseDate.getFullYear(),
@@ -116,28 +121,19 @@ function generateDayChips(baseDate: Date): DayChip[] {
   });
 }
 
-function formatDatePill(date: Date): string {
-  const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const monthShort = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  return `${dayLabels[date.getDay()]}, ${date.getDate()} ${monthShort[date.getMonth()]} ${String(date.getFullYear()).slice(2)}`;
+function formatDatePill(date: Date, language: string): string {
+  const locale = language === 'id' ? 'id-ID' : 'en-US';
+  const dayFormat = new Intl.DateTimeFormat(locale, { weekday: 'short' });
+  const monthFormat = new Intl.DateTimeFormat(locale, { month: 'short' });
+  const dayLabel = dayFormat.format(date);
+  const monthLabel = monthFormat.format(date);
+  return `${dayLabel}, ${date.getDate()} ${monthLabel} ${String(date.getFullYear()).slice(2)}`;
 }
 
 export function ScheduleActiveBookingsScreen() {
   const router = useRouter();
   const today = new Date();
+  const { t, language } = useI18nContext();
   const [selectedDate, setSelectedDate] = useState(today);
   const [selectedKey, setSelectedKey] = useState(toApiDate(today));
   const [filterMenuVisible, setFilterMenuVisible] = useState(false);
@@ -165,7 +161,7 @@ export function ScheduleActiveBookingsScreen() {
     setFilterMenuVisible(true);
   };
 
-  const days = generateDayChips(today);
+  const days = generateDayChips(today, language);
 
   const reqDateFrom = toApiDate(today);
   const reqDateTo = toApiDate(
@@ -224,9 +220,9 @@ export function ScheduleActiveBookingsScreen() {
         style={styles.emptyImage}
         resizeMode="cover"
       />
-      <AppText style={styles.emptyTitle}>No bookings for this date.</AppText>
+      <AppText style={styles.emptyTitle}>{t("schedule.noBookings")}</AppText>
       <AppText style={styles.emptySubtitle}>
-        Ready to start? Tap the plus icon to add a new appointment manually.
+        {t("schedule.emptySubtitle")}
       </AppText>
     </View>
   );
@@ -240,7 +236,7 @@ export function ScheduleActiveBookingsScreen() {
         <>
           <View style={styles.topBar}>
             <DateSelectorPill
-              label={formatDatePill(selectedDate)}
+              label={formatDatePill(selectedDate, language)}
               onPress={() => setCalendarVisible(true)}
             />
           </View>
@@ -262,7 +258,7 @@ export function ScheduleActiveBookingsScreen() {
             <View style={styles.menuOverlay}>
               <StatusFilterMenu
                 visible
-                options={SCHEDULE_STATUS_OPTIONS}
+                options={getScheduleStatusOptions(t)}
                 selected={statusFilter}
                 onSelect={(value) =>
                   setStatusFilter(
@@ -292,7 +288,7 @@ export function ScheduleActiveBookingsScreen() {
       {requestedBookings.length > 0 && (
         <View style={styles.requestsSection}>
           <AppText style={styles.requestsTitle}>
-            Requests{" "}
+            {t("bookings.appointmentRequest")}{" "}
             <AppText style={styles.sectionCount}>
               ({requestedBookings.length})
             </AppText>
@@ -343,7 +339,7 @@ export function ScheduleActiveBookingsScreen() {
 
       <View style={styles.sectionHeader}>
         <AppText style={styles.sectionTitle}>
-          Bookings{" "}
+          {t("schedule.bookings")}{" "}
           <AppText style={styles.sectionCount}>({bookings.length})</AppText>
         </AppText>
         <TouchableOpacity
@@ -353,8 +349,8 @@ export function ScheduleActiveBookingsScreen() {
           style={styles.filterPill}
         >
           <AppText style={styles.filterLabel}>
-            {SCHEDULE_STATUS_OPTIONS.find((o) => o.value === statusFilter)
-              ?.label ?? "All"}
+            {getScheduleStatusOptions(t).find((o) => o.value === statusFilter)
+              ?.label ?? t("common.all")}
           </AppText>
           <Ionicons name="chevron-down" size={14} color={Colors.text.primary} />
         </TouchableOpacity>
