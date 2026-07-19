@@ -4,8 +4,10 @@ import {
   SCHEDULE_STATUS_OPTIONS,
   StatusFilterMenu,
 } from "@/src/components/StatusFilterMenu";
+import { useHorizontalScrollDrag } from "@/src/hooks";
 import { CalendarModal } from "@/src/features/schedule/components/CalendarModal";
 import { DateSelectorPill } from "@/src/features/schedule/components/DateSelectorPill";
+import { NewBookBottomSheet } from "@/src/components/NewBookBottomSheet";
 import {
   DayChip,
   DayChipRow,
@@ -143,6 +145,8 @@ export function ScheduleActiveBookingsScreen() {
   const [statusFilter, setStatusFilter] = useState<
     "all" | "waiting" | "in_progress" | "completed" | "cancelled"
   >("all");
+  const [newBookVisible, setNewBookVisible] = useState(false);
+  const requestScrollRef = useHorizontalScrollDrag();
   const [menuTop, setMenuTop] = useState(0);
   const filterBtnRef = useRef<View>(null);
   const handleOpenFilterMenu = () => {
@@ -210,7 +214,7 @@ export function ScheduleActiveBookingsScreen() {
   };
 
   const handleNewAppointment = () => {
-    router.push("/d/new-appointment");
+    setNewBookVisible(true);
   };
 
   const renderEmptyState = () => (
@@ -294,6 +298,7 @@ export function ScheduleActiveBookingsScreen() {
             </AppText>
           </AppText>
           <ScrollView
+            ref={requestScrollRef}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.requestsScroll}
@@ -387,6 +392,10 @@ export function ScheduleActiveBookingsScreen() {
         waitingDates={waitingDateSet}
         onSelect={handleCalendarSelect}
         onClose={() => setCalendarVisible(false)}
+      />
+      <NewBookBottomSheet
+        visible={newBookVisible}
+        onClose={() => setNewBookVisible(false)}
       />
     </ScreenShell>
   );

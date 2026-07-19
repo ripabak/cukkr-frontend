@@ -2,7 +2,7 @@ import { BookingCard } from "@/src/components/BookingCard";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { useBarbershopCurrent } from "@/src/features/barbershop/hooks";
 import { BarbershopSwitcherModal } from "@/src/features/home/components/BarbershopSwitcherModal";
-import { NewBookBottomSheet } from "@/src/features/home/components/NewBookBottomSheet";
+import { NewBookBottomSheet } from "@/src/components/NewBookBottomSheet";
 import { ShortcutTile } from "@/src/features/home/components/ShortcutTile";
 import {
   HOME_QUERY_KEYS,
