@@ -1,5 +1,6 @@
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { InfoRow } from "@/src/components/InfoRow";
+import { LanguageSwitcher } from "@/src/components/LanguageSwitcher";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useSignOut } from "@/src/features/auth/hooks";
@@ -127,6 +128,11 @@ export function UserProfileScreen() {
           }
           isLast
         />
+      </ProfileSummaryCard>
+
+      <AppText style={styles.sectionLabel}>Language</AppText>
+      <ProfileSummaryCard style={styles.card}>
+        <LanguageSwitcher />
       </ProfileSummaryCard>
 
       <AppText style={styles.sectionLabel}>Logout</AppText>

@@ -1,5 +1,5 @@
 import { expoClient } from "@better-auth/expo/client";
-import { emailOTPClient, organizationClient } from "better-auth/client/plugins";
+import { emailOTPClient, organizationClient, inferAdditionalFields } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
@@ -26,5 +26,8 @@ export const authClient = createAuthClient({
     }),
     emailOTPClient(),
     organizationClient(),
+    inferAdditionalFields({
+      user: { language: { type: "string", required: false } }
+    }),
   ],
 });

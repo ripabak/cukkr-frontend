@@ -2,6 +2,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 
 import { useToast } from "@/src/lib/providers";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { AuthButton } from "../components/AuthButton";
 import { AuthFooterPrompt } from "../components/AuthFooterPrompt";
 import { AuthScreenShell } from "../components/AuthScreenShell";
@@ -19,6 +20,7 @@ const MIN_PASSWORD_LENGTH = 8;
 export function RegisterScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const { redirect } = useLocalSearchParams<{ redirect?: string }>();
   const [name, setName] = useState("");
   const [identifier, setIdentifier] = useState("");
@@ -34,19 +36,19 @@ export function RegisterScreen() {
 
     const emailResult = validateEmail(identifier);
     if (!emailResult.isValid) {
-      toast.error(emailResult.message);
+      toast.error(t(emailResult.message));
       return;
     }
 
     const passwordResult = validatePassword(password, MIN_PASSWORD_LENGTH);
     if (!passwordResult.isValid) {
-      toast.error(passwordResult.message);
+      toast.error(t(passwordResult.message, passwordResult.params));
       return;
     }
 
     const matchResult = validatePasswordsMatch(password, confirmPassword);
     if (!matchResult.isValid) {
-      toast.error(matchResult.message);
+      toast.error(t(matchResult.message));
       return;
     }
 
@@ -64,12 +66,12 @@ export function RegisterScreen() {
 
   return (
     <AuthScreenShell
-      title="Create Account"
-      description="Create a new account to get started and enjoy accessing our features."
+      title={t("auth.registerTitle")}
+      description={t("auth.registerDescription")}
       footer={
         <AuthFooterPrompt
-          prompt="Already have an account?"
-          actionLabel="Sign In here"
+          prompt={t("auth.signInInstead")}
+          actionLabel={t("auth.login")}
           onPress={() =>
             router.push({
               pathname: "/d/login",
@@ -81,41 +83,41 @@ export function RegisterScreen() {
     >
       <AuthTextField
         autoCapitalize="words"
-        label="Name"
+        label={t("auth.name")}
         onChangeText={setName}
-        placeholder="Name"
+        placeholder={t("auth.name")}
         value={name}
       />
 
       <AuthTextField
         autoCapitalize="none"
         keyboardType="email-address"
-        label="Email*"
+        label={t("auth.email")}
         onChangeText={setIdentifier}
-        placeholder="Email"
+        placeholder={t("auth.email")}
         value={identifier}
       />
 
       <AuthTextField
-        label="Password"
+        label={t("auth.password")}
         onChangeText={setPassword}
-        placeholder="Password"
+        placeholder={t("auth.password")}
         secureTextEntry
         secureToggle
         value={password}
       />
 
       <AuthTextField
-        label="Confirm Password"
+        label={t("auth.confirmPassword")}
         onChangeText={setConfirmPassword}
-        placeholder="Confirm Password"
+        placeholder={t("auth.confirmPassword")}
         secureTextEntry
         secureToggle
         value={confirmPassword}
       />
 
       <AuthButton
-        label={isPending ? "Creating Account..." : "Create Account"}
+        label={isPending ? t("common.saving") : t("auth.register")}
         onPress={handleRegister}
         disabled={isPending}
       />

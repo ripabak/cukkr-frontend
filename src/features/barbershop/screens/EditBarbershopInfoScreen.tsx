@@ -9,6 +9,7 @@ import {
   useUpdateBarbershopSettings,
 } from "@/src/features/barbershop/hooks";
 import { useMemberRole } from "@/src/hooks";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -58,6 +59,7 @@ const MODE_CONFIG: Record<
 export function EditBarbershopInfoScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const params = useLocalSearchParams<{ mode?: string }>();
   const mode: Mode =
     params.mode === "name" ||
@@ -89,7 +91,7 @@ export function EditBarbershopInfoScreen() {
 
   const handleSave = () => {
     if (mode === "name" && !value.trim()) {
-      toast.error("Name cannot be empty");
+      toast.error(t("common.error"));
       return;
     }
 
@@ -102,11 +104,11 @@ export function EditBarbershopInfoScreen() {
 
     updateSettings(payload, {
       onSuccess: () => {
-        toast.success(`${MODE_CONFIG[mode].title} updated`);
+        toast.success(t("toast.updateSuccess"));
         router.back();
       },
       onError: (error) => {
-        toast.error(error.message || "Failed to update");
+        toast.error(error.message || t("toast.unknownError"));
       },
     });
   };
@@ -150,7 +152,7 @@ export function EditBarbershopInfoScreen() {
       <HelperCopy lines={config.helperLines} style={styles.helper} />
       {!isOwner && (
         <View style={styles.viewOnlyBanner}>
-          <AppText style={styles.viewOnlyText}>Only the barbershop owner can edit this information</AppText>
+          <AppText style={styles.viewOnlyText}>{t("common.noPermission")}</AppText>
         </View>
       )}
     </ScreenShell>

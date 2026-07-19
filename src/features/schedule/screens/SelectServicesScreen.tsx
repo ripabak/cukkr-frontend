@@ -12,10 +12,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { AppText } from "@/src/components/AppText";
 
 export function SelectServicesScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const { formData, setServices } = useNewBookingForm();
   const [query, setQuery] = useState("");
 
@@ -77,10 +79,10 @@ export function SelectServicesScreen() {
       }
       contentStyle={styles.content}
     >
-      <SearchInput value={query} onChangeText={setQuery} placeholder="Search" />
+      <SearchInput value={query} onChangeText={setQuery} placeholder={t("common.search")} />
 
       {!isLoading && filtered.length === 0 ? (
-        <AppText style={styles.emptyText}>No services found.</AppText>
+        <AppText style={styles.emptyText}>{t("services.noServices")}</AppText>
       ) : (
         <View style={styles.list}>
           {filtered.map((item) => (

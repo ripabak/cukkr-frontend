@@ -24,6 +24,7 @@ import {
 import { formatTime12h, toApiDate } from "@/src/utils/date";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
@@ -57,6 +58,7 @@ function RequestCard({
   onAccept,
   onDecline,
 }: RequestCardProps) {
+  const { t } = useI18nContext();
   const iconName = bookingType === "walk_in" ? "walk" : "calendar";
   return (
     <TouchableOpacity
@@ -86,14 +88,14 @@ function RequestCard({
           activeOpacity={0.8}
           style={reqStyles.declineBtn}
         >
-          <AppText style={reqStyles.declineText}>Decline</AppText>
+          <AppText style={reqStyles.declineText}>{t("bookings.actionDecline")}</AppText>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={onAccept}
           activeOpacity={0.8}
           style={reqStyles.acceptBtn}
         >
-          <AppText style={reqStyles.acceptText}>Accept</AppText>
+          <AppText style={reqStyles.acceptText}>{t("bookings.actionAccept")}</AppText>
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
@@ -138,6 +140,7 @@ function formatDatePill(date: Date): string {
 export function ScheduleActiveBookingsScreen() {
   const router = useRouter();
   const today = new Date();
+  const { t } = useI18nContext();
   const [selectedDate, setSelectedDate] = useState(today);
   const [selectedKey, setSelectedKey] = useState(toApiDate(today));
   const [filterMenuVisible, setFilterMenuVisible] = useState(false);
@@ -224,7 +227,7 @@ export function ScheduleActiveBookingsScreen() {
         style={styles.emptyImage}
         resizeMode="cover"
       />
-      <AppText style={styles.emptyTitle}>No bookings for this date.</AppText>
+      <AppText style={styles.emptyTitle}>{t("schedule.noBookings")}</AppText>
       <AppText style={styles.emptySubtitle}>
         Ready to start? Tap the plus icon to add a new appointment manually.
       </AppText>
@@ -292,7 +295,7 @@ export function ScheduleActiveBookingsScreen() {
       {requestedBookings.length > 0 && (
         <View style={styles.requestsSection}>
           <AppText style={styles.requestsTitle}>
-            Requests{" "}
+            {t("bookings.appointmentRequest")}{" "}
             <AppText style={styles.sectionCount}>
               ({requestedBookings.length})
             </AppText>
@@ -354,7 +357,7 @@ export function ScheduleActiveBookingsScreen() {
         >
           <AppText style={styles.filterLabel}>
             {SCHEDULE_STATUS_OPTIONS.find((o) => o.value === statusFilter)
-              ?.label ?? "All"}
+              ?.label ?? t("common.all")}
           </AppText>
           <Ionicons name="chevron-down" size={14} color={Colors.text.primary} />
         </TouchableOpacity>

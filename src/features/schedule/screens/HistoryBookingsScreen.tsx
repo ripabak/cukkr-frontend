@@ -15,6 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { AppText } from "@/src/components/AppText";
 
 const SORT_OPTIONS = [
@@ -42,6 +43,7 @@ function formatDatePill(date: Date): string {
 
 export function HistoryBookingsScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState(today);
   const [calendarVisible, setCalendarVisible] = useState(false);
@@ -170,7 +172,7 @@ export function HistoryBookingsScreen() {
         >
           <AppText style={styles.filterLabel}>
             {HISTORY_STATUS_OPTIONS.find((o) => o.value === statusFilter)
-              ?.label ?? "All"}
+              ?.label ?? t("common.all")}
           </AppText>
           <Ionicons name="chevron-down" size={14} color={Colors.text.primary} />
         </TouchableOpacity>
@@ -195,7 +197,7 @@ export function HistoryBookingsScreen() {
           />
         ))}
         {!isLoading && bookings.length === 0 ? (
-          <AppText style={styles.emptyText}>No bookings for this date.</AppText>
+          <AppText style={styles.emptyText}>{t("schedule.noBookings")}</AppText>
         ) : null}
       </View>
 

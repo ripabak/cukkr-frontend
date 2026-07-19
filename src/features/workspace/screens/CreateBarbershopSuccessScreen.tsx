@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import { GradientButton } from "@/src/features/workspace/components/GradientButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -9,8 +10,9 @@ import { AppText } from "@/src/components/AppText";
 
 export function CreateBarbershopSuccessScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const { formData, resetFormData } = useCreateBarbershopForm();
-  const barbershopName = formData.name || "Your Barbershop";
+  const barbershopName = formData.name || t("createBarbershop.yourBarbershop");
 
   const handleOpenBarbershop = () => {
     resetFormData();
@@ -26,12 +28,12 @@ export function CreateBarbershopSuccessScreen() {
         padding: 32,
       }}
     >
-      <AppText style={styles.title}>Congratulation 🎉</AppText>
+      <AppText style={styles.title}>{t("common.success")}</AppText>
       <AppText style={styles.subtitle}>
-        {`Your barbershop, "${barbershopName}," has been created.`}
+        {`${t("createBarbershop.successMessage")} "${barbershopName}"`}
       </AppText>
       <GradientButton
-        label="Open My Barbershop"
+        label={t("common.done")}
         style={styles.button}
         onPress={handleOpenBarbershop}
       />

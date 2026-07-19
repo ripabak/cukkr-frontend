@@ -2,6 +2,7 @@ import { Colors } from "@/src/theme/colors";
 import { HelperCopy } from "@/src/components/HelperCopy";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { MessageComposer } from "@/src/features/barbershop/components/MessageComposer";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -12,6 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export function SendMessagesToCustomersScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const params = useLocalSearchParams<{
     count?: string;
     recipientName?: string;
@@ -30,7 +32,7 @@ export function SendMessagesToCustomersScreen() {
 
   const handleSend = () => {
     if (!message.trim()) {
-      toast.error("Please write a message first");
+      toast.error(t("common.error"));
       return;
     }
     toast.info("Messaging feature coming soon");
@@ -69,7 +71,7 @@ export function SendMessagesToCustomersScreen() {
           <MessageComposer
             value={message}
             onChangeText={setMessage}
-            placeholder="Messages to selected customers"
+            placeholder={t("customers.searchPlaceholder")}
           />
           <HelperCopy
             lines={[

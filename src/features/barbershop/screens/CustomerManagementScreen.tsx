@@ -8,6 +8,7 @@ import { SortMenu } from "@/src/components/SortMenu";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useCustomersList } from "@/src/features/barbershop/hooks";
 import { formatCurrency } from "@/src/features/barbershop/utils/form-validators";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -24,6 +25,7 @@ const SORT_OPTIONS = [
 
 export function CustomerManagementScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const [search, setSearch] = useState("");
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -109,9 +111,9 @@ export function CustomerManagementScreen() {
       }
       contentStyle={styles.content}
     >
-      <AppText style={styles.title}>Customer{"\n"}Management</AppText>
+      <AppText style={styles.title}>{t("customers.title")}</AppText>
       <AppText style={styles.subtitle}>
-        Manage all your customers in one place.
+        {t("customers.noCustomers")}
       </AppText>
       {!selectionMode && (
         <AppText style={styles.hint}>
@@ -125,13 +127,13 @@ export function CustomerManagementScreen() {
         <SearchInput
           value={search}
           onChangeText={setSearch}
-          placeholder="Search"
+          placeholder={t("customers.searchPlaceholder")}
         />
       </View>
 
       {!isLoading && customers.length === 0 ? (
         <AppText style={styles.empty}>
-          {search ? "No customers match your search." : "No customers yet."}
+          {search ? t("common.noData") : t("customers.noCustomers")}
         </AppText>
       ) : null}
 

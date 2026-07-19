@@ -9,6 +9,7 @@ import {
   useLeaveBarbershop,
 } from "@/src/features/barbershop/hooks";
 import { useMemberRole } from "@/src/hooks";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -21,6 +22,7 @@ import { AppText } from "@/src/components/AppText";
 export function BarbershopSettingsScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const { data: barbershop, isLoading } = useBarbershopCurrent();
   const { role } = useMemberRole();
   const isOwner = role === "owner";
@@ -36,12 +38,12 @@ export function BarbershopSettingsScreen() {
       deleteBarbershop(barbershop.id, {
         onSuccess: () => {
           setShowActionModal(false);
-          toast.success("Barbershop deleted");
+          toast.success(t("toast.deleteSuccess"));
           router.replace("/");
         },
         onError: (error) => {
           setShowActionModal(false);
-          toast.error(error.message || "Failed to delete barbershop");
+          toast.error(error.message || t("toast.unknownError"));
         },
       });
     } else {
@@ -53,20 +55,20 @@ export function BarbershopSettingsScreen() {
         },
         onError: (error) => {
           setShowActionModal(false);
-          toast.error(error.message || "Failed to leave barbershop");
+          toast.error(error.message || t("toast.unknownError"));
         },
       });
     }
   };
 
   const handleCameraBadge = () => {
-    Alert.alert("Logo Upload", "Logo upload will be available soon.");
+    Alert.alert(t("barbershop.logoUpload"), "Logo upload will be available soon.");
   };
 
   return (
     <ScreenShell contentStyle={styles.scrollContentPadding} hideAppHeader>
       <View style={styles.titleRow}>
-        <AppText style={styles.title}>Barbershop Settings</AppText>
+        <AppText style={styles.title}>{t("barbershop.settings")}</AppText>
       </View>
       <AppText style={styles.subtitle}>Setup based on your barbershop needs</AppText>
 
@@ -107,9 +109,9 @@ export function BarbershopSettingsScreen() {
       <AppText style={styles.sectionLabel}>Information</AppText>
       <View style={styles.card}>
         <InfoRow
-          label="Name"
+          label={t("barbershop.nameLabel")}
           value={barbershop?.name}
-          placeholder="Name"
+          placeholder={t("barbershop.nameLabel")}
           onPress={
             isLoading
               ? undefined
@@ -135,9 +137,9 @@ export function BarbershopSettingsScreen() {
           }
         />
         <InfoRow
-          label="Address"
+          label={t("barbershop.addressLabel")}
           value={barbershop?.address!}
-          placeholder="Address"
+          placeholder={t("barbershop.addressLabel")}
           isLast
           onPress={
             isLoading
@@ -175,25 +177,25 @@ export function BarbershopSettingsScreen() {
       </AppText>
       <View style={styles.card}>
         <OperationRow
-          label="Barbers"
+          label={t("barbers.title")}
           onPress={
             isLoading ? undefined : () => router.push("/d/barbers-management")
           }
         />
         <OperationRow
-          label="Customers"
+          label={t("customers.title")}
           onPress={
             isLoading ? undefined : () => router.push("/d/customer-management")
           }
         />
         <OperationRow
-          label="Services"
+          label={t("services.title")}
           onPress={
             isLoading ? undefined : () => router.push("/d/services-management")
           }
         />
         <OperationRow
-          label="Open Hours"
+          label={t("barbershop.openHours")}
           isLast
           onPress={isLoading ? undefined : () => router.push("/d/open-hours")}
         />
@@ -225,7 +227,7 @@ export function BarbershopSettingsScreen() {
               ? "Delete"
               : "Leave"
         }
-        cancelLabel="Cancel"
+        cancelLabel={t("common.cancel")}
         onConfirm={handleActionConfirm}
         onCancel={() => setShowActionModal(false)}
       />

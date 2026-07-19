@@ -3,6 +3,7 @@ import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useCurrentBarbershop, useCurrentPin } from "@/src/features/home/hooks";
 import { Colors } from "@/src/theme/colors";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Share, StyleSheet, View } from "react-native";
@@ -11,6 +12,7 @@ import QRCode from "react-native-qrcode-svg";
 
 export function WalkInQrScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const { data: barbershop } = useCurrentBarbershop();
   const { data: pinData } = useCurrentPin();
 
@@ -33,7 +35,7 @@ export function WalkInQrScreen() {
     <ScreenShell
       contentStyle={styles.content}
       headerSlot={
-        <ScreenHeader title="Walk-In QR" onBack={() => router.back()} />
+        <ScreenHeader title={t("home.walkIn")} onBack={() => router.back()} />
       }
     >
       <View style={styles.card}>
@@ -47,7 +49,7 @@ export function WalkInQrScreen() {
         ) : (
           <View style={styles.qrPlaceholder}>
             <AppText style={styles.placeholderText}>
-              No booking URL configured
+              {t("common.noData")}
             </AppText>
           </View>
         )}

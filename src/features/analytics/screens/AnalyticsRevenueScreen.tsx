@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   ActivityIndicator,
   StyleSheet,
@@ -62,6 +63,7 @@ const bookingTypeStyles = StyleSheet.create({
 
 export function AnalyticsRevenueScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const { range: rangeParam } = useLocalSearchParams<{
     range?: AnalyticsRange;
   }>();
@@ -135,7 +137,7 @@ export function AnalyticsRevenueScreen() {
         >
           <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
         </TouchableOpacity>
-        <AppText style={styles.pageTitle}>Revenue</AppText>
+        <AppText style={styles.pageTitle}>{t("services.price")}</AppText>
         <View style={styles.topBarRight} />
       </View>
 
@@ -149,8 +151,8 @@ export function AnalyticsRevenueScreen() {
 
       {stats ? (
         <View style={styles.statsRow}>
-          <StatCard
-            label="Bookings"
+            <StatCard
+              label={t("home.totalBookings")}
             value={String(stats.totalBookings?.current ?? 0)}
             icon={
               <Ionicons
@@ -162,8 +164,8 @@ export function AnalyticsRevenueScreen() {
             stat={stats.totalBookings ?? EMPTY_STAT}
             style={styles.statFlex}
           />
-          <StatCard
-            label="Avg / Booking"
+            <StatCard
+              label={t("services.price")}
             value={formatRupiah(stats.avgRevenuePerBooking?.current ?? 0)}
             icon={
               <Ionicons
@@ -175,8 +177,8 @@ export function AnalyticsRevenueScreen() {
             stat={stats.avgRevenuePerBooking ?? EMPTY_STAT}
             style={styles.statFlex}
           />
-          <StatCard
-            label="Avg Time"
+            <StatCard
+              label={t("services.duration")}
             value={`${stats.avgTime?.current ?? 0}m`}
             icon={
               <Ionicons
@@ -194,7 +196,7 @@ export function AnalyticsRevenueScreen() {
       {chart && chart.length > 0 ? (
         <View style={styles.chartCard}>
           <View style={styles.chartCardHeader}>
-            <AppText style={styles.chartCardTitle}>Revenue Trend</AppText>
+            <AppText style={styles.chartCardTitle}>{t("services.price")}</AppText>
             {stats ? (
               <TrendBadge
                 direction={stats.totalBookings?.direction ?? "neutral"}
@@ -236,7 +238,7 @@ export function AnalyticsRevenueScreen() {
             style={styles.listLoader}
           />
         ) : bookings.length === 0 ? (
-          <AppText style={styles.emptyText}>No transactions found</AppText>
+          <AppText style={styles.emptyText}>{t("components.emptyState.defaultMessage")}</AppText>
         ) : (
           bookings.map((bk) => (
             <TouchableOpacity

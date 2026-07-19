@@ -23,6 +23,7 @@ import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
 import { formatDateLabel, formatTime12h } from "@/src/utils/date";
 import { Ionicons } from "@expo/vector-icons";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
@@ -42,6 +43,7 @@ type ModalType = "accept" | "decline" | "start" | "takeover" | "cancel" | null;
 
 export function BookingDetailScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const { id, action, orgId, orgName } = useLocalSearchParams<{
     id: string;
     action?: string;
@@ -122,7 +124,7 @@ export function BookingDetailScreen() {
     if (!id) return;
     setModalType(null);
     acceptBooking(id, {
-      onSuccess: () => toast.success("Booking accepted"),
+      onSuccess: () => toast.success(t("toast.bookingAccepted")),
       onError: (error) => toast.error(getErrorMessage(error)),
     });
   };
@@ -133,7 +135,7 @@ export function BookingDetailScreen() {
     declineBooking(
       { id, reason },
       {
-        onSuccess: () => toast.success("Booking declined"),
+        onSuccess: () => toast.success(t("toast.bookingDeclined")),
         onError: (error) => toast.error(getErrorMessage(error)),
       },
     );
@@ -145,7 +147,7 @@ export function BookingDetailScreen() {
     updateStatus(
       { id, status: "in_progress" },
       {
-        onSuccess: () => toast.success("Booking started"),
+        onSuccess: () => toast.success(t("toast.bookingStarted")),
         onError: (error) => toast.error(getErrorMessage(error)),
       },
     );
@@ -157,7 +159,7 @@ export function BookingDetailScreen() {
     updateStatus(
       { id, status: "completed" },
       {
-        onSuccess: () => toast.success("Booking completed"),
+        onSuccess: () => toast.success(t("toast.bookingCompleted")),
         onError: (error) => toast.error(getErrorMessage(error)),
       },
     );
@@ -182,7 +184,7 @@ export function BookingDetailScreen() {
       { id, status: "cancelled", cancelReason: "Cancelled by barber" },
       {
         onSuccess: () => {
-          toast.success("Booking cancelled");
+          toast.success(t("toast.bookingCancelled"));
           router.back();
         },
         onError: (error) => toast.error(getErrorMessage(error)),
@@ -194,7 +196,7 @@ export function BookingDetailScreen() {
     if (booking?.status === "waiting") {
       return [
         {
-          label: "Cancel Book",
+          label: t("bookings.actionCancel"),
           danger: true,
           onPress: () => {
             setOverflowVisible(false);
@@ -401,10 +403,10 @@ export function BookingDetailScreen() {
         <ConfirmationModal
           visible={modalType === "accept"}
           icon="checkmark-circle-outline"
-          title="Accept this booking?"
+          title={t("bookings.confirmAccept")}
           description="The customer will be notified and the booking will be moved to the queue."
-          confirmLabel={isAccepting ? "Accepting..." : "Accept"}
-          cancelLabel="Cancel"
+          confirmLabel={isAccepting ? "Accepting..." : t("bookings.actionAccept")}
+          cancelLabel={t("common.cancel")}
           onConfirm={handleAccept}
           onCancel={() => setModalType(null)}
         />
@@ -417,9 +419,9 @@ export function BookingDetailScreen() {
         <ConfirmationModal
           visible={modalType === "start"}
           icon="cut"
-          title="Start this booking?"
+          title={t("bookings.confirmStart")}
           description="This will mark the booking as In Progress. Please make sure you are ready to serve the customer before continuing."
-          confirmLabel="Yes"
+          confirmLabel={t("common.yes")}
           cancelLabel="No, Not Yet"
           onConfirm={handleStart}
           onCancel={() => setModalType(null)}
@@ -430,17 +432,17 @@ export function BookingDetailScreen() {
           title="Take Over This Booking?"
           description="The preferred barber differs. Do you want to take over this booking?"
           confirmLabel="Yes, Take Over"
-          cancelLabel="No"
+          cancelLabel={t("common.no")}
           onConfirm={handleStart}
           onCancel={() => setModalType(null)}
         />
         <ConfirmationModal
           visible={modalType === "cancel"}
           icon="close-circle"
-          title="Cancel this booking?"
+          title={t("bookings.confirmCancel")}
           description="This action cannot be undone. The customer will be notified."
           confirmLabel="Yes, Cancel"
-          cancelLabel="No"
+          cancelLabel={t("common.no")}
           onConfirm={handleCancel}
           onCancel={() => setModalType(null)}
         />

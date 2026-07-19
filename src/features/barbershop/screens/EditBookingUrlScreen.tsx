@@ -10,6 +10,7 @@ import {
 import { useDebounce, useMemberRole } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useRouter } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
@@ -18,6 +19,7 @@ import { AppText } from "@/src/components/AppText";
 export function EditBookingUrlScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
 
   const { data: barbershop, isLoading: isFetching } = useBarbershopCurrent();
   const { mutate: updateSettings, isPending: isSaving } =
@@ -52,15 +54,15 @@ export function EditBookingUrlScreen() {
     if (!isChanged) return null;
     if (!isValidSlug)
       return {
-        text: "Only letters, numbers, and hyphens between words.",
+        text: t("barbershop.slugLabel"),
         color: Colors.status.danger,
       };
-    if (isTyping) return { text: "Checking availability...", color: Colors.status.warning };
+    if (isTyping) return { text: t("common.loading"), color: Colors.status.warning };
     if (isCheckingSlug)
-      return { text: "Checking availability...", color: Colors.status.warning };
-    if (isAvailable === true) return { text: "Available ✓", color: Colors.status.success };
+      return { text: t("common.loading"), color: Colors.status.warning };
+    if (isAvailable === true) return { text: t("common.success"), color: Colors.status.success };
     if (isAvailable === false)
-      return { text: "Slug not available", color: Colors.status.danger };
+      return { text: t("common.error"), color: Colors.status.danger };
     return null;
   }, [isChanged, isValidSlug, isTyping, isCheckingSlug, isAvailable]);
 
@@ -78,11 +80,11 @@ export function EditBookingUrlScreen() {
       { slug: slug.trim() },
       {
         onSuccess: () => {
-          toast.success("Booking URL updated");
+          toast.success(t("toast.updateSuccess"));
           router.back();
         },
         onError: (error) => {
-          toast.error(error.message || "Failed to update booking URL");
+          toast.error(error.message || t("toast.unknownError"));
         },
       },
     );
@@ -93,7 +95,7 @@ export function EditBookingUrlScreen() {
       hideAppHeader
       headerSlot={
         <EditFieldHeader
-          title="Book Url"
+          title={t("barbershop.slugLabel")}
           onBack={() => router.back()}
           onSave={canSave ? handleSave : undefined}
           hideSave={!isOwner}
@@ -111,7 +113,7 @@ export function EditBookingUrlScreen() {
         <>
           <TextInputField
             label="https://cukkr.com/"
-            placeholder="your-barbershop"
+            placeholder={t("barbershop.slugLabel")}
             value={slug}
             onChangeText={setSlug}
             editable={isOwner}
@@ -128,14 +130,14 @@ export function EditBookingUrlScreen() {
             ]}
             errorLine={
               isChanged && !isValidSlug
-                ? "Only letters, numbers, and hyphens between words."
+                ? t("barbershop.slugLabel")
                 : undefined
             }
             style={styles.helper}
           />
           {!isOwner && (
             <View style={styles.viewOnlyBanner}>
-              <AppText style={styles.viewOnlyText}>Only the barbershop owner can edit the booking URL</AppText>
+              <AppText style={styles.viewOnlyText}>{t("common.noPermission")}</AppText>
             </View>
           )}
         </>

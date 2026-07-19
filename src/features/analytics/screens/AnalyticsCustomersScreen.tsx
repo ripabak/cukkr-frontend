@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   ActivityIndicator,
   StyleSheet,
@@ -63,6 +64,7 @@ const statusStyles = StyleSheet.create({
 
 export function AnalyticsCustomersScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
   const { range: rangeParam } = useLocalSearchParams<{
     range?: AnalyticsRange;
   }>();
@@ -140,7 +142,7 @@ export function AnalyticsCustomersScreen() {
         >
           <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
         </TouchableOpacity>
-        <AppText style={styles.pageTitle}>Customers</AppText>
+        <AppText style={styles.pageTitle}>{t("customers.title")}</AppText>
         <View style={styles.topBarRight} />
       </View>
 
@@ -157,7 +159,7 @@ export function AnalyticsCustomersScreen() {
           {/* Top row: total + split */}
           <View style={styles.statsRow}>
             <StatCard
-              label="Customers"
+              label={t("customers.title")}
               value={String(stats.totalCustomers?.current ?? 0)}
               icon={
                 <Ionicons
@@ -177,7 +179,7 @@ export function AnalyticsCustomersScreen() {
                     size={12}
                     color={Colors.text.secondary}
                   />
-                  <AppText style={styles.splitLabel}>Walk-in</AppText>
+                  <AppText style={styles.splitLabel}>{t("home.walkIn")}</AppText>
                 </View>
                 <AppText style={styles.splitValue}>
                   {stats.totalWalkIn?.current ?? 0}
@@ -190,7 +192,7 @@ export function AnalyticsCustomersScreen() {
                     size={12}
                     color={Colors.text.secondary}
                   />
-                  <AppText style={styles.splitLabel}>Appt</AppText>
+                  <AppText style={styles.splitLabel}>{t("home.appointment")}</AppText>
                 </View>
                 <AppText style={styles.splitValue}>
                   {stats.totalAppointment?.current ?? 0}
@@ -202,7 +204,7 @@ export function AnalyticsCustomersScreen() {
           {/* New / Return */}
           <View style={[styles.statsRow, { marginTop: 10 }]}>
             <StatCard
-              label="New Customers"
+              label={t("customers.title")}
               value={String(stats.totalNew?.current ?? 0)}
               icon={
                 <Ionicons
@@ -215,7 +217,7 @@ export function AnalyticsCustomersScreen() {
               style={styles.statFlex}
             />
             <StatCard
-              label="Returning"
+              label={t("customers.title")}
               value={String(stats.totalReturn?.current ?? 0)}
               icon={
                 <Ionicons
@@ -234,7 +236,7 @@ export function AnalyticsCustomersScreen() {
       {chart && chart.length > 0 ? (
         <View style={styles.chartCard}>
           <View style={styles.chartCardHeader}>
-            <AppText style={styles.chartCardTitle}>Customer Trend</AppText>
+            <AppText style={styles.chartCardTitle}>{t("customers.title")}</AppText>
             {stats ? (
               <TrendBadge
                 direction={stats.totalCustomers?.direction ?? "neutral"}
@@ -281,7 +283,7 @@ export function AnalyticsCustomersScreen() {
             style={styles.listLoader}
           />
         ) : customers.length === 0 ? (
-          <AppText style={styles.emptyText}>No customers found</AppText>
+          <AppText style={styles.emptyText}>{t("components.emptyState.defaultMessage")}</AppText>
         ) : (
           customers.map((c) => (
             <TouchableOpacity

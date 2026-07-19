@@ -4,6 +4,7 @@ import { StyleSheet, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
 
 import { useToast } from "@/src/lib/providers";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { authTheme } from "../auth-theme";
 import { AuthButton } from "../components/AuthButton";
 import { AuthScreenShell } from "../components/AuthScreenShell";
@@ -17,6 +18,7 @@ import { getErrorMessage } from "../utils/error-handler";
 export function VerifyOtpScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const { email, redirect } = useLocalSearchParams<{
     email: string;
     redirect?: string;
@@ -31,7 +33,7 @@ export function VerifyOtpScreen() {
     try {
       await sendOtp({ email, type: "forget-password" });
       countdown.reset();
-      toast.success("OTP sent successfully");
+      toast.success(t("auth.otpSent"));
     } catch (error) {
       toast.error(getErrorMessage(error));
     }
@@ -39,7 +41,7 @@ export function VerifyOtpScreen() {
 
   const handleContinue = () => {
     if (otp.length < 4) {
-      toast.error("Please enter a valid OTP");
+      toast.error(t("common.error"));
       return;
     }
 
@@ -51,8 +53,8 @@ export function VerifyOtpScreen() {
 
   return (
     <AuthScreenShell
-      title="Verify Your Code"
-      description={`Enter the code sent to ${email || "your email"} to proceed.`}
+      title={t("auth.verifyOtp")}
+      description={t("auth.verifyOtpDescription", { email: email || t("auth.email") })}
     >
       <OtpCodeInput onChange={setOtp} value={otp} length={4} />
 
@@ -61,13 +63,13 @@ export function VerifyOtpScreen() {
       </View>
 
       <AuthButton
-        label={resending ? "Sending..." : "Send Again"}
+        label={resending ? t("common.saving") : t("auth.resendOtp")}
         variant="secondary"
         onPress={handleResend}
         disabled={resending || countdown.isActive}
       />
       <AuthButton
-        label="Continue"
+        label={t("common.next")}
         onPress={handleContinue}
         disabled={otp.length < 4}
       />

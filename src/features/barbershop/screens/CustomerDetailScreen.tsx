@@ -19,6 +19,7 @@ import {
   useCustomerChart,
 } from "@/src/features/barbershop/hooks";
 import { formatCurrency } from "@/src/features/barbershop/utils/form-validators";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -44,6 +45,7 @@ const DETAIL_TABS = [
   { key: "messages", label: "Messages" },
 ];
 
+
 const EMPTY_MESSAGES: MessageItem[] = [];
 
 interface Props {
@@ -52,6 +54,7 @@ interface Props {
 
 export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
   const router = useRouter();
+  const { t } = useI18nContext();
   const { customerId = "" } = useLocalSearchParams<{ customerId?: string }>();
   const [activeTab, setActiveTab] = useState<string>(defaultTab);
   const [filterVisible, setFilterVisible] = useState(false);
@@ -100,7 +103,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
 
       <AppText style={styles.customerName}>{customer?.name ?? "—"}</AppText>
       <AppText style={styles.customerPhone}>
-        {customer?.phone ?? customer?.email ?? "No contact"}
+        {customer?.phone ?? customer?.email ?? t("common.noData")}
         {customer?.emailVerified || customer?.phoneVerified ? " (verified)" : ""}
       </AppText>
 
@@ -115,7 +118,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
         <View style={styles.tabContent}>
           <View style={styles.statRow}>
             <StatCard
-              label="Book Value"
+              label={t("customers.bookingHistory")}
               value={formatCurrency(customer.totalSpend)}
               style={styles.statCard}
             />
@@ -127,14 +130,14 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
           </View>
           <View style={styles.statRow}>
             <StatCard
-              label="Walk-In"
+              label={t("home.walkIn")}
               value={String(customer.walkInCount)}
               iconName="people"
               iconColor={Colors.brand.primary}
               style={styles.statCard}
             />
             <StatCard
-              label="Appoint."
+              label={t("home.appointment")}
               value={String(customer.appointmentCount)}
               iconName="calendar"
               iconColor={Colors.brand.primary}
@@ -142,8 +145,8 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
             />
           </View>
           <CustomerBookingChart
-            title="Book Stats"
-            subtitle={`${customer.completedCount} completed · ${customer.cancelledCount} cancelled`}
+            title={t("bookings.detail")}
+              subtitle={`${customer.completedCount} ${t("schedule.status.completed")} · ${customer.cancelledCount} ${t("schedule.status.cancelled")}`}
             data={chartData}
             style={styles.chartCard}
           />
@@ -164,7 +167,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
             >
               <AppText style={styles.filterLabel}>
                 {SCHEDULE_STATUS_OPTIONS.find((o) => o.value === statusFilter)
-                  ?.label ?? "All"}
+                  ?.label ?? t("common.all")}
               </AppText>
               <Ionicons
                 name="chevron-down"
@@ -222,7 +225,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
       {activeTab === "messages" && (
         <View style={styles.tabContent}>
           <MessageThread messages={EMPTY_MESSAGES} />
-          <AppText style={styles.noMessages}>No messages sent yet.</AppText>
+          <AppText style={styles.noMessages}>{t("customers.noBookings")}</AppText>
         </View>
       )}
     </ScreenShell>

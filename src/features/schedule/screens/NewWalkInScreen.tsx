@@ -7,6 +7,7 @@ import { FormShell } from "@/src/features/schedule/components/FormShell";
 import { useNewBookingForm } from "@/src/features/schedule/context/NewBookingContext";
 import { useCreateBooking } from "@/src/features/schedule/hooks";
 import { useToast } from "@/src/lib/providers";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { getErrorMessage } from "@/src/lib/utils/error-handler";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -17,6 +18,7 @@ type BookingType = "appointment" | "walkin";
 export function NewWalkInScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const { formData, updateFormData, resetFormData } = useNewBookingForm();
   const { mutate: createBooking, isPending } = useCreateBooking();
 
@@ -54,7 +56,7 @@ export function NewWalkInScreen() {
       },
       {
         onSuccess: () => {
-          toast.success("Walk-in created");
+          toast.success(t("toast.createSuccess"));
           resetFormData();
           router.back();
         },

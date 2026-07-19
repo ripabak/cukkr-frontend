@@ -9,6 +9,7 @@ import { FormShell } from "@/src/features/schedule/components/FormShell";
 import { useNewBookingForm } from "@/src/features/schedule/context/NewBookingContext";
 import { useCreateBooking } from "@/src/features/schedule/hooks";
 import { useToast } from "@/src/lib/providers";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { getErrorMessage } from "@/src/lib/utils/error-handler";
 import { useRouter } from "expo-router";
 import React, { useMemo, useState } from "react";
@@ -68,6 +69,7 @@ function isSameDay(a: Date, b: Date): boolean {
 export function NewAppointmentScreen() {
   const router = useRouter();
   const toast = useToast();
+  const { t } = useI18nContext();
   const { formData, updateFormData, resetFormData } = useNewBookingForm();
   const { mutateAsync: createBooking, isPending } = useCreateBooking();
   const { data: openHoursData } = useOpenHours();
@@ -173,7 +175,7 @@ export function NewAppointmentScreen() {
         barberId: formData.barberId ?? undefined,
         notes: formData.notes || null,
       });
-      toast.success("Appointment created");
+      toast.success(t("toast.createSuccess"));
       resetFormData();
       router.back();
     } catch (error) {

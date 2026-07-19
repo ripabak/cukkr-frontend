@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { OnboardingButton } from "../components/OnboardingButton";
 import { OnboardingCard } from "../components/OnboardingCard";
 import { OnboardingContainer } from "../components/OnboardingContainer";
@@ -13,6 +14,7 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 export function OnboardingEasyBookingScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
 
   return (
     <OnboardingContainer style={styles.container}>
@@ -48,7 +50,7 @@ export function OnboardingEasyBookingScreen() {
         <OnboardingIndicator current={0} total={3} />
 
         <View style={styles.textContent}>
-          <AppText style={styles.heading}>Easy Booking with One Link</AppText>
+          <AppText style={styles.heading}>{t("home.newBooking")}</AppText>
           <AppText style={styles.body}>
             Share your booking link on social media.{"\n"}
             Customers book by themselves — no chat,{"\n"}
@@ -59,7 +61,7 @@ export function OnboardingEasyBookingScreen() {
         <View style={styles.spacer} />
 
         <OnboardingButton
-          label="Love it"
+          label={t("common.next")}
           onPress={() => router.push("/d/onboarding-run-barbershop")}
           style={styles.button}
         />

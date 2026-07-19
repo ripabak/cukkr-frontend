@@ -4,6 +4,7 @@ import { MultilineInputField } from "@/src/components/MultilineInputField";
 import { TextInputField } from "@/src/components/TextInputField";
 import { useChangePassword } from "@/src/features/auth/hooks";
 import { useToast } from "@/src/lib/providers/toast";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useGlobalSearchParams, useRouter } from "expo-router";
@@ -27,6 +28,7 @@ export function EditUserProfileFieldsScreen() {
   const router = useRouter();
   const toast = useToast();
   const insets = useSafeAreaInsets();
+  const { t } = useI18nContext();
   const rawMode = useGlobalSearchParams().mode;
   const modeStr = Array.isArray(rawMode) ? rawMode[0] : rawMode;
   const mode: EditMode = (modeStr as EditMode) ?? "name";
@@ -67,7 +69,7 @@ export function EditUserProfileFieldsScreen() {
 
     try {
       await updateProfile({ name: name.trim(), bio: bio.trim() || null });
-      toast.success("Profile updated successfully");
+      toast.success(t("common.saveSuccess"));
       router.back();
     } catch (error) {
       toast.error(getErrorMessage(error));
@@ -85,7 +87,7 @@ export function EditUserProfileFieldsScreen() {
 
     try {
       await changePassword({ currentPassword, newPassword });
-      toast.success("Password changed successfully");
+      toast.success(t("common.saveSuccess"));
       router.back();
     } catch (error) {
       toast.error(getErrorMessage(error));
@@ -184,7 +186,7 @@ export function EditUserProfileFieldsScreen() {
             style={styles.forgotRow}
             onPress={() => router.push("/d/forgot-password")}
           >
-            <AppText style={styles.forgotText}>Forgot Password</AppText>
+            <AppText style={styles.forgotText}>{t("auth.forgotPassword")}</AppText>
           </TouchableOpacity>
           <HelperCopy
             lines={["Enter your current password, then set your new password."]}

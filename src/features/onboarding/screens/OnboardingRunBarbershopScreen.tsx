@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { OnboardingButton } from "../components/OnboardingButton";
 import { OnboardingCard } from "../components/OnboardingCard";
 import { OnboardingContainer } from "../components/OnboardingContainer";
@@ -13,6 +14,7 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 export function OnboardingRunBarbershopScreen() {
   const router = useRouter();
+  const { t } = useI18nContext();
 
   return (
     <OnboardingContainer style={styles.container}>
@@ -55,7 +57,7 @@ export function OnboardingRunBarbershopScreen() {
 
         <View style={styles.textContent}>
           <AppText style={styles.heading}>
-            Run Your Barbershop{"\n"}with Full Control
+            {t("schedule.title")}
           </AppText>
           <AppText style={styles.body}>
             Manage bookings, walk-ins, barbers, and services{"\n"}
@@ -67,7 +69,7 @@ export function OnboardingRunBarbershopScreen() {
         <View style={styles.spacer} />
 
         <OnboardingButton
-          label="Next"
+          label={t("common.next")}
           onPress={() => router.push("/d/onboarding-customer-happy")}
           style={styles.button}
         />
