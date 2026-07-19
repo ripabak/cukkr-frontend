@@ -122,8 +122,7 @@ export function AnalyticsBarbersScreen() {
                       {barber.name}
                     </AppText>
                     <AppText style={styles.barberMeta}>
-                      {barber.totalCustomers} customer
-                      {barber.totalCustomers !== 1 ? "s" : ""}
+                      {t("barbers.customersCount", { count: String(barber.totalCustomers) })}
                     </AppText>
                   </View>
                 </View>

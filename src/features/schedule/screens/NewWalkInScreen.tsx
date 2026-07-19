@@ -37,11 +37,11 @@ export function NewWalkInScreen() {
 
   function handleSubmit() {
     if (!formData.customerName.trim()) {
-      toast.error("Please enter customer name");
+      toast.error(t("schedule.pleaseEnterName"));
       return;
     }
     if (formData.serviceIds.length === 0) {
-      toast.error("Please select at least one service");
+      toast.error(t("schedule.pleaseSelectService"));
       return;
     }
 
@@ -73,7 +73,7 @@ export function NewWalkInScreen() {
       hideAppHeader
       headerSlot={
         <ScreenHeader
-          title="New Walk-In"
+          title={t("schedule.newWalkIn")}
           onBack={() => router.back()}
           rightAction={
             <BookingTypeToggle
@@ -86,7 +86,7 @@ export function NewWalkInScreen() {
       footerSlot={
         <View style={styles.footer}>
           <PrimaryButton
-            label="New Walk-In"
+            label={t("schedule.newWalkIn")}
             onPress={handleSubmit}
             disabled={isPending || !isValid}
           />

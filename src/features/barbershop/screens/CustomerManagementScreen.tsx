@@ -16,12 +16,14 @@ import { AppText } from "@/src/components/AppText";
 
 type CustomerSort = "name_asc" | "recent" | "bookings_desc" | "spend_desc";
 
-const SORT_OPTIONS = [
-  { label: "Sort by Name", value: "name_asc" },
-  { label: "Sort by Total Bookings", value: "bookings_desc" },
-  { label: "Sort by Spend", value: "spend_desc" },
-  { label: "Recently Added", value: "recent" },
-];
+function getSortOptions(t: (key: string) => string) {
+  return [
+    { label: t("customers.sortByName"), value: "name_asc" },
+    { label: t("customers.sortByTotalBookings"), value: "bookings_desc" },
+    { label: t("customers.sortBySpend"), value: "spend_desc" },
+    { label: t("customers.recentlyAdded"), value: "recent" },
+  ];
+}
 
 export function CustomerManagementScreen() {
   const router = useRouter();
@@ -102,7 +104,7 @@ export function CustomerManagementScreen() {
       overlaySlot={
         <SortMenu
           visible={sortVisible}
-          options={SORT_OPTIONS}
+          options={getSortOptions(t)}
           selected={sortValue}
           onSelect={(v) => setSortValue(v as CustomerSort)}
           onClose={() => setSortVisible(false)}
@@ -118,8 +120,8 @@ export function CustomerManagementScreen() {
       {!selectionMode && (
         <AppText style={styles.hint}>
           {hasContact
-            ? "Only customers with valid contact information will appear here."
-            : "Showing all customers including those without contact info."}
+            ? t("customers.onlyWithContact")
+            : t("customers.showingAll")}
         </AppText>
       )}
 

@@ -24,8 +24,8 @@ export function SendMessagesToCustomersScreen() {
   const [message, setMessage] = useState("");
 
   const title = recipientName
-    ? `Send Message to ${recipientName}`
-    : `Send Messages (${count})`;
+    ? t("customers.sendMessageTo", { name: recipientName })
+    : t("customers.sendMessages", { count: String(count) });
 
   const selectionMode = !recipientName;
   const bgColor = selectionMode ? Colors.brand.primary : Colors.bg.default;
@@ -35,7 +35,7 @@ export function SendMessagesToCustomersScreen() {
       toast.error(t("common.error"));
       return;
     }
-    toast.info("Messaging feature coming soon");
+    toast.info(t("customers.msgComingSoon"));
   };
 
   const canSend = message.trim().length > 0;
@@ -75,10 +75,10 @@ export function SendMessagesToCustomersScreen() {
           />
           <HelperCopy
             lines={[
-              "Send messages or announcements to your customers.",
-              "Keep them informed about promotions, new services, or important updates.",
+              t("customers.msgHelper1"),
+              t("customers.msgHelper2"),
               "",
-              "It will send the message through registered email or mobile phone.",
+              t("customers.msgHelper3"),
             ]}
             style={styles.helper}
           />

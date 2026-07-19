@@ -18,22 +18,6 @@ import { AppText } from "@/src/components/AppText";
 
 type BookingType = "appointment" | "walkin";
 
-const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const MONTH_LABELS = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
 function generateTimeSlots(
   openTime: string,
   closeTime: string,
@@ -69,7 +53,7 @@ function isSameDay(a: Date, b: Date): boolean {
 export function NewAppointmentScreen() {
   const router = useRouter();
   const toast = useToast();
-  const { t } = useI18nContext();
+  const { t, language } = useI18nContext();
   const { formData, updateFormData, resetFormData } = useNewBookingForm();
   const { mutateAsync: createBooking, isPending } = useCreateBooking();
   const { data: openHoursData } = useOpenHours();
@@ -100,6 +84,13 @@ export function NewAppointmentScreen() {
     setDayAvailability(dayHours);
   }
 
+  function formatDateLocale(date: Date, language: string): string {
+    const locale = language === 'id' ? 'id-ID' : 'en-US';
+    const dayFormat = new Intl.DateTimeFormat(locale, { weekday: 'short' });
+    const monthFormat = new Intl.DateTimeFormat(locale, { month: 'short' });
+    return `${dayFormat.format(date)}, ${date.getDate()} ${monthFormat.format(date)} ${date.getFullYear()}`;
+  }
+
   function handleTimeSlotSelect(slot: string) {
     if (!selectedDate) return;
     setSelectedTimeSlot(slot);
@@ -109,7 +100,7 @@ export function NewAppointmentScreen() {
     const amPm = h >= 12 ? "PM" : "AM";
     const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
     const mm = String(m).padStart(2, "0");
-    const label = `${DAY_LABELS[selectedDate.getDay()]}, ${selectedDate.getDate()} ${MONTH_LABELS[selectedDate.getMonth()]} ${selectedDate.getFullYear()} ${h12}:${mm} ${amPm}`;
+    const label = `${formatDateLocale(selectedDate, language)} ${h12}:${mm} ${amPm}`;
     setDisplayDateTime(label);
     updateFormData({ scheduledAt: d.toISOString() });
   }
@@ -136,7 +127,7 @@ export function NewAppointmentScreen() {
   }, [dayAvailability, selectedDate]);
 
   const displayDateOnly = selectedDate
-    ? `${DAY_LABELS[selectedDate.getDay()]}, ${selectedDate.getDate()} ${MONTH_LABELS[selectedDate.getMonth()]} ${selectedDate.getFullYear()}`
+    ? formatDateLocale(selectedDate, language)
     : undefined;
 
   const isValid =
@@ -153,15 +144,15 @@ export function NewAppointmentScreen() {
 
   async function handleSubmit() {
     if (!formData.customerName.trim()) {
-      toast.error("Please enter customer name");
+      toast.error(t("schedule.pleaseEnterName"));
       return;
     }
     if (!formData.scheduledAt) {
-      toast.error("Please select date and time");
+      toast.error(t("schedule.pleaseSelectDateTime"));
       return;
     }
     if (formData.serviceIds.length === 0) {
-      toast.error("Please select at least one service");
+      toast.error(t("schedule.pleaseSelectService"));
       return;
     }
 
@@ -189,7 +180,7 @@ export function NewAppointmentScreen() {
       hideAppHeader
       headerSlot={
         <ScreenHeader
-          title="New Appointment"
+          title={t("schedule.newAppointment")}
           onBack={() => router.back()}
           rightAction={
             <BookingTypeToggle
@@ -202,7 +193,7 @@ export function NewAppointmentScreen() {
       footerSlot={
         <View style={styles.footer}>
           <PrimaryButton
-            label="New Appointment"
+            label={t("schedule.newAppointment")}
             onPress={handleSubmit}
             disabled={isPending || !isValid}
           />
@@ -230,12 +221,12 @@ export function NewAppointmentScreen() {
           {dayAvailability && !dayAvailability.isOpen ? (
             <View style={styles.closedBox}>
               <AppText style={styles.closedText}>
-                Barbershop is closed on this date. Please choose another date.
+                {t("schedule.barbershopClosed")}
               </AppText>
             </View>
           ) : timeSlots.length > 0 ? (
             <View>
-              <AppText style={styles.timeSectionLabel}>Select a time</AppText>
+              <AppText style={styles.timeSectionLabel}>{t("schedule.selectTime")}</AppText>
               <View style={styles.slotsGrid}>
                 {timeSlots.map((slot) => (
                   <TouchableOpacity

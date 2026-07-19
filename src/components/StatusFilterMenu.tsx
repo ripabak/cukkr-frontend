@@ -8,11 +8,11 @@ import {
   ViewStyle,
 } from "react-native";
 
-interface StatusOption {
+export type StatusOption = {
   label: string;
   value: string;
   color?: string;
-}
+};
 
 interface Props {
   visible: boolean;
@@ -23,30 +23,36 @@ interface Props {
   style?: ViewStyle;
 }
 
-export const SCHEDULE_STATUS_OPTIONS: StatusOption[] = [
-  { label: "All", value: "all" },
-  { label: "Requested", value: "requested" },
-  { label: "Waiting", value: "waiting", color: Colors.status.waiting },
-  {
-    label: "In Progress",
-    value: "in_progress",
-    color: Colors.status.inProgress,
-  },
-  { label: "Completed", value: "completed", color: Colors.status.success },
-  { label: "Cancelled", value: "cancelled", color: Colors.status.danger },
-];
+type TFunction = (key: string, params?: Record<string, string>) => string;
 
-export const HISTORY_STATUS_OPTIONS: StatusOption[] = [
-  { label: "All", value: "all" },
-  { label: "Completed", value: "completed", color: Colors.status.success },
-  { label: "Waiting", value: "waiting", color: Colors.status.waiting },
-  {
-    label: "In Progress",
-    value: "in_progress",
-    color: Colors.status.inProgress,
-  },
-  { label: "Canceled", value: "canceled", color: Colors.status.danger },
-];
+export function getScheduleStatusOptions(t: TFunction): StatusOption[] {
+  return [
+    { label: t("common.all"), value: "all" },
+    { label: t("schedule.status.requested"), value: "requested" },
+    { label: t("schedule.status.waiting"), value: "waiting", color: Colors.status.waiting },
+    {
+      label: t("schedule.status.inProgress"),
+      value: "in_progress",
+      color: Colors.status.inProgress,
+    },
+    { label: t("schedule.status.completed"), value: "completed", color: Colors.status.success },
+    { label: t("schedule.status.cancelled"), value: "cancelled", color: Colors.status.danger },
+  ];
+}
+
+export function getHistoryStatusOptions(t: TFunction): StatusOption[] {
+  return [
+    { label: t("common.all"), value: "all" },
+    { label: t("schedule.status.completed"), value: "completed", color: Colors.status.success },
+    { label: t("schedule.status.waiting"), value: "waiting", color: Colors.status.waiting },
+    {
+      label: t("schedule.status.inProgress"),
+      value: "in_progress",
+      color: Colors.status.inProgress,
+    },
+    { label: t("schedule.status.cancelled"), value: "canceled", color: Colors.status.danger },
+  ];
+}
 
 export function StatusFilterMenu({
   visible,

@@ -1,3 +1,4 @@
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
@@ -13,10 +14,14 @@ interface Props {
   onCancel: () => void;
 }
 
-const ROLE_OPTIONS: { value: "admin" | "member"; label: string }[] = [
-  { value: "admin", label: "Admin" },
-  { value: "member", label: "Member" },
-];
+type TFunction = (key: string, params?: Record<string, string>) => string;
+
+function getRoleOptions(t: TFunction): { value: "admin" | "member"; label: string }[] {
+  return [
+    { value: "admin", label: t("barbers.admin") },
+    { value: "member", label: t("barbers.member") },
+  ];
+}
 
 export function RoleChangeModal({
   visible,
@@ -25,6 +30,7 @@ export function RoleChangeModal({
   onSave,
   onCancel,
 }: Props) {
+  const { t } = useI18nContext();
   const { frameWidth } = useFrame();
   const initialRole = currentRole === "admin" ? "admin" : "member";
   const [selectedRole, setSelectedRole] = useState<"admin" | "member">(initialRole);
@@ -38,16 +44,16 @@ export function RoleChangeModal({
             <Ionicons name="shield-checkmark-outline" size={32} color={Colors.text.primary} />
           </View>
 
-          <AppText style={styles.title}>Change Role</AppText>
+          <AppText style={styles.title}>{t("barbers.changeRole")}</AppText>
           <AppText style={styles.description}>
             {memberName}
           </AppText>
           <AppText style={styles.currentRole}>
-            Current: {currentRole.charAt(0).toUpperCase() + currentRole.slice(1)}
+            {t("barbers.currentRole", { role: currentRole.charAt(0).toUpperCase() + currentRole.slice(1) })}
           </AppText>
 
           <View style={styles.optionsRow}>
-            {ROLE_OPTIONS.map((opt) => {
+            {getRoleOptions(t).map((opt) => {
               const isSelected = selectedRole === opt.value;
               return (
                 <TouchableOpacity
@@ -78,7 +84,7 @@ export function RoleChangeModal({
               activeOpacity={0.8}
               style={[styles.btn, styles.btnCancel]}
             >
-              <AppText style={styles.btnCancelText}>Cancel</AppText>
+              <AppText style={styles.btnCancelText}>{t("common.cancel")}</AppText>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => onSave(selectedRole)}
@@ -96,7 +102,7 @@ export function RoleChangeModal({
                   !hasChanged && styles.btnSaveTextDisabled,
                 ]}
               >
-                Save
+                {t("common.save")}
               </AppText>
             </TouchableOpacity>
           </View>

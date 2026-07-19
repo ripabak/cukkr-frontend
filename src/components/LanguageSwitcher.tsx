@@ -4,6 +4,7 @@ import { SUPPORTED_LANGUAGES } from '@/src/lib/i18n'
 import { Colors } from '@/src/theme/colors'
 import { useToast } from '@/src/lib/providers/toast'
 import { getErrorMessage } from '@/src/lib/utils/error-handler'
+import { Ionicons } from '@expo/vector-icons'
 import React, { useCallback, useState } from 'react'
 import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native'
 
@@ -30,28 +31,33 @@ export function LanguageSwitcher() {
 
   return (
     <View style={styles.container}>
-      {SUPPORTED_LANGUAGES.map((lang) => {
+      {SUPPORTED_LANGUAGES.map((lang, index) => {
         const isSelected = language === lang.value
         const isLoading = changingLang === lang.value
+        const isLast = index === SUPPORTED_LANGUAGES.length - 1
         return (
           <Pressable
             key={lang.value}
-            style={[styles.option, isSelected && styles.optionSelected]}
+            style={[styles.option, !isLast && styles.borderBottom]}
             onPress={() => handleChange(lang.value)}
             disabled={isLoading}
           >
-            {isLoading ? (
-              <ActivityIndicator size="small" color={Colors.text.primary} />
-            ) : (
+            <View style={styles.rowContent}>
+              <AppText style={styles.flag}>{lang.flag}</AppText>
               <AppText
                 style={[
-                  styles.optionText,
-                  isSelected && styles.optionTextSelected,
+                  styles.label,
+                  isSelected && styles.labelSelected,
                 ]}
               >
                 {lang.label}
               </AppText>
-            )}
+              {isLoading ? (
+                <ActivityIndicator size="small" color={Colors.text.primary} />
+              ) : isSelected ? (
+                <Ionicons name="checkmark-circle" size={20} color={Colors.brand.primary} />
+              ) : null}
+            </View>
           </Pressable>
         )
       })}
@@ -60,30 +66,30 @@ export function LanguageSwitcher() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    gap: 8,
-  },
+  container: {},
   option: {
-    flex: 1,
-    paddingVertical: 10,
     paddingHorizontal: 16,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
+    paddingVertical: 16,
+  },
+  borderBottom: {
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border.light,
+  },
+  rowContent: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    gap: 10,
   },
-  optionSelected: {
-    backgroundColor: Colors.brand.primarySurface,
-    borderColor: Colors.brand.primary,
+  flag: {
+    fontSize: 22,
   },
-  optionText: {
+  label: {
     fontSize: 14,
-    fontWeight: '600',
-    color: Colors.text.secondary,
+    fontWeight: '700',
+    color: Colors.text.primary,
+    flex: 1,
   },
-  optionTextSelected: {
+  labelSelected: {
     color: Colors.brand.primaryDark,
   },
 })

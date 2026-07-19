@@ -125,8 +125,8 @@ export function EditBookingUrlScreen() {
           )}
           <HelperCopy
             lines={[
-              "This is your public booking link that customers use to make appointments.",
-              "Use only letters, numbers, and hyphens.",
+              t("barbershop.urlHelper1"),
+              t("barbershop.urlHelper2"),
             ]}
             errorLine={
               isChanged && !isValidSlug

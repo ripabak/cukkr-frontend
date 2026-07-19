@@ -1,3 +1,4 @@
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
@@ -22,22 +23,22 @@ interface Props {
   style?: ViewStyle;
 }
 
-const DEFAULT_OPTIONS: SortOption[] = [
-  { label: "Sort by Name", value: "name" },
-  { label: "Sort by Lowest", value: "lowest" },
-  { label: "Sort by Highest", value: "highest" },
-  { label: "Sort by Recently Added", value: "recent" },
-  { label: "Sort by Oldest First", value: "oldest" },
-];
-
 export function SortMenu({
   visible,
-  options = DEFAULT_OPTIONS,
+  options,
   selected,
   onSelect,
   onClose,
   style,
 }: Props) {
+  const { t } = useI18nContext();
+  const resolvedOptions = options ?? [
+    { label: t("components.sortMenu.sortByName"), value: "name" },
+    { label: t("components.sortMenu.sortByLowest"), value: "lowest" },
+    { label: t("components.sortMenu.sortByHighest"), value: "highest" },
+    { label: t("components.sortMenu.sortByRecent"), value: "recent" },
+    { label: t("components.sortMenu.sortByOldest"), value: "oldest" },
+  ];
   if (!visible) return null;
 
   return (
@@ -48,7 +49,7 @@ export function SortMenu({
         activeOpacity={1}
       />
       <View style={[styles.menu, style]}>
-        {options.map((opt, index) => (
+        {resolvedOptions.map((opt, index) => (
           <TouchableOpacity
             key={opt.value}
             onPress={() => {
@@ -58,7 +59,7 @@ export function SortMenu({
             activeOpacity={0.7}
             style={[
               styles.item,
-              index < options.length - 1 && styles.itemBorder,
+              index < resolvedOptions.length - 1 && styles.itemBorder,
             ]}
           >
             <AppText

@@ -2,7 +2,7 @@ import { Colors } from "@/src/theme/colors";
 import { BookingCard } from "@/src/components/BookingCard";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import {
-  SCHEDULE_STATUS_OPTIONS,
+  getScheduleStatusOptions,
   StatusFilterMenu,
 } from "@/src/components/StatusFilterMenu";
 import { CustomerBookingChart } from "@/src/features/barbershop/components/CustomerBookingChart";
@@ -39,11 +39,13 @@ type BookingStatus =
   | "completed"
   | "cancelled";
 
-const DETAIL_TABS = [
-  { key: "general", label: "General" },
-  { key: "books", label: "Books" },
-  { key: "messages", label: "Messages" },
-];
+function getDetailTabs(t: (key: string) => string) {
+  return [
+    { key: "general", label: t("customers.general") },
+    { key: "books", label: t("customers.books") },
+    { key: "messages", label: t("customers.messages") },
+  ];
+}
 
 
 const EMPTY_MESSAGES: MessageItem[] = [];
@@ -104,11 +106,11 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
       <AppText style={styles.customerName}>{customer?.name ?? "—"}</AppText>
       <AppText style={styles.customerPhone}>
         {customer?.phone ?? customer?.email ?? t("common.noData")}
-        {customer?.emailVerified || customer?.phoneVerified ? " (verified)" : ""}
+        {customer?.emailVerified || customer?.phoneVerified ? ` (${t("common.verified")})` : ""}
       </AppText>
 
       <SegmentedTabs
-        tabs={DETAIL_TABS}
+        tabs={getDetailTabs(t)}
         activeKey={activeTab}
         onTabPress={setActiveTab}
         style={styles.tabs}
@@ -123,7 +125,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
               style={styles.statCard}
             />
             <StatCard
-              label="Books"
+              label={t("customers.books")}
               value={String(customer.totalBookings)}
               style={styles.statCard}
             />
@@ -157,7 +159,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
         <View style={styles.tabContent}>
           <View style={styles.bookingHeader}>
             <AppText style={styles.bookingTitle}>
-              Booking{" "}
+              {t("bookings.detail")}{" "}
               <AppText style={styles.bookingCount}>({bookings.length})</AppText>
             </AppText>
             <TouchableOpacity
@@ -166,7 +168,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
               activeOpacity={0.8}
             >
               <AppText style={styles.filterLabel}>
-                {SCHEDULE_STATUS_OPTIONS.find((o) => o.value === statusFilter)
+                {getScheduleStatusOptions(t).find((o) => o.value === statusFilter)
                   ?.label ?? t("common.all")}
               </AppText>
               <Ionicons
@@ -210,7 +212,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
           )}
           <StatusFilterMenu
             visible={filterVisible}
-            options={SCHEDULE_STATUS_OPTIONS}
+            options={getScheduleStatusOptions(t)}
             selected={statusFilter}
             onSelect={(s) => {
               setStatusFilter(s as BookingStatus);

@@ -1,6 +1,7 @@
 import { Colors } from "@/src/theme/colors";
 import React, { useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   Modal,
   View,
@@ -29,10 +30,12 @@ export function SwipeConfirmationModal({
   visible,
   title,
   description,
-  swipeLabel = "Swipe to complete",
+  swipeLabel,
   onComplete,
   onCancel,
 }: Props) {
+  const { t } = useI18nContext();
+  const resolvedSwipeLabel = swipeLabel ?? t("schedule.swipeToComplete");
   const { frameWidth } = useFrame();
   const pan = useRef(new Animated.Value(0)).current;
   const [completed, setCompleted] = useState(false);
@@ -103,7 +106,7 @@ export function SwipeConfirmationModal({
               <Ionicons name="arrow-forward" size={22} color="#FFFFFF" />
             </Animated.View>
             <AppText style={styles.swipeLabel}>
-              {completed ? "Completed!" : swipeLabel}
+              {completed ? t("schedule.swipeCompleted") : resolvedSwipeLabel}
             </AppText>
           </View>
         </TouchableOpacity>

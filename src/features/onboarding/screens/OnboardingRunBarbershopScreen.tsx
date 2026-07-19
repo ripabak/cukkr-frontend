@@ -60,9 +60,7 @@ export function OnboardingRunBarbershopScreen() {
             {t("schedule.title")}
           </AppText>
           <AppText style={styles.body}>
-            Manage bookings, walk-ins, barbers, and services{"\n"}
-            in one system.{"\n"}
-            Everything is structured, nothing gets missed.
+            {t("onboarding.runBarbershopBody")}
           </AppText>
         </View>
 

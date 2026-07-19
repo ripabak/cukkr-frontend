@@ -1,3 +1,4 @@
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
@@ -9,20 +10,20 @@ import {
 } from "react-native";
 import type { AnalyticsRange } from "../services/analytics.service";
 
-const RANGE_OPTIONS: { value: AnalyticsRange; label: string }[] = [
-  { value: "24h", label: "24H" },
-  { value: "week", label: "Week" },
-  { value: "month", label: "Month" },
-  { value: "6m", label: "6 Mo" },
-  { value: "1y", label: "1 Year" },
-];
-
 interface Props {
   value: AnalyticsRange;
   onChange: (range: AnalyticsRange) => void;
 }
 
 export function RangePicker({ value, onChange }: Props) {
+  const { t } = useI18nContext();
+  const RANGE_OPTIONS: { value: AnalyticsRange; label: string }[] = [
+    { value: "24h", label: t("analytics.ranges.24h") },
+    { value: "week", label: t("analytics.ranges.week") },
+    { value: "month", label: t("analytics.ranges.month") },
+    { value: "6m", label: t("analytics.ranges.6m") },
+    { value: "1y", label: t("analytics.ranges.1y") },
+  ];
   return (
     <View style={styles.wrapper}>
       <ScrollView

@@ -60,7 +60,7 @@ export function SelectServicesScreen() {
       hideAppHeader
       headerSlot={
         <ScreenHeader
-          title="Select Services"
+          title={t("schedule.selectServices")}
           onBack={() => router.back()}
           rightAction={
             <TouchableOpacity

@@ -1,3 +1,4 @@
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import React from "react";
 import { ConfirmationModal } from "./ConfirmationModal";
 
@@ -14,14 +15,15 @@ export function CrossOrgNotificationModal({
   onSwitch,
   onDismiss,
 }: Props) {
+  const { t } = useI18nContext();
   return (
     <ConfirmationModal
       visible={visible}
       icon="swap-horizontal"
-      title={`Notification from ${organizationName}`}
-      description="You have a new notification in another barbershop."
-      cancelLabel="Switch"
-      confirmLabel="Stay here"
+      title={t("notifications.crossOrgTitle", { name: organizationName })}
+      description={t("notifications.crossOrgDesc")}
+      cancelLabel={t("notifications.switch")}
+      confirmLabel={t("notifications.stayHere")}
       onCancel={onSwitch}
       onConfirm={onDismiss}
     />

@@ -26,13 +26,15 @@ const EMPTY_STAT = {
   direction: "neutral" as const,
 };
 
-const STATUS_OPTIONS = [
-  { label: "All", value: "all" },
-  { label: "New", value: "new", color: Colors.status.success },
-  { label: "Return", value: "return", color: Colors.status.info },
-];
+function getStatusOptions(t: (key: string) => string) {
+  return [
+    { label: t("analytics.all"), value: "all" },
+    { label: t("analytics.newCustomer"), value: "new", color: Colors.status.success },
+    { label: t("analytics.returnCustomer"), value: "return", color: Colors.status.info },
+  ];
+}
 
-function CustomerStatusPill({ status }: { status: "new" | "return" }) {
+function CustomerStatusPill({ status, t }: { status: "new" | "return"; t: (key: string) => string }) {
   const isNew = status === "new";
   return (
     <View
@@ -47,7 +49,7 @@ function CustomerStatusPill({ status }: { status: "new" | "return" }) {
           isNew ? statusStyles.newText : statusStyles.returnText,
         ]}
       >
-        {isNew ? "New" : "Return"}
+        {isNew ? t("analytics.newCustomer") : t("analytics.returnCustomer")}
       </AppText>
     </View>
   );
@@ -124,7 +126,7 @@ export function AnalyticsCustomersScreen() {
           <View style={styles.menuOverlay}>
             <StatusFilterMenu
               visible
-              options={STATUS_OPTIONS}
+              options={getStatusOptions(t)}
               selected={statusFilter}
               onSelect={handleStatusChange}
               onClose={() => setStatusMenuVisible(false)}
@@ -256,7 +258,7 @@ export function AnalyticsCustomersScreen() {
       <View style={styles.listSection}>
         <View style={styles.listHeader}>
           <AppText style={styles.sectionTitle}>
-            Customers{meta ? ` (${meta.totalItems})` : ""}
+            {t("customers.title")}{meta ? ` (${meta.totalItems})` : ""}
           </AppText>
           <TouchableOpacity
             ref={filterBtnRef}
@@ -265,8 +267,8 @@ export function AnalyticsCustomersScreen() {
             activeOpacity={0.8}
           >
             <AppText style={styles.filterPillText}>
-              {STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ??
-                "All"}
+              {getStatusOptions(t).find((o) => o.value === statusFilter)?.label ??
+                t("analytics.all")}
             </AppText>
             <Ionicons
               name="chevron-down"
@@ -307,10 +309,10 @@ export function AnalyticsCustomersScreen() {
                   <AppText style={styles.customerName} numberOfLines={1}>
                     {c.customerName}
                   </AppText>
-                  <CustomerStatusPill status={c.status} />
+                  <CustomerStatusPill status={c.status} t={t} />
                 </View>
                 <AppText style={styles.customerMeta}>
-                  {c.totalVisits} visit{c.totalVisits !== 1 ? "s" : ""}
+                  {c.totalVisits} {t("customers.visit", { count: String(c.totalVisits) })}
                   {c.lastVisitDate ? ` · ${formatDate(c.lastVisitDate)}` : ""}
                 </AppText>
               </View>

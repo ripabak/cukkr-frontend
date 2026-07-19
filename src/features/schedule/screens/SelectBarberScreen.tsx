@@ -34,7 +34,7 @@ export function SelectBarberScreen() {
     <ScreenShell
       hideAppHeader
       headerSlot={
-        <ScreenHeader title="Select Barber" onBack={() => router.back()} />
+        <ScreenHeader title={t("schedule.selectBarber")} onBack={() => router.back()} />
       }
       contentStyle={styles.content}
     >

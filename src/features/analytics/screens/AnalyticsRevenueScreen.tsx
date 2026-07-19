@@ -26,11 +26,13 @@ const EMPTY_STAT = {
   direction: "neutral" as const,
 };
 
-const TYPE_OPTIONS = [
-  { label: "All", value: "all" },
-  { label: "Walk-in", value: "walk_in" },
-  { label: "Appointment", value: "appointment" },
-];
+function getTypeOptions(t: (key: string) => string) {
+  return [
+    { label: t("analytics.all"), value: "all" },
+    { label: t("analytics.walkIn"), value: "walk_in" },
+    { label: t("analytics.appointment"), value: "appointment" },
+  ];
+}
 
 function BookingTypeIcon({ type }: { type: "walk_in" | "appointment" }) {
   return (
@@ -119,7 +121,7 @@ export function AnalyticsRevenueScreen() {
           <View style={styles.menuOverlay}>
             <StatusFilterMenu
               visible
-              options={TYPE_OPTIONS}
+              options={getTypeOptions(t)}
               selected={typeFilter}
               onSelect={handleTypeChange}
               onClose={() => setTypeMenuVisible(false)}
@@ -212,7 +214,7 @@ export function AnalyticsRevenueScreen() {
       <View style={styles.listSection}>
         <View style={styles.listHeader}>
           <AppText style={styles.sectionTitle}>
-            Transactions{meta ? ` (${meta.totalItems})` : ""}
+            {t("analytics.transactions")}{meta ? ` (${meta.totalItems})` : ""}
           </AppText>
           <TouchableOpacity
             ref={filterBtnRef}
@@ -221,7 +223,7 @@ export function AnalyticsRevenueScreen() {
             activeOpacity={0.8}
           >
             <AppText style={styles.filterPillText}>
-              {TYPE_OPTIONS.find((o) => o.value === typeFilter)?.label ?? "All"}
+              {getTypeOptions(t).find((o) => o.value === typeFilter)?.label ?? t("analytics.all")}
             </AppText>
             <Ionicons
               name="chevron-down"

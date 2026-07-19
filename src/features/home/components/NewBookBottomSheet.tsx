@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   Animated,
   Modal,
@@ -23,6 +24,7 @@ interface Props {
 const FALLBACK_PANEL_HEIGHT = 280;
 
 export function NewBookBottomSheet({ visible, onClose }: Props) {
+  const { t } = useI18nContext();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { frameWidth } = useFrame();
@@ -102,7 +104,7 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
         }}
       >
         <View style={styles.handle} />
-        <AppText style={styles.title}>New Booking</AppText>
+        <AppText style={styles.title}>{t("home.newBooking")}</AppText>
 
         <View style={styles.buttonsRow}>
           <TouchableOpacity
@@ -118,7 +120,7 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
               size={36}
               color={Colors.text.primary}
             />
-            <AppText style={styles.btnLabel}>Walk-In</AppText>
+            <AppText style={styles.btnLabel}>{t("home.walkIn")}</AppText>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -134,7 +136,7 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
               size={36}
               color={Colors.text.primary}
             />
-            <AppText style={styles.btnLabel}>Appointment</AppText>
+            <AppText style={styles.btnLabel}>{t("home.appointment")}</AppText>
           </TouchableOpacity>
         </View>
       </Animated.View>

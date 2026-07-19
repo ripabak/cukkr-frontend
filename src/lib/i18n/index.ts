@@ -3,9 +3,11 @@ import { en } from './locales/en'
 
 export type Language = 'id' | 'en'
 
-export const SUPPORTED_LANGUAGES: { value: Language; label: string }[] = [
-  { value: 'id', label: 'Indonesia' },
-  { value: 'en', label: 'English' },
+export type SupportedLanguage = { value: Language; label: string; flag: string }
+
+export const SUPPORTED_LANGUAGES: SupportedLanguage[] = [
+  { value: 'id', label: 'Indonesia', flag: '🇮🇩' },
+  { value: 'en', label: 'English', flag: '🇬🇧' },
 ]
 
 type DeepRecord = { [key: string]: string | DeepRecord }

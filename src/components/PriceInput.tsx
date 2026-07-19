@@ -1,6 +1,7 @@
 import React from "react";
 import { ViewStyle } from "react-native";
 import { LabeledInput } from "@/src/components/LabeledInput";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 
 function formatPriceDisplay(raw: string): string {
   const digits = raw.replace(/\D/g, "");
@@ -27,9 +28,10 @@ export function PriceInput({
   editable,
   style,
 }: Props) {
+  const { t } = useI18nContext();
   return (
     <LabeledInput
-      label="Price (Rp)"
+      label={t("services.price")}
       value={formatPriceDisplay(value)}
       onChangeText={(text) => onChangeText(unformatPrice(text))}
       placeholder={placeholder}

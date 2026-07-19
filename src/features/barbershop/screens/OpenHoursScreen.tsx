@@ -95,7 +95,7 @@ export function OpenHoursScreen() {
     <ScreenShell headerSlot={<ScreenHeader onBack={() => router.back()} />} hideAppHeader contentStyle={{ paddingBottom: 200 }}>
       <AppText style={styles.title}>{t("barbershop.openHours")}</AppText>
       <AppText style={styles.subtitle}>
-        Set your barbershop operating hours for each day
+        {t("createBarbershop.openHoursSubtitle")}
       </AppText>
 
       <View style={styles.card}>

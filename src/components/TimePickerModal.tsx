@@ -2,6 +2,7 @@ import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   Modal,
   NativeScrollEvent,
@@ -206,6 +207,7 @@ export function TimePickerModal({
   onClose,
   style,
 }: Props) {
+  const { t } = useI18nContext();
   const MINUTES =
     minuteStep > 1
       ? Array.from(
@@ -318,7 +320,7 @@ export function TimePickerModal({
         >
           {/* Header */}
           <View style={styles.header}>
-            <AppText style={styles.title}>Select Time</AppText>
+            <AppText style={styles.title}>{t("components.timePicker.selectTime")}</AppText>
             {minTime && maxTime && (
               <View style={styles.rangeChip}>
                 <AppText style={styles.rangeText}>
@@ -366,7 +368,7 @@ export function TimePickerModal({
             style={styles.confirmBtn}
           >
             <Ionicons name="checkmark" size={18} color="#FFFFFF" />
-            <AppText style={styles.confirmText}>Confirm</AppText>
+            <AppText style={styles.confirmText}>{t("common.confirm")}</AppText>
           </TouchableOpacity>
         </TouchableOpacity>
       </TouchableOpacity>

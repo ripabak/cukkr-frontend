@@ -48,9 +48,7 @@ export function OnboardingCustomerHappyScreen() {
         <View style={styles.textContent}>
           <AppText style={styles.heading}>{t("common.success")}</AppText>
           <AppText style={styles.body}>
-            Smooth bookings for customers, clear schedules{"\n"}
-            for barbers.{"\n"}
-            Everyone knows what to do, every day.
+            {t("onboarding.customerHappyBody")}
           </AppText>
         </View>
 

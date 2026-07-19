@@ -2,6 +2,7 @@ import { Colors } from "@/src/theme/colors";
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 import { AppTextInput } from "@/src/components/AppTextInput";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 
 interface Props {
   value: string;
@@ -13,15 +14,17 @@ interface Props {
 export function MessageComposer({
   value,
   onChangeText,
-  placeholder = "Messages to selected customers",
+  placeholder,
   style,
 }: Props) {
+  const { t } = useI18nContext();
+  const resolvedPlaceholder = placeholder ?? t("customers.messagePlaceholder");
   return (
     <View style={[styles.container, style]}>
       <AppTextInput
         value={value}
         onChangeText={onChangeText}
-        placeholder={placeholder}
+        placeholder={resolvedPlaceholder}
         placeholderTextColor="#B0ADA0"
         multiline
         textAlignVertical="top"

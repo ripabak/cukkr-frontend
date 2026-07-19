@@ -63,12 +63,11 @@ export function WalkInQrScreen() {
       ) : null}
 
       <AppText style={styles.hint}>
-        Customer scan this QR code to check-in as a walk-in. PIN will be
-        auto-filled on the booking page.
+        {t("walkIn.hint")}
       </AppText>
 
       <PrimaryButton
-        label="Share"
+        label={t("walkIn.share")}
         onPress={handleShare}
         disabled={!qrUrl}
         style={styles.shareBtn}

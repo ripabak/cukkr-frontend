@@ -44,7 +44,7 @@ export function AnalyticsOverviewScreen() {
       <View style={styles.topBar}>
         <AppText style={styles.pageTitle}>{t("tabs.analytics")}</AppText>
         <AppText style={styles.pageSubtitle}>
-          See your barbershop's performance
+          {t("analytics.performance")}
         </AppText>
       </View>
 

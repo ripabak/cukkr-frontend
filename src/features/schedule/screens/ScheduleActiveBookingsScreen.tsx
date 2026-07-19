@@ -1,7 +1,7 @@
 import { BookingCard } from "@/src/components/BookingCard";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import {
-  SCHEDULE_STATUS_OPTIONS,
+  getScheduleStatusOptions,
   StatusFilterMenu,
 } from "@/src/components/StatusFilterMenu";
 import { useHorizontalScrollDrag } from "@/src/hooks";
@@ -102,8 +102,11 @@ function RequestCard({
   );
 }
 
-function generateDayChips(baseDate: Date): DayChip[] {
-  const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+function generateDayChips(baseDate: Date, language: string): DayChip[] {
+  const locale = language === 'id' ? 'id-ID' : 'en-US';
+  const dayLabels = Array.from({ length: 7 }, (_, i) =>
+    new Intl.DateTimeFormat(locale, { weekday: 'short' }).format(new Date(2024, 0, i + 1))
+  );
   return Array.from({ length: 30 }, (_, i) => {
     const d = new Date(
       baseDate.getFullYear(),
@@ -118,29 +121,19 @@ function generateDayChips(baseDate: Date): DayChip[] {
   });
 }
 
-function formatDatePill(date: Date): string {
-  const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const monthShort = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  return `${dayLabels[date.getDay()]}, ${date.getDate()} ${monthShort[date.getMonth()]} ${String(date.getFullYear()).slice(2)}`;
+function formatDatePill(date: Date, language: string): string {
+  const locale = language === 'id' ? 'id-ID' : 'en-US';
+  const dayFormat = new Intl.DateTimeFormat(locale, { weekday: 'short' });
+  const monthFormat = new Intl.DateTimeFormat(locale, { month: 'short' });
+  const dayLabel = dayFormat.format(date);
+  const monthLabel = monthFormat.format(date);
+  return `${dayLabel}, ${date.getDate()} ${monthLabel} ${String(date.getFullYear()).slice(2)}`;
 }
 
 export function ScheduleActiveBookingsScreen() {
   const router = useRouter();
   const today = new Date();
-  const { t } = useI18nContext();
+  const { t, language } = useI18nContext();
   const [selectedDate, setSelectedDate] = useState(today);
   const [selectedKey, setSelectedKey] = useState(toApiDate(today));
   const [filterMenuVisible, setFilterMenuVisible] = useState(false);
@@ -168,7 +161,7 @@ export function ScheduleActiveBookingsScreen() {
     setFilterMenuVisible(true);
   };
 
-  const days = generateDayChips(today);
+  const days = generateDayChips(today, language);
 
   const reqDateFrom = toApiDate(today);
   const reqDateTo = toApiDate(
@@ -229,7 +222,7 @@ export function ScheduleActiveBookingsScreen() {
       />
       <AppText style={styles.emptyTitle}>{t("schedule.noBookings")}</AppText>
       <AppText style={styles.emptySubtitle}>
-        Ready to start? Tap the plus icon to add a new appointment manually.
+        {t("schedule.emptySubtitle")}
       </AppText>
     </View>
   );
@@ -243,7 +236,7 @@ export function ScheduleActiveBookingsScreen() {
         <>
           <View style={styles.topBar}>
             <DateSelectorPill
-              label={formatDatePill(selectedDate)}
+              label={formatDatePill(selectedDate, language)}
               onPress={() => setCalendarVisible(true)}
             />
           </View>
@@ -265,7 +258,7 @@ export function ScheduleActiveBookingsScreen() {
             <View style={styles.menuOverlay}>
               <StatusFilterMenu
                 visible
-                options={SCHEDULE_STATUS_OPTIONS}
+                options={getScheduleStatusOptions(t)}
                 selected={statusFilter}
                 onSelect={(value) =>
                   setStatusFilter(
@@ -346,7 +339,7 @@ export function ScheduleActiveBookingsScreen() {
 
       <View style={styles.sectionHeader}>
         <AppText style={styles.sectionTitle}>
-          Bookings{" "}
+          {t("schedule.bookings")}{" "}
           <AppText style={styles.sectionCount}>({bookings.length})</AppText>
         </AppText>
         <TouchableOpacity
@@ -356,7 +349,7 @@ export function ScheduleActiveBookingsScreen() {
           style={styles.filterPill}
         >
           <AppText style={styles.filterLabel}>
-            {SCHEDULE_STATUS_OPTIONS.find((o) => o.value === statusFilter)
+            {getScheduleStatusOptions(t).find((o) => o.value === statusFilter)
               ?.label ?? t("common.all")}
           </AppText>
           <Ionicons name="chevron-down" size={14} color={Colors.text.primary} />

@@ -1,3 +1,4 @@
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { MultilineInputField } from "@/src/components/MultilineInputField";
 import { Colors } from "@/src/theme/colors";
 import React, { useState } from "react";
@@ -18,6 +19,7 @@ export function DeclineReasonModal({
   onCancel,
   isSending,
 }: Props) {
+  const { t } = useI18nContext();
   const { frameWidth } = useFrame();
   const [reason, setReason] = useState("");
 
@@ -39,14 +41,14 @@ export function DeclineReasonModal({
     >
       <View style={styles.overlay}>
         <View style={[styles.card, { width: frameWidth * 0.85 }]}>
-          <AppText style={styles.title}>Decline this booking?</AppText>
+          <AppText style={styles.title}>{t("bookings.confirmDecline")}</AppText>
           <AppText style={styles.subtitle}>
-            You can add a reason for the customer (optional).
+            {t("bookings.declineReasonOptional")}
           </AppText>
           <MultilineInputField
             value={reason}
             onChangeText={setReason}
-            placeholder="Add a reason..."
+            placeholder={t("bookings.declineReasonPlaceholder")}
             numberOfLines={4}
             style={styles.input}
           />
@@ -62,7 +64,7 @@ export function DeclineReasonModal({
               ]}
             >
               <AppText style={styles.btnPrimaryLabel}>
-                {isSending ? "Sending..." : "Send"}
+                {isSending ? t("common.saving") : t("common.send")}
               </AppText>
             </TouchableOpacity>
             <TouchableOpacity
@@ -70,7 +72,7 @@ export function DeclineReasonModal({
               activeOpacity={0.8}
               style={[styles.btn, styles.btnOutline]}
             >
-              <AppText style={styles.btnOutlineLabel}>Cancel</AppText>
+              <AppText style={styles.btnOutlineLabel}>{t("common.cancel")}</AppText>
             </TouchableOpacity>
           </View>
         </View>

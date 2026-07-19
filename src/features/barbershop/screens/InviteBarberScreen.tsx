@@ -71,8 +71,8 @@ export function InviteBarberScreen() {
           />
           <HelperCopy
             lines={[
-              "Enter the email address of the barber you want to invite.",
-              "They will receive an invitation to join your barbershop.",
+              t("barbers.inviteHelper1"),
+              t("barbers.inviteHelper2"),
             ]}
           />
           {!canInvite && (

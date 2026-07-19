@@ -52,9 +52,7 @@ export function OnboardingEasyBookingScreen() {
         <View style={styles.textContent}>
           <AppText style={styles.heading}>{t("home.newBooking")}</AppText>
           <AppText style={styles.body}>
-            Share your booking link on social media.{"\n"}
-            Customers book by themselves — no chat,{"\n"}
-            no back-and-forth.
+            {t("onboarding.easyBookingBody")}
           </AppText>
         </View>
 
