@@ -28,6 +28,7 @@ export function useAcceptBooking() {
       queryClient.invalidateQueries({ queryKey: BOOKINGS_QUERY_KEYS.all });
       queryClient.invalidateQueries({ queryKey: BOOKINGS_QUERY_KEYS.byId(id) });
       queryClient.invalidateQueries({ queryKey: HOME_QUERY_KEYS.all });
+      queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_QUERY_KEYS.all });
     },
   });
 }
@@ -41,6 +42,7 @@ export function useDeclineBooking() {
       queryClient.invalidateQueries({ queryKey: BOOKINGS_QUERY_KEYS.all });
       queryClient.invalidateQueries({ queryKey: BOOKINGS_QUERY_KEYS.byId(id) });
       queryClient.invalidateQueries({ queryKey: HOME_QUERY_KEYS.all });
+      queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_QUERY_KEYS.all });
     },
   });
 }
