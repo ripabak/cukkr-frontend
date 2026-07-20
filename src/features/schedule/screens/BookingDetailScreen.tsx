@@ -102,6 +102,9 @@ export function BookingDetailScreen() {
     useDeclineBooking();
   const { mutate: updateStatus } = useUpdateBookingStatus();
 
+  const { data: activeMember } = authClient.useActiveMember();
+  const role = (activeMember?.role as "owner" | "admin" | "member" | undefined) ?? null;
+
   const [overflowVisible, setOverflowVisible] = useState(false);
   const [modalType, setModalType] = useState<ModalType>(null);
   const [swipeModalVisible, setSwipeModalVisible] = useState(false);
@@ -206,7 +209,18 @@ export function BookingDetailScreen() {
       ];
     }
     if (booking?.status === "in_progress") {
-      return [{ label: t("bookings.markAsWaiting"), onPress: handleMarkWaiting }];
+      const items: { label: string; onPress?: () => void }[] = [];
+      if (role === "owner" || role === "admin") {
+        items.push({
+          label: t("bookings.markAsCompleted"),
+          onPress: () => {
+            setOverflowVisible(false);
+            setSwipeModalVisible(true);
+          },
+        });
+      }
+      items.push({ label: t("bookings.markAsWaiting"), onPress: handleMarkWaiting });
+      return items;
     }
     return [];
   })();
@@ -329,14 +343,22 @@ export function BookingDetailScreen() {
         );
       }
       if (booking.status === "in_progress") {
-        return (
-          <StickyCta
-            label={t("bookings.complete")}
-            onPress={() => setSwipeModalVisible(true)}
-            color={Colors.status.success}
-            textColor={Colors.text.primary}
-          />
-        );
+        if (role === "member") {
+          const isHandlingBarber =
+            booking.handledByBarber &&
+            activeMember?.id === booking.handledByBarber.memberId;
+          if (isHandlingBarber) {
+            return (
+              <StickyCta
+                label={t("bookings.complete")}
+                onPress={() => setSwipeModalVisible(true)}
+                color={Colors.status.success}
+                textColor={Colors.text.primary}
+              />
+            );
+          }
+        }
+        return null;
       }
       return null;
     })();

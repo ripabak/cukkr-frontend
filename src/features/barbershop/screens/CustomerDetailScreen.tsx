@@ -68,6 +68,8 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
     useCustomerBookings(customerId, { status: statusFilter });
   const { data: chartData = [] } = useCustomerChart(customerId);
 
+  const isVerified = !!(customer?.emailVerified || customer?.phoneVerified);
+
   if (isLoadingCustomer) {
     return (
       <ScreenShell hideAppHeader>
@@ -94,12 +96,16 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
         <IconActionButton
           iconName="send"
           size={36}
-          onPress={() =>
-            router.push({
-              pathname: "/d/send-messages-to-customers",
-              params: { recipientName: customer?.name, count: "1" },
-            })
+          onPress={
+            isVerified
+              ? () =>
+                  router.push({
+                    pathname: "/d/send-messages-to-customers",
+                    params: { recipientName: customer?.name, count: "1" },
+                  })
+              : undefined
           }
+          style={!isVerified ? { opacity: 0.4 } : undefined}
         />
       </View>
 
