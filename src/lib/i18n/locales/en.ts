@@ -227,6 +227,7 @@ export const en = {
     customer: 'Customer',
     staff: 'Staff',
     staffBy: 'Staff · {name}',
+    markAsCompleted: 'Mark as Completed',
     markAsWaiting: 'Mark as Waiting',
     takeOver: 'Take Over',
     handleThis: 'Handle this',

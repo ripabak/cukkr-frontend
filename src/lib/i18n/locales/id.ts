@@ -227,6 +227,7 @@ export const id = {
     customer: 'Pelanggan',
     staff: 'Staf',
     staffBy: 'Staf · {name}',
+    markAsCompleted: 'Tandai Selesai',
     markAsWaiting: 'Tandai Menunggu',
     takeOver: 'Ambil Alih',
     handleThis: 'Tangani Ini',

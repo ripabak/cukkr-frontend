@@ -50,6 +50,12 @@ export function CustomerManagementScreen() {
     });
   }
 
+  const allSelectedVerified =
+    selectedIds.size > 0 &&
+    customers
+      .filter((c) => selectedIds.has(c.id))
+      .every((c) => c.emailVerified || c.phoneVerified);
+
   function handleCardPress(customerId: string, customerHasContact: boolean) {
     if (selectionMode) {
       if (customerHasContact) {
@@ -91,12 +97,16 @@ export function CustomerManagementScreen() {
           <>
             <SelectionFooter count={selectedIds.size} />
             <FloatingActionButton
-              onPress={() =>
-                router.push({
-                  pathname: "/d/send-messages-to-customers",
-                  params: { count: selectedIds.size },
-                })
+              onPress={
+                allSelectedVerified
+                  ? () =>
+                      router.push({
+                        pathname: "/d/send-messages-to-customers",
+                        params: { count: selectedIds.size },
+                      })
+                  : undefined
               }
+              style={!allSelectedVerified && selectedIds.size > 0 ? { opacity: 0.4 } : undefined}
             />
           </>
         ) : null
@@ -143,7 +153,7 @@ export function CustomerManagementScreen() {
         <View style={styles.list}>
           {customers.map((customer) => {
             const customerHasContact = !!(
-              customer.email || customer.phone
+              customer.emailVerified || customer.phoneVerified
             );
             return (
               <CustomerCard
