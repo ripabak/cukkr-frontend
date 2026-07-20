@@ -5,6 +5,7 @@ export const id = {
     select: 'Pilih',
     send: 'Kirim',
     saving: 'Menyimpan...',
+    saved: 'Tersimpan',
     cancel: 'Batal',
     delete: 'Hapus',
     edit: 'Ubah',

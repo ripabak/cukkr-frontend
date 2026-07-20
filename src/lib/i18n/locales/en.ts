@@ -5,6 +5,7 @@ export const en = {
     select: 'Select',
     send: 'Send',
     saving: 'Saving...',
+    saved: 'Saved',
     cancel: 'Cancel',
     delete: 'Delete',
     edit: 'Edit',
