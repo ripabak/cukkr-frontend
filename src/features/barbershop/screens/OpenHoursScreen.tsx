@@ -1,6 +1,5 @@
 import { Colors } from "@/src/theme/colors";
 import { DayHoursRow } from "@/src/components/DayHoursRow";
-import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import {
@@ -16,10 +15,11 @@ import {
   timeToString,
 } from "@/src/utils/time-format";
 import { useMemberRole } from "@/src/hooks";
+import { useDebounce } from "@/src/hooks/useDebounce";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
 
@@ -43,15 +43,18 @@ export function OpenHoursScreen() {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
-  const { data: apiDays, isLoading } = useOpenHours();
-  const { mutate: updateHours, isPending: isSaving } = useUpdateOpenHours();
+  const { data: apiDays } = useOpenHours();
+  const { mutate: updateHours } = useUpdateOpenHours();
   const { role } = useMemberRole();
   const canManage = role === "owner" || role === "admin";
   const [days, setDays] = useState<DayConfig[]>(DEFAULT_DAYS);
   const [initialized, setInitialized] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
+  const skipInitRef = useRef(false);
 
   useEffect(() => {
     if (apiDays && apiDays.length > 0 && !initialized) {
+      skipInitRef.current = true;
       setDays((prev) =>
         prev.map((d) => {
           const api = apiDays.find((a) => a.dayOfWeek === d.dayOfWeek);
@@ -74,22 +77,33 @@ export function OpenHoursScreen() {
     );
   };
 
-  const handleSave = () => {
-    const payload = days.map((d) => ({
+  const debouncedDays = useDebounce(days, 800);
+
+  useEffect(() => {
+    if (!initialized) return;
+    if (skipInitRef.current) {
+      skipInitRef.current = false;
+      return;
+    }
+
+    const payload = debouncedDays.map((d) => ({
       dayOfWeek: d.dayOfWeek,
       isOpen: d.enabled,
       openTime: d.enabled ? timeToString(d.open) : null,
       closeTime: d.enabled ? timeToString(d.close) : null,
     }));
 
+    setSaveStatus("saving");
     updateHours(payload, {
       onSuccess: () => {
-        toast.success(t("toast.saveSuccess"));
-        router.back();
+        setSaveStatus("saved");
       },
-      onError: (e) => toast.error(e.message || t("toast.unknownError")),
+      onError: (e) => {
+        toast.error(e.message || t("toast.unknownError"));
+        setSaveStatus("idle");
+      },
     });
-  };
+  }, [debouncedDays]);
 
   return (
     <ScreenShell headerSlot={<ScreenHeader onBack={() => router.back()} />} hideAppHeader contentStyle={{ paddingBottom: 200 }}>
@@ -116,12 +130,11 @@ export function OpenHoursScreen() {
       </View>
 
       {canManage ? (
-        <PrimaryButton
-          label={isSaving ? t("common.saving") : t("common.save")}
-          onPress={handleSave}
-          disabled={isSaving || isLoading}
-          style={styles.saveBtn}
-        />
+        saveStatus !== "idle" ? (
+          <AppText style={styles.saveStatus}>
+            {saveStatus === "saving" ? t("common.saving") : t("common.saved")}
+          </AppText>
+        ) : null
       ) : (
         <View style={styles.viewOnlyBanner}>
           <AppText style={styles.viewOnlyText}>{t("common.noPermission")}</AppText>
@@ -154,7 +167,12 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginBottom: 24,
   },
-  saveBtn: {},
+  saveStatus: {
+    fontSize: 12,
+    color: Colors.text.muted,
+    textAlign: "center",
+    marginBottom: 16,
+  },
   viewOnlyBanner: {
     padding: 12,
     backgroundColor: Colors.bg.surface,
