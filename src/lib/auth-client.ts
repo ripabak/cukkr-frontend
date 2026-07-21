@@ -26,15 +26,6 @@ export const authClient = createAuthClient({
     }),
     emailOTPClient(),
     organizationClient({
-      schema: inferOrgAdditionalFields({
-        organization: {
-          additionalFields: {
-            logoThumb: { type: "string" },
-            logoMed: { type: "string" },
-            logoFull: { type: "string" },
-          },
-        },
-      }),
     }),
     inferAdditionalFields({
       user: {
