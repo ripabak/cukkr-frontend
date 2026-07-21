@@ -516,6 +516,106 @@ Check `src/types/app.d.ts` for complete endpoint list. Key endpoints include:
 - **Analytics**: `app.api.analytics` (get stats by range)
 - **Public**: `app.api.public` (barbershop details, availability, booking, walk-in)
 
+### Image Upload (Eden Treaty)
+
+Image uploads differ between **web** and **native** because Eden Treaty supports `File` objects natively (web) but React Native provides `{ uri, name, type }` objects which Eden cannot serialize.
+
+#### Architecture
+
+```
+Screen / Hook
+    ↓
+useImagePicker() hook → pickAndGetFile() → { uri, name, type }
+    ↓
+Service (uploadImage / uploadLogo / uploadAvatar)
+    ├── Platform.OS === 'web'   → fetch(uri) → Blob → new File([blob], name, { type }) → Eden Treaty
+    └── Platform.OS === native  → XHR + FormData (bypasses Eden, attaches auth cookies manually)
+    ↓
+Backend (t.File({ format: 'image/*' }))
+```
+
+#### Shared Utilities
+
+**`src/utils/pick-image.ts`** — wraps `launchImageLibraryAsync` from `react-native-image-picker`:
+
+```typescript
+import { pickImage, type PickedImage } from '@/src/utils/pick-image';
+
+// Returns { uri, name, type } or throws USER_CANCELLED / MAX_SIZE_EXCEEDED:{sizeMB}
+const file = await pickImage(maxSizeBytes);
+```
+
+**`src/hooks/useImagePicker.ts`** — shared React hook:
+
+```typescript
+import { useImagePicker } from '@/src/hooks';
+
+const { pickAndGetFile, isPicking, pickError } = useImagePicker();
+// pickAndGetFile() returns PickedImage | null
+// Returns null if user cancelled; pickError contains error message on failure
+```
+
+#### Service Pattern
+
+Each upload service uses the same dual-platform pattern. Reference: `src/features/barbershop/services/services.service.ts:132-148`.
+
+```typescript
+import { Platform } from 'react-native';
+import { app } from '@/src/lib/eden-app';
+import { authClient } from '@/src/lib/auth-client';
+
+// Web helper: convert { uri } to real File object
+async function createWebFile(file: { uri: string; name: string; type: string }): Promise<File> {
+    const response = await fetch(file.uri);
+    const blob = await response.blob();
+    return new File([blob], file.name, { type: file.type });
+}
+
+// Native helper: XHR upload with auth cookies
+async function nativeUpload(apiPath: string, file: { uri: string; name: string; type: string }): Promise<unknown> {
+    return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        formData.append('file', file as unknown as Blob);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `${API_URL}${apiPath}`);
+        xhr.setRequestHeader('Cookie', authClient.getCookie());
+        xhr.onload = () => { /* parse JSON, resolve/reject */ };
+        xhr.onerror = () => reject(new Error('Network error'));
+        xhr.send(formData);
+    });
+}
+
+// Upload service method
+async uploadImage(id: string, file: { uri: string; name: string; type: string }) {
+    if (Platform.OS === 'web') {
+        const nativeFile = await createWebFile(file);
+        const { data: response, error } = await app.api
+            .services({ id }).image.post({ file: nativeFile });
+        if (error || !response) throw new Error(error?.value?.message || 'Upload failed');
+        return response.data;
+    }
+    return nativeUpload(`/api/services/${id}/image`, file);
+}
+```
+
+#### Rules
+
+- **Never use Eden Treaty on native for file uploads** — React Native file objects (`{ uri, name, type }`) are not serializable by Eden.
+- **Web uses Eden Treaty** with a real `File` object created via `fetch(uri)` → `blob()` → `new File(...)`.
+- **Native uses XHR + FormData** with `authClient.getCookie()` for auth headers.
+- **Always use the shared `useImagePicker` hook** instead of calling `pickImage` directly.
+- **Handle `USER_CANCELLED` and `MAX_SIZE_EXCEEDED:{sizeMB}` errors** in the screen — extract the max size from the error message for user-friendly toasts.
+- **Invalidate related queries on upload success** in the mutation hook (e.g., `queryClient.invalidateQueries({ queryKey: SERVICES_QUERY_KEYS.byId(serviceId) })`).
+
+#### Current Upload Endpoints (Frontend)
+
+| Feature | Service | Hook | Screen(s) |
+|---|---|---|---|
+| Service image | `servicesService.uploadImage()` | `useUploadServiceImage(serviceId)` | `ServiceDetailScreen`, `AddOrEditServiceScreen` |
+| Barbershop logo | `barbershopService.uploadLogo()` | `useUploadLogo()` | `BarbershopSettingsScreen`, `CreateBarbershopNameLogoScreen` |
+| User avatar | `profileService.uploadAvatar()` | `useUploadAvatar()` | `UserProfileScreen` |
+
 ## Key Documentation
 
 Every agent must read these docs before starting any work:
