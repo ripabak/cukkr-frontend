@@ -45,3 +45,17 @@ export function useDeleteBarbershop() {
     },
   });
 }
+
+export function useUploadLogo() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (file: { uri: string; name: string; type: string }) =>
+      barbershopService.uploadLogo(file),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: BARBERSHOP_QUERY_KEYS.current(),
+      });
+    },
+  });
+}

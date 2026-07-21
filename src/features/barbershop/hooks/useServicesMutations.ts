@@ -80,3 +80,18 @@ export function useSetServiceDefault() {
     },
   });
 }
+
+export function useUploadServiceImage(serviceId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (file: { uri: string; name: string; type: string }) =>
+      servicesService.uploadImage(serviceId, file),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: SERVICES_QUERY_KEYS.all });
+      queryClient.invalidateQueries({
+        queryKey: SERVICES_QUERY_KEYS.byId(serviceId),
+      });
+      queryClient.invalidateQueries({ queryKey: SCHEDULE_SERVICES_KEY });
+    },
+  });
+}

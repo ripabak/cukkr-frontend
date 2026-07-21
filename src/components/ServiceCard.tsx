@@ -2,6 +2,7 @@ import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
 import React from "react";
 import { View, Image, StyleSheet, ViewStyle } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { AppText } from "@/src/components/AppText";
 import { StatusBadge } from "@/src/components/StatusBadge";
 import { ToggleSwitch } from "@/src/components/ToggleSwitch";
@@ -47,7 +48,9 @@ export function ServiceCard({
         {imageUri ? (
           <Image source={{ uri: imageUri }} style={styles.image} />
         ) : (
-          <View style={styles.imageEmpty} />
+          <View style={styles.imageEmpty}>
+            <Ionicons name="cut-outline" size={24} color={Colors.icon.muted} />
+          </View>
         )}
       </View>
       <View style={styles.info}>
@@ -95,6 +98,8 @@ const styles = StyleSheet.create({
     height: 56,
     borderRadius: 8,
     overflow: "hidden",
+    borderWidth: 1.5,
+    borderColor: Colors.border.default,
   },
   image: {
     width: "100%",
@@ -104,7 +109,9 @@ const styles = StyleSheet.create({
   imageEmpty: {
     width: "100%",
     height: "100%",
-    backgroundColor: Colors.brand.primaryDark,
+    backgroundColor: Colors.bg.surface,
+    alignItems: "center",
+    justifyContent: "center",
   },
   info: {
     flex: 1,

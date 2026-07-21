@@ -1,3 +1,5 @@
+import { useImagePicker } from "@/src/hooks";
+import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
 import { ImageUploadBox } from "@/src/components/ImageUploadBox";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
@@ -17,9 +19,14 @@ import { validateBarbershopName } from "../utils/form-validators";
 export function CreateBarbershopNameLogoScreen() {
   const router = useRouter();
   const { t } = useI18nContext();
+  const toast = useToast();
   const { formData, updateFormData } = useCreateBarbershopForm();
   const [name, setName] = useState(formData.name || "");
+  const [logoPreviewUri, setLogoPreviewUri] = useState<string | undefined>(
+    undefined,
+  );
   const { data: session } = authClient.useSession();
+  const { pickAndGetFile, isPicking } = useImagePicker();
 
   const hasActiveOrg = !!session?.session?.activeOrganizationId;
 
@@ -58,9 +65,13 @@ export function CreateBarbershopNameLogoScreen() {
       <AppText style={styles.logoLabel}>{t("barbershop.logoUpload")}</AppText>
       <ImageUploadBox
         label={t("createBarbershop.chooseImage")}
+        imageUri={logoPreviewUri}
         style={styles.imageUpload}
-        onPress={() => {
-          console.log("TODO: Open image picker");
+        onPress={async () => {
+          const file = await pickAndGetFile();
+          if (!file) return;
+          setLogoPreviewUri(file.uri);
+          updateFormData({ logo: file as unknown as File });
         }}
       />
 

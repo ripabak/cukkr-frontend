@@ -124,6 +124,7 @@ export function ServicesManagementScreen() {
               <ServiceCard
                 name={service.name}
                 price={service.price}
+                imageUri={service.imageUrl ?? undefined}
                 discountPercent={
                   service.discount > 0 ? service.discount : undefined
                 }
