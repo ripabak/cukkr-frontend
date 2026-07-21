@@ -398,6 +398,10 @@ export function HomeDashboardScreen() {
             {bookingUrl && (
               <TouchableOpacity
                 onPress={handleShareLink}
+                onLongPress={() => {
+                  Clipboard.setStringAsync(bookingUrl);
+                  toast.success(t("home.linkCopied"));
+                }}
                 activeOpacity={0.7}
                 style={styles.walkInLinkPill}
               >
