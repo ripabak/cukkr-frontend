@@ -1211,6 +1211,7 @@ export declare const app: Elysia<"", {
                                 email: string | null;
                                 emailVerified: boolean;
                                 phone: string | null;
+                                language: string | null;
                                 createdAt: Date;
                                 updatedAt: Date;
                                 phoneVerified: boolean;
@@ -1402,8 +1403,8 @@ export declare const app: Elysia<"", {
                                     memberId: string;
                                 } | null;
                                 customerName: string;
-                                serviceNames: string[];
                                 totalDuration: number;
+                                serviceNames: string[];
                             }[];
                             status: string | number;
                             path: string;
@@ -1461,8 +1462,8 @@ export declare const app: Elysia<"", {
                                 memberId: string;
                             } | null;
                             customerName: string;
-                            serviceNames: string[];
                             totalDuration: number;
+                            serviceNames: string[];
                         }[];
                         status: string | number;
                         path: string;
@@ -1528,6 +1529,7 @@ export declare const app: Elysia<"", {
                                     email: string | null;
                                     emailVerified: boolean;
                                     phone: string | null;
+                                    language: string | null;
                                     createdAt: Date;
                                     updatedAt: Date;
                                     phoneVerified: boolean;
@@ -1620,6 +1622,7 @@ export declare const app: Elysia<"", {
                                     email: string | null;
                                     emailVerified: boolean;
                                     phone: string | null;
+                                    language: string | null;
                                     createdAt: Date;
                                     updatedAt: Date;
                                     phoneVerified: boolean;
@@ -1716,6 +1719,7 @@ export declare const app: Elysia<"", {
                                         email: string | null;
                                         emailVerified: boolean;
                                         phone: string | null;
+                                        language: string | null;
                                         createdAt: Date;
                                         updatedAt: Date;
                                         phoneVerified: boolean;
@@ -1810,6 +1814,7 @@ export declare const app: Elysia<"", {
                                         email: string | null;
                                         emailVerified: boolean;
                                         phone: string | null;
+                                        language: string | null;
                                         createdAt: Date;
                                         updatedAt: Date;
                                         phoneVerified: boolean;
@@ -1906,6 +1911,7 @@ export declare const app: Elysia<"", {
                                         email: string | null;
                                         emailVerified: boolean;
                                         phone: string | null;
+                                        language: string | null;
                                         createdAt: Date;
                                         updatedAt: Date;
                                         phoneVerified: boolean;
@@ -2002,6 +2008,7 @@ export declare const app: Elysia<"", {
                                         email: string | null;
                                         emailVerified: boolean;
                                         phone: string | null;
+                                        language: string | null;
                                         createdAt: Date;
                                         updatedAt: Date;
                                         phoneVerified: boolean;
@@ -3916,6 +3923,7 @@ export declare const app: Elysia<"", {
                                 notes?: string | null | undefined;
                                 barberId?: string | null | undefined;
                                 customerEmail?: string | null | undefined;
+                                lang?: string | undefined;
                                 customerName: string;
                                 serviceIds: string[];
                                 validationToken: string;
@@ -3949,6 +3957,7 @@ export declare const app: Elysia<"", {
                                             email: string | null;
                                             emailVerified: boolean;
                                             phone: string | null;
+                                            language: string | null;
                                             createdAt: Date;
                                             updatedAt: Date;
                                             phoneVerified: boolean;
@@ -4018,6 +4027,7 @@ export declare const app: Elysia<"", {
                             body: {
                                 notes?: string | null | undefined;
                                 barberId?: string | null | undefined;
+                                lang?: string | undefined;
                                 scheduledAt: string;
                                 customerName: string;
                                 customerEmail: string;
@@ -4101,6 +4111,56 @@ export declare const app: Elysia<"", {
                                             status: "verified" | "already_verified" | "invalid";
                                             bookingId: string | null;
                                             verified: boolean;
+                                        };
+                                        status: string | number;
+                                        path: string;
+                                        timeStamp: string;
+                                    };
+                                    422: {
+                                        type: "validation";
+                                        on: string;
+                                        summary?: string;
+                                        message?: string;
+                                        found?: unknown;
+                                        property?: string;
+                                        expected?: string;
+                                    };
+                                };
+                            };
+                        };
+                    };
+                };
+            };
+        };
+    } & {
+        public: {
+            booking: {
+                ":slug": {
+                    identity: {
+                        check: {
+                            get: {
+                                body: unknown;
+                                params: {
+                                    slug: string;
+                                };
+                                query: {
+                                    token: string;
+                                };
+                                headers: unknown;
+                                response: {
+                                    200: {
+                                        meta?: {
+                                            limit: number;
+                                            page: number;
+                                            totalItems: number;
+                                            totalPages: number;
+                                            hasNext: boolean;
+                                            hasPrev: boolean;
+                                        } | undefined;
+                                        message: string;
+                                        data: {
+                                            customerName: string | null;
+                                            valid: boolean;
                                         };
                                         status: string | number;
                                         path: string;

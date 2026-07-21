@@ -10,6 +10,7 @@ interface Props {
   selectionMode: boolean;
   onToggleSelect: () => void;
   onFilterPress?: () => void;
+  filterSlot?: React.ReactNode;
   hasContact?: boolean;
   onContactFilterPress?: () => void;
 }
@@ -18,6 +19,7 @@ export function SelectionToolbar({
   selectionMode,
   onToggleSelect,
   onFilterPress,
+  filterSlot,
   hasContact,
   onContactFilterPress,
 }: Props) {
@@ -34,9 +36,11 @@ export function SelectionToolbar({
         </TouchableOpacity>
       )}
       <View style={styles.right}>
-        <TouchableOpacity style={styles.filterBtn} onPress={onFilterPress}>
-          <Ionicons name="filter" size={18} color={Colors.text.primary} />
-        </TouchableOpacity>
+        {filterSlot ?? (
+          <TouchableOpacity style={styles.filterBtn} onPress={onFilterPress}>
+            <Ionicons name="filter" size={18} color={Colors.text.primary} />
+          </TouchableOpacity>
+        )}
         {onContactFilterPress ? (
           <TouchableOpacity
             style={[

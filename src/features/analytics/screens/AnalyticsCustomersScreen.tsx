@@ -1,9 +1,9 @@
 import { ScreenShell } from "@/src/components/ScreenShell";
-import { StatusFilterMenu } from "@/src/components/StatusFilterMenu";
+import { FilterPicker } from "@/src/components/FilterPicker";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { AppText } from "@/src/components/AppText";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
@@ -74,10 +74,7 @@ export function AnalyticsCustomersScreen() {
   const [statusFilter, setStatusFilter] = useState<"all" | "new" | "return">(
     "all",
   );
-  const [statusMenuVisible, setStatusMenuVisible] = useState(false);
-  const [menuTop, setMenuTop] = useState(0);
   const [page, setPage] = useState(1);
-  const filterBtnRef = useRef<View>(null);
 
   const { data: custData, isLoading: custLoading } =
     useAnalyticsCustomers(range);
@@ -102,39 +99,9 @@ export function AnalyticsCustomersScreen() {
     setPage(1);
   };
 
-  const handleOpenStatusMenu = () => {
-    filterBtnRef.current?.measure(
-      (
-        _x: number,
-        _y: number,
-        _w: number,
-        height: number,
-        _px: number,
-        pageY: number,
-      ) => {
-        setMenuTop(pageY + height + 4);
-      },
-    );
-    setStatusMenuVisible(true);
-  };
-
   return (
     <ScreenShell
       contentStyle={styles.scrollContent}
-      overlaySlot={
-        statusMenuVisible ? (
-          <View style={styles.menuOverlay}>
-            <StatusFilterMenu
-              visible
-              options={getStatusOptions(t)}
-              selected={statusFilter}
-              onSelect={handleStatusChange}
-              onClose={() => setStatusMenuVisible(false)}
-              style={{ top: menuTop, right: 20 }}
-            />
-          </View>
-        ) : null
-      }
     >
       <View style={styles.topBar}>
         <TouchableOpacity
@@ -260,22 +227,13 @@ export function AnalyticsCustomersScreen() {
           <AppText style={styles.sectionTitle}>
             {t("customers.title")}{meta ? ` (${meta.totalItems})` : ""}
           </AppText>
-          <TouchableOpacity
-            ref={filterBtnRef}
-            style={styles.filterPill}
-            onPress={handleOpenStatusMenu}
-            activeOpacity={0.8}
-          >
-            <AppText style={styles.filterPillText}>
-              {getStatusOptions(t).find((o) => o.value === statusFilter)?.label ??
-                t("analytics.all")}
-            </AppText>
-            <Ionicons
-              name="chevron-down"
-              size={13}
-              color={Colors.text.primary}
-            />
-          </TouchableOpacity>
+          <FilterPicker
+            options={getStatusOptions(t)}
+            selected={statusFilter}
+            onSelect={handleStatusChange}
+            pillStyle={styles.filterPill}
+            pillTextStyle={styles.filterPillText}
+          />
         </View>
 
         {listLoading && customers.length === 0 ? (
@@ -457,6 +415,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 12,
+    position: "relative",
+    zIndex: 999,
   },
   sectionTitle: {
     fontSize: 17,
@@ -566,13 +526,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     color: Colors.text.primary,
-  },
-  menuOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 50,
   },
 });

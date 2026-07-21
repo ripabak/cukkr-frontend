@@ -4,8 +4,8 @@ import { IconActionButton } from "@/src/features/barbershop/components/IconActio
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SearchInput } from "@/src/components/SearchInput";
+import { FilterPicker } from "@/src/components/FilterPicker";
 import { ServiceCard } from "@/src/components/ServiceCard";
-import { SortMenu } from "@/src/components/SortMenu";
 import { useMemberRole } from "@/src/hooks";
 import {
   useServicesList,
@@ -41,7 +41,6 @@ export function ServicesManagementScreen() {
   const { role } = useMemberRole();
   const canManage = role === "owner" || role === "admin";
   const [search, setSearch] = useState("");
-  const [sortMenuVisible, setSortMenuVisible] = useState(false);
   const [selectedSort, setSelectedSort] = useState<SortOption>("name_asc");
 
   const { data: services = [], isLoading } = useServicesList({
@@ -63,17 +62,24 @@ export function ServicesManagementScreen() {
           onBack={() => router.back()}
           rightAction={
             <View style={styles.headerActions}>
-              <TouchableOpacity
-                onPress={() => setSortMenuVisible(true)}
-                activeOpacity={0.7}
-                style={styles.headerIcon}
-              >
-                <Ionicons
-                  name="filter-outline"
-                  size={18}
-                  color={Colors.text.primary}
-                />
-              </TouchableOpacity>
+              <FilterPicker
+                options={SORT_OPTIONS}
+                selected={selectedSort}
+                onSelect={(v) => setSelectedSort(v as SortOption)}
+                renderTrigger={({ onPress }) => (
+                  <TouchableOpacity
+                    onPress={onPress}
+                    activeOpacity={0.7}
+                    style={styles.headerIcon}
+                  >
+                    <Ionicons
+                      name="filter-outline"
+                      size={18}
+                      color={Colors.text.primary}
+                    />
+                  </TouchableOpacity>
+                )}
+              />
               <Permission roles={["owner", "admin"]}>
                 <IconActionButton
                   iconName="add"
@@ -84,19 +90,6 @@ export function ServicesManagementScreen() {
             </View>
           }
         />
-      }
-      overlaySlot={
-        sortMenuVisible ? (
-          <View style={styles.menuOverlay}>
-            <SortMenu
-              visible
-              selected={selectedSort}
-              onSelect={(v) => setSelectedSort(v as SortOption)}
-              onClose={() => setSortMenuVisible(false)}
-              options={SORT_OPTIONS}
-            />
-          </View>
-        ) : null
       }
     >
       <AppText style={styles.title}>{t("services.management")}</AppText>
@@ -192,13 +185,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: Colors.bg.default,
-  },
-  menuOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 50,
   },
 });
