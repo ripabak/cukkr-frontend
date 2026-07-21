@@ -182,11 +182,6 @@ export function HomeDashboardScreen() {
     });
   };
 
-  const handleCopyLink = async () => {
-    if (!bookingUrl) return;
-    await Clipboard.setStringAsync(bookingUrl);
-  };
-
   const bookingUrl = barbershop?.slug
     ? `${process.env.EXPO_PUBLIC_WEB_URL}/${barbershop.slug}`
     : null;
@@ -402,7 +397,7 @@ export function HomeDashboardScreen() {
 
             {bookingUrl && (
               <TouchableOpacity
-                onPress={handleCopyLink}
+                onPress={handleShareLink}
                 activeOpacity={0.7}
                 style={styles.walkInLinkPill}
               >
@@ -410,27 +405,12 @@ export function HomeDashboardScreen() {
                   {bookingUrl}
                 </AppText>
                 <Ionicons
-                  name="copy-outline"
+                  name="share-outline"
                   size={18}
                   color={Colors.text.secondary}
                 />
               </TouchableOpacity>
             )}
-
-            <TouchableOpacity
-              onPress={handleShareLink}
-              activeOpacity={0.9}
-              style={styles.walkInShareBtn}
-            >
-              <Ionicons
-                name="share-outline"
-                size={20}
-                color={Colors.text.primary}
-              />
-              <AppText style={styles.walkInShareText}>
-                {t("home.shareWalkinLink")}
-              </AppText>
-            </TouchableOpacity>
           </View>
 
           {/* Today&apos;s Queue */}
@@ -782,6 +762,8 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
+    borderWidth: 1.5,
+    borderColor: Colors.border.default,
     backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
@@ -881,21 +863,6 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
     fontWeight: "500",
   },
-  walkInShareBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-    backgroundColor: Colors.brand.primary,
-    borderRadius: 999,
-    paddingVertical: 14,
-  },
-  walkInShareText: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: Colors.text.primary,
-  },
-
   // Section
   sectionRow: {
     flexDirection: "row",
