@@ -437,13 +437,13 @@ export declare const app: Elysia<"", {
                                 id: string;
                                 name: string;
                                 slug: string;
-                                logoThumb: string | null;
-                                logoMed: string | null;
-                                logoFull: string | null;
                                 role: string;
                                 description: string | null;
                                 address: string | null;
                                 logoUrl: string | null;
+                                logoThumb: string | null;
+                                logoMed: string | null;
+                                logoFull: string | null;
                                 onboardingCompleted: boolean;
                             }[];
                             status: string | number;
@@ -485,13 +485,14 @@ export declare const app: Elysia<"", {
                             id: string;
                             name: string;
                             slug: string;
-                            logoThumb: string | null;
-                            logoMed: string | null;
-                            logoFull: string | null;
                             description: string | null;
                             address: string | null;
                             logoUrl: string | null;
+                            logoThumb: string | null;
+                            logoMed: string | null;
+                            logoFull: string | null;
                             onboardingCompleted: boolean;
+                            lastSlugChangedAt: string | null;
                             timezone: string;
                         };
                         status: string | number;
@@ -539,13 +540,14 @@ export declare const app: Elysia<"", {
                                 id: string;
                                 name: string;
                                 slug: string;
-                                logoThumb: string | null;
-                                logoMed: string | null;
-                                logoFull: string | null;
                                 description: string | null;
                                 address: string | null;
                                 logoUrl: string | null;
+                                logoThumb: string | null;
+                                logoMed: string | null;
+                                logoFull: string | null;
                                 onboardingCompleted: boolean;
+                                lastSlugChangedAt: string | null;
                                 timezone: string;
                             };
                             status: string | number;
@@ -671,10 +673,10 @@ export declare const app: Elysia<"", {
                             } | undefined;
                             message: string;
                             data: {
+                                logoUrl: string;
                                 logoThumb: string;
                                 logoMed: string;
                                 logoFull: string;
-                                logoUrl: string;
                             };
                             status: string | number;
                             path: string;
@@ -2813,6 +2815,7 @@ export declare const app: Elysia<"", {
                                 topBarber: {
                                     id: string;
                                     name: string;
+                                    imageThumb: string | null;
                                     imageUrl: string | null;
                                     count: number;
                                     revenue: number;
@@ -2820,6 +2823,7 @@ export declare const app: Elysia<"", {
                                 topService: {
                                     id: string;
                                     name: string;
+                                    imageThumb: string | null;
                                     imageUrl: string | null;
                                     count: number;
                                     revenue: number;
@@ -3156,6 +3160,7 @@ export declare const app: Elysia<"", {
                                 message: string;
                                 data: {
                                     name: string;
+                                    imageThumb: string | null;
                                     imageUrl: string | null;
                                     barberId: string;
                                     totalCustomers: number;
@@ -3804,10 +3809,14 @@ export declare const app: Elysia<"", {
                                     description: string | null;
                                     address: string | null;
                                     logoUrl: string | null;
+                                    logoThumb: string | null;
+                                    logoMed: string | null;
+                                    logoFull: string | null;
                                     services: {
                                         duration: number;
                                         id: string;
                                         name: string;
+                                        imageThumb: string | null;
                                         description: string | null;
                                         price: number;
                                         discount: number;
@@ -3817,7 +3826,9 @@ export declare const app: Elysia<"", {
                                     barbers: {
                                         id: string;
                                         name: string;
+                                        bio: string | null;
                                         avatarUrl: string | null;
+                                        avatarThumb: string | null;
                                     }[];
                                     openHours: {
                                         dayOfWeek: number;

@@ -2,6 +2,7 @@ import { EditFieldHeader } from "@/src/components/EditFieldHeader";
 import { HelperCopy } from "@/src/components/HelperCopy";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { TextInputField } from "@/src/components/TextInputField";
+import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import {
   useBarbershopCurrent,
   useBarbershopSlugCheck,
@@ -11,6 +12,7 @@ import { useDebounce, useMemberRole } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
 import { useI18nContext } from "@/src/lib/i18n/provider";
+import { formatDateTime } from "@/src/utils/date";
 import { useRouter } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
@@ -18,6 +20,7 @@ import { AppText } from "@/src/components/AppText";
 
 const BASE_URL = "cukkr.com/";
 const MIN_SLUG_LENGTH = 3;
+const SLUG_COOLDOWN_HOURS = 72;
 
 export function EditBookingUrlScreen() {
   const router = useRouter();
@@ -32,6 +35,8 @@ export function EditBookingUrlScreen() {
 
   const [slug, setSlug] = useState("");
   const [initialized, setInitialized] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
 
   useEffect(() => {
     if (barbershop && !initialized) {
@@ -39,6 +44,16 @@ export function EditBookingUrlScreen() {
       setInitialized(true);
     }
   }, [barbershop, initialized]);
+
+  const lastSlugChangedAt = barbershop?.lastSlugChangedAt
+    ? new Date(barbershop.lastSlugChangedAt)
+    : null;
+
+  const cooldownEnd = lastSlugChangedAt
+    ? new Date(lastSlugChangedAt.getTime() + SLUG_COOLDOWN_HOURS * 60 * 60 * 1000)
+    : null;
+
+  const isCooldownActive = cooldownEnd ? new Date() < cooldownEnd : false;
 
   const sanitizeSlug = (text: string) => {
     return text.toLowerCase().replace(/[^a-z0-9-]/g, "");
@@ -105,10 +120,20 @@ export function EditBookingUrlScreen() {
     isValidSlug &&
     hasMinLength &&
     !isTyping &&
-    isAvailable === true;
+    isAvailable === true &&
+    !isCooldownActive;
+
+  const handleSavePress = () => {
+    if (isCooldownActive) {
+      setShowRejectModal(true);
+      return;
+    }
+    setShowConfirmModal(true);
+  };
 
   const handleSave = () => {
     if (!canSave) return;
+    setShowConfirmModal(false);
 
     updateSettings(
       { slug: debouncedSlug },
@@ -131,7 +156,7 @@ export function EditBookingUrlScreen() {
         <EditFieldHeader
           title={t("barbershop.slugLabel")}
           onBack={() => router.back()}
-          onSave={canSave ? handleSave : undefined}
+          onSave={canSave ? handleSavePress : undefined}
           hideSave={!isOwner}
         />
       }
@@ -150,7 +175,7 @@ export function EditBookingUrlScreen() {
             placeholder={t("barbershop.slugLabel")}
             value={slug}
             onChangeText={(text) => setSlug(sanitizeSlug(text))}
-            editable={isOwner}
+            editable={isOwner && !isCooldownActive}
             autoCapitalize="none"
             autoCorrect={false}
           />
@@ -166,6 +191,13 @@ export function EditBookingUrlScreen() {
             ]}
             style={styles.helper}
           />
+          {isCooldownActive && cooldownEnd && (
+            <AppText style={styles.cooldownInfo}>
+              {t("barbershop.urlCooldownLabel", {
+                date: formatDateTime(cooldownEnd),
+              })}
+            </AppText>
+          )}
           {!isOwner && (
             <View style={styles.viewOnlyBanner}>
               <AppText style={styles.viewOnlyText}>{t("common.noPermission")}</AppText>
@@ -173,6 +205,24 @@ export function EditBookingUrlScreen() {
           )}
         </>
       )}
+      <ConfirmationModal
+        visible={showConfirmModal}
+        title={t("barbershop.urlCooldownConfirmTitle")}
+        description={t("barbershop.urlCooldownConfirmDesc")}
+        confirmLabel={t("common.save")}
+        cancelLabel={t("common.cancel")}
+        onConfirm={handleSave}
+        onCancel={() => setShowConfirmModal(false)}
+      />
+      <ConfirmationModal
+        visible={showRejectModal}
+        title={t("barbershop.urlCooldownActiveTitle")}
+        description={t("barbershop.urlCooldownActiveDesc", {
+          date: cooldownEnd ? formatDateTime(cooldownEnd) : "",
+        })}
+        confirmLabel={t("common.ok")}
+        onConfirm={() => setShowRejectModal(false)}
+      />
     </ScreenShell>
   );
 }
@@ -203,5 +253,10 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: Colors.text.muted,
     textAlign: "center",
+  },
+  cooldownInfo: {
+    fontSize: 13,
+    color: Colors.status.warning,
+    marginTop: 12,
   },
 });
