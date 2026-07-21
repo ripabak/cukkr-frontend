@@ -101,9 +101,9 @@ export function BarbershopSettingsScreen() {
           }
           activeOpacity={0.8}
         >
-          {barbershop?.logoUrl ? (
+          {barbershop?.logoMed ? (
             <Image
-              source={{ uri: barbershop.logoUrl }}
+              source={{ uri: barbershop.logoMed }}
               style={[styles.avatarCircle, styles.clickableBorder]}
               contentFit="cover"
             />

@@ -234,9 +234,9 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
                     activeOpacity={0.7}
                     disabled={isSwitchingWorkspace}
                   >
-                    {shop.logoUrl ? (
+                    {shop.logoThumb ? (
                       <Image
-                        source={{ uri: shop.logoUrl }}
+                        source={{ uri: shop.logoThumb }}
                         style={[styles.avatarImage, isActive && styles.avatarActive]}
                       />
                     ) : (

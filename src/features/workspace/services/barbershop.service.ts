@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 import { authClient } from "@/src/lib/auth-client";
 import { app } from "@/src/lib/eden-app";
+import { compressImage } from "@/src/utils/compress-image";
 
 async function createWebFile(file: { uri: string; name: string; type: string }): Promise<File> {
   const response = await fetch(file.uri);
@@ -70,8 +71,9 @@ export const barbershopService = {
   },
 
   async uploadLogo(file: { uri: string; name: string; type: string }) {
+    const compressed = await compressImage(file.uri);
     if (Platform.OS === 'web') {
-      const nativeFile = await createWebFile(file);
+      const nativeFile = await createWebFile(compressed);
       const { data: response, error } = await app.api.barbershop.logo.post({
         file: nativeFile,
       });
@@ -79,8 +81,11 @@ export const barbershopService = {
         throw new Error(error?.value?.message || 'Failed to upload logo');
       return response.data;
     }
-    return nativeUpload('/api/barbershop/logo', file) as Promise<{
+    return nativeUpload('/api/barbershop/logo', compressed) as Promise<{
       logoUrl: string;
+      logoThumb: string;
+      logoMed: string;
+      logoFull: string;
     }>;
   },
 };

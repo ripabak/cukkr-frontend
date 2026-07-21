@@ -1,5 +1,5 @@
 import { expoClient } from "@better-auth/expo/client";
-import { emailOTPClient, organizationClient, inferAdditionalFields } from "better-auth/client/plugins";
+import { emailOTPClient, organizationClient, inferAdditionalFields, inferOrgAdditionalFields } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
@@ -25,9 +25,24 @@ export const authClient = createAuthClient({
       storage: Platform.OS === "web" ? webStorage : SecureStore,
     }),
     emailOTPClient(),
-    organizationClient(),
+    organizationClient({
+      schema: inferOrgAdditionalFields({
+        organization: {
+          additionalFields: {
+            logoThumb: { type: "string" },
+            logoMed: { type: "string" },
+            logoFull: { type: "string" },
+          },
+        },
+      }),
+    }),
     inferAdditionalFields({
-      user: { language: { type: "string", required: false } }
+      user: {
+        language: { type: "string", required: false },
+        imageThumb: { type: "string", required: false },
+        imageMed: { type: "string", required: false },
+        imageFull: { type: "string", required: false },
+      }
     }),
   ],
 });

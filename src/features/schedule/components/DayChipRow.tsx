@@ -1,14 +1,17 @@
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import React, { useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
 import {
+  Platform,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
-import { useHorizontalScrollDrag } from "@/src/hooks";
+
+const DESKTOP_BREAKPOINT = 1024;
+const SCROLL_STEP = 228;
 
 export interface DayChip {
   dayLabel: string;
@@ -33,69 +36,136 @@ export function DayChipRow({
   highlightDates,
   waitingDates,
 }: Props) {
-  const scrollRef = useHorizontalScrollDrag();
+  const scrollRef = useRef<ScrollView>(null);
+  const [scrollX, setScrollX] = useState(0);
+  const [contentWidth, setContentWidth] = useState(0);
+  const [containerWidth, setContainerWidth] = useState(0);
+
+  const isDesktop = Platform.OS === "web" && window.innerWidth >= DESKTOP_BREAKPOINT;
+
+  const canScrollLeft = scrollX > 5;
+  const canScrollRight = contentWidth - containerWidth - scrollX > 5;
+
+  const handleScroll = (e: unknown) => {
+    const ev = e as { nativeEvent: { contentOffset: { x: number } } };
+    setScrollX(ev.nativeEvent.contentOffset.x);
+  };
+
+  const handleContentSizeChange = (w: number, _h: number) => {
+    setContentWidth(w);
+  };
+
+  const handleContainerLayout = (e: unknown) => {
+    const ev = e as { nativeEvent: { layout: { width: number } } };
+    setContainerWidth(ev.nativeEvent.layout.width);
+  };
+
+  const scrollBy = (direction: "left" | "right") => {
+    const amount = direction === "left" ? -SCROLL_STEP : SCROLL_STEP;
+    scrollRef.current?.scrollTo({
+      x: scrollX + amount,
+      y: 0,
+      animated: true,
+    });
+  };
+
+  const arrowBtn = (direction: "left" | "right") => {
+    const isLeft = direction === "left";
+    const disabled = isLeft ? !canScrollLeft : !canScrollRight;
+    return (
+      <TouchableOpacity
+        key={direction}
+        onPress={() => scrollBy(direction)}
+        activeOpacity={0.75}
+        disabled={disabled}
+        style={[
+          styles.arrowBtn,
+          isLeft ? styles.arrowBtnLeft : styles.arrowBtnRight,
+          disabled && styles.arrowBtnDisabled,
+        ]}
+      >
+        <Ionicons
+          name={isLeft ? "chevron-back" : "chevron-forward"}
+          size={20}
+          color={disabled ? Colors.icon.muted : Colors.text.primary}
+        />
+      </TouchableOpacity>
+    );
+  };
 
   return (
-    <ScrollView
-      ref={scrollRef}
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={styles.row}
+    <View
+      style={styles.wrapper}
+      onLayout={isDesktop ? handleContainerLayout : undefined}
     >
-      {days.map((day) => {
-        const isSelected = day.dateKey === selectedKey;
-        const hasRequest = !isSelected && highlightDates?.has(day.dateKey);
-        const hasWaiting = !isSelected && waitingDates?.has(day.dateKey);
-        return (
+      <ScrollView
+        ref={scrollRef}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.row}
+        onScroll={isDesktop ? handleScroll : undefined}
+        onContentSizeChange={isDesktop ? handleContentSizeChange : undefined}
+        scrollEventThrottle={16}
+      >
+        {days.map((day) => {
+          const isSelected = day.dateKey === selectedKey;
+          const hasRequest = !isSelected && highlightDates?.has(day.dateKey);
+          const hasWaiting = !isSelected && waitingDates?.has(day.dateKey);
+          return (
+            <TouchableOpacity
+              key={day.dateKey}
+              onPress={() => onSelect(day.dateKey)}
+              activeOpacity={0.8}
+              style={[styles.chip, isSelected && styles.chipSelected]}
+            >
+              <AppText
+                style={[styles.dayLabel, isSelected && styles.dayLabelSelected]}
+              >
+                {day.dayLabel.toUpperCase()}
+              </AppText>
+              <AppText
+                style={[styles.dayNumber, isSelected && styles.dayNumberSelected]}
+              >
+                {day.dayNumber}
+              </AppText>
+              <View style={styles.dotsRow}>
+                {hasRequest ? (
+                  <View style={styles.requestDot} />
+                ) : (
+                  <View style={styles.dotPlaceholder} />
+                )}
+                {hasWaiting ? (
+                  <View style={styles.waitingDot} />
+                ) : (
+                  <View style={styles.dotPlaceholder} />
+                )}
+              </View>
+            </TouchableOpacity>
+          );
+        })}
+        {onShowMore ? (
           <TouchableOpacity
-            key={day.dateKey}
-            onPress={() => onSelect(day.dateKey)}
+            onPress={onShowMore}
             activeOpacity={0.8}
-            style={[styles.chip, isSelected && styles.chipSelected]}
+            style={[styles.chip, styles.moreChip]}
           >
-            <AppText
-              style={[styles.dayLabel, isSelected && styles.dayLabelSelected]}
-            >
-              {day.dayLabel.toUpperCase()}
-            </AppText>
-            <AppText
-              style={[styles.dayNumber, isSelected && styles.dayNumberSelected]}
-            >
-              {day.dayNumber}
-            </AppText>
-            <View style={styles.dotsRow}>
-              {hasRequest ? (
-                <View style={styles.requestDot} />
-              ) : (
-                <View style={styles.dotPlaceholder} />
-              )}
-              {hasWaiting ? (
-                <View style={styles.waitingDot} />
-              ) : (
-                <View style={styles.dotPlaceholder} />
-              )}
-            </View>
+            <Ionicons
+              name="chevron-forward"
+              size={18}
+              color={Colors.icon.muted}
+            />
           </TouchableOpacity>
-        );
-      })}
-      {onShowMore ? (
-        <TouchableOpacity
-          onPress={onShowMore}
-          activeOpacity={0.8}
-          style={[styles.chip, styles.moreChip]}
-        >
-          <Ionicons
-            name="chevron-forward"
-            size={18}
-            color={Colors.icon.muted}
-          />
-        </TouchableOpacity>
-      ) : null}
-    </ScrollView>
+        ) : null}
+      </ScrollView>
+      {isDesktop ? [arrowBtn("left"), arrowBtn("right")] : null}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    position: "relative",
+  },
   row: {
     flexDirection: "row",
     gap: 10,
@@ -160,5 +230,24 @@ const styles = StyleSheet.create({
   dotPlaceholder: {
     width: 5,
     height: 5,
+  },
+  arrowBtn: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    width: 28,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 10,
+  },
+  arrowBtnLeft: {
+    left: 0,
+  },
+  arrowBtnRight: {
+    right: 0,
+  },
+  arrowBtnDisabled: {
+    opacity: 0,
+    pointerEvents: "none",
   },
 });

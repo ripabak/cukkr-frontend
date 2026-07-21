@@ -267,7 +267,7 @@ export function HomeDashboardScreen() {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
-        <View style={[styles.page, { paddingTop: stickyHeaderHeight + 8 }]}>
+        <View style={[styles.page, { paddingTop: stickyHeaderHeight + 36 }]}>
           {/* Greeting + Today&apos;s Hours */}
           <View style={styles.greetingSection}>
             <View style={styles.greetingLeft}>
@@ -566,7 +566,7 @@ export function HomeDashboardScreen() {
           >
             <Ionicons
               name="notifications-outline"
-              size={18}
+              size={20}
               color={Colors.text.primary}
             />
             {(unreadCount ?? 0) > 0 ? <View style={styles.notifDot} /> : null}
@@ -667,21 +667,23 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    marginHorizontal: 24,
     gap: 12,
-    marginBottom: 24,
+    marginBottom: 36,
   },
   greetingLeft: {
     flex: 1,
   },
   greetingSmall: {
-    fontSize: 12,
+    fontSize: 13,
     color: Colors.text.secondary,
     fontWeight: "500",
   },
   greetingName: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: "800",
     color: Colors.text.primary,
+    letterSpacing: -0.5,
   },
   rolePillContainer: {
     alignSelf: "flex-start",
@@ -707,8 +709,8 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   openHoursTitle: {
-    fontSize: 11,
-    fontWeight: "500",
+    fontSize: 12,
+    fontWeight: "600",
     color: Colors.text.muted,
   },
   openHoursStatusRow: {
@@ -771,14 +773,15 @@ const styles = StyleSheet.create({
   },
   shopName: {
     maxWidth: 120,
-    fontSize: 13,
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "700",
     color: Colors.text.primary,
+    letterSpacing: -0.3,
   },
   notifBtn: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
@@ -793,9 +796,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.status.danger,
   },
   profileBtn: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     borderWidth: 1.5,
     borderColor: Colors.border.default,
     backgroundColor: Colors.bg.surface,
@@ -804,12 +807,12 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   profileAvatar: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
   profileInitials: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: "700",
     color: Colors.brand.primaryDark,
   },
@@ -819,6 +822,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 8,
+    marginTop: 16,
     marginBottom: 24,
   },
 

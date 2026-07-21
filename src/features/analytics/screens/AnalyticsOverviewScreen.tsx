@@ -195,7 +195,7 @@ export function AnalyticsOverviewScreen() {
               </View>
               {highlights.topBarber ? (
                 <HighlightRow
-                  imageUrl={highlights.topBarber.imageUrl}
+                  imageUrl={highlights.topBarber.imageThumb ?? highlights.topBarber.imageUrl}
                   name={highlights.topBarber.name}
                   subtitle={`Top barber · ${highlights.topBarber.count} ${t("customers.title")}`}
                   revenue={highlights.topBarber.revenue}
@@ -207,7 +207,7 @@ export function AnalyticsOverviewScreen() {
               ) : null}
               {highlights.topService ? (
                 <HighlightRow
-                  imageUrl={highlights.topService.imageUrl}
+                  imageUrl={highlights.topService.imageThumb ?? highlights.topService.imageUrl}
                   name={highlights.topService.name}
                   subtitle={`Top service · ${highlights.topService.count} ${t("services.title")}`}
                   revenue={highlights.topService.revenue}

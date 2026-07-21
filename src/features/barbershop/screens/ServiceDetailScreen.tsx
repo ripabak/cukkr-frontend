@@ -89,6 +89,13 @@ export function ServiceDetailScreen() {
     });
   };
 
+  const handleEditField = (mode: string) => {
+    router.push({
+      pathname: "/d/edit-service-info",
+      params: { serviceId, mode },
+    });
+  };
+
   const handleImageUpload = async () => {
     const file = await pickAndGetFile();
     if (!file) return;
@@ -157,9 +164,9 @@ export function ServiceDetailScreen() {
               }
               activeOpacity={canManage ? 0.8 : 1}
             >
-              {service?.imageUrl ? (
+              {service?.imageMed ? (
                 <Image
-                  source={{ uri: service.imageUrl }}
+                  source={{ uri: service.imageMed }}
                   style={styles.serviceImageContent}
                   contentFit="cover"
                 />
@@ -179,10 +186,17 @@ export function ServiceDetailScreen() {
 
           <AppText style={styles.sectionLabel}>{t("services.management")}</AppText>
           <View style={styles.card}>
-            <InfoRow label={t("services.serviceName")} value={service?.name ?? "—"} />
+            <InfoRow
+              label={t("services.serviceName")}
+              value={service?.name ?? "—"}
+              onPress={canManage ? () => handleEditField("name") : undefined}
+              showChevron={canManage}
+            />
             <InfoRow
               label="Description"
               value={service?.description ?? "—"}
+              onPress={canManage ? () => handleEditField("description") : undefined}
+              showChevron={canManage}
               isLast
             />
           </View>
@@ -194,24 +208,27 @@ export function ServiceDetailScreen() {
             <InfoRow
               label={t("services.duration")}
               value={service ? `${service.duration} minutes` : "—"}
+              onPress={canManage ? () => handleEditField("duration") : undefined}
+              showChevron={canManage}
             />
             <InfoRow
               label={t("services.price")}
               value={service ? formatPrice(service.price) : "—"}
+              onPress={canManage ? () => handleEditField("price") : undefined}
+              showChevron={canManage}
             />
             <InfoRow
               label={t("services.discount")}
               value={service ? `${service.discount}%` : "—"}
+              onPress={canManage ? () => handleEditField("discount") : undefined}
+              showChevron={canManage}
               isLast
             />
           </View>
 
           <Permission roles={["owner", "admin"]}>
             <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
-              {t("services.active")}
-            </AppText>
-            <AppText style={styles.operationalSubtitle}>
-              {t("services.toggleActive")}
+              {t("services.operational")}
             </AppText>
             <View style={styles.card}>
               <ToggleRow
@@ -240,16 +257,6 @@ export function ServiceDetailScreen() {
             <OverflowMenu
               visible
               items={[
-                {
-                  label: t("services.editService"),
-                  onPress: () => {
-                    setOverflowVisible(false);
-                    router.push({
-                      pathname: "/d/add-or-edit-service",
-                      params: { serviceId, isEdit: "true" },
-                    });
-                  },
-                },
                 {
                   label: t("common.delete"),
                   danger: true,
