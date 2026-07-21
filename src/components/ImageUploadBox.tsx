@@ -30,7 +30,7 @@ export function ImageUploadBox({ onPress, imageUri, label, style }: Props) {
         <Image source={{ uri: imageUri }} style={styles.image} />
       ) : (
         <View style={styles.row}>
-          <Ionicons name="image-outline" size={20} color={Colors.icon.muted} />
+          <Ionicons name="camera-outline" size={20} color={Colors.icon.muted} />
           <AppText style={styles.label}>{label ?? t("createBarbershop.chooseImage")}</AppText>
         </View>
       )}

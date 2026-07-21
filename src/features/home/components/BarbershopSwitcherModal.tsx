@@ -8,6 +8,7 @@ import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   ActivityIndicator,
   Animated,
+  Image,
   Modal,
   ScrollView,
   StyleSheet,
@@ -233,18 +234,25 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
                     activeOpacity={0.7}
                     disabled={isSwitchingWorkspace}
                   >
-                    <View
-                      style={[styles.avatar, isActive && styles.avatarActive]}
-                    >
-                      <AppText
-                        style={[
-                          styles.avatarText,
-                          isActive && styles.avatarTextActive,
-                        ]}
+                    {shop.logoUrl ? (
+                      <Image
+                        source={{ uri: shop.logoUrl }}
+                        style={[styles.avatarImage, isActive && styles.avatarActive]}
+                      />
+                    ) : (
+                      <View
+                        style={[styles.avatar, isActive && styles.avatarActive]}
                       >
-                        {initials}
-                      </AppText>
-                    </View>
+                        <AppText
+                          style={[
+                            styles.avatarText,
+                            isActive && styles.avatarTextActive,
+                          ]}
+                        >
+                          {initials}
+                        </AppText>
+                      </View>
+                    )}
                     <View style={styles.itemTexts}>
                       <AppText style={styles.itemName} numberOfLines={1}>
                         {shop.name}
@@ -360,6 +368,13 @@ const styles = StyleSheet.create({
     borderColor: Colors.border.default,
     alignItems: "center",
     justifyContent: "center",
+  },
+  avatarImage: {
+    width: 38,
+    height: 38,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
   },
   avatarActive: {
     backgroundColor: Colors.brand.primary,

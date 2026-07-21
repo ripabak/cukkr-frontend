@@ -7,16 +7,16 @@ import {
   useBarbershopCurrent,
   useDeleteBarbershop,
   useLeaveBarbershop,
+  useUploadLogo,
 } from "@/src/features/barbershop/hooks";
-import { useMemberRole } from "@/src/hooks";
+import { useImagePicker, useMemberRole } from "@/src/hooks";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
-import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
 
 export function BarbershopSettingsScreen() {
@@ -30,6 +30,10 @@ export function BarbershopSettingsScreen() {
   const { mutate: deleteBarbershop, isPending: isDeleting } =
     useDeleteBarbershop();
   const isPending = isLeaving || isDeleting;
+
+  const { pickAndGetFile, isPicking } = useImagePicker();
+  const { mutate: uploadLogo, isPending: isUploading } = useUploadLogo();
+
   const [showActionModal, setShowActionModal] = useState(false);
 
   const handleActionConfirm = () => {
@@ -61,8 +65,24 @@ export function BarbershopSettingsScreen() {
     }
   };
 
-  const handleCameraBadge = () => {
-    Alert.alert(t("barbershop.logoUpload"), t("barbershop.logoComingSoon"));
+  const handleCameraBadge = async () => {
+    const file = await pickAndGetFile();
+    if (!file) return;
+
+    uploadLogo(file, {
+      onSuccess: () => {
+        toast.success(t("toast.logoUploadSuccess"));
+      },
+      onError: (e) => {
+        const message = e.message;
+        if (message.startsWith("MAX_SIZE_EXCEEDED:")) {
+          const size = message.split(":")[1];
+          toast.error(t("toast.imageTooLarge", { size }));
+        } else {
+          toast.error(e.message || t("toast.unknownError"));
+        }
+      },
+    });
   };
 
   return (
@@ -73,36 +93,34 @@ export function BarbershopSettingsScreen() {
       <AppText style={styles.subtitle}>{t("barbershop.setupSubtitle")}</AppText>
 
       <View style={styles.avatarWrapper}>
-        {barbershop?.logoUrl ? (
-          <Image
-            source={{ uri: barbershop.logoUrl }}
-            style={styles.avatarCircle}
-            contentFit="cover"
-          />
-        ) : (
-          <View style={styles.avatar}>
-            <AppText style={styles.avatarInitials}>
-              {barbershop?.name
-                ? barbershop.name
-                    .split(" ")
-                    .slice(0, 2)
-                    .filter(Boolean)
-                    .map((w: string) => w[0].toUpperCase())
-                    .join("")
-                : "?"}
-            </AppText>
-          </View>
-        )}
         <TouchableOpacity
-          style={styles.editAvatarBtn}
-          onPress={isLoading ? undefined : handleCameraBadge}
+          onPress={
+            isLoading || isPicking || isUploading
+              ? undefined
+              : handleCameraBadge
+          }
           activeOpacity={0.8}
         >
-          <Ionicons
-            name="camera-outline"
-            size={14}
-            color={Colors.text.primary}
-          />
+          {barbershop?.logoUrl ? (
+            <Image
+              source={{ uri: barbershop.logoUrl }}
+              style={[styles.avatarCircle, styles.clickableBorder]}
+              contentFit="cover"
+            />
+          ) : (
+            <View style={[styles.avatar, styles.clickableBorder]}>
+              <AppText style={styles.avatarInitials}>
+                {barbershop?.name
+                  ? barbershop.name
+                      .split(" ")
+                      .slice(0, 2)
+                      .filter(Boolean)
+                      .map((w: string) => w[0].toUpperCase())
+                      .join("")
+                  : "?"}
+              </AppText>
+            </View>
+          )}
         </TouchableOpacity>
       </View>
 
@@ -282,18 +300,9 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     letterSpacing: 1,
   },
-  editAvatarBtn: {
-    position: "absolute",
-    bottom: -6,
-    right: -6,
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    backgroundColor: Colors.bg.default,
-    borderWidth: 1,
+  clickableBorder: {
+    borderWidth: 1.5,
     borderColor: Colors.border.default,
-    alignItems: "center",
-    justifyContent: "center",
   },
   sectionLabel: {
     fontSize: 13,

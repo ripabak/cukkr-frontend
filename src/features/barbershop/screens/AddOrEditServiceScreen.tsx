@@ -7,6 +7,7 @@ import {
   useCreateService,
   useServiceById,
   useUpdateService,
+  useUploadServiceImage,
 } from "@/src/features/barbershop/hooks";
 import {
   validateDiscount,
@@ -14,6 +15,7 @@ import {
   validatePrice,
   validateServiceName,
 } from "@/src/features/barbershop/utils/form-validators";
+import { useImagePicker } from "@/src/hooks";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -35,6 +37,11 @@ export function AddOrEditServiceScreen() {
   const { mutate: createService, isPending: isCreating } = useCreateService();
   const { mutate: updateService, isPending: isUpdating } = useUpdateService();
 
+  const [imageUri, setImageUri] = useState<string | undefined>(undefined);
+  const { pickAndGetFile } = useImagePicker();
+  const { mutate: uploadServiceImage, isPending: isUploadingImage } =
+    useUploadServiceImage(serviceId);
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -51,11 +58,35 @@ export function AddOrEditServiceScreen() {
       setDuration(String(existing.duration));
       setIsActive(existing.isActive);
       setDiscount(existing.discount > 0 ? String(existing.discount) : "");
+      if (existing.imageUrl) {
+        setImageUri(existing.imageUrl);
+      }
       setInitialized(true);
     }
   }, [existing, isEdit, initialized]);
 
   const isPending = isCreating || isUpdating;
+
+  const handleImagePress = async () => {
+    const file = await pickAndGetFile();
+    if (!file) return;
+
+    setImageUri(file.uri);
+    uploadServiceImage(file, {
+      onSuccess: () => {
+        toast.success(t("toast.imageUploadSuccess"));
+      },
+      onError: (e) => {
+        const message = e.message;
+        if (message.startsWith("MAX_SIZE_EXCEEDED:")) {
+          const size = message.split(":")[1];
+          toast.error(t("toast.imageTooLarge", { size }));
+        } else {
+          toast.error(e.message || t("toast.unknownError"));
+        }
+      },
+    });
+  };
 
   const handleSubmit = () => {
     const nameVal = validateServiceName(name);
@@ -158,7 +189,8 @@ export function AddOrEditServiceScreen() {
             onActiveChange={setIsActive}
             discount={discount}
             onDiscountChange={setDiscount}
-            onImagePress={() => {}}
+            onImagePress={isUploadingImage ? undefined : handleImagePress}
+            imageUri={imageUri}
             showDiscount={isEdit}
           />
 

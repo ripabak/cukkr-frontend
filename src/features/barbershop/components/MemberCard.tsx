@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ViewStyle,
+  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBadge } from "@/src/components/StatusBadge";
@@ -18,6 +19,7 @@ interface Props {
   nameSmall?: boolean;
   role?: string;
   isYou?: boolean;
+  imageUri?: string;
   status: string;
   statusVariant?: StatusVariant;
   onRemove?: () => void;
@@ -31,6 +33,7 @@ export function MemberCard({
   nameSmall,
   role,
   isYou,
+  imageUri,
   roleChangeable,
   status,
   statusVariant = "active",
@@ -62,7 +65,13 @@ export function MemberCard({
 
   return (
     <View style={[styles.card, style]}>
-      <View style={styles.avatar} />
+      <View style={styles.avatar}>
+        {imageUri ? (
+          <Image source={{ uri: imageUri }} style={styles.avatarImage} />
+        ) : (
+          <Ionicons name="person-outline" size={24} color={Colors.icon.muted} />
+        )}
+      </View>
       <View style={styles.info}>
         <View style={styles.nameRow}>
           <AppText
@@ -108,7 +117,17 @@ const styles = StyleSheet.create({
     height: 56,
     borderRadius: 28,
     backgroundColor: Colors.bg.surface,
+    overflow: "hidden",
     flexShrink: 0,
+    borderWidth: 1.5,
+    borderColor: Colors.border.default,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  avatarImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   info: {
     flex: 1,

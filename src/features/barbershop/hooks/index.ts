@@ -7,6 +7,7 @@ export {
   useUpdateBarbershopSettings,
   useLeaveBarbershop,
   useDeleteBarbershop,
+  useUploadLogo,
 } from "./useBarbershopMutations";
 
 // Barbers
@@ -26,6 +27,7 @@ export {
   useDeleteService,
   useToggleServiceActive,
   useSetServiceDefault,
+  useUploadServiceImage,
 } from "./useServicesMutations";
 
 // Open Hours

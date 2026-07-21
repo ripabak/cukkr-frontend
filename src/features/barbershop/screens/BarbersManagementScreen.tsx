@@ -162,6 +162,7 @@ export function BarbersManagementScreen() {
                 <MemberCard
                   key={member.id}
                   name={member.user.name}
+                  imageUri={member.user.image ?? undefined}
                   role={member.role}
                   isYou={isYou}
                   status={t("services.active")}

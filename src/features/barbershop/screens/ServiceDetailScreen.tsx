@@ -1,7 +1,6 @@
 import { Permission } from "@/src/components/Permission";
-import { useMemberRole } from "@/src/hooks";
+import { useImagePicker, useMemberRole } from "@/src/hooks";
 import { Colors } from "@/src/theme/colors";
-import AppTheme from "@/src/app-theme";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { InfoRow } from "@/src/components/InfoRow";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -14,10 +13,12 @@ import {
   useServiceById,
   useSetServiceDefault,
   useToggleServiceActive,
+  useUploadServiceImage,
 } from "@/src/features/barbershop/hooks";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { AppText } from "@/src/components/AppText";
@@ -47,6 +48,10 @@ export function ServiceDetailScreen() {
   const { mutate: setDefault, isPending: isSettingDefault } =
     useSetServiceDefault();
   const { mutate: deleteService, isPending: isDeleting } = useDeleteService();
+
+  const { pickAndGetFile } = useImagePicker();
+  const { mutate: uploadImage, isPending: isUploadingImage } =
+    useUploadServiceImage(serviceId);
 
   const [overflowVisible, setOverflowVisible] = useState(false);
   const [showSetDefaultModal, setShowSetDefaultModal] = useState(false);
@@ -80,6 +85,26 @@ export function ServiceDetailScreen() {
       onError: (e) => {
         toast.error(e.message || t("toast.unknownError"));
         setShowDeleteModal(false);
+      },
+    });
+  };
+
+  const handleImageUpload = async () => {
+    const file = await pickAndGetFile();
+    if (!file) return;
+
+    uploadImage(file, {
+      onSuccess: () => {
+        toast.success(t("toast.imageUploadSuccess"));
+      },
+      onError: (e) => {
+        const message = e.message;
+        if (message.startsWith("MAX_SIZE_EXCEEDED:")) {
+          const size = message.split(":")[1];
+          toast.error(t("toast.imageTooLarge", { size }));
+        } else {
+          toast.error(e.message || t("toast.unknownError"));
+        }
       },
     });
   };
@@ -124,13 +149,32 @@ export function ServiceDetailScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.imageWrapper}>
-            <View style={styles.serviceImage}>
-              {canManage && (
-                <View style={styles.cameraBadge}>
-                  <Ionicons name="camera" size={14} color={Colors.text.primary} />
+            <TouchableOpacity
+              onPress={
+                canManage && !isUploadingImage
+                  ? handleImageUpload
+                  : undefined
+              }
+              activeOpacity={canManage ? 0.8 : 1}
+            >
+              {service?.imageUrl ? (
+                <Image
+                  source={{ uri: service.imageUrl }}
+                  style={styles.serviceImageContent}
+                  contentFit="cover"
+                />
+              ) : (
+                <View style={styles.serviceImagePlaceholder}>
+                  <Ionicons
+                    name="camera-outline"
+                    size={24}
+                    color={
+                      canManage ? Colors.icon.muted : Colors.border.default
+                    }
+                  />
                 </View>
               )}
-            </View>
+            </TouchableOpacity>
           </View>
 
           <AppText style={styles.sectionLabel}>{t("services.management")}</AppText>
@@ -250,7 +294,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: Colors.bg.default,
-    paddingTop: AppTheme.spacing.lg,
   },
   outer: {
     flex: 1,
@@ -277,22 +320,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
   },
-  serviceImage: {
+  serviceImageContent: {
+    width: 80,
+    height: 80,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: Colors.border.default,
+  },
+  serviceImagePlaceholder: {
     width: 80,
     height: 80,
     borderRadius: 16,
     backgroundColor: Colors.bg.surface,
-  },
-  cameraBadge: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: Colors.brand.primary,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1.5,
+    borderColor: Colors.border.default,
   },
   sectionLabel: {
     fontSize: 13,

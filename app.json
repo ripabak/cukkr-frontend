@@ -13,7 +13,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Cukkr needs camera access to take photos for barbershop logo, service images, and profile avatar.",
+        "NSPhotoLibraryUsageDescription": "Cukkr needs photo library access to select images for barbershop logo, service images, and profile avatar."
+      }
     },
     "android": {
       "adaptiveIcon": {

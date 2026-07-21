@@ -9,7 +9,7 @@ import { LogoutRow } from "@/src/features/profile/components/LogoutRow";
 import { ProfileSummaryCard } from "@/src/features/profile/components/ProfileSummaryCard";
 import { useToast } from "@/src/lib/providers/toast";
 import { Colors } from "@/src/theme/colors";
-import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { AppText } from "@/src/components/AppText";
@@ -19,7 +19,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useProfile } from "../hooks";
+import { useProfile, useUploadAvatar } from "../hooks";
+import { useImagePicker } from "@/src/hooks";
 import { getErrorMessage } from "../utils/error-handler";
 
 export function UserProfileScreen() {
@@ -29,6 +30,9 @@ export function UserProfileScreen() {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const { data: profile, isLoading, error } = useProfile();
   const { mutateAsync: signOut, isPending: signingOut } = useSignOut();
+  const { pickAndGetFile } = useImagePicker();
+  const { mutate: uploadAvatar, isPending: isUploadingAvatar } =
+    useUploadAvatar();
 
   const handleLogout = async () => {
     try {
@@ -39,6 +43,26 @@ export function UserProfileScreen() {
     } finally {
       setShowLogoutConfirm(false);
     }
+  };
+
+  const handleAvatarUpload = async () => {
+    const file = await pickAndGetFile();
+    if (!file) return;
+
+    uploadAvatar(file, {
+      onSuccess: () => {
+        toast.success(t("toast.avatarUploadSuccess"));
+      },
+      onError: (e) => {
+        const message = e.message;
+        if (message.startsWith("MAX_SIZE_EXCEEDED:")) {
+          const size = message.split(":")[1];
+          toast.error(t("toast.imageTooLarge", { size }));
+        } else {
+          toast.error(e.message || t("toast.unknownError"));
+        }
+      },
+    });
   };
 
   if (isLoading) {
@@ -70,24 +94,30 @@ export function UserProfileScreen() {
       contentStyle={{ paddingTop: 20, gap: 12 }}
     >
       <View style={styles.avatarWrapper}>
-        <View style={styles.avatar}>
-          <AppText style={styles.avatarInitials}>
-            {profile.name
-              ? profile.name
-                  .split(" ")
-                  .slice(0, 2)
-                  .filter(Boolean)
-                  .map((w: string) => w[0].toUpperCase())
-                  .join("")
-              : "?"}
-          </AppText>
-        </View>
-        <TouchableOpacity style={styles.editAvatarBtn} activeOpacity={0.8}>
-          <Ionicons
-            name="camera-outline"
-            size={14}
-            color={Colors.text.primary}
-          />
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={isUploadingAvatar ? undefined : handleAvatarUpload}
+        >
+          {profile.avatarUrl ? (
+            <Image
+              source={{ uri: profile.avatarUrl }}
+              style={[styles.avatarImage, styles.clickableBorder]}
+              contentFit="cover"
+            />
+          ) : (
+            <View style={[styles.avatar, styles.clickableBorder]}>
+              <AppText style={styles.avatarInitials}>
+                {profile.name
+                  ? profile.name
+                      .split(" ")
+                      .slice(0, 2)
+                      .filter(Boolean)
+                      .map((w: string) => w[0].toUpperCase())
+                      .join("")
+                  : "?"}
+              </AppText>
+            </View>
+          )}
         </TouchableOpacity>
       </View>
 
@@ -166,24 +196,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  avatarImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 60,
+  },
   avatarInitials: {
     fontSize: 28,
     fontWeight: "700",
     color: "#ffffff",
     letterSpacing: 1,
   },
-  editAvatarBtn: {
-    position: "absolute",
-    bottom: -6,
-    right: -6,
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    backgroundColor: Colors.bg.default,
-    borderWidth: 1,
+  clickableBorder: {
+    borderWidth: 1.5,
     borderColor: Colors.border.default,
-    alignItems: "center",
-    justifyContent: "center",
   },
   sectionLabel: {
     fontSize: 13,
