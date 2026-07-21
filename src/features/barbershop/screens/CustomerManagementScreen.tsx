@@ -4,14 +4,15 @@ import { FloatingActionButton } from "@/src/features/barbershop/components/Float
 import { SearchInput } from "@/src/components/SearchInput";
 import { SelectionFooter } from "@/src/features/barbershop/components/SelectionFooter";
 import { SelectionToolbar } from "@/src/features/barbershop/components/SelectionToolbar";
-import { SortMenu } from "@/src/components/SortMenu";
+import { FilterPicker } from "@/src/components/FilterPicker";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useCustomersList } from "@/src/features/barbershop/hooks";
 import { formatCurrency } from "@/src/features/barbershop/utils/form-validators";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { AppText } from "@/src/components/AppText";
 
 type CustomerSort = "name_asc" | "recent" | "bookings_desc" | "spend_desc";
@@ -31,7 +32,6 @@ export function CustomerManagementScreen() {
   const [search, setSearch] = useState("");
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [sortVisible, setSortVisible] = useState(false);
   const [sortValue, setSortValue] = useState<CustomerSort>("name_asc");
   const [hasContact, setHasContact] = useState(true);
 
@@ -87,7 +87,22 @@ export function CustomerManagementScreen() {
             if (selectionMode) handleCancelSelection();
             else setSelectionMode(true);
           }}
-          onFilterPress={() => setSortVisible(true)}
+          filterSlot={
+            <FilterPicker
+              options={getSortOptions(t)}
+              selected={sortValue}
+              onSelect={(v) => setSortValue(v as CustomerSort)}
+              renderTrigger={({ onPress }) => (
+                <TouchableOpacity
+                  style={toolbarStyles.filterBtn}
+                  onPress={onPress}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name="filter" size={18} color={Colors.text.primary} />
+                </TouchableOpacity>
+              )}
+            />
+          }
           hasContact={hasContact}
           onContactFilterPress={() => setHasContact((prev) => !prev)}
         />
@@ -110,16 +125,6 @@ export function CustomerManagementScreen() {
             />
           </>
         ) : null
-      }
-      overlaySlot={
-        <SortMenu
-          visible={sortVisible}
-          options={getSortOptions(t)}
-          selected={sortValue}
-          onSelect={(v) => setSortValue(v as CustomerSort)}
-          onClose={() => setSortVisible(false)}
-          style={styles.sortMenu}
-        />
       }
       contentStyle={styles.content}
     >
@@ -176,6 +181,19 @@ export function CustomerManagementScreen() {
   );
 }
 
+const toolbarStyles = StyleSheet.create({
+  filterBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: Colors.bg.default,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
+
 const styles = StyleSheet.create({
   content: { paddingBottom: 200 },
   title: {
@@ -196,5 +214,4 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   list: { gap: 12 },
-  sortMenu: { top: 100, right: 20, left: 20 },
 });

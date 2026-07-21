@@ -1,9 +1,7 @@
 import { BookingCard } from "@/src/components/BookingCard";
 import { ScreenShell } from "@/src/components/ScreenShell";
-import {
-  getScheduleStatusOptions,
-  StatusFilterMenu,
-} from "@/src/components/StatusFilterMenu";
+import { getScheduleStatusOptions } from "@/src/components/StatusFilterMenu";
+import { FilterPicker } from "@/src/components/FilterPicker";
 import { useHorizontalScrollDrag } from "@/src/hooks";
 import { CalendarModal } from "@/src/features/schedule/components/CalendarModal";
 import { DateSelectorPill } from "@/src/features/schedule/components/DateSelectorPill";
@@ -136,30 +134,12 @@ export function ScheduleActiveBookingsScreen() {
   const { t, language } = useI18nContext();
   const [selectedDate, setSelectedDate] = useState(today);
   const [selectedKey, setSelectedKey] = useState(toApiDate(today));
-  const [filterMenuVisible, setFilterMenuVisible] = useState(false);
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [statusFilter, setStatusFilter] = useState<
     "all" | "waiting" | "in_progress" | "completed" | "cancelled"
   >("all");
   const [newBookVisible, setNewBookVisible] = useState(false);
   const requestScrollRef = useHorizontalScrollDrag();
-  const [menuTop, setMenuTop] = useState(0);
-  const filterBtnRef = useRef<View>(null);
-  const handleOpenFilterMenu = () => {
-    filterBtnRef.current?.measure(
-      (
-        _x: number,
-        _y: number,
-        _w: number,
-        height: number,
-        _px: number,
-        pageY: number,
-      ) => {
-        setMenuTop(pageY + height + 4);
-      },
-    );
-    setFilterMenuVisible(true);
-  };
 
   const days = generateDayChips(today, language);
 
@@ -253,36 +233,13 @@ export function ScheduleActiveBookingsScreen() {
         </>
       }
       overlaySlot={
-        <>
-          {filterMenuVisible ? (
-            <View style={styles.menuOverlay}>
-              <StatusFilterMenu
-                visible
-                options={getScheduleStatusOptions(t)}
-                selected={statusFilter}
-                onSelect={(value) =>
-                  setStatusFilter(
-                    value as
-                      | "all"
-                      | "waiting"
-                      | "in_progress"
-                      | "completed"
-                      | "cancelled",
-                  )
-                }
-                onClose={() => setFilterMenuVisible(false)}
-                style={{ top: menuTop, right: 20 }}
-              />
-            </View>
-          ) : null}
-          <TouchableOpacity
-            onPress={handleNewAppointment}
-            activeOpacity={0.85}
-            style={styles.fab}
-          >
-            <Ionicons name="add" size={28} color={Colors.text.primary} />
-          </TouchableOpacity>
-        </>
+        <TouchableOpacity
+          onPress={handleNewAppointment}
+          activeOpacity={0.85}
+          style={styles.fab}
+        >
+          <Ionicons name="add" size={28} color={Colors.text.primary} />
+        </TouchableOpacity>
       }
     >
       {requestedBookings.length > 0 && (
@@ -342,18 +299,22 @@ export function ScheduleActiveBookingsScreen() {
           {t("schedule.bookings")}{" "}
           <AppText style={styles.sectionCount}>({bookings.length})</AppText>
         </AppText>
-        <TouchableOpacity
-          ref={filterBtnRef}
-          onPress={handleOpenFilterMenu}
-          activeOpacity={0.8}
-          style={styles.filterPill}
-        >
-          <AppText style={styles.filterLabel}>
-            {getScheduleStatusOptions(t).find((o) => o.value === statusFilter)
-              ?.label ?? t("common.all")}
-          </AppText>
-          <Ionicons name="chevron-down" size={14} color={Colors.text.primary} />
-        </TouchableOpacity>
+        <FilterPicker
+          options={getScheduleStatusOptions(t)}
+          selected={statusFilter}
+          onSelect={(value) =>
+            setStatusFilter(
+              value as
+                | "all"
+                | "waiting"
+                | "in_progress"
+                | "completed"
+                | "cancelled",
+            )
+          }
+          pillStyle={styles.filterPill}
+          pillTextStyle={styles.filterLabel}
+        />
       </View>
 
       <View style={styles.list}>
@@ -416,6 +377,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 16,
     marginTop: 12,
+    position: "relative",
+    zIndex: 999,
   },
   sectionTitle: {
     fontSize: 28,
@@ -479,14 +442,6 @@ const styles = StyleSheet.create({
   },
   scrollContentPadding: {
     paddingBottom: 200,
-  },
-  menuOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 50,
   },
   requestsSection: {
     marginBottom: 24,

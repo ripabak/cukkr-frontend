@@ -7,6 +7,7 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  View,
   ViewStyle,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -78,7 +79,7 @@ export function ScreenShell({
       edges={edges}
     >
       {!hideAppHeader && <AppHeader />}
-      {headerSlot}
+      {headerSlot ? <View style={styles.headerSlotWrapper}>{headerSlot}</View> : null}
       {keyboardAvoid ? (
         <KeyboardAvoidingView
           style={styles.keyboardView}
@@ -108,5 +109,9 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: AppTheme.spacing.xl,
     paddingBottom: 40,
+  },
+  headerSlotWrapper: {
+    position: "relative",
+    zIndex: 100,
   },
 });

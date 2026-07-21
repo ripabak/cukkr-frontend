@@ -1,9 +1,9 @@
 import { ScreenShell } from "@/src/components/ScreenShell";
-import { StatusFilterMenu } from "@/src/components/StatusFilterMenu";
+import { FilterPicker } from "@/src/components/FilterPicker";
 import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { AppText } from "@/src/components/AppText";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
@@ -73,10 +73,7 @@ export function AnalyticsRevenueScreen() {
   const [typeFilter, setTypeFilter] = useState<
     "all" | "walk_in" | "appointment"
   >("all");
-  const [typeMenuVisible, setTypeMenuVisible] = useState(false);
-  const [menuTop, setMenuTop] = useState(0);
   const [page, setPage] = useState(1);
-  const filterBtnRef = useRef<View>(null);
 
   const { data: revData, isLoading: revLoading } = useAnalyticsRevenue(range);
   const { data: bookingsData, isLoading: bookingsLoading } =
@@ -97,39 +94,9 @@ export function AnalyticsRevenueScreen() {
     setPage(1);
   };
 
-  const handleOpenTypeMenu = () => {
-    filterBtnRef.current?.measure(
-      (
-        _x: number,
-        _y: number,
-        _w: number,
-        height: number,
-        _px: number,
-        pageY: number,
-      ) => {
-        setMenuTop(pageY + height + 4);
-      },
-    );
-    setTypeMenuVisible(true);
-  };
-
   return (
     <ScreenShell
       contentStyle={styles.scrollContent}
-      overlaySlot={
-        typeMenuVisible ? (
-          <View style={styles.menuOverlay}>
-            <StatusFilterMenu
-              visible
-              options={getTypeOptions(t)}
-              selected={typeFilter}
-              onSelect={handleTypeChange}
-              onClose={() => setTypeMenuVisible(false)}
-              style={{ top: menuTop, right: 20 }}
-            />
-          </View>
-        ) : null
-      }
     >
       <View style={styles.topBar}>
         <TouchableOpacity
@@ -216,21 +183,13 @@ export function AnalyticsRevenueScreen() {
           <AppText style={styles.sectionTitle}>
             {t("analytics.transactions")}{meta ? ` (${meta.totalItems})` : ""}
           </AppText>
-          <TouchableOpacity
-            ref={filterBtnRef}
-            style={styles.filterPill}
-            onPress={handleOpenTypeMenu}
-            activeOpacity={0.8}
-          >
-            <AppText style={styles.filterPillText}>
-              {getTypeOptions(t).find((o) => o.value === typeFilter)?.label ?? t("analytics.all")}
-            </AppText>
-            <Ionicons
-              name="chevron-down"
-              size={13}
-              color={Colors.text.primary}
-            />
-          </TouchableOpacity>
+          <FilterPicker
+            options={getTypeOptions(t)}
+            selected={typeFilter}
+            onSelect={handleTypeChange}
+            pillStyle={styles.filterPill}
+            pillTextStyle={styles.filterPillText}
+          />
         </View>
 
         {bookingsLoading && bookings.length === 0 ? (
@@ -376,6 +335,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 12,
+    position: "relative",
+    zIndex: 999,
   },
   sectionTitle: {
     fontSize: 17,
@@ -467,13 +428,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     color: Colors.text.primary,
-  },
-  menuOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 50,
   },
 });
