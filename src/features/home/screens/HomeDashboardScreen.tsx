@@ -186,9 +186,20 @@ export function HomeDashboardScreen() {
     ? `${process.env.EXPO_PUBLIC_WEB_URL}/${barbershop.slug}`
     : null;
 
-  const todayOpenHours = openHoursData?.find(
-    (d) => d.dayOfWeek === new Date().getDay(),
-  );
+  const timezone = barbershop?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const todayOpenHours = React.useMemo(() => {
+    const dayMap: Record<string, number> = {
+      Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6,
+    };
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: timezone,
+      weekday: 'short',
+    }).formatToParts(new Date());
+    const localDay = parts.find((p) => p.type === 'weekday')?.value;
+    const dayOfWeek = localDay ? dayMap[localDay] ?? new Date().getDay() : new Date().getDay();
+    return openHoursData?.find((d) => d.dayOfWeek === dayOfWeek) ?? null;
+  }, [openHoursData, timezone]);
 
   const isCurrentlyOpen = React.useMemo(() => {
     if (!todayOpenHours || !todayOpenHours.isOpen) return false;
@@ -199,12 +210,21 @@ export function HomeDashboardScreen() {
       ? parseTime24(todayOpenHours.closeTime)
       : null;
     if (!open || !close) return false;
-    const now = new Date();
-    const nowMinutes = now.getHours() * 60 + now.getMinutes();
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: timezone,
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    }).formatToParts(new Date());
+    let nowMinutes = 0;
+    for (const p of parts) {
+      if (p.type === 'hour') nowMinutes += parseInt(p.value) * 60;
+      else if (p.type === 'minute') nowMinutes += parseInt(p.value);
+    }
     const openMinutes = open.hour24 * 60 + open.minute;
     const closeMinutes = close.hour24 * 60 + close.minute;
     return nowMinutes >= openMinutes && nowMinutes < closeMinutes;
-  }, [todayOpenHours]);
+  }, [todayOpenHours, timezone]);
 
   const handleShareLink = async () => {
     if (!bookingUrl) return;
