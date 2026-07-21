@@ -19,7 +19,7 @@ export function LogoutRow({ onPress, style }: Props) {
       style={[styles.container, style]}
     >
       <AppText style={styles.label}>{t("common.logout")}</AppText>
-      <Ionicons name="exit-outline" size={20} color={Colors.text.primary} />
+      <Ionicons name="exit-outline" size={20} color={Colors.status.danger} />
     </TouchableOpacity>
   );
 }
@@ -28,6 +28,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.bg.default,
     borderRadius: 16,
+    borderWidth: 1,
+    borderColor: Colors.status.danger,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
@@ -37,6 +39,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 15,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: Colors.status.danger,
   },
 });
