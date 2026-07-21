@@ -499,6 +499,11 @@ export function HomeDashboardScreen() {
         ]}
       >
         <View style={styles.headerRow}>
+          <Image
+            source={require("@/public/cukkr-logo-trans.png")}
+            style={styles.headerLogo}
+            resizeMode="contain"
+          />
           <TouchableOpacity
             style={styles.shopSwitcher}
             activeOpacity={0.7}
@@ -742,6 +747,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     gap: 10,
+  },
+  headerLogo: {
+    width: 28,
+    height: 28,
   },
   shopSwitcher: {
     flex: 1,
