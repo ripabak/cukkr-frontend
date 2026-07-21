@@ -2,7 +2,7 @@ import { BookingCard } from "@/src/components/BookingCard";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { getScheduleStatusOptions } from "@/src/components/StatusFilterMenu";
 import { FilterPicker } from "@/src/components/FilterPicker";
-import { useHorizontalScrollDrag } from "@/src/hooks";
+
 import { CalendarModal } from "@/src/features/schedule/components/CalendarModal";
 import { DateSelectorPill } from "@/src/features/schedule/components/DateSelectorPill";
 import { NewBookBottomSheet } from "@/src/components/NewBookBottomSheet";
@@ -139,7 +139,7 @@ export function ScheduleActiveBookingsScreen() {
     "all" | "waiting" | "in_progress" | "completed" | "cancelled"
   >("all");
   const [newBookVisible, setNewBookVisible] = useState(false);
-  const requestScrollRef = useHorizontalScrollDrag();
+  const requestScrollRef = useRef<ScrollView>(null);
 
   const days = generateDayChips(today, language);
 

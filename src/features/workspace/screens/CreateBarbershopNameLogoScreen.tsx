@@ -1,7 +1,8 @@
+import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { useImagePicker } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
-import { ImageUploadBox } from "@/src/components/ImageUploadBox";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SecondaryButton } from "@/src/components/SecondaryButton";
@@ -10,7 +11,7 @@ import { WizardProgress } from "@/src/features/workspace/components/WizardProgre
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
 import { authClient } from "@/src/lib/auth-client";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
@@ -63,17 +64,28 @@ export function CreateBarbershopNameLogoScreen() {
       />
 
       <AppText style={styles.logoLabel}>{t("barbershop.logoUpload")}</AppText>
-      <ImageUploadBox
-        label={t("createBarbershop.chooseImage")}
-        imageUri={logoPreviewUri}
-        style={styles.imageUpload}
+      <TouchableOpacity
+        activeOpacity={0.7}
+        style={styles.logoPicker}
         onPress={async () => {
           const file = await pickAndGetFile();
           if (!file) return;
           setLogoPreviewUri(file.uri);
           updateFormData({ logo: file as unknown as File });
         }}
-      />
+      >
+        {logoPreviewUri ? (
+          <Image
+            source={{ uri: logoPreviewUri }}
+            style={styles.logoPreviewImage}
+            contentFit="cover"
+          />
+        ) : (
+          <View style={styles.logoPlaceholder}>
+            <Ionicons name="camera-outline" size={24} color={Colors.icon.muted} />
+          </View>
+        )}
+      </TouchableOpacity>
 
       <View style={styles.flex} />
       {hasActiveOrg ? (
@@ -124,8 +136,23 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     marginTop: 16,
   },
-  imageUpload: {
-    marginTop: 0,
+  logoPicker: {
+    width: "100%",
+    aspectRatio: 1,
+    borderRadius: 16,
+    overflow: "hidden",
+    borderWidth: 1.5,
+    borderColor: Colors.border.default,
+  },
+  logoPlaceholder: {
+    flex: 1,
+    backgroundColor: Colors.bg.surface,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  logoPreviewImage: {
+    width: "100%",
+    height: "100%",
   },
   flex: {
     flex: 1,

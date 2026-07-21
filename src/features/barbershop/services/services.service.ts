@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 import { app } from "@/src/lib/eden-app";
 import { authClient } from "@/src/lib/auth-client";
+import { compressImage } from "@/src/utils/compress-image";
 
 async function createWebFile(file: { uri: string; name: string; type: string }): Promise<File> {
   const response = await fetch(file.uri);
@@ -133,8 +134,9 @@ export const servicesService = {
     serviceId: string,
     file: { uri: string; name: string; type: string },
   ) {
+    const compressed = await compressImage(file.uri);
     if (Platform.OS === 'web') {
-      const nativeFile = await createWebFile(file);
+      const nativeFile = await createWebFile(compressed);
       const { data: response, error } = await app.api
         .services({ id: serviceId })
         .image.post({ file: nativeFile });
@@ -142,8 +144,11 @@ export const servicesService = {
         throw new Error(error?.value?.message || 'Failed to upload service image');
       return response.data;
     }
-    return nativeUpload(`/api/services/${serviceId}/image`, file) as Promise<{
+    return nativeUpload(`/api/services/${serviceId}/image`, compressed) as Promise<{
       imageUrl: string;
+      imageThumb: string;
+      imageMed: string;
+      imageFull: string;
     }>;
   },
 };

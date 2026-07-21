@@ -16,6 +16,7 @@ import { AppText } from "@/src/components/AppText";
 import { useCreateBarbershopForm } from "../context/CreateBarbershopContext";
 import { useCreateOrganization, useSetActiveOrganization } from "../hooks";
 import { servicesService } from "../services";
+import { barbershopService as localBarbershopService } from "../services/barbershop.service";
 import { getErrorMessage } from "../utils/error-handler";
 import {
   validateDuration,
@@ -73,11 +74,21 @@ export function CreateBarbershopFirstServiceScreen() {
       },
       {
         onSuccess: async (org) => {
-          // Step 2: Set organization as active
+          const uploadLogo = async () => {
+            if (formData.logo) {
+              try {
+                const logoFile = formData.logo as unknown as { uri: string; name: string; type: string };
+                await localBarbershopService.uploadLogo(logoFile);
+              } catch {
+                // Logo upload is optional — continue even if it fails
+              }
+            }
+          };
+
           setActive(org.id, {
             onSuccess: async () => {
-              // Step 3: Create service in the organization
               try {
+                await uploadLogo();
                 const serviceResponse = await servicesService.create({
                   name: serviceName,
                   price: priceNum,

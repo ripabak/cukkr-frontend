@@ -118,7 +118,7 @@ export function EditUserProfileFieldsScreen() {
         ]}
       >
         <EditFieldHeader
-          title={t("profile.changePassword")}
+          title={t("editProfile.changePassword")}
           onBack={() => router.back()}
           onSave={handleChangePassword}
         />
@@ -127,7 +127,7 @@ export function EditUserProfileFieldsScreen() {
           keyboardShouldPersistTaps="handled"
         >
           <View>
-            <AppText style={styles.fieldLabel}>{t("profile.currentPassword")}</AppText>
+            <AppText style={styles.fieldLabel}>{t("editProfile.currentPassword")}</AppText>
             <View style={styles.passwordInputRow}>
               <TextInputField
                 value={currentPassword}
@@ -135,7 +135,7 @@ export function EditUserProfileFieldsScreen() {
                   setCurrentPassword(text);
                   setCurrentPwError("");
                 }}
-                placeholder={t("profile.currentPassword")}
+                placeholder={t("editProfile.currentPassword")}
                 secureTextEntry={!showCurrentPw}
                 inputStyle={{ paddingRight: 40 }}
               />
@@ -155,7 +155,7 @@ export function EditUserProfileFieldsScreen() {
             ) : null}
           </View>
           <View>
-            <AppText style={styles.fieldLabel}>{t("profile.newPassword")}</AppText>
+            <AppText style={styles.fieldLabel}>{t("editProfile.newPassword")}</AppText>
             <View style={styles.passwordInputRow}>
               <TextInputField
                 value={newPassword}
@@ -163,7 +163,7 @@ export function EditUserProfileFieldsScreen() {
                   setNewPassword(text);
                   setNewPwError("");
                 }}
-                placeholder={t("profile.newPassword")}
+                placeholder={t("editProfile.newPassword")}
                 secureTextEntry={!showNewPw}
                 inputStyle={{ paddingRight: 40 }}
               />
@@ -189,7 +189,7 @@ export function EditUserProfileFieldsScreen() {
             <AppText style={styles.forgotText}>{t("auth.forgotPassword")}</AppText>
           </TouchableOpacity>
           <HelperCopy
-            lines={[t("profile.passwordHelper")]}
+            lines={[t("editProfile.passwordHelper")]}
           />
         </ScrollView>
         {changingPassword && (
@@ -209,7 +209,7 @@ export function EditUserProfileFieldsScreen() {
       ]}
     >
       <EditFieldHeader
-        title={mode === "bio" ? t("profile.bio") : t("profile.yourName")}
+        title={mode === "bio" ? t("editProfile.bio") : t("editProfile.yourName")}
         onBack={() => router.back()}
         onSave={handleSaveNameBio}
       />
@@ -225,7 +225,7 @@ export function EditUserProfileFieldsScreen() {
                 setBio(text);
                 setBioError("");
               }}
-              placeholder={t("profile.bioPlaceholder")}
+              placeholder={t("editProfile.bioPlaceholder")}
             />
             {bioError ? <AppText style={styles.errorText}>{bioError}</AppText> : null}
           </>
@@ -237,7 +237,7 @@ export function EditUserProfileFieldsScreen() {
                 setName(text);
                 setNameError("");
               }}
-              placeholder={t("profile.namePlaceholder")}
+              placeholder={t("editProfile.namePlaceholder")}
             />
             {nameError ? (
               <AppText style={styles.errorText}>{nameError}</AppText>
@@ -247,8 +247,8 @@ export function EditUserProfileFieldsScreen() {
         <HelperCopy
           lines={[
             mode === "bio"
-              ? t("profile.bioHelper1")
-              : t("profile.nameHelper1"),
+              ? t("editProfile.bioHelper1")
+              : t("editProfile.nameHelper1"),
           ]}
         />
       </ScrollView>

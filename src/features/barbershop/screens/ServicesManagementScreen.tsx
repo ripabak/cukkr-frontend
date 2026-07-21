@@ -84,7 +84,7 @@ export function ServicesManagementScreen() {
                 <IconActionButton
                   iconName="add"
                   onPress={() => router.push("/d/add-or-edit-service")}
-                  size={36}
+                  size={40}
                 />
               </Permission>
             </View>
@@ -124,7 +124,7 @@ export function ServicesManagementScreen() {
               <ServiceCard
                 name={service.name}
                 price={service.price}
-                imageUri={service.imageUrl ?? undefined}
+                imageUri={service.imageThumb ?? undefined}
                 discountPercent={
                   service.discount > 0 ? service.discount : undefined
                 }

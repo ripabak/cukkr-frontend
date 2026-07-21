@@ -103,9 +103,9 @@ export function AnalyticsBarbersScreen() {
                     <AppText style={styles.rankText}>{i + 1}</AppText>
                   </View>
                   <View style={styles.barberAvatar}>
-                    {barber.imageUrl ? (
+                    {barber.imageThumb || barber.imageUrl ? (
                       <Image
-                        source={{ uri: barber.imageUrl }}
+                        source={{ uri: barber.imageThumb ?? barber.imageUrl ?? undefined }}
                         style={styles.barberAvatarImg}
                         contentFit="cover"
                       />

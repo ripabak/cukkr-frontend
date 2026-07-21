@@ -9,6 +9,7 @@ import { LogoutRow } from "@/src/features/profile/components/LogoutRow";
 import { ProfileSummaryCard } from "@/src/features/profile/components/ProfileSummaryCard";
 import { useToast } from "@/src/lib/providers/toast";
 import { Colors } from "@/src/theme/colors";
+import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -98,24 +99,15 @@ export function UserProfileScreen() {
           activeOpacity={0.8}
           onPress={isUploadingAvatar ? undefined : handleAvatarUpload}
         >
-          {profile.avatarUrl ? (
+          {profile.avatarMed ? (
             <Image
-              source={{ uri: profile.avatarUrl }}
+              source={{ uri: profile.avatarMed }}
               style={[styles.avatarImage, styles.clickableBorder]}
               contentFit="cover"
             />
           ) : (
             <View style={[styles.avatar, styles.clickableBorder]}>
-              <AppText style={styles.avatarInitials}>
-                {profile.name
-                  ? profile.name
-                      .split(" ")
-                      .slice(0, 2)
-                      .filter(Boolean)
-                      .map((w: string) => w[0].toUpperCase())
-                      .join("")
-                  : "?"}
-              </AppText>
+              <Ionicons name="camera-outline" size={24} color={Colors.icon.muted} />
             </View>
           )}
         </TouchableOpacity>
@@ -191,22 +183,19 @@ const styles = StyleSheet.create({
   avatar: {
     width: 80,
     height: 80,
-    borderRadius: 60,
-    backgroundColor: Colors.brand.primaryDark,
+    borderRadius: 16,
+    backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1.5,
+    borderColor: Colors.border.default,
   },
   avatarImage: {
     width: 80,
     height: 80,
-    borderRadius: 60,
+    borderRadius: 16,
   },
-  avatarInitials: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#ffffff",
-    letterSpacing: 1,
-  },
+
   clickableBorder: {
     borderWidth: 1.5,
     borderColor: Colors.border.default,

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ViewStyle,
   KeyboardTypeOptions,
+  type TextInputProps,
 } from "react-native";
 import { AppText } from "@/src/components/AppText";
 import { AppTextInput } from "@/src/components/AppTextInput";
@@ -18,6 +19,8 @@ interface Props {
   keyboardType?: KeyboardTypeOptions;
   secureTextEntry?: boolean;
   editable?: boolean;
+  autoCapitalize?: TextInputProps["autoCapitalize"];
+  autoCorrect?: boolean;
   style?: ViewStyle;
   inputStyle?: import("react-native").TextStyle;
 }
@@ -31,6 +34,8 @@ export function TextInputField({
   keyboardType,
   secureTextEntry,
   editable,
+  autoCapitalize,
+  autoCorrect,
   style,
   inputStyle,
 }: Props) {
@@ -51,6 +56,8 @@ export function TextInputField({
           keyboardType={keyboardType}
           secureTextEntry={secureTextEntry}
           editable={editable}
+          autoCapitalize={autoCapitalize}
+          autoCorrect={autoCorrect}
           style={[styles.input, inputStyle]}
         />
       </View>

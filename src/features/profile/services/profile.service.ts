@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 import { app } from "@/src/lib/eden-app";
 import { authClient } from "@/src/lib/auth-client";
+import { compressImage } from "@/src/utils/compress-image";
 
 async function createWebFile(file: { uri: string; name: string; type: string }): Promise<File> {
   const response = await fetch(file.uri);
@@ -64,8 +65,9 @@ export const profileService = {
   },
 
   async uploadAvatar(file: { uri: string; name: string; type: string }) {
+    const compressed = await compressImage(file.uri);
     if (Platform.OS === 'web') {
-      const nativeFile = await createWebFile(file);
+      const nativeFile = await createWebFile(compressed);
       const { data: response, error } = await app.api.me.avatar.post({
         file: nativeFile,
       });
@@ -73,8 +75,11 @@ export const profileService = {
         throw new Error(error?.value?.message || 'Failed to upload avatar');
       return response.data;
     }
-    return nativeUpload('/api/me/avatar', file) as Promise<{
+    return nativeUpload('/api/me/avatar', compressed) as Promise<{
       avatarUrl: string;
+      avatarThumb: string;
+      avatarMed: string;
+      avatarFull: string;
     }>;
   },
 };
