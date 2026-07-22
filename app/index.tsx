@@ -12,7 +12,7 @@ export default function Index() {
     if (!hasHydrated) return;
     if (pathname !== "/") return;
     router.replace(
-      hasSeenOnboarding ? "/d/(tabs)/home" : "/d/onboarding-splash",
+      hasSeenOnboarding ? "/d/(tabs)/home" : "/d/onboarding-easy-booking",
     );
   }, [hasHydrated, hasSeenOnboarding, pathname]);
 
