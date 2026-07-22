@@ -16,6 +16,8 @@ interface Props {
   selectedDate?: Date;
   openHours?: DayHourInfo[];
   disablePast?: boolean;
+  minDate?: Date;
+  maxDate?: Date;
   highlightDates?: Set<string>;
   waitingDates?: Set<string>;
   onSelect: (date: Date) => void;
@@ -50,6 +52,8 @@ export function CalendarModal({
   selectedDate,
   openHours,
   disablePast = true,
+  minDate,
+  maxDate,
   highlightDates,
   waitingDates,
   onSelect,
@@ -110,8 +114,11 @@ export function CalendarModal({
   }
 
   function isDayPast(day: number): boolean {
-    if (!disablePast) return false;
-    return new Date(viewYear, viewMonth, day) < today;
+    const date = new Date(viewYear, viewMonth, day);
+    if (disablePast && date < today) return true;
+    if (minDate && date < minDate) return true;
+    if (maxDate && date > maxDate) return true;
+    return false;
   }
 
   function isDayClosed(day: number): boolean {

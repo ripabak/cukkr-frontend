@@ -4,17 +4,25 @@ import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { useOpenHours } from "@/src/hooks/useOpenHours";
 import { BookingForm } from "@/src/features/schedule/components/BookingForm";
 import { BookingTypeToggle } from "@/src/features/schedule/components/BookingTypeToggle";
-import { CalendarModal } from "@/src/features/schedule/components/CalendarModal";
 import { FormShell } from "@/src/features/schedule/components/FormShell";
 import { useNewBookingForm } from "@/src/features/schedule/context/NewBookingContext";
 import { useCreateBooking } from "@/src/features/schedule/hooks";
+import { useBarbershopCurrent } from "@/src/features/barbershop/hooks";
 import { useToast } from "@/src/lib/providers";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { getErrorMessage } from "@/src/lib/utils/error-handler";
 import { useRouter } from "expo-router";
 import React, { useMemo, useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Modal, Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
+import DateTimePicker, { DateTimePickerAndroid, DateTimePickerEvent } from '@react-native-community/datetimepicker';
+
+function toDateInputValue(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
 
 type BookingType = "appointment" | "walkin";
 
@@ -42,12 +50,24 @@ function generateTimeSlots(
   return slots;
 }
 
-function isSameDay(a: Date, b: Date): boolean {
-  return (
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
-  );
+function getBarbershopNow(timezone: string) {
+  const now = new Date();
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: timezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).formatToParts(now);
+  const get = (type: string) => parseInt(parts.find((p) => p.type === type)?.value ?? '0');
+  return { year: get('year'), month: get('month'), day: get('day'), hour: get('hour'), minute: get('minute') };
+}
+
+function isBarbershopToday(selected: Date, tz: string): boolean {
+  const bt = getBarbershopNow(tz);
+  return selected.getFullYear() === bt.year && selected.getMonth() + 1 === bt.month && selected.getDate() === bt.day;
 }
 
 export function NewAppointmentScreen() {
@@ -57,10 +77,23 @@ export function NewAppointmentScreen() {
   const { formData, updateFormData, resetFormData } = useNewBookingForm();
   const { mutateAsync: createBooking, isPending } = useCreateBooking();
   const { data: openHoursData } = useOpenHours();
+  const { data: barbershop } = useBarbershopCurrent();
+  const minAdvanceHours = barbershop?.minAdvanceHours ?? 0;
+  const maxAdvanceDays = barbershop?.maxAdvanceDays ?? 365;
+  const timezone = barbershop?.timezone ?? 'UTC';
+
+  const barbershopNow = useMemo(() => getBarbershopNow(timezone), [timezone]);
+
+  const now = Date.now();
+  const minDate = new Date(now + minAdvanceHours * 3600 * 1000);
+  const maxDate = new Date(now + maxAdvanceDays * 86400 * 1000);
+  const minDateStr = toDateInputValue(minDate);
+  const maxDateStr = toDateInputValue(maxDate);
 
   const [bookingType, setBookingType] = useState<BookingType>("appointment");
-  const [showCalendar, setShowCalendar] = useState(false);
+  const [showIosPicker, setShowIosPicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [tempDate, setTempDate] = useState<Date>(new Date());
   const [dayAvailability, setDayAvailability] = useState<{
     isOpen: boolean;
     openTime: string | null;
@@ -73,7 +106,6 @@ export function NewAppointmentScreen() {
 
   function handleDateSelect(date: Date) {
     setSelectedDate(date);
-    setShowCalendar(false);
     setSelectedTimeSlot(undefined);
     setDisplayDateTime(undefined);
     updateFormData({ scheduledAt: null });
@@ -89,6 +121,41 @@ export function NewAppointmentScreen() {
     const dayFormat = new Intl.DateTimeFormat(locale, { weekday: 'short' });
     const monthFormat = new Intl.DateTimeFormat(locale, { month: 'short' });
     return `${dayFormat.format(date)}, ${date.getDate()} ${monthFormat.format(date)} ${date.getFullYear()}`;
+  }
+
+  function openDatePicker() {
+    if (Platform.OS === 'android') {
+      DateTimePickerAndroid.open({
+        value: selectedDate ?? new Date(),
+        mode: 'date',
+        minimumDate: minDate,
+        maximumDate: maxDate,
+        onChange: (event, date) => {
+          if (event.type === 'set' && date) {
+            handleDateSelect(date);
+          }
+        },
+      });
+    } else {
+      setShowIosPicker(true);
+      setTempDate(selectedDate ?? new Date());
+    }
+  }
+
+  function confirmIosDate() {
+    handleDateSelect(tempDate);
+    setShowIosPicker(false);
+  }
+
+  function handleWebDateChange(e: { target: { value: string } }) {
+    const val = e.target.value;
+    if (val) {
+      handleDateSelect(new Date(val + 'T00:00:00'));
+    }
+  }
+
+  function handleIosDateChange(event: DateTimePickerEvent, date?: Date) {
+    if (date) setTempDate(date);
   }
 
   function handleTimeSlotSelect(slot: string) {
@@ -114,9 +181,9 @@ export function NewAppointmentScreen() {
       return [];
     if (!selectedDate) return [];
 
-    const isToday = isSameDay(selectedDate, new Date());
+    const isToday = isBarbershopToday(selectedDate, timezone);
     const minMinutes = isToday
-      ? new Date().getHours() * 60 + new Date().getMinutes()
+      ? barbershopNow.hour * 60 + barbershopNow.minute + minAdvanceHours * 60
       : undefined;
 
     return generateTimeSlots(
@@ -124,7 +191,7 @@ export function NewAppointmentScreen() {
       dayAvailability.closeTime,
       minMinutes
     );
-  }, [dayAvailability, selectedDate]);
+  }, [dayAvailability, selectedDate, minAdvanceHours, timezone, barbershopNow]);
 
   const displayDateOnly = selectedDate
     ? formatDateLocale(selectedDate, language)
@@ -202,20 +269,68 @@ export function NewAppointmentScreen() {
       backgroundColor={Colors.bg.default}
       contentStyle={{ paddingTop: 24, gap: 14 }}
     >
-      <BookingForm
-        customerName={formData.customerName}
-        onCustomerNameChange={(v) => updateFormData({ customerName: v })}
-        email={formData.email}
-        onEmailChange={(v) => updateFormData({ email: v })}
-        selectedBarber={formData.barberName ?? undefined}
-        selectedBarberAvatarUrl={formData.barberAvatarUrl ?? undefined}
-        onBarberPress={() => router.push("/d/select-barber")}
-        selectedDateTime={displayDateTime ?? displayDateOnly}
-        onDateTimePress={() => setShowCalendar(true)}
-        showDateTimeSelector
-        services={formData.selectedServices}
-        onServicePress={() => router.push("/d/select-services")}
-      />
+      {Platform.OS === 'web' ? (
+        <>
+          <BookingForm
+            customerName={formData.customerName}
+            onCustomerNameChange={(v) => updateFormData({ customerName: v })}
+            email={formData.email}
+            onEmailChange={(v) => updateFormData({ email: v })}
+            selectedBarber={formData.barberName ?? undefined}
+            selectedBarberAvatarUrl={formData.barberAvatarUrl ?? undefined}
+            onBarberPress={() => router.push("/d/select-barber")}
+            selectedDateTime={displayDateTime ?? displayDateOnly}
+            onDateTimePress={openDatePicker}
+            showDateTimeSelector={false}
+            services={formData.selectedServices}
+            onServicePress={() => router.push("/d/select-services")}
+          />
+          <View>
+            <AppText style={styles.label}>
+              {t("schedule.bookingForm.dateTime")} <AppText style={styles.asterisk}>*</AppText>
+            </AppText>
+            <View style={styles.webDateWrapper}>
+              <input
+                id="native-date-input"
+                type="date"
+                value={selectedDate ? toDateInputValue(selectedDate) : ''}
+                min={minDateStr}
+                max={maxDateStr}
+                onChange={handleWebDateChange}
+                style={{
+                  flex: 1,
+                  border: 'none',
+                  outline: 'none',
+                  background: 'transparent',
+                  fontSize: 14,
+                  fontFamily: 'inherit',
+                  color: selectedDate ? Colors.text.primary : Colors.text.muted,
+                  padding: 0,
+                  WebkitAppearance: 'none',
+                  appearance: 'none',
+                  cursor: 'pointer',
+                  minHeight: 20,
+                }}
+              />
+            </View>
+          </View>
+        </>
+      ) : (
+        <BookingForm
+          customerName={formData.customerName}
+          onCustomerNameChange={(v) => updateFormData({ customerName: v })}
+          email={formData.email}
+          onEmailChange={(v) => updateFormData({ email: v })}
+          selectedBarber={formData.barberName ?? undefined}
+          selectedBarberAvatarUrl={formData.barberAvatarUrl ?? undefined}
+          onBarberPress={() => router.push("/d/select-barber")}
+          selectedDateTime={displayDateTime ?? displayDateOnly}
+          onDateTimePress={openDatePicker}
+          showDateTimeSelector
+          services={formData.selectedServices}
+          onServicePress={() => router.push("/d/select-services")}
+        />
+      )}
 
       {selectedDate && (
         <View>
@@ -255,18 +370,67 @@ export function NewAppointmentScreen() {
         </View>
       )}
 
-      <CalendarModal
-        visible={showCalendar}
-        selectedDate={selectedDate}
-        openHours={openHoursData ?? []}
-        onSelect={handleDateSelect}
-        onClose={() => setShowCalendar(false)}
-      />
+      {Platform.OS === 'ios' && showIosPicker && (
+        <Modal transparent animationType="fade">
+          <TouchableOpacity
+            style={styles.pickerOverlay}
+            activeOpacity={1}
+            onPress={() => setShowIosPicker(false)}
+          >
+            <TouchableOpacity activeOpacity={1} style={styles.pickerCard}>
+              <DateTimePicker
+                value={tempDate}
+                mode="date"
+                display="spinner"
+                minimumDate={minDate}
+                maximumDate={maxDate}
+                onChange={handleIosDateChange}
+              />
+              <PrimaryButton label="Done" onPress={confirmIosDate} />
+            </TouchableOpacity>
+          </TouchableOpacity>
+        </Modal>
+      )}
     </FormShell>
   );
 }
 
 const styles = StyleSheet.create({
+  label: {
+    fontSize: 13,
+    color: Colors.text.secondary,
+    marginBottom: 6,
+  },
+  asterisk: {
+    color: Colors.status.danger,
+  },
+  webDateWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.bg.default,
+    borderRadius: 999,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
+    gap: 10,
+  },
+  pickerOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.2)",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 24,
+  },
+  pickerCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 20,
+    padding: 20,
+    width: "100%",
+    maxWidth: 320,
+    alignSelf: "center",
+    gap: 16,
+  },
   footer: {
     paddingHorizontal: 20,
     paddingBottom: 24,

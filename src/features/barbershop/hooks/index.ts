@@ -34,6 +34,9 @@ export {
 export { useOpenHours } from "./useOpenHoursQueries";
 export { useUpdateOpenHours } from "./useOpenHoursMutations";
 
+// Booking Preferences
+export { useUpdateBookingWindow } from "./useBookingWindowMutations";
+
 // Customers
 export {
   useCustomersList,

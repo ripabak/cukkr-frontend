@@ -191,6 +191,27 @@ export function BarbershopSettingsScreen() {
       </View>
 
       <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
+        {t("barbershop.bookingPreferences")}
+      </AppText>
+      <View style={styles.card}>
+        <InfoRow
+          label={t("barbershop.bookingPreferences")}
+          value={
+            barbershop
+              ? `${barbershop.minAdvanceHours}h min / ${barbershop.maxAdvanceDays}d max`
+              : undefined
+          }
+          placeholder="—"
+          isLast
+          onPress={
+            isLoading
+              ? undefined
+              : () => router.push("/d/booking-preferences")
+          }
+        />
+      </View>
+
+      <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
         {t("barbershop.operations")}
       </AppText>
       <View style={styles.card}>

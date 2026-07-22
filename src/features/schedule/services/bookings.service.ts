@@ -122,4 +122,15 @@ export const bookingsService = {
       );
     return response.data;
   },
+
+  async getRequestedBookings(dateFrom?: string, dateTo?: string) {
+    const { data: response, error } = await app.api.bookings.requests.get({
+      query: { dateFrom, dateTo },
+    });
+    if (error || !response)
+      throw new Error(
+        error?.value?.message || "Failed to fetch requested bookings",
+      );
+    return response.data ?? [];
+  },
 };

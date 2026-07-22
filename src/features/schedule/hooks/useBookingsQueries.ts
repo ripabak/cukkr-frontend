@@ -21,6 +21,13 @@ export const BOOKINGS_QUERY_KEYS = {
     ] as const,
   byId: (id: string) => [...BOOKINGS_QUERY_KEYS.all, "detail", id] as const,
   inProgress: ["schedule-bookings", "in-progress"] as const,
+  requests: (dateFrom?: string, dateTo?: string) =>
+    [
+      ...BOOKINGS_QUERY_KEYS.all,
+      "requests",
+      dateFrom ?? "",
+      dateTo ?? "",
+    ] as const,
 };
 
 export function useBookings(
@@ -63,5 +70,13 @@ export function useInProgressBooking() {
   return useQuery({
     queryKey: BOOKINGS_QUERY_KEYS.inProgress,
     queryFn: () => bookingsService.getInProgress(),
+  });
+}
+
+export function useRequestedBookings(dateFrom?: string, dateTo?: string) {
+  return useQuery({
+    queryKey: BOOKINGS_QUERY_KEYS.requests(dateFrom, dateTo),
+    queryFn: () => bookingsService.getRequestedBookings(dateFrom, dateTo),
+    enabled: !!dateFrom,
   });
 }

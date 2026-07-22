@@ -18,6 +18,7 @@ import { useUnreadCountByOrg } from "@/src/features/notifications/hooks/useNotif
 import { notificationsService } from "@/src/features/notifications/services/notifications.service";
 import { pwaNotificationService } from "@/src/services/pwa-notification.service";
 import { mapApiStatusToBookingStatus } from "@/src/features/schedule/utils/booking-formatters";
+import { useRequestedBookings } from "@/src/features/schedule/hooks";
 import { useAuthUser, useMemberRole } from "@/src/hooks";
 import { authClient } from "@/src/lib/auth-client";
 import { useI18nContext } from "@/src/lib/i18n/provider";
@@ -76,6 +77,9 @@ export function HomeDashboardScreen() {
   const { data: barbershop } = useBarbershopCurrent();
   const { data: summary } = useBookingSummary(today);
   const { data: activeBookings = [] } = useHomeActiveBookings(today);
+  const nextYear = toApiDate(new Date(Date.now() + 365 * 86400 * 1000));
+  const { data: requestsData = [] } = useRequestedBookings(today, nextYear);
+  const requestCount = requestsData.length;
   const { data: currentPinData } = useCurrentPin();
   const { mutate: generatePin, isPending: isGenerating } =
     useGenerateWalkInPin();
@@ -341,6 +345,19 @@ export function HomeDashboardScreen() {
                 />
               }
               onPress={() => setNewBookVisible(true)}
+            />
+            <ShortcutTile
+              label={t("home.requests")}
+              variant="small"
+              badgeCount={requestCount}
+              icon={
+                <Ionicons
+                  name="calendar-number-outline"
+                  size={22}
+                  color={Colors.text.primary}
+                />
+              }
+              onPress={() => router.push("/d/booking-requests")}
             />
             <ShortcutTile
               label={t("barbers.title")}
@@ -849,6 +866,7 @@ const styles = StyleSheet.create({
   quickActionsScroll: {
     flexDirection: "row",
     gap: 20,
+    paddingVertical: 4,
   },
 
   // Walk-In Check-In
