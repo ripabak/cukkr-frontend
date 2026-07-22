@@ -101,6 +101,7 @@ export function NewWalkInScreen() {
         email={formData.email}
         onEmailChange={(v) => updateFormData({ email: v })}
         selectedBarber={formData.barberName ?? undefined}
+        selectedBarberAvatarUrl={formData.barberAvatarUrl ?? undefined}
         onBarberPress={() => router.push("/d/select-barber")}
         showDateTimeSelector={false}
         services={formData.selectedServices}

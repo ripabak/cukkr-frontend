@@ -119,14 +119,15 @@ export const en = {
     inProgress: 'In Progress',
     waiting: 'Waiting',
     quickActions: 'Quick Actions',
-    newBooking: 'New Booking',
+    newBooking: 'New Book',
+    openHours: 'Open Hours',
     newWalkIn: 'New Walk-in',
     viewSchedule: 'View Schedule',
     noBookingsToday: 'No bookings for today',
     walkInShort: 'Walk-In',
     appointShort: 'Appoint.',
     todayHours: "Today's Hours",
-    walkinCheckin: 'WALK-IN CHECK-IN',
+    walkinCheckin: 'WALK-IN PIN',
     shareWalkinLink: 'Share Walk-in Link',
     upNext: 'Up Next',
     seeAll: 'See All',
@@ -143,6 +144,15 @@ export const en = {
   walkIn: {
     hint: 'Customer scan this QR code to check-in as a walk-in. PIN will be auto-filled on the booking page.',
     share: 'Share',
+  },
+  barbershopQr: {
+    title: 'Barbershop QR',
+    descriptionLine1: 'Scan this QR to directly',
+    descriptionLine2: 'access the booking page',
+    printedOn: 'Printed on',
+    printQr: 'Print QR',
+    shareQr: 'Share',
+    captureFailed: 'Failed to capture QR image',
   },
   schedule: {
     title: 'Schedule',
@@ -327,6 +337,8 @@ export const en = {
     durationPlaceholder: '30',
     namePlaceholder: 'Haircut',
     selectService: 'Select a service',
+    managementSubtitle:
+      'Manage your services — add, edit, or remove services and set prices. Owners and admins can manage services; members can view the list.',
     changeService: 'Change service',
     percentOff: '{percent}% OFF',
     editNameHelper1: 'Give it a name customers will easily remember',
@@ -432,6 +444,8 @@ export const en = {
     inviteHelper1: 'Enter the email address of the barber you want to invite.',
     inviteHelper2: 'They will receive an invitation to join your barbershop.',
     customersCount: '{count} customers',
+    managementSubtitle:
+      'Manage your barbershop team — invite new barbers, change roles, or remove members. Members can view the team roster.',
   },
   analytics: {
     subtitle: "See your barbershop's performance",
@@ -557,7 +571,7 @@ export const en = {
       confirm: 'Confirm',
     },
     newBook: {
-      title: 'New Booking',
+      title: 'New Book',
       walkIn: 'Walk-In',
       appointment: 'Appointment',
     },

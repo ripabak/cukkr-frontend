@@ -5,6 +5,7 @@ export interface SelectedService {
   name: string;
   price: number;
   isDefault?: boolean;
+  imageThumb?: string | null;
 }
 
 export interface NewBookingFormData {
@@ -13,6 +14,7 @@ export interface NewBookingFormData {
   notes: string;
   barberId: string | null;
   barberName: string | null;
+  barberAvatarUrl: string | null;
   serviceIds: string[];
   selectedServices: SelectedService[];
   scheduledAt: string | null;
@@ -21,7 +23,7 @@ export interface NewBookingFormData {
 interface NewBookingContextType {
   formData: NewBookingFormData;
   updateFormData: (data: Partial<NewBookingFormData>) => void;
-  setBarber: (id: string, name: string) => void;
+  setBarber: (id: string, name: string, avatarUrl?: string | null) => void;
   setServices: (services: SelectedService[]) => void;
   resetFormData: () => void;
 }
@@ -32,6 +34,7 @@ const defaultFormData: NewBookingFormData = {
   notes: "",
   barberId: null,
   barberName: null,
+  barberAvatarUrl: null,
   serviceIds: [],
   selectedServices: [],
   scheduledAt: null,
@@ -52,8 +55,8 @@ export function NewBookingProvider({
     setFormData((prev) => ({ ...prev, ...data }));
   };
 
-  const setBarber = (id: string, name: string) => {
-    setFormData((prev) => ({ ...prev, barberId: id, barberName: name }));
+  const setBarber = (id: string, name: string, avatarUrl?: string | null) => {
+    setFormData((prev) => ({ ...prev, barberId: id, barberName: name, barberAvatarUrl: avatarUrl ?? null }));
   };
 
   const setServices = (services: SelectedService[]) => {

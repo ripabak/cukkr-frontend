@@ -325,6 +325,11 @@ export function HomeDashboardScreen() {
 
           {/* Quick Actions */}
           <View style={styles.quickActionsRow}>
+            <Animated.ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.quickActionsScroll}
+            >
             <ShortcutTile
               label={t("home.newBooking")}
               variant="small"
@@ -373,6 +378,19 @@ export function HomeDashboardScreen() {
               }
               onPress={() => router.push("/d/services-management")}
             />
+            <ShortcutTile
+              label={t("home.openHours")}
+              variant="small"
+              icon={
+                <Ionicons
+                  name="time-outline"
+                  size={22}
+                  color={Colors.text.primary}
+                />
+              }
+              onPress={() => router.push("/d/open-hours")}
+            />
+            </Animated.ScrollView>
           </View>
 
           {/* Walk-In Check-In */}
@@ -399,7 +417,7 @@ export function HomeDashboardScreen() {
                   )}
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => router.push("/d/walkin-qr")}
+                  onPress={() => router.push("/d/barbershop-qr")}
                   style={styles.walkInIconBtn}
                 >
                   <Ionicons
@@ -825,11 +843,12 @@ const styles = StyleSheet.create({
 
   // Quick Actions
   quickActionsRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 8,
     marginTop: 16,
     marginBottom: 24,
+  },
+  quickActionsScroll: {
+    flexDirection: "row",
+    gap: 20,
   },
 
   // Walk-In Check-In

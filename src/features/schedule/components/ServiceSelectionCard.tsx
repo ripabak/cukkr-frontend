@@ -4,6 +4,7 @@ import React from "react";
 import { AppText } from "@/src/components/AppText";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
+  Image,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -14,6 +15,7 @@ interface ServiceItem {
   name: string;
   price: number;
   isDefault?: boolean;
+  imageThumb?: string | null;
 }
 
 interface Props {
@@ -57,7 +59,11 @@ export function ServiceSelectionCard({
         <>
           {services.map((svc, idx) => (
             <View key={idx} style={styles.serviceRow}>
-              <View style={styles.imagePlaceholder} />
+              {svc.imageThumb ? (
+                <Image source={{ uri: svc.imageThumb }} style={styles.serviceImage} />
+              ) : (
+                <View style={styles.imagePlaceholder} />
+              )}
               <View style={styles.serviceInfo}>
                 <AppText style={styles.serviceName}>{svc.name}</AppText>
                 <AppText style={styles.servicePrice}>
@@ -123,6 +129,12 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: 8,
     backgroundColor: Colors.bg.surface,
+  },
+  serviceImage: {
+    width: 48,
+    height: 48,
+    borderRadius: 8,
+    resizeMode: "cover",
   },
   serviceInfo: {
     flex: 1,

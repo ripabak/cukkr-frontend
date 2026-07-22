@@ -7,7 +7,7 @@ import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { AppText } from "@/src/components/AppText";
 
@@ -25,8 +25,8 @@ export function SelectBarberScreen() {
     b.name.toLowerCase().includes(query.toLowerCase()),
   );
 
-  const handleSelect = (id: string, name: string) => {
-    setBarber(id, name);
+  const handleSelect = (id: string, name: string, avatarUrl?: string | null) => {
+    setBarber(id, name, avatarUrl);
     router.back();
   };
 
@@ -49,10 +49,14 @@ export function SelectBarberScreen() {
               key={item.id}
               activeOpacity={0.7}
               style={styles.barberRow}
-              onPress={() => handleSelect(item.id, item.name)}
+              onPress={() => handleSelect(item.id, item.name, item.avatarUrl)}
             >
               <View style={styles.avatar}>
-                <Ionicons name="person" size={22} color={Colors.text.primary} />
+                {item.avatarUrl ? (
+                  <Image source={{ uri: item.avatarUrl }} style={styles.avatarImage} />
+                ) : (
+                  <Ionicons name="person-outline" size={24} color={Colors.icon.muted} />
+                )}
               </View>
               <AppText style={styles.barberName}>{item.name}</AppText>
               <Ionicons
@@ -100,6 +104,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     color: Colors.text.primary,
+  },
+  avatarImage: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    resizeMode: "cover",
   },
   emptyText: {
     textAlign: "center",

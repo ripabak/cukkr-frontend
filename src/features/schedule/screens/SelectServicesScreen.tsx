@@ -50,6 +50,7 @@ export function SelectServicesScreen() {
         name: s.name,
         price: s.price,
         isDefault: s.isDefault,
+        imageThumb: s.imageThumb,
       }));
     setServices(selectedServices);
     router.back();
@@ -95,6 +96,7 @@ export function SelectServicesScreen() {
               <ServiceCard
                 name={item.name}
                 price={item.price}
+                imageUri={item.imageThumb ?? undefined}
                 discountPercent={item.discount > 0 ? item.discount : undefined}
                 isDefault={item.isDefault}
               />

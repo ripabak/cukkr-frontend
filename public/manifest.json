@@ -31,5 +31,21 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/Screenshot-books-mobile.webp",
+      "sizes": "782x1568",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Cukkr Dashboard"
+    },
+    {
+      "src": "/screenshots/Screenshot-books-desktop.webp",
+      "sizes": "2474x1570",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "Cukkr Dashboard Desktop"
+    }
   ]
 }
