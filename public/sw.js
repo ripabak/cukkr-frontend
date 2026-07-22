@@ -57,6 +57,9 @@ self.addEventListener("fetch", (event) => {
 
   if (request.method !== "GET") return;
 
+  // Only handle http: and https: requests (Cache API rejects chrome-extension:, etc.)
+  if (url.protocol !== "http:" && url.protocol !== "https:") return;
+
   // Never cache API / auth requests
   if (url.pathname.startsWith("/api/")) return;
 

@@ -1,5 +1,6 @@
 import { useMemberRole } from "@/src/hooks";
 import { Colors } from "@/src/theme/colors";
+import { ProtectedRoute } from "@/src/components/ProtectedRoute";
 import { WorkspaceRoute } from "@/src/components/WorkspaceRoute";
 import { Stack, useRouter } from "expo-router";
 import { useEffect } from "react";
@@ -24,10 +25,12 @@ function AnalyticsGuard({ children }: { children: React.ReactNode }) {
 
 export default function AnalyticsLayout() {
   return (
-    <WorkspaceRoute>
-      <AnalyticsGuard>
-        <Stack screenOptions={{ headerShown: false }} />
-      </AnalyticsGuard>
-    </WorkspaceRoute>
+    <ProtectedRoute>
+      <WorkspaceRoute>
+        <AnalyticsGuard>
+          <Stack screenOptions={{ headerShown: false }} />
+        </AnalyticsGuard>
+      </WorkspaceRoute>
+    </ProtectedRoute>
   );
 }

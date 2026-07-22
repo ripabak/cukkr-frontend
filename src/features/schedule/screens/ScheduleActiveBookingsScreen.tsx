@@ -13,6 +13,7 @@ import {
 import {
   useBookingDateMarkers,
   useBookings,
+  useRequestedBookings,
 } from "@/src/features/schedule/hooks";
 import {
   formatDuration,
@@ -163,6 +164,12 @@ export function ScheduleActiveBookingsScreen() {
   const { data: rawBookings = [], isLoading } = useBookings(selectedKey, {
     status: "all",
   });
+
+  const { data: requestsData = [] } = useRequestedBookings(
+    reqDateFrom,
+    reqDateTo,
+  );
+  const requestCount = requestsData.length;
   const requestedBookings = rawBookings.filter((b) => b.status === "requested");
   const bookings = React.useMemo(() => {
     const filtered = rawBookings.filter((b) => {
@@ -193,6 +200,10 @@ export function ScheduleActiveBookingsScreen() {
     setNewBookVisible(true);
   };
 
+  const handleRequestsPress = () => {
+    router.push({ pathname: "/d/booking-requests" });
+  };
+
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
       <Image
@@ -219,6 +230,27 @@ export function ScheduleActiveBookingsScreen() {
               label={formatDatePill(selectedDate, language)}
               onPress={() => setCalendarVisible(true)}
             />
+            <TouchableOpacity
+              onPress={handleRequestsPress}
+              activeOpacity={0.7}
+              style={styles.requestsBtn}
+            >
+              <Ionicons
+                name="list-outline"
+                size={18}
+                color={Colors.text.primary}
+              />
+              <AppText style={styles.requestsBtnLabel}>
+                {t("schedule.requestsButton")}
+              </AppText>
+              {requestCount > 0 && (
+                <View style={styles.requestsBadge}>
+                  <AppText style={styles.requestsBadgeText}>
+                    {requestCount > 99 ? "99+" : requestCount}
+                  </AppText>
+                </View>
+              )}
+            </TouchableOpacity>
           </View>
           <View style={styles.dayChipsWrapper}>
             <DayChipRow
@@ -362,10 +394,42 @@ const styles = StyleSheet.create({
   topBar: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingTop: 36,
     paddingBottom: 12,
+  },
+  requestsBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: Colors.bg.default,
+    borderRadius: 999,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
+    elevation: 2,
+  },
+  requestsBtnLabel: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: Colors.text.primary,
+  },
+  requestsBadge: {
+    backgroundColor: Colors.status.danger,
+    borderRadius: 10,
+    minWidth: 20,
+    height: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 5,
+  },
+  requestsBadgeText: {
+    fontSize: 11,
+    fontWeight: "700",
+    color: "#FFFFFF",
   },
   dayChipsWrapper: {
     paddingHorizontal: 20,

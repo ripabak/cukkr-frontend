@@ -10,6 +10,7 @@ export {
   useBookingDateMarkers,
   useBookings,
   useInProgressBooking,
+  useRequestedBookings,
 } from "./useBookingsQueries";
 export {
   useScheduleBarbers,

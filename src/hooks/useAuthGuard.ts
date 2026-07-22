@@ -29,7 +29,7 @@ export function useAuthGuard() {
         params: { redirect: redirectTo },
       });
     }
-  }, [isPending, isAuthenticated, segments]);
+  }, [isPending, isAuthenticated, segments, router, pathname, globalParams]);
 
   return { isLoading: isPending, isAuthenticated };
 }

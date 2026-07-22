@@ -7,6 +7,7 @@ import { DualActionFooter } from "@/src/features/schedule/components/DualActionF
 import { StickyCta } from "@/src/features/schedule/components/StickyCta";
 import { SwipeConfirmationModal } from "@/src/features/schedule/components/SwipeConfirmationModal";
 import { DeclineReasonModal } from "@/src/features/schedule/components/DeclineReasonModal";
+import { BookingTimelinePreview } from "@/src/features/schedule/components/BookingTimelinePreview";
 import {
   useAcceptBooking,
   useBookingById,
@@ -382,7 +383,14 @@ export function BookingDetailScreen() {
               params: { customerId: booking.customer.id },
             })
           }
-        />
+        >
+          {booking.status === "requested" && booking.scheduledAt ? (
+            <BookingTimelinePreview
+              scheduledAt={booking.scheduledAt as unknown as string}
+              bookingId={booking.id}
+            />
+          ) : null}
+        </BookingDetailCard>
         {footer}
       </>
     );

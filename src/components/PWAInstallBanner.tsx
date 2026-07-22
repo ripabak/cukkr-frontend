@@ -18,6 +18,7 @@ export function PWAInstallBanner() {
   const {
     showBanner,
     isIOS,
+    isSafari,
     promptInstall,
     dismiss,
     showIOSModal,
@@ -69,7 +70,11 @@ export function PWAInstallBanner() {
         </View>
       </View>
 
-      <IOSInstallModal visible={showIOSModal} onClose={closeIOSModal} />
+      <IOSInstallModal
+        visible={showIOSModal}
+        isSafari={isSafari}
+        onClose={closeIOSModal}
+      />
     </>
   );
 }

@@ -15,6 +15,7 @@ interface Props {
   style?: ViewStyle;
   iconBg?: string;
   dotColor?: string;
+  badgeCount?: number;
   variant?: "small" | "large";
 }
 
@@ -25,6 +26,7 @@ export function ShortcutTile({
   style,
   iconBg,
   dotColor,
+  badgeCount,
   variant = "small",
 }: Props) {
   const isLarge = variant === "large";
@@ -46,6 +48,13 @@ export function ShortcutTile({
       >
         {dotColor ? (
           <View style={[styles.dot, { backgroundColor: dotColor }]} />
+        ) : null}
+        {badgeCount && badgeCount > 0 ? (
+          <View style={styles.badge}>
+            <AppText style={styles.badgeText}>
+              {badgeCount > 99 ? "99+" : badgeCount}
+            </AppText>
+          </View>
         ) : null}
         {icon}
       </View>
@@ -116,5 +125,22 @@ const styles = StyleSheet.create({
     color: Colors.text.primary,
     textTransform: "uppercase",
     letterSpacing: 0.5,
+  },
+  badge: {
+    position: "absolute",
+    top: -4,
+    right: -4,
+    minWidth: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: Colors.status.danger,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 5,
+  },
+  badgeText: {
+    fontSize: 11,
+    fontWeight: "700",
+    color: "#fff",
   },
 });
