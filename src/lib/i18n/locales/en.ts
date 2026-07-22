@@ -119,7 +119,8 @@ export const en = {
     inProgress: 'In Progress',
     waiting: 'Waiting',
     quickActions: 'Quick Actions',
-    newBooking: 'New Booking',
+    newBooking: 'New Book',
+    openHours: 'Open Hours',
     newWalkIn: 'New Walk-in',
     viewSchedule: 'View Schedule',
     noBookingsToday: 'No bookings for today',
@@ -143,6 +144,15 @@ export const en = {
   walkIn: {
     hint: 'Customer scan this QR code to check-in as a walk-in. PIN will be auto-filled on the booking page.',
     share: 'Share',
+  },
+  barbershopQr: {
+    title: 'Barbershop QR',
+    descriptionLine1: 'Scan this QR to directly',
+    descriptionLine2: 'access the booking page',
+    printedOn: 'Printed on',
+    printQr: 'Print QR',
+    shareQr: 'Share',
+    captureFailed: 'Failed to capture QR image',
   },
   schedule: {
     title: 'Schedule',

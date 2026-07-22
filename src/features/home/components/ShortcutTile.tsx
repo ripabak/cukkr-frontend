@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "600",
     color: Colors.text.primary,
+    textAlign: "center",
   },
 
   largeContainer: {

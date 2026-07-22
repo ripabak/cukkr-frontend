@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, ViewStyle } from "react-native";
+import { Image, View, StyleSheet, ViewStyle } from "react-native";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { TextInputField } from "@/src/components/TextInputField";
 import { SelectorInput } from "@/src/features/schedule/components/SelectorInput";
@@ -9,6 +9,7 @@ interface ServiceItem {
   name: string;
   price: number;
   isDefault?: boolean;
+  imageThumb?: string | null;
 }
 
 interface Props {
@@ -18,6 +19,7 @@ interface Props {
   onEmailChange: (v: string) => void;
   emailRequired?: boolean;
   selectedBarber?: string;
+  selectedBarberAvatarUrl?: string | null;
   onBarberPress?: () => void;
   selectedDateTime?: string;
   onDateTimePress?: () => void;
@@ -34,6 +36,7 @@ export function BookingForm({
   onEmailChange,
   emailRequired = false,
   selectedBarber,
+  selectedBarberAvatarUrl,
   onBarberPress,
   selectedDateTime,
   onDateTimePress,
@@ -64,7 +67,8 @@ export function BookingForm({
         label={t("schedule.bookingForm.barber")}
         placeholder={t("schedule.bookingForm.selectBarber")}
         value={selectedBarber}
-        iconName="person-outline"
+        iconName={selectedBarberAvatarUrl ? undefined : "person-outline"}
+        leftElement={selectedBarberAvatarUrl ? <Image source={{ uri: selectedBarberAvatarUrl }} style={styles.barberAvatar} /> : undefined}
         onPress={onBarberPress}
       />
       {showDateTimeSelector ? (
@@ -89,5 +93,11 @@ export function BookingForm({
 const styles = StyleSheet.create({
   container: {
     gap: 14,
+  },
+  barberAvatar: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    resizeMode: "cover",
   },
 });

@@ -208,6 +208,7 @@ export function NewAppointmentScreen() {
         email={formData.email}
         onEmailChange={(v) => updateFormData({ email: v })}
         selectedBarber={formData.barberName ?? undefined}
+        selectedBarberAvatarUrl={formData.barberAvatarUrl ?? undefined}
         onBarberPress={() => router.push("/d/select-barber")}
         selectedDateTime={displayDateTime ?? displayDateOnly}
         onDateTimePress={() => setShowCalendar(true)}

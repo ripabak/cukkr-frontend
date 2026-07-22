@@ -10,6 +10,7 @@ interface Props {
   placeholder: string;
   value?: string;
   iconName?: keyof typeof Ionicons.glyphMap;
+  leftElement?: React.ReactNode;
   onPress?: () => void;
   style?: ViewStyle;
 }
@@ -20,6 +21,7 @@ export function SelectorInput({
   placeholder,
   value,
   iconName,
+  leftElement,
   onPress,
   style,
 }: Props) {
@@ -36,14 +38,14 @@ export function SelectorInput({
         activeOpacity={0.7}
         style={[styles.container, style]}
       >
-        {iconName ? (
+        {leftElement ?? (iconName ? (
           <Ionicons
             name={iconName}
             size={18}
             color={Colors.icon.muted}
             style={styles.icon}
           />
-        ) : null}
+        ) : null)}
         <AppText
           style={[
             styles.text,
