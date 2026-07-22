@@ -22,7 +22,7 @@ import {
 } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/src/components/useColorScheme";
@@ -43,12 +43,22 @@ export default function DashboardLayout() {
     ...FontAwesome.font,
   });
 
+  const minSplashDone = useRef(false);
+
   useEffect(() => {
     if (error) throw error;
   }, [error]);
 
   useEffect(() => {
-    if (loaded) {
+    const minTimer = setTimeout(() => {
+      minSplashDone.current = true;
+      if (loaded) SplashScreen.hideAsync();
+    }, 1500);
+    return () => clearTimeout(minTimer);
+  }, []);
+
+  useEffect(() => {
+    if (loaded && minSplashDone.current) {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
