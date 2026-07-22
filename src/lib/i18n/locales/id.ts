@@ -126,7 +126,7 @@ export const id = {
     walkInShort: 'Walk-In',
     appointShort: 'Janji',
     todayHours: 'Jam Hari Ini',
-    walkinCheckin: 'WALK-IN CHECK-IN',
+    walkinCheckin: 'WALK-IN PIN',
     shareWalkinLink: 'Bagikan Tautan Walk-in',
     upNext: 'Selanjutnya',
     seeAll: 'Lihat Semua',
@@ -327,6 +327,8 @@ export const id = {
     durationPlaceholder: '30',
     namePlaceholder: 'Potong Rambut',
     selectService: 'Pilih layanan',
+    managementSubtitle:
+      'Atur layanan kamu — tambah, ubah, atau hapus layanan dan atur harga. Pemilik dan admin bisa mengelola layanan; anggota bisa melihat daftar.',
     changeService: 'Ganti layanan',
     percentOff: '{percent}% OFF',
     editNameHelper1: 'Beri nama yang mudah diingat pelanggan',
@@ -432,6 +434,8 @@ export const id = {
     inviteHelper1: 'Masukkan email barber yang ingin kamu undang.',
     inviteHelper2: 'Mereka akan menerima undangan untuk bergabung dengan barbershop kamu.',
     customersCount: '{count} pelanggan',
+    managementSubtitle:
+      'Atur tim barbershop kamu — undang barber baru, ubah peran, atau hapus anggota. Anggota bisa melihat daftar tim.',
   },
   analytics: {
     subtitle: 'Lihat performa barbershop kamu',
@@ -557,7 +561,7 @@ export const id = {
       confirm: 'Konfirmasi',
     },
     newBook: {
-      title: 'Booking Baru',
+      title: 'Buat Book',
       walkIn: 'Walk-In',
       appointment: 'Appointment',
     },

@@ -93,7 +93,7 @@ export function ServicesManagementScreen() {
       }
     >
       <AppText style={styles.title}>{t("services.management")}</AppText>
-      <AppText style={styles.subtitle}>{t("services.management")}</AppText>
+      <AppText style={styles.subtitle}>{t("services.managementSubtitle")}</AppText>
 
       <SearchInput
         value={search}

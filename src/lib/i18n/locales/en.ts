@@ -126,7 +126,7 @@ export const en = {
     walkInShort: 'Walk-In',
     appointShort: 'Appoint.',
     todayHours: "Today's Hours",
-    walkinCheckin: 'WALK-IN CHECK-IN',
+    walkinCheckin: 'WALK-IN PIN',
     shareWalkinLink: 'Share Walk-in Link',
     upNext: 'Up Next',
     seeAll: 'See All',
@@ -327,6 +327,8 @@ export const en = {
     durationPlaceholder: '30',
     namePlaceholder: 'Haircut',
     selectService: 'Select a service',
+    managementSubtitle:
+      'Manage your services — add, edit, or remove services and set prices. Owners and admins can manage services; members can view the list.',
     changeService: 'Change service',
     percentOff: '{percent}% OFF',
     editNameHelper1: 'Give it a name customers will easily remember',
@@ -432,6 +434,8 @@ export const en = {
     inviteHelper1: 'Enter the email address of the barber you want to invite.',
     inviteHelper2: 'They will receive an invitation to join your barbershop.',
     customersCount: '{count} customers',
+    managementSubtitle:
+      'Manage your barbershop team — invite new barbers, change roles, or remove members. Members can view the team roster.',
   },
   analytics: {
     subtitle: "See your barbershop's performance",
@@ -557,7 +561,7 @@ export const en = {
       confirm: 'Confirm',
     },
     newBook: {
-      title: 'New Booking',
+      title: 'New Book',
       walkIn: 'Walk-In',
       appointment: 'Appointment',
     },

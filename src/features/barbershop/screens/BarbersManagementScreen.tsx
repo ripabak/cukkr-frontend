@@ -115,7 +115,7 @@ export function BarbersManagementScreen() {
       contentStyle={{ paddingBottom: 200 }}
     >
       <AppText style={styles.title}>{t("barbers.title")}</AppText>
-      <AppText style={styles.subtitle}>{t("barbers.title")}</AppText>
+      <AppText style={styles.subtitle}>{t("barbers.managementSubtitle")}</AppText>
 
       {!isLoading && pendingInvitations.length > 0 ? (
         <>
