@@ -103,12 +103,26 @@ export function NewAppointmentScreen() {
     string | undefined
   >();
   const [displayDateTime, setDisplayDateTime] = useState<string | undefined>();
+  const [outOfWindowReason, setOutOfWindowReason] = useState<'tooEarly' | 'tooLate' | null>(null);
 
   function handleDateSelect(date: Date) {
     setSelectedDate(date);
     setSelectedTimeSlot(undefined);
     setDisplayDateTime(undefined);
     updateFormData({ scheduledAt: null });
+    setOutOfWindowReason(null);
+
+    const selectedStr = toDateInputValue(date);
+    if (selectedStr > maxDateStr) {
+      setOutOfWindowReason('tooLate');
+      setDayAvailability(null);
+      return;
+    }
+    if (selectedStr < minDateStr) {
+      setOutOfWindowReason('tooEarly');
+      setDayAvailability(null);
+      return;
+    }
 
     const dayOfWeek = date.getDay();
     const dayHours =
@@ -269,6 +283,11 @@ export function NewAppointmentScreen() {
       backgroundColor={Colors.bg.default}
       contentStyle={{ paddingTop: 24, gap: 14 }}
     >
+      {(minAdvanceHours > 0 || maxAdvanceDays < 365) && (
+        <AppText style={styles.bookingWindowHint}>
+          {t("schedule.bookingWindowHint", { hours: String(minAdvanceHours), days: String(maxAdvanceDays) })}
+        </AppText>
+      )}
       {Platform.OS === 'web' ? (
         <>
           <BookingForm
@@ -334,7 +353,15 @@ export function NewAppointmentScreen() {
 
       {selectedDate && (
         <View>
-          {dayAvailability && !dayAvailability.isOpen ? (
+          {outOfWindowReason ? (
+            <View style={styles.closedBox}>
+              <AppText style={styles.closedText}>
+                {outOfWindowReason === 'tooEarly'
+                  ? t("schedule.outsideWindowMin", { hours: String(minAdvanceHours) })
+                  : t("schedule.outsideWindowMax", { days: String(maxAdvanceDays) })}
+              </AppText>
+            </View>
+          ) : dayAvailability && !dayAvailability.isOpen ? (
             <View style={styles.closedBox}>
               <AppText style={styles.closedText}>
                 {t("schedule.barbershopClosed")}
@@ -365,6 +392,12 @@ export function NewAppointmentScreen() {
                   </TouchableOpacity>
                 ))}
               </View>
+            </View>
+          ) : dayAvailability?.isOpen ? (
+            <View style={styles.closedBox}>
+              <AppText style={styles.closedText}>
+                {t("schedule.noSlotsAvailable")}
+              </AppText>
             </View>
           ) : null}
         </View>
@@ -435,6 +468,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 24,
     paddingTop: 12,
+  },
+  bookingWindowHint: {
+    fontSize: 12,
+    color: Colors.text.muted,
+    lineHeight: 18,
   },
   timeSectionLabel: {
     fontSize: 13,
