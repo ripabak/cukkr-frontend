@@ -1,12 +1,12 @@
 import { EditFieldHeader } from "@/src/components/EditFieldHeader";
 import { HelperCopy } from "@/src/components/HelperCopy";
-import { Permission } from "@/src/components/Permission";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { TextInputField } from "@/src/components/TextInputField";
 import {
   useBarbershopCurrent,
   useUpdateBookingWindow,
 } from "@/src/features/barbershop/hooks";
+import { useMemberRole } from "@/src/hooks";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
@@ -23,6 +23,8 @@ export function BookingPreferencesScreen() {
   const { data: barbershop, isLoading: isFetching } = useBarbershopCurrent();
   const { mutate: updateBookingWindow, isPending: isSaving } =
     useUpdateBookingWindow();
+  const { role } = useMemberRole();
+  const canManage = role === "owner" || role === "admin";
 
   const [minHours, setMinHours] = useState("");
   const [maxDays, setMaxDays] = useState("");
@@ -75,6 +77,7 @@ export function BookingPreferencesScreen() {
           title={t("barbershop.bookingPreferences")}
           onBack={() => router.back()}
           onSave={canSave ? handleSave : undefined}
+          hideSave={!canManage}
         />
       }
       contentStyle={styles.content}
@@ -93,7 +96,7 @@ export function BookingPreferencesScreen() {
             value={minHours}
             onChangeText={(text) => setMinHours(text.replace(/[^0-9]/g, ""))}
             keyboardType="number-pad"
-            editable={!isSaving}
+            editable={canManage && !isSaving}
           />
           {minHours.length > 0 && !isMinValid && (
             <AppText style={styles.feedbackError}>
@@ -107,7 +110,7 @@ export function BookingPreferencesScreen() {
             value={maxDays}
             onChangeText={(text) => setMaxDays(text.replace(/[^0-9]/g, ""))}
             keyboardType="number-pad"
-            editable={!isSaving}
+            editable={canManage && !isSaving}
             style={styles.secondField}
           />
           {maxDays.length > 0 && !isMaxValid && (
@@ -130,13 +133,13 @@ export function BookingPreferencesScreen() {
             style={styles.helper}
           />
 
-          <Permission roles={["member"]}>
+          {!canManage && (
             <View style={styles.viewOnlyBanner}>
               <AppText style={styles.viewOnlyText}>
                 {t("common.noPermission")}
               </AppText>
             </View>
-          </Permission>
+          )}
         </>
       )}
     </ScreenShell>
