@@ -1,5 +1,6 @@
 import { Colors } from "@/src/theme/colors";
 import { useFrame } from "@/src/components/FrameContext";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
@@ -14,6 +15,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Neu } from "@/src/theme/styles";
 
 interface Props {
   visible: boolean;
@@ -24,6 +26,7 @@ const FALLBACK_PANEL_HEIGHT = 280;
 
 export function NewBookBottomSheet({ visible, onClose }: Props) {
   const router = useRouter();
+  const { t } = useI18nContext();
   const insets = useSafeAreaInsets();
   const { frameWidth } = useFrame();
   const { width: viewportWidth } = useWindowDimensions();
@@ -84,6 +87,7 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
       <Animated.View
         style={[
           styles.panel,
+          Neu.float(Colors.bg.surface, 1.2),
           {
             left: frameOffset,
             right: frameOffset,
@@ -102,11 +106,11 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
         }}
       >
         <View style={styles.handle} />
-        <AppText style={styles.title}>New Booking</AppText>
+        <AppText style={styles.title}>{t("home.newBooking")}</AppText>
 
         <View style={styles.buttonsRow}>
           <TouchableOpacity
-            style={styles.bookingBtn}
+            style={[styles.bookingBtn, Neu.raised(Colors.bg.surface)]}
             activeOpacity={0.75}
             onPress={() => {
               onClose();
@@ -118,11 +122,11 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
               size={36}
               color={Colors.text.primary}
             />
-            <AppText style={styles.btnLabel}>Walk-In</AppText>
+            <AppText style={styles.btnLabel}>{t("bookings.walkIn")}</AppText>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.bookingBtn}
+            style={[styles.bookingBtn, Neu.raised(Colors.bg.surface)]}
             activeOpacity={0.75}
             onPress={() => {
               onClose();
@@ -134,7 +138,7 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
               size={36}
               color={Colors.text.primary}
             />
-            <AppText style={styles.btnLabel}>Appointment</AppText>
+            <AppText style={styles.btnLabel}>{t("bookings.appointment")}</AppText>
           </TouchableOpacity>
         </View>
       </Animated.View>
@@ -149,16 +153,10 @@ const styles = StyleSheet.create({
   panel: {
     position: "absolute",
     bottom: 0,
-    backgroundColor: Colors.bg.default,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
     paddingTop: 12,
     paddingHorizontal: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 16,
-    elevation: 16,
   },
   handle: {
     width: 36,
@@ -182,13 +180,10 @@ const styles = StyleSheet.create({
   },
   bookingBtn: {
     flex: 1,
-    borderRadius: 20,
+    borderRadius: 24,
     paddingVertical: 28,
     alignItems: "center",
     gap: 10,
-    backgroundColor: Colors.bg.surface,
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
   },
   btnLabel: {
     fontSize: 14,

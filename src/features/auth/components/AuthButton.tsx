@@ -1,3 +1,4 @@
+import { Neu } from "@/src/theme/styles";
 import { Pressable, StyleSheet } from "react-native";
 import { AppText } from "@/src/components/AppText";
 
@@ -22,7 +23,7 @@ export function AuthButton({
       disabled={disabled}
       style={({ pressed }) => [
         styles.button,
-        variant === "secondary" ? styles.secondaryButton : styles.primaryButton,
+        variant === "secondary" ? Neu.soft(authTheme.colors.cardBackground) : Neu.accent(0.9),
         pressed && styles.pressed,
         disabled && styles.disabled,
       ]}
@@ -47,16 +48,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: authTheme.spacing.lg,
   },
-  primaryButton: {
-    backgroundColor: authTheme.colors.accent,
-  },
-  secondaryButton: {
-    backgroundColor: authTheme.colors.cardBackground,
-    borderWidth: 1.5,
-    borderColor: authTheme.colors.accent,
-  },
   pressed: {
-    opacity: 0.82,
+    opacity: 0.85,
   },
   disabled: {
     opacity: 0.5,

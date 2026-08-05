@@ -1,6 +1,7 @@
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { FilterPicker } from "@/src/components/FilterPicker";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -106,8 +107,8 @@ export function AnalyticsCustomersScreen() {
       <View style={styles.topBar}>
         <TouchableOpacity
           onPress={() => router.back()}
-          style={styles.backBtn}
-          activeOpacity={0.7}
+          style={[styles.backBtn, Neu.soft(Colors.bg.surface, 0.7)]}
+          activeOpacity={0.85}
         >
           <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
         </TouchableOpacity>
@@ -141,7 +142,7 @@ export function AnalyticsCustomersScreen() {
               style={styles.statFlex}
             />
             <View style={styles.splitCol}>
-              <View style={styles.splitCard}>
+              <View style={[styles.splitCard, Neu.soft(Colors.bg.surface, 0.7)]}>
                 <View style={styles.splitCardHeader}>
                   <Ionicons
                     name="walk-outline"
@@ -154,7 +155,7 @@ export function AnalyticsCustomersScreen() {
                   {stats.totalWalkIn?.current ?? 0}
                 </AppText>
               </View>
-              <View style={styles.splitCard}>
+              <View style={[styles.splitCard, Neu.soft(Colors.bg.surface, 0.7)]}>
                 <View style={styles.splitCardHeader}>
                   <Ionicons
                     name="calendar-outline"
@@ -203,7 +204,7 @@ export function AnalyticsCustomersScreen() {
       ) : null}
 
       {chart && chart.length > 0 ? (
-        <View style={styles.chartCard}>
+        <View style={[styles.chartCard, Neu.raised(Colors.bg.surface)]}>
           <View style={styles.chartCardHeader}>
             <AppText style={styles.chartCardTitle}>{t("customers.title")}</AppText>
             {stats ? (
@@ -231,7 +232,7 @@ export function AnalyticsCustomersScreen() {
             options={getStatusOptions(t)}
             selected={statusFilter}
             onSelect={handleStatusChange}
-            pillStyle={styles.filterPill}
+            pillStyle={[styles.filterPill, Neu.soft(Colors.bg.surface, 0.7)]}
             pillTextStyle={styles.filterPillText}
           />
         </View>
@@ -248,8 +249,8 @@ export function AnalyticsCustomersScreen() {
           customers.map((c) => (
             <TouchableOpacity
               key={c.customerId}
-              style={styles.customerRow}
-              activeOpacity={0.75}
+              style={[styles.customerRow, Neu.raised(Colors.bg.surface)]}
+              activeOpacity={0.85}
               onPress={() =>
                 router.push({
                   pathname: "/d/customer-detail-general",
@@ -286,7 +287,7 @@ export function AnalyticsCustomersScreen() {
             <TouchableOpacity
               disabled={!meta.hasPrev}
               onPress={() => setPage((p) => p - 1)}
-              style={[styles.pageBtn, !meta.hasPrev && styles.pageBtnDisabled]}
+              style={[styles.pageBtn, Neu.soft(Colors.bg.surface, 0.7), !meta.hasPrev && styles.pageBtnDisabled]}
             >
               <Ionicons
                 name="chevron-back"
@@ -300,7 +301,7 @@ export function AnalyticsCustomersScreen() {
             <TouchableOpacity
               disabled={!meta.hasNext}
               onPress={() => setPage((p) => p + 1)}
-              style={[styles.pageBtn, !meta.hasNext && styles.pageBtnDisabled]}
+              style={[styles.pageBtn, Neu.soft(Colors.bg.surface, 0.7), !meta.hasNext && styles.pageBtnDisabled]}
             >
               <Ionicons
                 name="chevron-forward"
@@ -331,9 +332,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.bg.surface,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
   },
   pageTitle: {
     flex: 1,
@@ -362,12 +360,9 @@ const styles = StyleSheet.create({
   },
   splitCard: {
     flex: 1,
-    backgroundColor: Colors.bg.default,
     borderRadius: 16,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
     justifyContent: "center",
   },
   splitCardHeader: {
@@ -388,13 +383,8 @@ const styles = StyleSheet.create({
   },
   chartCard: {
     marginTop: 14,
-    backgroundColor: Colors.bg.default,
     borderRadius: 20,
     padding: 16,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 2,
   },
   chartCardHeader: {
     flexDirection: "row",
@@ -427,14 +417,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
-    backgroundColor: Colors.bg.default,
     borderRadius: 999,
     paddingHorizontal: 16,
     paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)",
-    elevation: 1,
   },
   filterPillText: {
     fontSize: 14,
@@ -455,12 +440,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 14,
     gap: 12,
-    backgroundColor: Colors.bg.default,
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 2,
     marginBottom: 8,
   },
   customerAvatar: {
@@ -513,9 +493,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.bg.surface,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
     alignItems: "center",
     justifyContent: "center",
   },

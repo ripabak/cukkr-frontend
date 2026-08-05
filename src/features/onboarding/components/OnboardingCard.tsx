@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
+import { Neu } from "@/src/theme/styles";
 import { OnboardingTheme } from "../onboarding-theme";
 
 interface OnboardingCardProps {
@@ -11,7 +12,7 @@ export const OnboardingCard: React.FC<OnboardingCardProps> = ({
   children,
   style,
 }) => {
-  return <View style={[styles.card, style]}>{children}</View>;
+  return <View style={[styles.card, Neu.raised(OnboardingTheme.colors.white, 1.1), style]}>{children}</View>;
 };
 
 const styles = StyleSheet.create({

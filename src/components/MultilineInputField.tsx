@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -26,7 +27,7 @@ export function MultilineInputField({
   return (
     <View style={style}>
       {label ? <AppText style={styles.label}>{label}</AppText> : null}
-      <View style={styles.inputContainer}>
+      <View style={[styles.inputContainer, Neu.inset(Colors.bg.surface, 0.6)]}>
         <AppTextInput
           value={value}
           onChangeText={onChangeText}
@@ -46,16 +47,14 @@ export function MultilineInputField({
 const styles = StyleSheet.create({
   label: {
     fontSize: 13,
+    fontWeight: "600",
     color: Colors.text.secondary,
     marginBottom: 6,
   },
   inputContainer: {
-    backgroundColor: Colors.bg.default,
     borderRadius: 16,
     paddingHorizontal: 16,
     paddingVertical: 14,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
     minHeight: 100,
   },
   input: {

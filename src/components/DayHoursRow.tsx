@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React, { useState } from "react";
 import { AppText } from "@/src/components/AppText";
 import {
@@ -58,8 +59,12 @@ export function DayHoursRow({
         <View style={styles.times}>
           <TouchableOpacity
             onPress={() => setShowOpenPicker(true)}
-            activeOpacity={0.7}
-            style={[styles.timePill, (!enabled || !editable) && styles.timePillDisabled]}
+            activeOpacity={0.85}
+            style={[
+              styles.timePill,
+              Neu.inset(Colors.bg.surface, 0.6),
+              (!enabled || !editable) && styles.timePillDisabled,
+            ]}
             disabled={!enabled || !editable}
           >
             <AppText
@@ -71,8 +76,12 @@ export function DayHoursRow({
           <AppText style={styles.dash}>–</AppText>
           <TouchableOpacity
             onPress={() => setShowClosePicker(true)}
-            activeOpacity={0.7}
-            style={[styles.timePill, (!enabled || !editable) && styles.timePillDisabled]}
+            activeOpacity={0.85}
+            style={[
+              styles.timePill,
+              Neu.inset(Colors.bg.surface, 0.6),
+              (!enabled || !editable) && styles.timePillDisabled,
+            ]}
             disabled={!enabled || !editable}
           >
             <AppText
@@ -140,7 +149,7 @@ const styles = StyleSheet.create({
     width: 36,
   },
   dayDisabled: {
-    color: "#B0ADA0",
+    color: Colors.text.muted,
   },
   times: {
     flex: 1,
@@ -150,12 +159,9 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   timePill: {
-    backgroundColor: Colors.bg.default,
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 6,
-    borderWidth: 1,
-    borderColor: "#E0DDD0",
   },
   timePillDisabled: {
     opacity: 0.4,
@@ -166,7 +172,7 @@ const styles = StyleSheet.create({
     color: Colors.text.primary,
   },
   timeTextDisabled: {
-    color: "#B0ADA0",
+    color: Colors.text.muted,
   },
   dash: {
     fontSize: 14,

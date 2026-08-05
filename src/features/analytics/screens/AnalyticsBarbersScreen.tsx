@@ -1,5 +1,6 @@
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -47,8 +48,8 @@ export function AnalyticsBarbersScreen() {
         <View style={styles.topBar}>
           <TouchableOpacity
             onPress={() => router.back()}
-            style={styles.backBtn}
-            activeOpacity={0.7}
+            style={[styles.backBtn, Neu.soft(Colors.bg.surface, 0.7)]}
+            activeOpacity={0.85}
           >
             <Ionicons
               name="chevron-back"
@@ -71,7 +72,7 @@ export function AnalyticsBarbersScreen() {
 
       {/* Revenue by barber chart */}
       {chartPoints.length > 0 ? (
-        <View style={styles.chartCard}>
+        <View style={[styles.chartCard, Neu.raised(Colors.bg.surface, 1.1)]}>
           <AppText style={styles.chartCardTitle}>{t("services.price")}</AppText>
           <View style={styles.chartWrap}>
             <BarChart data={chartPoints} chartHeight={130} />
@@ -97,7 +98,7 @@ export function AnalyticsBarbersScreen() {
             const revenueShare =
               totalRevenue > 0 ? (barber.totalRevenue / totalRevenue) * 100 : 0;
             return (
-              <View key={barber.barberId} style={styles.barberRow}>
+              <View key={barber.barberId} style={[styles.barberRow, Neu.soft(Colors.bg.surface, 0.7)]}>
                 <View style={styles.barberLeft}>
                   <View style={styles.rankBadge}>
                     <AppText style={styles.rankText}>{i + 1}</AppText>
@@ -182,8 +183,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     backgroundColor: Colors.bg.default,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border.light,
     gap: 12,
   },
   backBtn: {
@@ -192,9 +191,6 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.bg.surface,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
   },
   pageTitle: {
     flex: 1,
@@ -211,11 +207,8 @@ const styles = StyleSheet.create({
   },
   chartCard: {
     marginTop: 16,
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 16,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
   },
   chartCardTitle: {
     fontSize: 14,
@@ -248,8 +241,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border.light,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+    marginBottom: 8,
   },
   barberLeft: {
     flexDirection: "row",

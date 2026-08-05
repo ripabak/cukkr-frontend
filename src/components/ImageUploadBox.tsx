@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
@@ -23,8 +24,8 @@ export function ImageUploadBox({ onPress, imageUri, label, style }: Props) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      activeOpacity={0.7}
-      style={[styles.container, style]}
+      activeOpacity={0.85}
+      style={[styles.container, Neu.inset(Colors.bg.surface, 0.6), style]}
     >
       {imageUri ? (
         <Image source={{ uri: imageUri }} style={styles.image} />
@@ -43,10 +44,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 60,
     borderRadius: 12,
-    borderWidth: 1.5,
-    borderStyle: "dashed",
-    borderColor: Colors.border.default,
-    backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",

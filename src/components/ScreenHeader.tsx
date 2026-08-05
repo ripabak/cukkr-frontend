@@ -8,6 +8,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import { Neu } from "@/src/theme/styles";
 
 interface Props {
   title?: string;
@@ -29,7 +30,7 @@ export function ScreenHeader({
       {onBack ? (
         <TouchableOpacity
           onPress={onBack}
-          style={styles.backButton}
+          style={[styles.backButton, Neu.soft(Colors.bg.surface)]}
           activeOpacity={0.7}
         >
           <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
@@ -65,7 +66,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -76,9 +76,10 @@ const styles = StyleSheet.create({
   title: {
     flex: 1,
     textAlign: "center",
-    fontSize: 17,
+    fontSize: 18,
     fontWeight: "700",
     color: Colors.text.primary,
+    letterSpacing: -0.3,
   },
   titleSpacer: {
     flex: 1,

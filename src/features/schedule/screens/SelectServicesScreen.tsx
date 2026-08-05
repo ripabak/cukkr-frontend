@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SearchInput } from "@/src/components/SearchInput";
@@ -66,8 +67,8 @@ export function SelectServicesScreen() {
           rightAction={
             <TouchableOpacity
               onPress={handleConfirm}
-              activeOpacity={0.8}
-              style={styles.confirmBtn}
+              activeOpacity={0.85}
+              style={[styles.confirmBtn, Neu.accent()]}
             >
               <Ionicons
                 name="checkmark"
@@ -89,7 +90,7 @@ export function SelectServicesScreen() {
           {filtered.map((item) => (
             <TouchableOpacity
               key={item.id}
-              activeOpacity={0.7}
+              activeOpacity={0.85}
               onPress={() => toggleService(item.id)}
               style={styles.serviceWrapper}
             >
@@ -103,7 +104,9 @@ export function SelectServicesScreen() {
               <View
                 style={[
                   styles.checkbox,
-                  selected.has(item.id) && styles.checkboxSelected,
+                  selected.has(item.id)
+                    ? [styles.checkboxSelected, Neu.accent(0.75)]
+                    : Neu.inset(Colors.bg.surface, 0.6),
                 ]}
               >
                 {selected.has(item.id) ? (
@@ -135,7 +138,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -150,15 +152,11 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 6,
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
-    backgroundColor: Colors.bg.default,
     alignItems: "center",
     justifyContent: "center",
   },
   checkboxSelected: {
     backgroundColor: Colors.brand.primary,
-    borderColor: Colors.border.default,
   },
   emptyText: {
     textAlign: "center",

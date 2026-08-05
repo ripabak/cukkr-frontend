@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { TouchableOpacity, StyleSheet, View, ViewStyle } from "react-native";
@@ -35,8 +36,8 @@ export function SelectorInput({
       ) : null}
       <TouchableOpacity
         onPress={onPress}
-        activeOpacity={0.7}
-        style={[styles.container, style]}
+        activeOpacity={0.85}
+        style={[styles.container, Neu.inset(Colors.bg.surface, 0.6), style]}
       >
         {leftElement ?? (iconName ? (
           <Ionicons
@@ -64,6 +65,7 @@ export function SelectorInput({
 const styles = StyleSheet.create({
   label: {
     fontSize: 13,
+    fontWeight: "600",
     color: Colors.text.secondary,
     marginBottom: 6,
   },
@@ -71,12 +73,9 @@ const styles = StyleSheet.create({
     color: Colors.status.danger,
   },
   container: {
-    backgroundColor: Colors.bg.default,
     borderRadius: 999,
     paddingHorizontal: 16,
     paddingVertical: 16,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
     flexDirection: "row",
     alignItems: "center",
     gap: 10,

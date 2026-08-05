@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -60,7 +61,7 @@ export function ChartCard({
   const xLabels = xLabelsProp ?? defaultXLabels;
 
   return (
-    <View style={[styles.card, style]}>
+    <View style={[styles.card, Neu.raised(Colors.bg.surface), style]}>
       <AppText style={styles.title}>{title}</AppText>
       {subtitle && (
         <AppText style={[styles.subtitle, { color: subtitleColor }]}>
@@ -127,7 +128,6 @@ export function ChartCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.bg.default,
     borderRadius: 20,
     padding: 16,
     gap: 4,

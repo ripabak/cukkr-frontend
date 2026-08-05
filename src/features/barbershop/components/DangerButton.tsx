@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -13,8 +14,8 @@ export function DangerButton({ label, onPress, style }: Props) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      activeOpacity={0.8}
-      style={[styles.button, style]}
+      activeOpacity={0.85}
+      style={[styles.button, Neu.soft(Colors.bg.surface, 0.9), style]}
     >
       <AppText style={styles.label}>{label}</AppText>
     </TouchableOpacity>
@@ -23,17 +24,14 @@ export function DangerButton({ label, onPress, style }: Props) {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
+    borderRadius: 999,
     paddingVertical: 16,
     width: "100%",
   },
   label: {
     fontSize: 15,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: Colors.status.danger,
     textAlign: "center",
   },
 });

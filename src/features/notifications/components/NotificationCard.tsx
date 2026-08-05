@@ -1,5 +1,6 @@
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
 import {
@@ -64,7 +65,7 @@ export function NotificationCard({
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={isClickable ? 0.85 : 1}
-      style={[styles.card, style]}
+      style={[styles.card, Neu.raised(Colors.bg.surface), style]}
     >
       <View style={styles.topRow}>
         <AppText style={styles.typeLabel}>
@@ -84,7 +85,7 @@ export function NotificationCard({
       </View>
       <View style={styles.bodyRow}>
         <View style={styles.bodyLeft}>
-          {status === "pending" ? <View style={styles.dot} /> : null}
+          {status === "pending" ? <View style={[styles.dot, Neu.inset(Colors.bg.surface, 0.6)]} /> : null}
           <View style={styles.bodyText}>
             <AppText style={styles.name}>{name}</AppText>
             {detail ? <AppText style={styles.detail}>{detail}</AppText> : null}
@@ -110,7 +111,7 @@ export function NotificationCard({
             ) : null}
           </View>
         </View>
-        <View style={styles.iconCircle}>
+        <View style={[styles.iconCircle, Neu.inset(Colors.bg.surface, 0.6)]}>
           <Ionicons
             name={TYPE_ICON[type]}
             size={20}
@@ -124,11 +125,8 @@ export function NotificationCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 16,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
   },
   topRow: {
     flexDirection: "row",
@@ -192,7 +190,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
     marginLeft: 12,

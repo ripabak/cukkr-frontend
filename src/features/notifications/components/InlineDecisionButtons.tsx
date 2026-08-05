@@ -1,5 +1,6 @@
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
 import {
@@ -31,15 +32,15 @@ export function InlineDecisionButtons({
     <View style={[styles.row, style]}>
       <TouchableOpacity
         onPress={onDecline}
-        activeOpacity={0.8}
-        style={[styles.btn, styles.declineBtn]}
+        activeOpacity={0.85}
+        style={[styles.btn, Neu.soft(Colors.bg.surface)]}
       >
         <AppText style={styles.declineLabel}>{resolvedDecline}</AppText>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={onAccept}
-        activeOpacity={0.8}
-        style={[styles.btn, styles.acceptBtn]}
+        activeOpacity={0.85}
+        style={[styles.btn, Neu.accent(0.85)]}
       >
         <AppText style={styles.acceptLabel}>{resolvedAccept}</AppText>
       </TouchableOpacity>
@@ -54,28 +55,20 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   btn: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 18,
     paddingVertical: 10,
     borderRadius: 999,
     alignItems: "center",
     justifyContent: "center",
   },
-  declineBtn: {
-    borderWidth: 1.5,
-    borderColor: Colors.status.danger,
-  },
-  acceptBtn: {
-    borderWidth: 1.5,
-    borderColor: Colors.status.success,
-  },
   declineLabel: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "600",
     color: Colors.status.danger,
   },
   acceptLabel: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: Colors.status.success,
+    fontSize: 13,
+    fontWeight: "700",
+    color: Colors.text.primary,
   },
 });

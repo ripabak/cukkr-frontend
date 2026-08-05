@@ -1,5 +1,6 @@
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { Modal, StyleSheet, TouchableOpacity, View } from "react-native";
@@ -23,21 +24,6 @@ interface Props {
   onSelect: (date: Date) => void;
   onClose: () => void;
 }
-
-const MONTH_NAMES = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
 
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
@@ -170,14 +156,14 @@ export function CalendarModal({
       >
         <TouchableOpacity
           activeOpacity={1}
-          style={[styles.card, { maxWidth: frameWidth - 48 }]}
+          style={[styles.card, Neu.float(Colors.bg.surface, 1.2), { maxWidth: frameWidth - 48 }]}
         >
           {/* Month navigation */}
           <View style={styles.monthRow}>
             <TouchableOpacity
               onPress={prevMonth}
-              activeOpacity={0.7}
-              style={styles.navBtn}
+              activeOpacity={0.85}
+              style={[styles.navBtn, Neu.soft(Colors.bg.surface, 0.6)]}
             >
               <Ionicons
                 name="chevron-back"
@@ -190,8 +176,8 @@ export function CalendarModal({
             </AppText>
             <TouchableOpacity
               onPress={nextMonth}
-              activeOpacity={0.7}
-              style={styles.navBtn}
+              activeOpacity={0.85}
+              style={[styles.navBtn, Neu.soft(Colors.bg.surface, 0.6)]}
             >
               <Ionicons
                 name="chevron-forward"
@@ -241,11 +227,12 @@ export function CalendarModal({
                           ? undefined
                           : () => onSelect(new Date(viewYear, viewMonth, day))
                       }
-                      activeOpacity={disabled ? 1 : 0.8}
+                      activeOpacity={disabled ? 1 : 0.85}
                       style={[
                         styles.dayBtn,
                         selected && styles.dayBtnSelected,
                         todayMark && !selected && styles.dayBtnToday,
+                        disabled && styles.dayBtnDisabled,
                       ]}
                     >
                       <AppText
@@ -311,14 +298,13 @@ export function CalendarModal({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.2)",
+    backgroundColor: Colors.bg.overlay,
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 24,
   },
   card: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 20,
+    borderRadius: 24,
     padding: 20,
     width: "100%",
     alignSelf: "center",
@@ -330,15 +316,16 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   navBtn: {
-    width: 32,
-    height: 32,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
   },
   monthTitle: {
     fontSize: 16,
-    fontWeight: "600",
-    color: "#1A1A1A",
+    fontWeight: "700",
+    color: Colors.text.primary,
   },
   dayLabelRow: {
     flexDirection: "row",
@@ -349,10 +336,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 11,
     fontWeight: "600",
-    color: "#AAAAAA",
+    color: Colors.text.muted,
   },
   dayLabelClosed: {
-    color: "#DDDBCD",
+    color: Colors.text.muted,
+    opacity: 0.5,
   },
   week: {
     flexDirection: "row",
@@ -365,38 +353,41 @@ const styles = StyleSheet.create({
     height: 40,
   },
   dayBtn: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
   },
+  dayBtnDisabled: {
+    opacity: 0.4,
+  },
   dayBtnSelected: {
-    backgroundColor: "#E63030",
+    backgroundColor: Colors.brand.primary,
   },
   dayBtnToday: {
     borderWidth: 1.5,
-    borderColor: "#E63030",
+    borderColor: Colors.brand.primary,
   },
   dayText: {
     fontSize: 14,
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
   dayTextSelected: {
-    color: "#FFFFFF",
+    color: Colors.text.primary,
     fontWeight: "700",
   },
   dayTextPast: {
-    color: "#D5D3C8",
+    color: Colors.text.muted,
   },
   dayTextClosed: {
-    color: "#C8C5BA",
+    color: Colors.text.muted,
   },
   closedDot: {
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: "#D0CEC5",
+    backgroundColor: Colors.text.muted,
     position: "absolute",
     bottom: 2,
   },
@@ -410,7 +401,7 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: "#E63030",
+    backgroundColor: Colors.status.danger,
   },
   waitingDot: {
     width: 4,
@@ -425,13 +416,13 @@ const styles = StyleSheet.create({
     marginTop: 12,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: "#F0EDE5",
+    borderTopColor: Colors.border.light,
   },
   legendDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: "#D0CEC5",
+    backgroundColor: Colors.text.muted,
   },
   legendDotFirst: {
     marginLeft: 0,
@@ -440,7 +431,7 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: "#E63030",
+    backgroundColor: Colors.status.danger,
     marginLeft: 12,
   },
   legendWaitingDot: {
@@ -452,6 +443,6 @@ const styles = StyleSheet.create({
   },
   legendText: {
     fontSize: 12,
-    color: "#9E9B90",
+    color: Colors.text.secondary,
   },
 });

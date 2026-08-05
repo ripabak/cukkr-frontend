@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -15,8 +16,8 @@ export function LogoutRow({ onPress, style }: Props) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      activeOpacity={0.7}
-      style={[styles.container, style]}
+      activeOpacity={0.85}
+      style={[styles.container, Neu.raised(Colors.status.dangerSurface, 1.1), style]}
     >
       <AppText style={styles.label}>{t("common.logout")}</AppText>
       <Ionicons name="exit-outline" size={20} color={Colors.status.danger} />
@@ -26,10 +27,7 @@ export function LogoutRow({ onPress, style }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.bg.default,
     borderRadius: 16,
-    borderWidth: 1,
-    borderColor: Colors.status.danger,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,

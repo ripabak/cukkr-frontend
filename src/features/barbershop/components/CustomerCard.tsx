@@ -1,12 +1,13 @@
-import { Colors } from "@/src/theme/colors";
-import React from "react";
 import { AppText } from "@/src/components/AppText";
+import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { useI18nContext } from "@/src/lib/i18n/provider";
+import React from "react";
 import {
-  View,
-  TouchableOpacity,
   StyleSheet,
+  TouchableOpacity,
   ViewStyle,
+  View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -37,15 +38,16 @@ export function CustomerCard({
   return (
     <TouchableOpacity
       onPress={selectable ? onPress : undefined}
-      activeOpacity={selectable ? 0.8 : 1}
+      activeOpacity={selectable ? 0.85 : 1}
       style={[
         styles.card,
+        Neu.raised(selected ? Colors.bg.default : Colors.bg.surface),
         selected && styles.cardSelected,
         !selectable && styles.cardDisabled,
         style,
       ]}
     >
-      <View style={[styles.avatar, !hasContact && styles.avatarMuted]}>
+      <View style={[styles.avatar, selected ? styles.avatarSelected : Neu.inset(Colors.bg.surface, 0.6)]}>
         <Ionicons
           name="person"
           size={22}
@@ -71,7 +73,6 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.brand.primarySurface,
     borderRadius: 20,
     paddingVertical: 14,
     paddingHorizontal: 16,
@@ -80,18 +81,16 @@ const styles = StyleSheet.create({
   cardSelected: {
     borderWidth: 2,
     borderColor: Colors.brand.primaryDark,
-    backgroundColor: Colors.bg.default,
   },
   avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: Colors.brand.primaryDark,
+    width: 44,
+    height: 44,
+    borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
   },
-  avatarMuted: {
-    backgroundColor: Colors.bg.surface,
+  avatarSelected: {
+    backgroundColor: Colors.brand.primary,
   },
   cardDisabled: {
     opacity: 0.5,

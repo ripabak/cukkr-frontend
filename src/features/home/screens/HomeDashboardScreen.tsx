@@ -11,7 +11,6 @@ import {
   useGenerateWalkInPin,
   useHomeActiveBookings,
 } from "@/src/features/home/hooks";
-import { QueueStatCard } from "@/src/features/home/components/QueueStatCard";
 import { useOpenHours } from "@/src/hooks/useOpenHours";
 import { useUnreadNotificationsCount } from "@/src/features/notifications/hooks";
 import { useUnreadCountByOrg } from "@/src/features/notifications/hooks/useNotificationsQueries";
@@ -19,12 +18,13 @@ import { notificationsService } from "@/src/features/notifications/services/noti
 import { pwaNotificationService } from "@/src/services/pwa-notification.service";
 import { mapApiStatusToBookingStatus } from "@/src/features/schedule/utils/booking-formatters";
 import { useRequestedBookings } from "@/src/features/schedule/hooks";
-import { useAuthUser, useMemberRole } from "@/src/hooks";
+import { useAuthUser } from "@/src/hooks";
 import { authClient } from "@/src/lib/auth-client";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
-import { formatTime12h, parseTime24, toApiDate } from "@/src/utils/date";
+import { Neu } from "@/src/theme/styles";
+import { formatDateShort, formatTime12h, parseTime24, toApiDate } from "@/src/utils/date";
 import { formatTimeRange } from "@/src/utils/time-format";
 import { Ionicons } from "@expo/vector-icons";
 import { useQueryClient } from "@tanstack/react-query";
@@ -44,24 +44,19 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const TOP_BAR_HEIGHT = 52;
+const TOP_BAR_HEIGHT = 64;
+const OPEN_HOURS_STRIP_HEIGHT = 34;
 
-function getStatConfig(t: (key: string) => string): {
+function getSummaryItems(t: (key: string) => string): {
   key: string;
   label: string;
   icon: React.ComponentProps<typeof Ionicons>["name"];
 }[] {
   return [
-    {
-      key: "walkIn",
-      label: t("home.walkInShort"),
-      icon: "walk",
-    },
-    {
-      key: "appointment",
-      label: t("home.appointShort"),
-      icon: "calendar",
-    },
+    { key: "walkIn", label: t("home.walkInShort"), icon: "walk" },
+    { key: "appointment", label: t("home.appointShort"), icon: "calendar" },
+    { key: "waiting", label: t("home.waiting"), icon: "time" },
+    { key: "inProgress", label: t("home.inProgress"), icon: "cut" },
   ];
 }
 
@@ -83,7 +78,6 @@ export function HomeDashboardScreen() {
   const { data: currentPinData } = useCurrentPin();
   const { mutate: generatePin, isPending: isGenerating } =
     useGenerateWalkInPin();
-  const { role } = useMemberRole();
   const { data: unreadCount } = useUnreadNotificationsCount();
   const { data: unreadByOrg = [] } = useUnreadCountByOrg();
   const { data: sessionData } = authClient.useSession();
@@ -143,7 +137,8 @@ export function HomeDashboardScreen() {
     }
   }, [currentPinData]);
 
-  const stickyHeaderHeight = insets.top + TOP_BAR_HEIGHT;
+  const stickyHeaderHeight =
+    insets.top + TOP_BAR_HEIGHT + OPEN_HOURS_STRIP_HEIGHT;
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const headerTranslateY = useRef(new Animated.Value(0)).current;
@@ -281,52 +276,12 @@ export function HomeDashboardScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: insets.bottom + 100 },
+          { paddingBottom: insets.bottom + 120 },
         ]}
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
         <View style={[styles.page, { paddingTop: stickyHeaderHeight + 36 }]}>
-          {/* Greeting + Today&apos;s Hours */}
-          <View style={styles.greetingSection}>
-            <View style={styles.greetingLeft}>
-              <AppText style={styles.greetingName}>{t("home.greeting", { name: user?.name ?? "..." })}</AppText>
-              {role ? (
-                <View style={styles.rolePillContainer}>
-                  <AppText style={styles.rolePill}>{role}</AppText>
-                </View>
-              ) : null}
-            </View>
-
-            <TouchableOpacity
-              activeOpacity={0.85}
-              onPress={() => router.push("/d/open-hours")}
-              style={styles.openHoursCard}
-            >
-              <AppText style={styles.openHoursTitle}>{t("home.todayHours")}</AppText>
-              <View style={styles.openHoursStatusRow}>
-                <View
-                  style={[
-                    styles.openHoursDot,
-                    {
-                      backgroundColor: isCurrentlyOpen
-                        ? Colors.status.success
-                        : Colors.status.danger,
-                    },
-                  ]}
-                />
-                <AppText style={styles.openHoursStatus}>
-                  {isCurrentlyOpen ? t("barbershop.open") : t("barbershop.closed")}
-                </AppText>
-              </View>
-              <AppText style={styles.openHoursRange}>
-                {todayOpenHours
-                  ? formatTimeRange(todayOpenHours.openTime, todayOpenHours.closeTime)
-                  : "—"}
-              </AppText>
-            </TouchableOpacity>
-          </View>
-
           {/* Quick Actions */}
           <View style={styles.quickActionsRow}>
             <Animated.ScrollView
@@ -339,7 +294,7 @@ export function HomeDashboardScreen() {
               variant="small"
               icon={
                 <Ionicons
-                  name="calendar-outline"
+                  name="calendar"
                   size={22}
                   color={Colors.text.primary}
                 />
@@ -352,7 +307,7 @@ export function HomeDashboardScreen() {
               badgeCount={requestCount}
               icon={
                 <Ionicons
-                  name="calendar-number-outline"
+                  name="calendar-number"
                   size={22}
                   color={Colors.text.primary}
                 />
@@ -364,7 +319,7 @@ export function HomeDashboardScreen() {
               variant="small"
               icon={
                 <Ionicons
-                  name="people-outline"
+                  name="people"
                   size={22}
                   color={Colors.text.primary}
                 />
@@ -376,7 +331,7 @@ export function HomeDashboardScreen() {
               variant="small"
               icon={
                 <Ionicons
-                  name="person-outline"
+                  name="person"
                   size={22}
                   color={Colors.text.primary}
                 />
@@ -388,7 +343,7 @@ export function HomeDashboardScreen() {
               variant="small"
               icon={
                 <Ionicons
-                  name="cut-outline"
+                  name="cut"
                   size={22}
                   color={Colors.text.primary}
                 />
@@ -400,7 +355,7 @@ export function HomeDashboardScreen() {
               variant="small"
               icon={
                 <Ionicons
-                  name="time-outline"
+                  name="time"
                   size={22}
                   color={Colors.text.primary}
                 />
@@ -411,14 +366,14 @@ export function HomeDashboardScreen() {
           </View>
 
           {/* Walk-In Check-In */}
-          <View style={styles.walkInCard}>
+          <View style={[styles.walkInCard, Neu.raised(Colors.bg.surface)]}>
             <View style={styles.walkInHeader}>
               <AppText style={styles.walkInLabel}>{t("home.walkinCheckin")}</AppText>
               <View style={styles.walkInActions}>
                 <TouchableOpacity
                   onPress={handleGeneratePin}
                   disabled={isGenerating}
-                  style={styles.walkInIconBtn}
+                  style={[styles.walkInIconBtn, Neu.inset(Colors.bg.surface, 0.6)]}
                 >
                   {isGenerating ? (
                     <ActivityIndicator
@@ -435,7 +390,7 @@ export function HomeDashboardScreen() {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => router.push("/d/barbershop-qr")}
-                  style={styles.walkInIconBtn}
+                  style={[styles.walkInIconBtn, Neu.inset(Colors.bg.surface, 0.6)]}
                 >
                   <Ionicons
                     name="qr-code-outline"
@@ -451,44 +406,82 @@ export function HomeDashboardScreen() {
             </AppText>
 
             {bookingUrl && (
-              <TouchableOpacity
-                onPress={handleShareLink}
-                onLongPress={() => {
-                  Clipboard.setStringAsync(bookingUrl);
-                  toast.success(t("home.linkCopied"));
-                }}
-                activeOpacity={0.7}
-                style={styles.walkInLinkPill}
-              >
-                <AppText style={styles.walkInLinkText} numberOfLines={1}>
-                  {bookingUrl}
-                </AppText>
-                <Ionicons
-                  name="share-outline"
-                  size={18}
-                  color={Colors.text.secondary}
-                />
-              </TouchableOpacity>
+              <View style={styles.walkInLinkRow}>
+                <TouchableOpacity
+                  onPress={handleShareLink}
+                  onLongPress={() => {
+                    Clipboard.setStringAsync(bookingUrl);
+                    toast.success(t("home.linkCopied"));
+                  }}
+                  activeOpacity={0.85}
+                  style={[styles.walkInLinkPill, Neu.inset(Colors.bg.surface, 0.6)]}
+                >
+                  <AppText style={styles.walkInLinkText} numberOfLines={1}>
+                    {bookingUrl}
+                  </AppText>
+                  <Ionicons
+                    name="share-outline"
+                    size={18}
+                    color={Colors.text.secondary}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    Clipboard.setStringAsync(bookingUrl);
+                    toast.success(t("home.linkCopied"));
+                  }}
+                  activeOpacity={0.85}
+                  style={[styles.walkInCopyBtn, Neu.inset(Colors.bg.surface, 0.6)]}
+                >
+                  <Ionicons
+                    name="copy-outline"
+                    size={18}
+                    color={Colors.text.secondary}
+                  />
+                </TouchableOpacity>
+              </View>
             )}
           </View>
 
-          {/* Today&apos;s Queue */}
-          <View style={styles.sectionRow}>
-            <AppText style={styles.sectionTitle}>{t("home.todayOverview")}</AppText>
-            <TouchableOpacity onPress={() => router.push("/d/schedule")}>
-              <AppText style={styles.seeAll}>{t("common.all")}</AppText>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.queueGrid}>
-            {getStatConfig(t).map((s) => (
-              <QueueStatCard
-                key={s.key}
-                label={s.label}
-                icon={s.icon}
-                value={statValues[s.key]}
-                onPress={() => router.push("/d/schedule")}
-              />
-            ))}
+          {/* Today&apos;s Overview */}
+          <View style={[styles.summaryCard, Neu.raised(Colors.bg.surface)]}>
+            <View style={styles.summaryHeader}>
+              <AppText style={styles.summaryTitle}>
+                {t("home.todayOverview")}
+              </AppText>
+              <AppText style={styles.summaryDate}>
+                {formatDateShort(new Date())}
+              </AppText>
+            </View>
+            <View style={styles.summaryItems}>
+              {getSummaryItems(t).map((item) => (
+                <TouchableOpacity
+                  key={item.key}
+                  style={styles.summaryItem}
+                  activeOpacity={0.85}
+                  onPress={() => router.push("/d/schedule")}
+                >
+                  <View
+                    style={[
+                      styles.summaryItemIcon,
+                      Neu.inset(Colors.bg.surface, 0.6),
+                    ]}
+                  >
+                    <Ionicons
+                      name={item.icon}
+                      size={20}
+                      color={Colors.brand.primaryDark}
+                    />
+                  </View>
+                  <AppText style={styles.summaryItemValue}>
+                    {statValues[item.key]}
+                  </AppText>
+                  <AppText style={styles.summaryItemLabel} numberOfLines={1}>
+                    {item.label}
+                  </AppText>
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
 
           {/* Up Next */}
@@ -538,28 +531,41 @@ export function HomeDashboardScreen() {
         ]}
       >
         <View style={styles.headerRow}>
-          <Image
-            source={require("@/public/cukkr-logo-trans.png")}
-            style={styles.headerLogo}
-            resizeMode="contain"
-          />
           <TouchableOpacity
-            style={styles.shopSwitcher}
-            activeOpacity={0.7}
-            onPress={() => setSwitcherVisible(true)}
+            style={styles.profileBtn}
+            activeOpacity={0.85}
+            onPress={() => router.push("/d/user-profile")}
           >
-            <AppText style={styles.shopName} numberOfLines={1}>
-              {barbershop?.name ?? "..."}
-            </AppText>
-            <View style={styles.shopSwitcherRight}>
-              {otherOrgHasUnread && <View style={styles.shopDot} />}
-              <Ionicons
-                name={switcherVisible ? "chevron-up" : "chevron-down"}
-                size={14}
-                color={Colors.text.primary}
-              />
-            </View>
+            {user?.image ? (
+              <Image source={{ uri: user.image }} style={styles.profileAvatar} />
+            ) : (
+              <View style={styles.profileAvatarFallback}>
+                <AppText style={styles.profileInitials}>
+                  {avatarInitials || "?"}
+                </AppText>
+              </View>
+            )}
           </TouchableOpacity>
+          <View style={styles.greetingCol}>
+            <AppText style={styles.greetingText} numberOfLines={1}>
+              {t("home.greeting", { name: user?.name ?? "..." })}
+            </AppText>
+            <TouchableOpacity
+              style={styles.changeShopBtn}
+              activeOpacity={0.85}
+              onPress={() => setSwitcherVisible(true)}
+            >
+              <AppText style={styles.changeShopName} numberOfLines={1}>
+                {barbershop?.name ?? "..."}
+              </AppText>
+              <Ionicons
+                name="chevron-down"
+                size={12}
+                color={Colors.text.secondary}
+              />
+              {otherOrgHasUnread && <View style={styles.shopDot} />}
+            </TouchableOpacity>
+          </View>
           <TouchableOpacity
             style={styles.notifBtn}
             onPress={async () => {
@@ -610,22 +616,41 @@ export function HomeDashboardScreen() {
             />
             {(unreadCount ?? 0) > 0 ? <View style={styles.notifDot} /> : null}
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.profileBtn}
-            onPress={() => router.push("/d/user-profile")}
-          >
-            {user?.image ? (
-              <Image
-                source={{ uri: user.image }}
-                style={styles.profileAvatar}
-              />
-            ) : (
-              <AppText style={styles.profileInitials}>
-                {avatarInitials}
-              </AppText>
-            )}
-          </TouchableOpacity>
         </View>
+        <TouchableOpacity
+          style={[
+            styles.openHoursStrip,
+            {
+              backgroundColor: isCurrentlyOpen
+                ? Colors.status.success
+                : Colors.status.danger,
+            },
+          ]}
+          activeOpacity={0.9}
+          onPress={() => router.push("/d/open-hours")}
+        >
+          <View style={styles.openHoursStripDot} />
+          <AppText style={styles.openHoursStripStatus}>
+            {isCurrentlyOpen ? t("barbershop.open") : t("barbershop.closed")}
+          </AppText>
+          {todayOpenHours ? (
+            <>
+              <View style={styles.openHoursStripDivider} />
+              <AppText style={styles.openHoursStripRange}>
+                {formatTimeRange(
+                  todayOpenHours.openTime,
+                  todayOpenHours.closeTime,
+                )}
+              </AppText>
+            </>
+          ) : null}
+          <View style={styles.openHoursStripSpacer} />
+          <Ionicons
+            name="chevron-forward"
+            size={14}
+            color="rgba(255, 255, 255, 0.85)"
+          />
+        </TouchableOpacity>
       </Animated.View>
 
       {/* Modals */}
@@ -701,78 +726,6 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
 
-  // Greeting
-  greetingSection: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginHorizontal: 24,
-    gap: 12,
-    marginBottom: 36,
-  },
-  greetingLeft: {
-    flex: 1,
-  },
-  greetingSmall: {
-    fontSize: 13,
-    color: Colors.text.secondary,
-    fontWeight: "500",
-  },
-  greetingName: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: Colors.text.primary,
-    letterSpacing: -0.5,
-  },
-  rolePillContainer: {
-    alignSelf: "flex-start",
-    backgroundColor: Colors.brand.primarySurface,
-    borderRadius: 20,
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    marginTop: 4,
-  },
-  rolePill: {
-    fontSize: 11,
-    fontWeight: "700",
-    color: Colors.brand.primaryDark,
-    textTransform: "capitalize",
-  },
-  openHoursCard: {
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 16,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    minWidth: 120,
-    alignItems: "flex-start",
-    gap: 4,
-  },
-  openHoursTitle: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: Colors.text.muted,
-  },
-  openHoursStatusRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-  },
-  openHoursDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  openHoursStatus: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: Colors.text.primary,
-  },
-  openHoursRange: {
-    fontSize: 12,
-    fontWeight: "500",
-    color: Colors.text.secondary,
-  },
-
   // Sticky header
   stickyHeader: {
     position: "absolute",
@@ -786,23 +739,90 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 20,
-    gap: 10,
+    paddingHorizontal: 28,
+    paddingVertical: 10,
+    gap: 14,
   },
-  headerLogo: {
-    width: 28,
-    height: 28,
+  openHoursStrip: {
+    height: OPEN_HOURS_STRIP_HEIGHT,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingHorizontal: 28,
   },
-  shopSwitcher: {
+  openHoursStripDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: Colors.text.inverse,
+  },
+  openHoursStripStatus: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: Colors.text.inverse,
+  },
+  openHoursStripDivider: {
+    width: 1,
+    height: 12,
+    backgroundColor: "rgba(255, 255, 255, 0.35)",
+    marginHorizontal: 2,
+  },
+  openHoursStripRange: {
+    fontSize: 13,
+    fontWeight: "500",
+    color: "rgba(255, 255, 255, 0.92)",
+  },
+  openHoursStripSpacer: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
   },
-  shopSwitcherRight: {
+  profileBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    overflow: "hidden",
+  },
+  profileAvatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+  },
+  profileAvatarFallback: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: Colors.brand.primarySurface,
+    borderWidth: 1,
+    borderColor: Colors.brand.primary,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  profileInitials: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: Colors.brand.primaryDark,
+  },
+  greetingCol: {
+    flex: 1,
+    gap: 4,
+  },
+  greetingText: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: Colors.text.primary,
+    letterSpacing: -0.2,
+  },
+  changeShopBtn: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
+    gap: 5,
+    alignSelf: "flex-start",
+  },
+  changeShopName: {
+    maxWidth: 160,
+    fontSize: 12,
+    fontWeight: "600",
+    color: Colors.text.secondary,
+    flexShrink: 1,
   },
   shopDot: {
     width: 8,
@@ -810,20 +830,10 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: Colors.status.danger,
   },
-  shopName: {
-    maxWidth: 120,
-    fontSize: 14,
-    fontWeight: "700",
-    color: Colors.text.primary,
-    letterSpacing: -0.3,
-  },
   notifBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
-    backgroundColor: Colors.bg.surface,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -836,27 +846,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: Colors.status.danger,
   },
-  profileBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
-    backgroundColor: Colors.bg.surface,
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-  },
-  profileAvatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-  },
-  profileInitials: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: Colors.brand.primaryDark,
-  },
 
   // Quick Actions
   quickActionsRow: {
@@ -865,16 +854,15 @@ const styles = StyleSheet.create({
   },
   quickActionsScroll: {
     flexDirection: "row",
-    gap: 20,
+    gap: 16,
     paddingVertical: 4,
   },
 
   // Walk-In Check-In
   walkInCard: {
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 20,
-    padding: 16,
-    marginBottom: 24,
+    borderRadius: 24,
+    padding: 18,
+    marginBottom: 28,
   },
   walkInHeader: {
     flexDirection: "row",
@@ -883,10 +871,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   walkInLabel: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: "700",
     color: Colors.text.secondary,
-    letterSpacing: 1,
+    letterSpacing: 0.5,
   },
   walkInActions: {
     flexDirection: "row",
@@ -897,7 +885,6 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: Colors.bg.default,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -909,13 +896,26 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   walkInLinkPill: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.bg.default,
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 10,
     gap: 8,
+    marginBottom: 12,
+  },
+  walkInLinkRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  walkInCopyBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 12,
   },
   walkInLinkText: {
@@ -933,21 +933,70 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
   },
   sectionTitle: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "700",
     color: Colors.text.primary,
+    letterSpacing: -0.3,
   },
   seeAll: {
     fontSize: 13,
     color: Colors.brand.primaryDark,
-    fontWeight: "500",
+    fontWeight: "600",
   },
 
-  // Today&apos;s Queue
-  queueGrid: {
-    flexDirection: "row",
-    gap: 12,
+  // Today&apos;s Overview card
+  summaryCard: {
+    borderRadius: 24,
+    padding: 18,
     marginBottom: 28,
+  },
+  summaryHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 16,
+  },
+  summaryTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: Colors.text.primary,
+    letterSpacing: -0.2,
+  },
+  summaryDate: {
+    fontSize: 12,
+    fontWeight: "500",
+    color: Colors.text.secondary,
+  },
+  summaryItems: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  summaryItem: {
+    flex: 1,
+    alignItems: "center",
+    gap: 6,
+    borderRadius: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 4,
+  },
+  summaryItemIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  summaryItemValue: {
+    fontSize: 22,
+    fontWeight: "800",
+    color: Colors.text.primary,
+    letterSpacing: -0.5,
+  },
+  summaryItemLabel: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: Colors.text.secondary,
+    textAlign: "center",
   },
 
   cardMargin: {

@@ -22,6 +22,7 @@ import {
 import { getErrorMessage } from "@/src/lib/utils/error-handler";
 import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { formatDateLabel, formatTime12h } from "@/src/utils/date";
 import { Ionicons } from "@expo/vector-icons";
 import { useI18nContext } from "@/src/lib/i18n/provider";
@@ -230,7 +231,7 @@ export function BookingDetailScreen() {
     if (isLoading) {
       return (
         <View style={styles.centered}>
-          <ActivityIndicator size="large" color={Colors.text.primary} />
+          <ActivityIndicator size="large" color={Colors.brand.primary} />
         </View>
       );
     }
@@ -405,8 +406,8 @@ export function BookingDetailScreen() {
             overflowItems.length > 0 ? (
               <TouchableOpacity
                 onPress={isLoading ? undefined : () => setOverflowVisible(true)}
-                activeOpacity={0.7}
-                style={styles.overflowBtn}
+                activeOpacity={0.85}
+                style={[styles.overflowBtn, Neu.accent()]}
               >
                 <Ionicons
                   name="ellipsis-horizontal"
@@ -518,7 +519,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },

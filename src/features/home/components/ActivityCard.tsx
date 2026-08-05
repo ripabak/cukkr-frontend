@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { getStatusColor, getStatusSurface, Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { AppText } from "@/src/components/AppText";
 import {
@@ -25,15 +26,19 @@ interface Props {
 export function ActivityCard({ item, style, onPress }: Props) {
   const accentColor =
     item.type === "in_progress"
-      ? Colors.status.inProgress
-      : Colors.status.waiting;
+      ? getStatusColor("in_progress")
+      : getStatusColor("waiting");
+  const surface =
+    item.type === "in_progress"
+      ? getStatusSurface("in_progress")
+      : getStatusSurface("waiting");
   return (
     <TouchableOpacity
       onPress={onPress}
-      activeOpacity={onPress ? 0.8 : 1}
-      style={[styles.container, style]}
+      activeOpacity={onPress ? 0.85 : 1}
+      style={[styles.container, Neu.soft(Colors.bg.surface), style]}
     >
-      <View style={styles.circle}>
+      <View style={[styles.circle, { backgroundColor: surface }]}>
         <Ionicons name="people" size={22} color={accentColor} />
       </View>
       <AppText style={[styles.time, { color: accentColor }]}>{item.time}</AppText>
@@ -55,14 +60,11 @@ export function ActivityCard({ item, style, onPress }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.bg.surface,
     borderRadius: 50,
     padding: 12,
     flexDirection: "row",
     alignItems: "center",
     marginTop: 8,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
   },
   circle: {
     width: 40,
@@ -71,7 +73,6 @@ const styles = StyleSheet.create({
     marginRight: 12,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.bg.default,
   },
   time: {
     fontSize: 13,

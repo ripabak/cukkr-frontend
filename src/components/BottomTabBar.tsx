@@ -10,6 +10,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Neu } from "@/src/theme/styles";
 
 type Tab = "home" | "stats" | "schedule" | "barbershop";
 
@@ -35,23 +36,36 @@ export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
     { key: "barbershop", label: t("tabs.settings"), icon: "storefront" },
   ];
 
-  const visibleTabs = role === "member" ? TABS.filter((t) => t.key !== "stats") : TABS;
+  const visibleTabs =
+    role === "member"
+      ? TABS.filter((tb) => tb.key !== "stats")
+      : TABS;
+
   return (
     <View
-      style={[styles.container, { paddingBottom: insets.bottom || 12 }, style]}
+      style={[
+        styles.container,
+        Neu.raised(Colors.bg.surface, 0.8),
+        { paddingBottom: insets.bottom || 12 },
+        style,
+      ]}
     >
       {visibleTabs.map((tab) => {
         const isActive = tab.key === activeTab;
-        const color = isActive ? Colors.brand.primary : Colors.icon.muted;
+        const color = isActive ? Colors.brand.primaryDark : Colors.icon.muted;
         return (
           <TouchableOpacity
             key={tab.key}
             onPress={() => onTabPress?.(tab.key)}
             activeOpacity={0.7}
-            style={styles.tab}
+            accessibilityLabel={tab.label}
+            style={[styles.tab, isActive && styles.tabActive]}
           >
-            <Ionicons name={tab.icon} size={21} color={color} />
-            <AppText style={[styles.label, { color }]}>{tab.label}</AppText>
+            <View
+              style={[styles.iconRing, isActive && styles.iconRingActive]}
+            >
+              <Ionicons name={tab.icon} size={22} color={color} />
+            </View>
           </TouchableOpacity>
         );
       })}
@@ -62,18 +76,27 @@ export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    backgroundColor: Colors.bg.default,
-    borderTopWidth: 1,
-    borderTopColor: Colors.border.default,
-    paddingTop: 12,
+    marginHorizontal: 16,
+    marginBottom: 12,
+    paddingTop: 10,
+    borderRadius: 28,
   },
   tab: {
     flex: 1,
     alignItems: "center",
-    gap: 2,
+    justifyContent: "center",
   },
-  label: {
-    fontSize: 9,
-    fontWeight: "500",
+  tabActive: {
+    transform: [{ translateY: -2 }],
+  },
+  iconRing: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  iconRingActive: {
+    backgroundColor: Colors.brand.primarySurface,
   },
 });

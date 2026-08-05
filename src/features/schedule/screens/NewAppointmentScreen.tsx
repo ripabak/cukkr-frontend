@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { useOpenHours } from "@/src/hooks/useOpenHours";
@@ -308,7 +309,7 @@ export function NewAppointmentScreen() {
             <AppText style={styles.label}>
               {t("schedule.bookingForm.dateTime")} <AppText style={styles.asterisk}>*</AppText>
             </AppText>
-            <View style={styles.webDateWrapper}>
+            <View style={[styles.webDateWrapper, Neu.inset(Colors.bg.surface)]}>
               <input
                 id="native-date-input"
                 type="date"
@@ -376,19 +377,14 @@ export function NewAppointmentScreen() {
                     key={slot}
                     style={[
                       styles.slotBtn,
-                      selectedTimeSlot === slot && styles.slotBtnSelected,
+                      selectedTimeSlot === slot
+                        ? Neu.accent(0.85)
+                        : Neu.soft(Colors.bg.surface, 0.6),
                     ]}
-                    activeOpacity={0.7}
+                    activeOpacity={0.85}
                     onPress={() => handleTimeSlotSelect(slot)}
                   >
-                    <AppText
-                      style={[
-                        styles.slotText,
-                        selectedTimeSlot === slot && styles.slotTextSelected,
-                      ]}
-                    >
-                      {slot}
-                    </AppText>
+                    <AppText style={styles.slotText}>{slot}</AppText>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -410,7 +406,7 @@ export function NewAppointmentScreen() {
             activeOpacity={1}
             onPress={() => setShowIosPicker(false)}
           >
-            <TouchableOpacity activeOpacity={1} style={styles.pickerCard}>
+            <TouchableOpacity activeOpacity={1} style={[styles.pickerCard, Neu.float(Colors.bg.default, 1.2)]}>
               <DateTimePicker
                 value={tempDate}
                 mode="date"
@@ -440,24 +436,20 @@ const styles = StyleSheet.create({
   webDateWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.bg.default,
     borderRadius: 999,
     paddingHorizontal: 16,
     paddingVertical: 14,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
     gap: 10,
   },
   pickerOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.2)",
+    backgroundColor: Colors.bg.overlay,
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 24,
   },
   pickerCard: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 20,
+    borderRadius: 24,
     padding: 20,
     width: "100%",
     maxWidth: 320,
@@ -483,9 +475,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.4,
   },
   closedBox: {
-    borderWidth: 1.5,
-    borderColor: Colors.status.danger,
-    borderRadius: 12,
+    borderRadius: 16,
     backgroundColor: Colors.status.dangerSurface,
     padding: 14,
   },
@@ -503,21 +493,13 @@ const styles = StyleSheet.create({
     width: "22%",
     paddingVertical: 12,
     borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
-    backgroundColor: Colors.bg.surface,
     alignItems: "center",
-  },
-  slotBtnSelected: {
-    borderColor: Colors.brand.primary,
-    backgroundColor: Colors.brand.primary,
+    justifyContent: "center",
+    minHeight: 44,
   },
   slotText: {
     fontSize: 14,
     fontWeight: "600",
-    color: Colors.text.primary,
-  },
-  slotTextSelected: {
     color: Colors.text.primary,
   },
 });

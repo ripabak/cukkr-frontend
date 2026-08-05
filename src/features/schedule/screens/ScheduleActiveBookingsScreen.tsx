@@ -22,6 +22,7 @@ import {
 } from "@/src/features/schedule/utils/booking-formatters";
 import { formatTime12h, toApiDate } from "@/src/utils/date";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useRouter } from "expo-router";
@@ -63,11 +64,11 @@ function RequestCard({
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.85}
-      style={reqStyles.card}
+      style={[reqStyles.card, Neu.raised(Colors.bg.surface)]}
     >
       <View style={reqStyles.iconRow}>
-        <View style={reqStyles.iconCircle}>
-          <Ionicons name={iconName} size={16} color={Colors.text.secondary} />
+        <View style={[reqStyles.iconCircle, Neu.inset(Colors.bg.surface, 0.6)]}>
+          <Ionicons name={iconName as any} size={16} color={Colors.text.secondary} />
         </View>
         <AppText style={reqStyles.time}>{timeLabel}</AppText>
       </View>
@@ -84,15 +85,15 @@ function RequestCard({
       <View style={reqStyles.actions}>
         <TouchableOpacity
           onPress={onDecline}
-          activeOpacity={0.8}
-          style={reqStyles.declineBtn}
+          activeOpacity={0.85}
+          style={[reqStyles.declineBtn, Neu.soft(Colors.bg.surface)]}
         >
           <AppText style={reqStyles.declineText}>{t("bookings.actionDecline")}</AppText>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={onAccept}
-          activeOpacity={0.8}
-          style={reqStyles.acceptBtn}
+          activeOpacity={0.85}
+          style={[reqStyles.acceptBtn, Neu.accent(0.9)]}
         >
           <AppText style={reqStyles.acceptText}>{t("bookings.actionAccept")}</AppText>
         </TouchableOpacity>
@@ -232,8 +233,8 @@ export function ScheduleActiveBookingsScreen() {
             />
             <TouchableOpacity
               onPress={handleRequestsPress}
-              activeOpacity={0.7}
-              style={styles.requestsBtn}
+              activeOpacity={0.85}
+              style={[styles.requestsBtn, Neu.soft(Colors.bg.surface)]}
             >
               <Ionicons
                 name="list-outline"
@@ -268,7 +269,7 @@ export function ScheduleActiveBookingsScreen() {
         <TouchableOpacity
           onPress={handleNewAppointment}
           activeOpacity={0.85}
-          style={styles.fab}
+          style={[styles.fab, Neu.accent(1.2)]}
         >
           <Ionicons name="add" size={28} color={Colors.text.primary} />
         </TouchableOpacity>
@@ -403,14 +404,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    backgroundColor: Colors.bg.default,
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 2,
   },
   requestsBtnLabel: {
     fontSize: 14,
@@ -445,30 +441,22 @@ const styles = StyleSheet.create({
     zIndex: 999,
   },
   sectionTitle: {
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: "700",
     color: Colors.text.primary,
-    letterSpacing: -0.8,
+    letterSpacing: -0.6,
   },
   sectionCount: {
     fontWeight: "500",
     color: Colors.text.muted,
   },
   filterPill: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: Colors.bg.default,
     borderRadius: 999,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    gap: 6,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 2,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
   },
   filterLabel: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "600",
     color: Colors.text.primary,
   },
@@ -528,11 +516,8 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
-    boxShadow: "0px 6px 20px rgba(255, 200, 30, 0.45)",
-    elevation: 6,
     zIndex: 40,
   },
 });
@@ -540,14 +525,9 @@ const styles = StyleSheet.create({
 const reqStyles = StyleSheet.create({
   card: {
     width: 200,
-    backgroundColor: Colors.bg.default,
     borderRadius: 20,
     padding: 16,
     gap: 8,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 2,
   },
   iconRow: {
     flexDirection: "row",
@@ -558,9 +538,6 @@ const reqStyles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: Colors.bg.cream,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -591,26 +568,23 @@ const reqStyles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
     alignItems: "center",
   },
   declineText: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.text.muted,
+    color: Colors.status.danger,
   },
   acceptBtn: {
     flex: 1,
     paddingVertical: 10,
     borderRadius: 12,
-    backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   acceptText: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "700",
     color: Colors.text.primary,
   },
 });

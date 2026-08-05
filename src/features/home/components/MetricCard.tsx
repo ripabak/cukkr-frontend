@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -16,7 +17,7 @@ export function MetricCard({ label, value, icon, accentColor, style }: Props) {
     <View
       style={[
         styles.card,
-        accentColor ? { borderWidth: 1, borderColor: accentColor } : undefined,
+        Neu.raised(Colors.bg.surface),
         style,
       ]}
     >
@@ -42,8 +43,7 @@ export function MetricCard({ label, value, icon, accentColor, style }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 12,
     flex: 1,
   },

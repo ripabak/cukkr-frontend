@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 import { AppTextInput } from "@/src/components/AppTextInput";
@@ -20,12 +21,12 @@ export function MessageComposer({
   const { t } = useI18nContext();
   const resolvedPlaceholder = placeholder ?? t("customers.messagePlaceholder");
   return (
-    <View style={[styles.container, style]}>
+    <View style={[styles.container, Neu.inset(Colors.bg.surface, 0.6), style]}>
       <AppTextInput
         value={value}
         onChangeText={onChangeText}
         placeholder={resolvedPlaceholder}
-        placeholderTextColor="#B0ADA0"
+        placeholderTextColor={Colors.text.muted}
         multiline
         textAlignVertical="top"
         style={styles.input}
@@ -36,10 +37,7 @@ export function MessageComposer({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.bg.default,
     borderRadius: 16,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
     padding: 16,
     minHeight: 120,
   },

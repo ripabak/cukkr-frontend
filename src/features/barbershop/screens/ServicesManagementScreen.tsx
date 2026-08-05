@@ -18,6 +18,7 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
+import { Neu } from "@/src/theme/styles";
 
 type SortOption =
   | "name_asc"
@@ -69,8 +70,8 @@ export function ServicesManagementScreen() {
                 renderTrigger={({ onPress }) => (
                   <TouchableOpacity
                     onPress={onPress}
-                    activeOpacity={0.7}
-                    style={styles.headerIcon}
+                    activeOpacity={0.85}
+                    style={[styles.headerIcon, Neu.soft(Colors.bg.surface)]}
                   >
                     <Ionicons
                       name="filter-outline"
@@ -147,7 +148,7 @@ export function ServicesManagementScreen() {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: "700",
     color: Colors.text.primary,
     marginTop: 8,
@@ -181,10 +182,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.bg.default,
   },
 });

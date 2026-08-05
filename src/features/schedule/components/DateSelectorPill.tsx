@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
@@ -14,8 +15,8 @@ export function DateSelectorPill({ label, onPress, style }: Props) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      activeOpacity={0.8}
-      style={[styles.pill, style]}
+      activeOpacity={0.85}
+      style={[styles.pill, Neu.soft(Colors.bg.surface), style]}
     >
       <Ionicons
         name="calendar-outline"
@@ -38,14 +39,9 @@ const styles = StyleSheet.create({
   pill: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.bg.default,
     borderRadius: 999,
     paddingHorizontal: 18,
     paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 2,
     alignSelf: "flex-start",
   },
   icon: {

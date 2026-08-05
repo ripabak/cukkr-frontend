@@ -4,6 +4,7 @@ import { SearchInput } from "@/src/components/SearchInput";
 import { useNewBookingForm } from "@/src/features/schedule/context/NewBookingContext";
 import { useScheduleBarbers } from "@/src/features/schedule/hooks";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -47,11 +48,11 @@ export function SelectBarberScreen() {
           {filtered.map((item) => (
             <TouchableOpacity
               key={item.id}
-              activeOpacity={0.7}
-              style={styles.barberRow}
+              activeOpacity={0.85}
+              style={[styles.barberRow, Neu.raised(Colors.bg.surface)]}
               onPress={() => handleSelect(item.id, item.name, item.avatarUrl)}
             >
-              <View style={styles.avatar}>
+              <View style={[styles.avatar, Neu.inset(Colors.bg.surface, 0.6)]}>
                 {item.avatarUrl ? (
                   <Image source={{ uri: item.avatarUrl }} style={styles.avatarImage} />
                 ) : (
@@ -84,7 +85,6 @@ const styles = StyleSheet.create({
   barberRow: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.brand.primary,
     borderRadius: 20,
     paddingHorizontal: 16,
     paddingVertical: 16,
@@ -94,7 +94,6 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",

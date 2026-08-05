@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
@@ -22,8 +23,8 @@ export function EditFieldHeader({ title, onBack, onSave, hideSave, style }: Prop
     <View style={[styles.container, style]}>
       <TouchableOpacity
         onPress={onBack}
-        activeOpacity={0.7}
-        style={styles.backButton}
+        activeOpacity={0.85}
+        style={[styles.backButton, Neu.soft(Colors.bg.surface, 0.7)]}
       >
         <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
       </TouchableOpacity>
@@ -33,8 +34,8 @@ export function EditFieldHeader({ title, onBack, onSave, hideSave, style }: Prop
       ) : (
         <TouchableOpacity
           onPress={onSave}
-          activeOpacity={0.7}
-          style={styles.saveButton}
+          activeOpacity={0.85}
+          style={[styles.saveButton, Neu.accent(0.85)]}
         >
           <Ionicons name="checkmark" size={18} color={Colors.text.primary} />
         </TouchableOpacity>
@@ -54,22 +55,21 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
   },
   title: {
     flex: 1,
     textAlign: "center",
-    fontSize: 17,
+    fontSize: 18,
     fontWeight: "700",
     color: Colors.text.primary,
+    letterSpacing: -0.3,
   },
   saveButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },

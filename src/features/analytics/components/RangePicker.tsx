@@ -1,5 +1,6 @@
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
 import {
@@ -37,8 +38,11 @@ export function RangePicker({ value, onChange }: Props) {
             <TouchableOpacity
               key={opt.value}
               onPress={() => onChange(opt.value)}
-              activeOpacity={0.75}
-              style={[styles.pill, active && styles.pillActive]}
+              activeOpacity={0.85}
+              style={[
+                styles.pill,
+                active ? Neu.accent(0.85) : Neu.soft(Colors.bg.surface, 0.7),
+              ]}
             >
               <AppText style={[styles.pillText, active && styles.pillTextActive]}>
                 {opt.label}
@@ -65,17 +69,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: 10,
     borderRadius: 999,
-    backgroundColor: Colors.bg.default,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)",
-    elevation: 1,
-  },
-  pillActive: {
-    backgroundColor: Colors.brand.primary,
-    borderColor: Colors.brand.primary,
-    boxShadow: "0px 4px 10px rgba(255, 200, 30, 0.35)",
-    elevation: 2,
   },
   pillText: {
     fontSize: 13,

@@ -3,12 +3,12 @@ import { useState } from "react";
 import {
   Pressable,
   StyleSheet,
-  TextInput,
   type TextInputProps,
   View,
 } from "react-native";
 import { AppText } from "@/src/components/AppText";
 import { AppTextInput } from "@/src/components/AppTextInput";
+import { Neu } from "@/src/theme/styles";
 
 import { authTheme } from "../auth-theme";
 
@@ -30,7 +30,7 @@ export function AuthTextField({
     <View style={styles.container}>
       <AppText style={styles.label}>{label}</AppText>
 
-      <View style={styles.inputShell}>
+      <View style={[styles.inputShell, Neu.inset(authTheme.colors.inputBackground, 0.6)]}>
         <AppTextInput
           placeholderTextColor={authTheme.colors.textSecondary}
           style={[styles.input, style]}
@@ -70,10 +70,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     minHeight: 54,
-    borderWidth: 1,
-    borderColor: authTheme.colors.border,
     borderRadius: authTheme.radius.input,
-    backgroundColor: authTheme.colors.inputBackground,
     paddingHorizontal: authTheme.spacing.md,
   },
   input: {

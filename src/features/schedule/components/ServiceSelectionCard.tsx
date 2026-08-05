@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
@@ -37,7 +38,7 @@ export function ServiceSelectionCard({
 }: Props) {
   const { t } = useI18nContext();
   return (
-    <View style={[styles.wrapper, style]}>
+    <View style={[styles.wrapper, Neu.raised(Colors.bg.surface, 1.1), style]}>
       <AppText style={styles.sectionLabel}>
         {t("bookings.services")}
         {required ? <AppText style={styles.asterisk}> *</AppText> : null}
@@ -92,8 +93,6 @@ export function ServiceSelectionCard({
 
 const styles = StyleSheet.create({
   wrapper: {
-    borderWidth: 1,
-    borderColor: Colors.border.default,
     borderRadius: 20,
     padding: 16,
     gap: 10,

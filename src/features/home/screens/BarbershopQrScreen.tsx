@@ -3,6 +3,7 @@ import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useCurrentBarbershop } from "@/src/features/home/hooks";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useRouter } from "expo-router";
 import React, { useRef } from "react";
@@ -63,7 +64,7 @@ export function BarbershopQrScreen() {
         />
       }
     >
-      <View ref={bannerRef} style={styles.banner} collapsable={false}>
+      <View ref={bannerRef} style={[styles.banner, Neu.raised(Colors.bg.default, 1.3)]} collapsable={false}>
         <View style={styles.headerRow}>
           <View style={styles.qrBrand}>
             <AppText style={styles.qrBrandText}>QR</AppText>
@@ -141,10 +142,7 @@ const styles = StyleSheet.create({
   },
   banner: {
     width: "100%",
-    backgroundColor: Colors.bg.default,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
+    borderRadius: 20,
     overflow: "visible",
     paddingHorizontal: 24,
     paddingTop: 24,

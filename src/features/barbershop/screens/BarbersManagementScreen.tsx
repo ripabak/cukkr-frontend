@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { Permission } from "@/src/components/Permission";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
@@ -249,7 +250,7 @@ export function BarbersManagementScreen() {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: "700",
     color: Colors.text.primary,
     marginTop: 8,
@@ -263,11 +264,14 @@ const styles = StyleSheet.create({
   },
   inviteBtn: {
     marginBottom: 24,
+    marginTop: 8,
   },
   sectionLabel: {
     fontSize: 13,
+    fontWeight: "600",
     color: Colors.text.secondary,
     marginBottom: 8,
+    letterSpacing: 0.5,
   },
   list: {
     marginBottom: 24,

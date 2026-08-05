@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { authClient } from "@/src/lib/auth-client";
 import { useToast } from "@/src/lib/providers";
 import { Ionicons } from "@expo/vector-icons";
@@ -135,7 +136,7 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
         statusBarTranslucent
       >
         <View style={styles.switchingOverlay}>
-          <View style={[styles.switchingCard, { width: frameWidth * 0.72 }]}>
+          <View style={[styles.switchingCard, Neu.float(Colors.bg.default, 1.2), { width: frameWidth * 0.72 }]}>
             <ActivityIndicator size="large" color={Colors.brand.primary} />
             <AppText style={styles.switchingTitle}>{t("barbershop.switchingWorkspace")}</AppText>
             <AppText style={styles.switchingSubText}>{t("barbershop.pleaseWait")}</AppText>
@@ -164,6 +165,7 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
         <Animated.View
           style={[
             styles.panel,
+            Neu.float(Colors.bg.default, 1.2),
             {
               top: insets.top,
               left: frameOffset,
@@ -177,7 +179,7 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
           <View style={styles.handle} />
 
           {/* Search */}
-          <View style={styles.searchRow}>
+          <View style={[styles.searchRow, Neu.inset(Colors.bg.surface, 0.6)]}>
             <Ionicons
               name="search-outline"
               size={16}
@@ -257,11 +259,16 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
                       <AppText style={styles.itemName} numberOfLines={1}>
                         {shop.name}
                       </AppText>
-                      {!isActive && unreadCount > 0 && (
-                        <AppText style={styles.unreadLabel}>
-                          {t("barbershop.unreadCount", { count: String(unreadCount) })}
-                        </AppText>
-                      )}
+                      <View style={styles.itemMetaRow}>
+                        {shop.role ? (
+                          <AppText style={styles.itemRole}>{shop.role}</AppText>
+                        ) : null}
+                        {!isActive && unreadCount > 0 && (
+                          <AppText style={styles.unreadLabel}>
+                            {t("barbershop.unreadCount", { count: String(unreadCount) })}
+                          </AppText>
+                        )}
+                      </View>
                     </View>
                     {isActive && (
                       <Ionicons
@@ -281,7 +288,7 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
             onPress={handleCreateNew}
             activeOpacity={0.7}
           >
-            <View style={styles.createIcon}>
+            <View style={[styles.createIcon, Neu.inset(Colors.bg.surface, 0.6)]}>
               <Ionicons name="add" size={20} color={Colors.text.secondary} />
             </View>
             <View>
@@ -301,15 +308,10 @@ const styles = StyleSheet.create({
   },
   panel: {
     position: "absolute",
-    backgroundColor: Colors.bg.default,
     borderBottomLeftRadius: 24,
     borderBottomRightRadius: 24,
     maxHeight: 440,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.14,
-    shadowRadius: 20,
-    elevation: 14,
+    overflow: "hidden",
   },
   handle: {
     width: 36,
@@ -327,12 +329,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 10,
     marginBottom: 8,
-    backgroundColor: Colors.bg.surface,
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 9,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
   },
   searchInput: {
     flex: 1,
@@ -364,8 +363,6 @@ const styles = StyleSheet.create({
     height: 38,
     borderRadius: 10,
     backgroundColor: Colors.bg.surface,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -373,12 +370,9 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 10,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
   },
   avatarActive: {
     backgroundColor: Colors.brand.primary,
-    borderColor: Colors.brand.primaryDark,
   },
   avatarText: {
     fontSize: 13,
@@ -397,11 +391,22 @@ const styles = StyleSheet.create({
   itemTexts: {
     flex: 1,
   },
+  itemMetaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginTop: 2,
+  },
+  itemRole: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: Colors.text.secondary,
+    textTransform: "capitalize",
+  },
   unreadLabel: {
     fontSize: 12,
     fontWeight: "500",
     color: Colors.status.danger,
-    marginTop: 2,
   },
   createRow: {
     flexDirection: "row",
@@ -417,9 +422,6 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 10,
-    backgroundColor: Colors.bg.surface,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -440,17 +442,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   switchingCard: {
-    backgroundColor: Colors.bg.default,
     borderRadius: 20,
     paddingVertical: 32,
     paddingHorizontal: 40,
     alignItems: "center",
     gap: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 20,
-    elevation: 16,
   },
   switchingTitle: {
     fontSize: 16,

@@ -3,6 +3,7 @@ import React from "react";
 import { View, StyleSheet, ViewStyle, KeyboardTypeOptions } from "react-native";
 import { AppText } from "@/src/components/AppText";
 import { AppTextInput } from "@/src/components/AppTextInput";
+import { Neu } from "@/src/theme/styles";
 
 interface Props {
   label: string;
@@ -26,7 +27,7 @@ export function LabeledInput({
   return (
     <View style={[styles.row, style]}>
       <AppText style={styles.label}>{label}</AppText>
-      <View style={styles.inputContainer}>
+      <View style={[styles.inputContainer, Neu.inset(Colors.bg.surface)]}>
         <AppTextInput
           value={value}
           onChangeText={onChangeText}
@@ -55,10 +56,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flex: 1,
-    backgroundColor: Colors.bg.default,
     borderRadius: 999,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
     paddingHorizontal: 16,
     paddingVertical: 14,
   },

@@ -3,6 +3,7 @@ import { Image } from "expo-image";
 import { useImagePicker } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SecondaryButton } from "@/src/components/SecondaryButton";
@@ -65,8 +66,8 @@ export function CreateBarbershopNameLogoScreen() {
 
       <AppText style={styles.logoLabel}>{t("barbershop.logoUpload")}</AppText>
       <TouchableOpacity
-        activeOpacity={0.7}
-        style={styles.logoPicker}
+        activeOpacity={0.85}
+        style={[styles.logoPicker, Neu.inset(Colors.bg.surface, 0.6)]}
         onPress={async () => {
           const file = await pickAndGetFile();
           if (!file) return;
@@ -141,12 +142,9 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     borderRadius: 16,
     overflow: "hidden",
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
   },
   logoPlaceholder: {
     flex: 1,
-    backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
   },

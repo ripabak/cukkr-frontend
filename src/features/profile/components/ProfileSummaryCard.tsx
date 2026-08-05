@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 
@@ -8,13 +9,12 @@ interface Props {
 }
 
 export function ProfileSummaryCard({ children, style }: Props) {
-  return <View style={[styles.card, style]}>{children}</View>;
+  return <View style={[styles.card, Neu.raised(Colors.bg.surface), style]}>{children}</View>;
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.brand.primarySurface,
-    borderRadius: 16,
+    borderRadius: 20,
     overflow: "hidden",
   },
 });

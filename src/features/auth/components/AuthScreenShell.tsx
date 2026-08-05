@@ -51,7 +51,7 @@ export function AuthScreenShell({
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    backgroundColor: authTheme.colors.cardBackground,
+    backgroundColor: authTheme.colors.pageBackground,
   },
   keyboardAvoidingView: {
     flex: 1,
@@ -68,14 +68,15 @@ const styles = StyleSheet.create({
   },
   title: {
     color: authTheme.colors.textPrimary,
-    fontSize: 34,
+    fontSize: 32,
     fontWeight: "800",
     fontFamily: "PlusJakartaSans_700Bold",
+    letterSpacing: -0.8,
   },
   description: {
     color: authTheme.colors.textSecondary,
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 15,
+    lineHeight: 22,
     fontFamily: "PlusJakartaSans_400Regular",
   },
   content: {

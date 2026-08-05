@@ -4,6 +4,7 @@ import React from "react";
 import { Modal, View, TouchableOpacity, StyleSheet } from "react-native";
 import { AppText } from "@/src/components/AppText";
 import { useFrame } from "./FrameContext";
+import { Neu } from "@/src/theme/styles";
 
 interface Props {
   visible: boolean;
@@ -32,13 +33,13 @@ export function ConfirmationModal({
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.overlay}>
-        <View style={[styles.card, { width: frameWidth * 0.85 }]}>
+        <View style={[styles.card, Neu.float(Colors.bg.surface, 1.2), { width: frameWidth * 0.85 }]}>
           {icon ? (
-            <View style={styles.iconWrapper}>
+            <View style={[styles.iconWrapper, Neu.soft(Colors.brand.primarySurface)]}>
               <Ionicons
                 name={icon as React.ComponentProps<typeof Ionicons>["name"]}
-                size={32}
-                color={Colors.text.primary}
+                size={28}
+                color={Colors.brand.primaryDark}
               />
             </View>
           ) : null}
@@ -50,8 +51,8 @@ export function ConfirmationModal({
             {cancelLabel ? (
               <TouchableOpacity
                 onPress={onCancel}
-                activeOpacity={0.8}
-                style={[styles.btn, styles.btnDark, hasBoth && styles.btnFlex]}
+                activeOpacity={0.85}
+                style={[styles.btn, Neu.soft(Colors.bg.surface), hasBoth && styles.btnFlex]}
               >
                 <AppText style={styles.btnDarkLabel}>{cancelLabel}</AppText>
               </TouchableOpacity>
@@ -59,10 +60,10 @@ export function ConfirmationModal({
             {confirmLabel ? (
               <TouchableOpacity
                 onPress={onConfirm}
-                activeOpacity={0.8}
+                activeOpacity={0.85}
                 style={[
                   styles.btn,
-                  styles.btnOutline,
+                  Neu.accent(),
                   hasBoth && styles.btnFlex,
                 ]}
               >
@@ -84,12 +85,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   card: {
-    backgroundColor: Colors.bg.default,
     borderRadius: 24,
     padding: 28,
+    alignItems: "center",
   },
   iconWrapper: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     alignItems: "center",
+    justifyContent: "center",
     marginBottom: 16,
   },
   title: {
@@ -97,16 +102,19 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     textAlign: "center",
     color: Colors.text.primary,
+    letterSpacing: -0.3,
   },
   description: {
     fontSize: 14,
     color: Colors.text.secondary,
     textAlign: "center",
     marginTop: 8,
+    lineHeight: 20,
   },
   buttons: {
     marginTop: 24,
     gap: 12,
+    width: "100%",
   },
   buttonsRow: {
     flexDirection: "row",
@@ -120,21 +128,14 @@ const styles = StyleSheet.create({
   btnFlex: {
     flex: 1,
   },
-  btnDark: {
-    backgroundColor: Colors.brand.primary,
-  },
   btnDarkLabel: {
     color: Colors.text.primary,
     fontSize: 16,
     fontWeight: "700",
   },
-  btnOutline: {
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
-  },
   btnOutlineLabel: {
     color: Colors.text.primary,
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "700",
   },
 });
