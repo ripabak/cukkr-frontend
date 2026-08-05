@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -20,7 +21,7 @@ export function StatCard({
   style,
 }: Props) {
   return (
-    <View style={[styles.card, style]}>
+    <View style={[styles.card, Neu.raised(Colors.bg.surface), style]}>
       <AppText style={styles.label}>{label}</AppText>
       <View style={styles.valueRow}>
         {iconName && (
@@ -39,15 +40,10 @@ export function StatCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.bg.default,
     borderRadius: 20,
     padding: 16,
     flex: 1,
     gap: 6,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 2,
   },
   label: {
     fontSize: 12,

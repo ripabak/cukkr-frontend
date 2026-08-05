@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
 import { useI18nContext } from "@/src/lib/i18n/provider";
@@ -50,7 +51,7 @@ export function MemberCard({
         key="role-btn"
         onPress={onRoleChange}
         activeOpacity={0.7}
-        style={styles.roleBtn}
+        style={[styles.roleBtn, Neu.soft(Colors.bg.surface)]}
       >
         <AppText style={styles.roleBtnText}>
           {role.charAt(0).toUpperCase() + role.slice(1)}
@@ -64,8 +65,8 @@ export function MemberCard({
   ) : null;
 
   return (
-    <View style={[styles.card, style]}>
-      <View style={styles.avatar}>
+    <View style={[styles.card, Neu.raised(Colors.bg.surface), style]}>
+      <View style={[styles.avatar, Neu.inset(Colors.bg.surface, 0.6)]}>
         {imageUri ? (
           <Image source={{ uri: imageUri }} style={styles.avatarImage} />
         ) : (
@@ -92,7 +93,7 @@ export function MemberCard({
           <TouchableOpacity
             onPress={onRemove}
             activeOpacity={0.7}
-            style={styles.removeBtn}
+            style={[styles.removeBtn, Neu.accent(0.8)]}
           >
             <Ionicons name="close" size={14} color={Colors.text.primary} />
           </TouchableOpacity>
@@ -104,7 +105,6 @@ export function MemberCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.brand.primarySurface,
     borderRadius: 20,
     flexDirection: "row",
     alignItems: "center",
@@ -116,11 +116,8 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: Colors.bg.surface,
     overflow: "hidden",
     flexShrink: 0,
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -168,9 +165,6 @@ const styles = StyleSheet.create({
   roleBtn: {
     alignSelf: "flex-start",
     marginTop: 4,
-    backgroundColor: Colors.bg.surface,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 3,
@@ -184,7 +178,6 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },

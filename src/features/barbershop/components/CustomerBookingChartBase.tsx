@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React, { useCallback, useState } from "react";
 import { View, StyleSheet, ViewStyle, LayoutChangeEvent } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -37,7 +38,7 @@ export default function CustomerBookingChart({
   }, []);
 
   return (
-    <View style={[styles.card, style]}>
+    <View style={[styles.card, Neu.raised(Colors.bg.surface, 1.1), style]}>
       <AppText style={styles.title}>{title}</AppText>
       {subtitle ? (
         <AppText style={[styles.subtitle, { color: subtitleColor }]}>
@@ -95,11 +96,8 @@ export default function CustomerBookingChart({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.bg.default,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
-    padding: 12,
+    borderRadius: 20,
+    padding: 16,
   },
   title: {
     fontSize: 15,

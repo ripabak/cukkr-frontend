@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
 import {
@@ -31,7 +32,7 @@ export function OverflowMenu({ visible, items, onClose, style }: Props) {
         onPress={onClose}
         activeOpacity={1}
       />
-      <View style={[styles.menu, style]}>
+      <View style={[styles.menu, Neu.float(Colors.bg.surface, 1.2), style]}>
         {items.map((item, index) => (
           <TouchableOpacity
             key={index}
@@ -66,14 +67,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 56,
     right: 20,
-    backgroundColor: Colors.bg.default,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.08)",
-    elevation: 8,
+    borderRadius: 16,
     minWidth: 180,
     zIndex: 100,
+    overflow: "hidden",
   },
   item: {
     paddingHorizontal: 16,

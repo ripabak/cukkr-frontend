@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -22,7 +23,7 @@ export function StickyCta({
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.85}
-      style={[styles.cta, { backgroundColor: color }, style]}
+      style={[styles.cta, Neu.accent(1.1), { backgroundColor: color }, style]}
     >
       <AppText style={[styles.label, { color: textColor }]}>{label}</AppText>
     </TouchableOpacity>
@@ -39,11 +40,9 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     alignItems: "center",
     justifyContent: "center",
-    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.15)",
-    elevation: 6,
   },
   label: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "700",
   },
 });

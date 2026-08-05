@@ -1,6 +1,7 @@
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { MultilineInputField } from "@/src/components/MultilineInputField";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React, { useState } from "react";
 import { Modal, View, TouchableOpacity, StyleSheet } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -40,7 +41,7 @@ export function DeclineReasonModal({
       onRequestClose={handleCancel}
     >
       <View style={styles.overlay}>
-        <View style={[styles.card, { width: frameWidth * 0.85 }]}>
+        <View style={[styles.card, Neu.float(Colors.bg.default, 1.2), { width: frameWidth * 0.85 }]}>
           <AppText style={styles.title}>{t("bookings.confirmDecline")}</AppText>
           <AppText style={styles.subtitle}>
             {t("bookings.declineReasonOptional")}
@@ -55,11 +56,11 @@ export function DeclineReasonModal({
           <View style={styles.buttons}>
             <TouchableOpacity
               onPress={handleSend}
-              activeOpacity={0.8}
+              activeOpacity={0.85}
               disabled={isSending}
               style={[
                 styles.btn,
-                styles.btnPrimary,
+                Neu.accent(),
                 isSending && styles.btnDisabled,
               ]}
             >
@@ -69,8 +70,8 @@ export function DeclineReasonModal({
             </TouchableOpacity>
             <TouchableOpacity
               onPress={handleCancel}
-              activeOpacity={0.8}
-              style={[styles.btn, styles.btnOutline]}
+              activeOpacity={0.85}
+              style={[styles.btn, Neu.soft(Colors.bg.surface)]}
             >
               <AppText style={styles.btnOutlineLabel}>{t("common.cancel")}</AppText>
             </TouchableOpacity>
@@ -89,7 +90,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   card: {
-    backgroundColor: Colors.bg.default,
     borderRadius: 24,
     padding: 28,
   },
@@ -119,9 +119,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  btnPrimary: {
-    backgroundColor: Colors.brand.primary,
-  },
   btnDisabled: {
     opacity: 0.6,
   },
@@ -129,10 +126,6 @@ const styles = StyleSheet.create({
     color: Colors.text.primary,
     fontSize: 16,
     fontWeight: "700",
-  },
-  btnOutline: {
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
   },
   btnOutlineLabel: {
     color: Colors.text.primary,

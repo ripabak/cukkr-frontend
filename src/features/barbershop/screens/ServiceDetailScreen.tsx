@@ -1,6 +1,7 @@
 import { Permission } from "@/src/components/Permission";
 import { useImagePicker, useMemberRole } from "@/src/hooks";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { InfoRow } from "@/src/components/InfoRow";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -135,17 +136,17 @@ export function ServiceDetailScreen() {
           onBack={() => router.back()}
           rightAction={
             <Permission roles={["owner", "admin"]}>
-              <TouchableOpacity
-                onPress={() => setOverflowVisible(true)}
-                activeOpacity={0.7}
-                style={styles.overflowBtn}
-              >
-                <Ionicons
-                  name="ellipsis-horizontal"
-                  size={18}
-                  color={Colors.text.primary}
-                />
-              </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setOverflowVisible(true)}
+                  activeOpacity={0.85}
+                  style={[styles.overflowBtn, Neu.accent()]}
+                >
+                  <Ionicons
+                    name="ellipsis-horizontal"
+                    size={18}
+                    color={Colors.text.primary}
+                  />
+                </TouchableOpacity>
             </Permission>
           }
         />
@@ -162,7 +163,8 @@ export function ServiceDetailScreen() {
                   ? handleImageUpload
                   : undefined
               }
-              activeOpacity={canManage ? 0.8 : 1}
+              activeOpacity={canManage ? 0.85 : 1}
+              style={[styles.imageBox, Neu.raised(Colors.bg.surface)]}
             >
               {service?.imageMed ? (
                 <Image
@@ -185,7 +187,7 @@ export function ServiceDetailScreen() {
           </View>
 
           <AppText style={styles.sectionLabel}>{t("services.management")}</AppText>
-          <View style={styles.card}>
+          <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
             <InfoRow
               label={t("services.serviceName")}
               value={service?.name ?? "—"}
@@ -204,7 +206,7 @@ export function ServiceDetailScreen() {
           <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
             {t("services.price")} & {t("services.duration")}
           </AppText>
-          <View style={styles.card}>
+          <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
             <InfoRow
               label={t("services.duration")}
               value={service ? `${service.duration} minutes` : "—"}
@@ -230,7 +232,7 @@ export function ServiceDetailScreen() {
             <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
               {t("services.operational")}
             </AppText>
-            <View style={styles.card}>
+            <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
               <ToggleRow
                 label={t("services.active")}
                 value={service?.isActive ?? false}
@@ -312,7 +314,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -325,43 +326,38 @@ const styles = StyleSheet.create({
   },
   imageWrapper: {
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 24,
+  },
+  imageBox: {
+    borderRadius: 22,
+    padding: 6,
   },
   serviceImageContent: {
-    width: 80,
-    height: 80,
+    width: 88,
+    height: 88,
     borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
   },
   serviceImagePlaceholder: {
-    width: 80,
-    height: 80,
+    width: 88,
+    height: 88,
     borderRadius: 16,
     backgroundColor: Colors.bg.surface,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
   },
   sectionLabel: {
     fontSize: 13,
     fontWeight: "600",
     color: Colors.text.secondary,
     marginBottom: 8,
-    textTransform: "uppercase",
     letterSpacing: 0.5,
   },
   sectionLabelTop: {
     marginTop: 24,
   },
   card: {
-    backgroundColor: Colors.bg.default,
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 2,
+    overflow: "hidden",
   },
   operationalSubtitle: {
     fontSize: 12,

@@ -1,5 +1,6 @@
 import { AppText } from "@/src/components/AppText";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import {
@@ -28,11 +29,11 @@ export function QueueStatCard({
     <TouchableOpacity
       activeOpacity={0.85}
       onPress={onPress}
-      style={[styles.card, style]}
+      style={[styles.card, Neu.raised(Colors.bg.surface), style]}
       disabled={!onPress}
     >
-      <View style={styles.iconCircle}>
-        <Ionicons name={icon} size={24} color={Colors.text.primary} />
+      <View style={[styles.iconCircle, Neu.inset(Colors.bg.surface, 0.6)]}>
+        <Ionicons name={icon} size={24} color={Colors.brand.primaryDark} />
       </View>
       <AppText style={styles.value}>{value}</AppText>
       <AppText style={styles.label}>{label}</AppText>
@@ -45,7 +46,6 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: "45%",
     aspectRatio: 1,
-    backgroundColor: Colors.bg.surface,
     borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
@@ -55,9 +55,6 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: Colors.bg.default,
-    borderWidth: 1.5,
-    borderColor: Colors.border.light,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 4,
@@ -66,10 +63,11 @@ const styles = StyleSheet.create({
     fontSize: 34,
     fontWeight: "800",
     color: Colors.text.primary,
+    letterSpacing: -0.8,
   },
   label: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.text.muted,
+    color: Colors.text.secondary,
   },
 });

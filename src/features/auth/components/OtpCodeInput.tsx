@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
 import { AppTextInput } from "@/src/components/AppTextInput";
+import { Neu } from "@/src/theme/styles";
 
 import { authTheme } from "../auth-theme";
 
@@ -52,7 +53,7 @@ export function OtpCodeInput({
           return (
             <View
               key={index}
-              style={[styles.cell, isActive && styles.activeCell]}
+              style={[styles.cell, Neu.inset(authTheme.colors.inputBackground, 0.6), isActive && styles.activeCell]}
             >
               <AppText style={styles.cellText}>{digit}</AppText>
             </View>
@@ -84,14 +85,11 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     maxWidth: 64,
     borderRadius: authTheme.radius.input,
-    borderWidth: 1,
-    borderColor: authTheme.colors.border,
-    backgroundColor: authTheme.colors.inputBackground,
     justifyContent: "center",
     alignItems: "center",
   },
   activeCell: {
-    borderColor: authTheme.colors.accentDark,
+    backgroundColor: authTheme.colors.accentSurface ?? "rgba(255, 200, 30, 0.12)",
   },
   cellText: {
     color: authTheme.colors.textPrimary,

@@ -1,5 +1,6 @@
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { Modal, View, TouchableOpacity, StyleSheet } from "react-native";
@@ -62,7 +63,9 @@ export function RoleChangeModal({
                   activeOpacity={0.8}
                   style={[
                     styles.option,
-                    isSelected && styles.optionSelected,
+                    isSelected
+                      ? [styles.optionSelected, Neu.accent(0.75)]
+                      : Neu.soft(Colors.bg.surface, 0.7),
                   ]}
                 >
                   <AppText
@@ -81,8 +84,8 @@ export function RoleChangeModal({
           <View style={styles.actions}>
             <TouchableOpacity
               onPress={onCancel}
-              activeOpacity={0.8}
-              style={[styles.btn, styles.btnCancel]}
+              activeOpacity={0.85}
+              style={[styles.btn, Neu.soft(Colors.bg.surface, 0.7)]}
             >
               <AppText style={styles.btnCancelText}>{t("common.cancel")}</AppText>
             </TouchableOpacity>
@@ -92,8 +95,7 @@ export function RoleChangeModal({
               disabled={!hasChanged}
               style={[
                 styles.btn,
-                styles.btnSave,
-                !hasChanged && styles.btnSaveDisabled,
+                !hasChanged ? styles.btnSaveDisabled : Neu.accent(0.9),
               ]}
             >
               <AppText
@@ -120,7 +122,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   card: {
-    backgroundColor: Colors.bg.default,
     borderRadius: 24,
     padding: 28,
   },
@@ -156,14 +157,11 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 48,
     borderRadius: 999,
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
     alignItems: "center",
     justifyContent: "center",
   },
   optionSelected: {
-    borderColor: Colors.brand.primary,
-    backgroundColor: Colors.brand.primarySurface,
+    backgroundColor: Colors.brand.primary,
   },
   optionText: {
     fontSize: 14,
@@ -171,7 +169,7 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
   },
   optionTextSelected: {
-    color: Colors.brand.primary,
+    color: Colors.text.primary,
   },
   actions: {
     flexDirection: "row",
@@ -184,17 +182,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  btnCancel: {
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
-  },
   btnCancelText: {
     fontSize: 16,
     fontWeight: "600",
     color: Colors.text.primary,
-  },
-  btnSave: {
-    backgroundColor: Colors.brand.primary,
   },
   btnSaveDisabled: {
     opacity: 0.4,

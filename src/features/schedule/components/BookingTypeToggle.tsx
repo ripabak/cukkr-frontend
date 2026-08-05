@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
@@ -12,13 +13,13 @@ interface Props {
 
 export function BookingTypeToggle({ value, onChange }: Props) {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, Neu.inset(Colors.bg.surface, 0.6)]}>
       <TouchableOpacity
         onPress={() => onChange("appointment")}
-        activeOpacity={0.8}
+        activeOpacity={0.85}
         style={[
           styles.iconBtn,
-          value === "appointment" && styles.iconBtnActive,
+          value === "appointment" && Neu.accent(0.8),
         ]}
       >
         <Ionicons
@@ -31,8 +32,11 @@ export function BookingTypeToggle({ value, onChange }: Props) {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => onChange("walkin")}
-        activeOpacity={0.8}
-        style={[styles.iconBtn, value === "walkin" && styles.iconBtnActive]}
+        activeOpacity={0.85}
+        style={[
+          styles.iconBtn,
+          value === "walkin" && Neu.accent(0.8),
+        ]}
       >
         <Ionicons
           name="walk"
@@ -47,17 +51,15 @@ export function BookingTypeToggle({ value, onChange }: Props) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    gap: 6,
+    gap: 4,
+    borderRadius: 14,
+    padding: 3,
   },
   iconBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
+    width: 38,
+    height: 38,
+    borderRadius: 11,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "transparent",
-  },
-  iconBtnActive: {
-    backgroundColor: Colors.brand.primary,
   },
 });

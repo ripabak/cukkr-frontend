@@ -1,5 +1,6 @@
 import { Colors } from "@/src/theme/colors";
-import { BookingStatus, BookingType } from "@/src/components/BookingCard";
+import { BookingType } from "@/src/components/BookingCard";
+import { BookingStatus, Status, Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
@@ -21,22 +22,6 @@ interface Props {
   style?: ViewStyle;
 }
 
-const STATUS_COLOR: Record<BookingStatus, string> = {
-  waiting: Colors.status.waiting,
-  in_progress: Colors.status.inProgress,
-  completed: Colors.status.success,
-  cancelled: Colors.status.danger,
-  requested: Colors.brand.primaryDark,
-};
-
-const STATUS_ICON_BG: Record<BookingStatus, string> = {
-  waiting: Colors.status.waitingSurface,
-  in_progress: Colors.status.inProgressSurface,
-  completed: Colors.status.successSurface,
-  cancelled: Colors.status.dangerSurface,
-  requested: Colors.brand.primarySurface,
-};
-
 export function HistoryBookingRow({
   customerName,
   barberName,
@@ -47,8 +32,7 @@ export function HistoryBookingRow({
   onPress,
   style,
 }: Props) {
-  const color = STATUS_COLOR[status];
-  const iconBg = STATUS_ICON_BG[status];
+  const statusStyle = Status.getStyle(status);
   const iconName =
     bookingType === "walk_in"
       ? "walk"
@@ -60,10 +44,10 @@ export function HistoryBookingRow({
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.85}
-      style={[styles.row, style]}
+      style={[styles.row, Neu.raised(Colors.bg.surface), style]}
     >
-      <View style={[styles.iconCircle, { backgroundColor: iconBg }]}>
-        <Ionicons name={iconName} size={20} color={color} />
+      <View style={[styles.iconCircle, { backgroundColor: statusStyle.surface }]}>
+        <Ionicons name={iconName as any} size={20} color={statusStyle.color} />
       </View>
       <View style={styles.info}>
         <AppText style={styles.dateTime} numberOfLines={1}>
@@ -75,7 +59,7 @@ export function HistoryBookingRow({
         </View>
       </View>
       <View style={styles.right}>
-        <AppText style={[styles.customerName, { color }]}>{customerName}</AppText>
+        <AppText style={[styles.customerName, { color: statusStyle.color }]}>{customerName}</AppText>
         <AppText style={styles.duration}>{duration}</AppText>
       </View>
     </TouchableOpacity>
@@ -86,12 +70,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.bg.default,
     borderRadius: 16,
     padding: 14,
     gap: 12,
-    boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.05)",
-    elevation: 1,
   },
   iconCircle: {
     width: 44,

@@ -1,5 +1,6 @@
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { formatTime12h } from "@/src/utils/date";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -96,8 +97,8 @@ export function InProgressFloatingCard({
           params: { id: bookingId },
         })
       }
-      activeOpacity={0.85}
-      style={styles.card}
+      activeOpacity={0.9}
+      style={[styles.card, Neu.float(Colors.status.inProgress, 1.1)]}
     >
       <Animated.View
         style={[
@@ -133,9 +134,11 @@ export function InProgressFloatingCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.status.inProgress,
+    marginHorizontal: 16,
+    marginBottom: 12,
     paddingHorizontal: 16,
     paddingVertical: 13,
+    borderRadius: 20,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -159,7 +162,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 10,
     fontWeight: "600",
-    color: "rgba(255,255,255,0.7)",
+    color: "rgba(255,255,255,0.8)",
     letterSpacing: 0.5,
     textTransform: "uppercase",
     marginBottom: 1,
@@ -175,7 +178,7 @@ const styles = StyleSheet.create({
   },
   startTime: {
     fontSize: 10,
-    color: "rgba(255,255,255,0.65)",
+    color: "rgba(255,255,255,0.7)",
   },
   elapsedRow: {
     flexDirection: "row",

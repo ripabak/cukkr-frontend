@@ -13,6 +13,7 @@ import { useImagePicker, useMemberRole } from "@/src/hooks";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -99,16 +100,17 @@ export function BarbershopSettingsScreen() {
               ? undefined
               : handleCameraBadge
           }
-          activeOpacity={0.8}
+          activeOpacity={0.85}
+          style={[styles.avatar, Neu.raised(Colors.bg.surface)]}
         >
           {barbershop?.logoMed ? (
             <Image
               source={{ uri: barbershop.logoMed }}
-              style={[styles.avatarCircle, styles.clickableBorder]}
+              style={styles.avatarImage}
               contentFit="cover"
             />
           ) : (
-            <View style={[styles.avatar, styles.clickableBorder]}>
+            <View style={styles.avatarFallback}>
               <AppText style={styles.avatarInitials}>
                 {barbershop?.name
                   ? barbershop.name
@@ -125,7 +127,7 @@ export function BarbershopSettingsScreen() {
       </View>
 
       <AppText style={styles.sectionLabel}>{t("barbershop.information")}</AppText>
-      <View style={styles.card}>
+      <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
         <InfoRow
           label={t("barbershop.nameLabel")}
           value={barbershop?.name}
@@ -174,7 +176,7 @@ export function BarbershopSettingsScreen() {
       <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
         {t("barbershop.bookingWeb")}
       </AppText>
-      <View style={styles.card}>
+      <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
         <InfoRow
           label={t("barbershop.bookUrl")}
           value={
@@ -193,7 +195,7 @@ export function BarbershopSettingsScreen() {
       <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
         {t("barbershop.bookingPreferences")}
       </AppText>
-      <View style={styles.card}>
+      <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
         <InfoRow
           label={t("barbershop.bookingPreferences")}
           value={
@@ -214,7 +216,7 @@ export function BarbershopSettingsScreen() {
       <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
         {t("barbershop.operations")}
       </AppText>
-      <View style={styles.card}>
+      <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
         <OperationRow
           label={t("barbers.title")}
           onPress={
@@ -285,7 +287,7 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   title: {
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: "700",
     color: Colors.text.primary,
     letterSpacing: -0.8,
@@ -298,51 +300,48 @@ const styles = StyleSheet.create({
   },
   avatarWrapper: {
     alignSelf: "center",
-    marginBottom: 24,
+    marginBottom: 28,
     position: "relative",
   },
-  avatarCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 20,
-    backgroundColor: Colors.bg.surface,
-  },
   avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 20,
-    backgroundColor: Colors.brand.primaryDark,
+    width: 96,
+    height: 96,
+    borderRadius: 28,
+    padding: 5,
+    overflow: "hidden",
+  },
+  avatarImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 22,
+  },
+  avatarFallback: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 22,
+    backgroundColor: Colors.brand.primarySurface,
     alignItems: "center",
     justifyContent: "center",
   },
   avatarInitials: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: "700",
-    color: "#ffffff",
+    color: Colors.brand.primaryDark,
     letterSpacing: 1,
-  },
-  clickableBorder: {
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
   },
   sectionLabel: {
     fontSize: 13,
     fontWeight: "600",
     color: Colors.text.secondary,
     marginBottom: 8,
-    textTransform: "uppercase",
     letterSpacing: 0.5,
   },
   sectionLabelTop: {
     marginTop: 24,
   },
   card: {
-    backgroundColor: Colors.bg.default,
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 2,
+    overflow: "hidden",
   },
   dangerBtn: {
     marginTop: 16,

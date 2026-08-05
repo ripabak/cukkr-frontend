@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
@@ -175,12 +176,12 @@ const pickerStyles = StyleSheet.create({
   },
   itemText: {
     fontSize: 18,
-    color: "#B0ADA0",
+    color: Colors.text.muted,
     fontWeight: "400",
   },
   itemTextSelected: {
     fontSize: 22,
-    color: "#1A1A1A",
+    color: Colors.text.primary,
     fontWeight: "700",
   },
   selectionBar: {
@@ -191,7 +192,7 @@ const pickerStyles = StyleSheet.create({
     height: ITEM_HEIGHT,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: "#E0DDD0",
+    borderColor: Colors.border.default,
   },
 });
 
@@ -316,13 +317,18 @@ export function TimePickerModal({
       >
         <TouchableOpacity
           activeOpacity={1}
-          style={[styles.container, { maxWidth: frameWidth - 48 }, style]}
+          style={[
+            styles.container,
+            Neu.float(Colors.bg.default, 1.2),
+            { maxWidth: frameWidth - 48 },
+            style,
+          ]}
         >
           {/* Header */}
           <View style={styles.header}>
             <AppText style={styles.title}>{t("components.timePicker.selectTime")}</AppText>
             {minTime && maxTime && (
-              <View style={styles.rangeChip}>
+              <View style={[styles.rangeChip, Neu.soft(Colors.bg.surface, 0.6)]}>
                 <AppText style={styles.rangeText}>
                   {formatTimePoint(minTime)} – {formatTimePoint(maxTime)}
                 </AppText>
@@ -364,10 +370,10 @@ export function TimePickerModal({
                 AM_PM[amPmIndex],
               )
             }
-            activeOpacity={0.8}
-            style={styles.confirmBtn}
+            activeOpacity={0.85}
+            style={[styles.confirmBtn, Neu.accent(0.9)]}
           >
-            <Ionicons name="checkmark" size={18} color="#FFFFFF" />
+            <Ionicons name="checkmark" size={18} color={Colors.text.primary} />
             <AppText style={styles.confirmText}>{t("common.confirm")}</AppText>
           </TouchableOpacity>
         </TouchableOpacity>
@@ -379,19 +385,16 @@ export function TimePickerModal({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.35)",
+    backgroundColor: Colors.bg.overlay,
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 24,
   },
   container: {
-    backgroundColor: "#FFFFFF",
     borderRadius: 24,
     padding: 20,
     paddingBottom: 16,
     width: "100%",
-    boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.15)",
-    elevation: 10,
     gap: 16,
   },
   header: {
@@ -402,10 +405,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
   },
   rangeChip: {
-    backgroundColor: Colors.bg.surface,
     borderRadius: 20,
     paddingHorizontal: 10,
     paddingVertical: 4,
@@ -413,7 +415,7 @@ const styles = StyleSheet.create({
   rangeText: {
     fontSize: 11,
     fontWeight: "600",
-    color: "#7A7870",
+    color: Colors.text.secondary,
   },
   columns: {
     flexDirection: "row",
@@ -422,11 +424,10 @@ const styles = StyleSheet.create({
   separator: {
     fontSize: 22,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
     marginHorizontal: 2,
   },
   confirmBtn: {
-    backgroundColor: "#1A1A1A",
     borderRadius: 14,
     height: 48,
     flexDirection: "row",
@@ -437,6 +438,6 @@ const styles = StyleSheet.create({
   confirmText: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: Colors.text.primary,
   },
 });

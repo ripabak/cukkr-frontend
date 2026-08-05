@@ -1,5 +1,6 @@
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
@@ -21,7 +22,7 @@ export function SearchInput({
   const { t } = useI18nContext();
   const resolvedPlaceholder = placeholder ?? t("common.search");
   return (
-    <View style={[styles.container, style]}>
+    <View style={[styles.container, Neu.inset(Colors.bg.surface), style]}>
       <Ionicons name="search" size={18} color={Colors.icon.muted} />
       <AppTextInput
         value={value}
@@ -39,12 +40,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    backgroundColor: Colors.bg.surface,
     borderRadius: 999,
-    paddingHorizontal: 14,
+    paddingHorizontal: 16,
     paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
   },
   input: {
     flex: 1,

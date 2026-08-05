@@ -1,6 +1,7 @@
 import AppTheme from "@/src/app-theme";
 import { AppHeader } from "@/src/components/AppHeader";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import {
   KeyboardAvoidingView,
@@ -20,7 +21,7 @@ interface Props {
   footerSlot?: React.ReactNode;
   /** Absolutely-positioned overlays (SortMenu, StatusFilterMenu, OverflowMenu — NOT React Native Modal) */
   overlaySlot?: React.ReactNode;
-  /** SafeAreaView background color — default: white */
+  /** SafeAreaView background color — default: soft gray */
   backgroundColor?: string;
   /** Additional style for scrollContent */
   contentStyle?: ViewStyle;
@@ -78,7 +79,11 @@ export function ScreenShell({
       style={[styles.safeArea, { backgroundColor }, style]}
       edges={edges}
     >
-      {!hideAppHeader && <AppHeader />}
+      {!hideAppHeader && (
+        <View style={[styles.headerWrapper, Neu.soft(Colors.bg.surface, 0.6)]}>
+          <AppHeader />
+        </View>
+      )}
       {headerSlot ? <View style={styles.headerSlotWrapper}>{headerSlot}</View> : null}
       {keyboardAvoid ? (
         <KeyboardAvoidingView
@@ -102,6 +107,12 @@ const styles = StyleSheet.create({
   },
   keyboardView: {
     flex: 1,
+  },
+  headerWrapper: {
+    marginHorizontal: 16,
+    marginTop: 8,
+    borderRadius: 16,
+    overflow: "hidden",
   },
   scroll: {
     flex: 1,

@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
 import {
@@ -22,14 +23,14 @@ interface Props {
 
 export function SegmentedTabs({ tabs, activeKey, onTabPress, style }: Props) {
   return (
-    <View style={[styles.container, style]}>
+    <View style={[styles.container, Neu.inset(Colors.bg.surface), style]}>
       {tabs.map((tab) => {
         const isActive = tab.key === activeKey;
         return (
           <TouchableOpacity
             key={tab.key}
             onPress={() => onTabPress(tab.key)}
-            activeOpacity={0.8}
+            activeOpacity={0.85}
             style={[styles.tab, isActive && styles.tabActive]}
           >
             <AppText style={[styles.label, isActive && styles.labelActive]}>
@@ -45,11 +46,8 @@ export function SegmentedTabs({ tabs, activeKey, onTabPress, style }: Props) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    backgroundColor: Colors.bg.surface,
     borderRadius: 50,
     padding: 4,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
   },
   tab: {
     flex: 1,
@@ -60,6 +58,7 @@ const styles = StyleSheet.create({
   },
   tabActive: {
     backgroundColor: Colors.brand.primary,
+    ...Neu.accent(0.7),
   },
   label: {
     fontSize: 13,

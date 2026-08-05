@@ -1,10 +1,11 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { CustomerCard } from "@/src/features/barbershop/components/CustomerCard";
 import { FloatingActionButton } from "@/src/features/barbershop/components/FloatingActionButton";
 import { SearchInput } from "@/src/components/SearchInput";
 import { SelectionFooter } from "@/src/features/barbershop/components/SelectionFooter";
-import { SelectionToolbar } from "@/src/features/barbershop/components/SelectionToolbar";
 import { FilterPicker } from "@/src/components/FilterPicker";
+import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useCustomersList } from "@/src/features/barbershop/hooks";
 import { formatCurrency } from "@/src/features/barbershop/utils/form-validators";
@@ -81,30 +82,69 @@ export function CustomerManagementScreen() {
       backgroundColor={bgColor}
       hideAppHeader
       headerSlot={
-        <SelectionToolbar
-          selectionMode={selectionMode}
-          onToggleSelect={() => {
-            if (selectionMode) handleCancelSelection();
-            else setSelectionMode(true);
-          }}
-          filterSlot={
-            <FilterPicker
-              options={getSortOptions(t)}
-              selected={sortValue}
-              onSelect={(v) => setSortValue(v as CustomerSort)}
-              renderTrigger={({ onPress }) => (
+        <ScreenHeader
+          title={selectionMode ? t("common.select") : undefined}
+          onBack={selectionMode ? undefined : () => router.back()}
+          rightAction={
+            <View style={styles.headerActions}>
+              {!selectionMode ? (
+                <FilterPicker
+                  options={getSortOptions(t)}
+                  selected={sortValue}
+                  onSelect={(v) => setSortValue(v as CustomerSort)}
+                  renderTrigger={({ onPress }) => (
+                    <TouchableOpacity
+                      style={[
+                        styles.headerActionBtn,
+                        Neu.soft(Colors.bg.surface),
+                      ]}
+                      onPress={onPress}
+                      activeOpacity={0.85}
+                    >
+                      <Ionicons
+                        name="filter"
+                        size={18}
+                        color={Colors.text.primary}
+                      />
+                    </TouchableOpacity>
+                  )}
+                />
+              ) : null}
+              {!selectionMode ? (
                 <TouchableOpacity
-                  style={toolbarStyles.filterBtn}
-                  onPress={onPress}
-                  activeOpacity={0.7}
+                  style={[
+                    styles.headerActionBtn,
+                    hasContact
+                      ? [styles.headerActionActive, Neu.accent(0.75)]
+                      : Neu.soft(Colors.bg.surface),
+                  ]}
+                  activeOpacity={0.85}
+                  onPress={() => setHasContact((prev) => !prev)}
                 >
-                  <Ionicons name="filter" size={18} color={Colors.text.primary} />
+                  <Ionicons
+                    name={hasContact ? "call" : "call-outline"}
+                    size={18}
+                    color={
+                      hasContact ? Colors.text.primary : Colors.icon.muted
+                    }
+                  />
                 </TouchableOpacity>
-              )}
-            />
+              ) : null}
+              <TouchableOpacity
+                style={[styles.selectBtn, Neu.soft(Colors.bg.surface)]}
+                activeOpacity={0.85}
+                onPress={
+                  selectionMode
+                    ? handleCancelSelection
+                    : () => setSelectionMode(true)
+                }
+              >
+                <AppText style={styles.selectText}>
+                  {selectionMode ? t("common.cancel") : t("common.select")}
+                </AppText>
+              </TouchableOpacity>
+            </View>
           }
-          hasContact={hasContact}
-          onContactFilterPress={() => setHasContact((prev) => !prev)}
         />
       }
       footerSlot={
@@ -181,26 +221,40 @@ export function CustomerManagementScreen() {
   );
 }
 
-const toolbarStyles = StyleSheet.create({
-  filterBtn: {
+const styles = StyleSheet.create({
+  content: { paddingBottom: 200 },
+  headerActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  headerActionBtn: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.bg.default,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
     alignItems: "center",
     justifyContent: "center",
   },
-});
-
-const styles = StyleSheet.create({
-  content: { paddingBottom: 200 },
+  headerActionActive: {
+    backgroundColor: Colors.brand.primary,
+  },
+  selectBtn: {
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  selectText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: Colors.text.primary,
+  },
   title: {
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: "700",
     color: Colors.text.primary,
-    lineHeight: 38,
+    lineHeight: 36,
     letterSpacing: -0.8,
     marginTop: 8,
   },

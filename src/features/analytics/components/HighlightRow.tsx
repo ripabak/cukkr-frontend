@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import React from "react";
@@ -25,12 +26,12 @@ export function HighlightRow({
 }: Props) {
   return (
     <TouchableOpacity
-      style={styles.row}
+      style={[styles.row, Neu.raised(Colors.bg.surface)]}
       onPress={onPress}
-      activeOpacity={0.75}
+      activeOpacity={0.85}
       disabled={!onPress}
     >
-      <View style={styles.avatar}>
+      <View style={[styles.avatar, Neu.inset(Colors.bg.surface, 0.6)]}>
         {imageUrl ? (
           <Image
             source={{ uri: imageUrl }}
@@ -55,7 +56,7 @@ export function HighlightRow({
           {subtitle}
         </AppText>
       </View>
-      <View style={styles.revenueBadge}>
+      <View style={[styles.revenueBadge, Neu.accent(0.85)]}>
         <AppText style={styles.revenueText}>{formatRupiah(revenue)}</AppText>
       </View>
     </TouchableOpacity>
@@ -66,14 +67,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.bg.default,
     borderRadius: 20,
     padding: 16,
     gap: 14,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 2,
     marginBottom: 12,
   },
   avatar: {
@@ -81,6 +77,8 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: 24,
     overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
   },
   avatarImg: {
     width: 48,
@@ -91,11 +89,8 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: Colors.border.default,
   },
   info: {
     flex: 1,
@@ -112,7 +107,6 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   revenueBadge: {
-    backgroundColor: Colors.brand.primary,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 8,

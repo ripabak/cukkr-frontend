@@ -8,13 +8,8 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import { Neu, Status, type BookingStatus } from "@/src/theme/styles";
 
-export type BookingStatus =
-  | "waiting"
-  | "in_progress"
-  | "completed"
-  | "cancelled"
-  | "requested";
 export type BookingType = "walk_in" | "appointment";
 
 interface Props {
@@ -28,22 +23,6 @@ interface Props {
   style?: ViewStyle;
 }
 
-const STATUS_COLOR: Record<BookingStatus, string> = {
-  waiting: Colors.status.waiting,
-  in_progress: Colors.status.inProgress,
-  completed: Colors.status.success,
-  cancelled: Colors.status.danger,
-  requested: Colors.brand.primaryDark,
-};
-
-const STATUS_ICON_BG: Record<BookingStatus, string> = {
-  waiting: Colors.status.waitingSurface,
-  in_progress: Colors.status.inProgressSurface,
-  completed: Colors.status.successSurface,
-  cancelled: Colors.status.dangerSurface,
-  requested: Colors.brand.primarySurface,
-};
-
 export function BookingCard({
   customerName,
   barberName,
@@ -54,8 +33,7 @@ export function BookingCard({
   onPress,
   style,
 }: Props) {
-  const color = STATUS_COLOR[status];
-  const iconBg = STATUS_ICON_BG[status];
+  const statusStyle = Status.getStyle(status);
   const iconName =
     bookingType === "walk_in"
       ? "walk"
@@ -67,20 +45,24 @@ export function BookingCard({
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.85}
-      style={[styles.card, style]}
+      style={[styles.card, Neu.raised(Colors.bg.surface), style]}
     >
-      <View style={[styles.iconCircle, { backgroundColor: iconBg }]}>
-        <Ionicons name={iconName} size={22} color={color} />
+      <View style={[styles.iconCircle, { backgroundColor: statusStyle.surface }]}>
+        <Ionicons name={iconName as any} size={22} color={statusStyle.color} />
       </View>
       <View style={styles.info}>
         <AppText style={styles.timeLabel}>{timeLabel}</AppText>
         <View style={styles.barberRow}>
           <Ionicons name="cut" size={12} color={Colors.icon.muted} />
-          <AppText style={styles.barberName} numberOfLines={1} ellipsizeMode="tail"> {barberName}</AppText>
+          <AppText style={styles.barberName} numberOfLines={1} ellipsizeMode="tail">
+            {" "}{barberName}
+          </AppText>
         </View>
       </View>
       <View style={styles.right}>
-        <AppText style={[styles.customerName, { color }]}>{customerName}</AppText>
+        <AppText style={[styles.customerName, { color: statusStyle.color }]}>
+          {customerName}
+        </AppText>
         <AppText style={styles.duration}>{duration}</AppText>
       </View>
     </TouchableOpacity>
@@ -91,14 +73,9 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.bg.default,
     borderRadius: 20,
     padding: 16,
     gap: 14,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 2,
   },
   iconCircle: {
     width: 48,

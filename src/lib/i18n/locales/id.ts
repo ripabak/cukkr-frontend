@@ -113,12 +113,12 @@ export const id = {
     nameHelper1: 'Masukkan namamu. Nama ini akan muncul di profil barber dan daftar barber di website booking barbershop.',
   },
   home: {
-    greeting: 'Halo lagi, {name}',
+    greeting: 'Hai, {name}',
     todayOverview: 'Ringkasan Hari Ini',
     totalBookings: 'Total Booking',
     walkIn: 'Walk-in',
     appointment: 'Janji',
-    inProgress: 'Sedang Berjalan',
+    inProgress: 'Proses',
     waiting: 'Menunggu',
     quickActions: 'Aksi Cepat',
     newBooking: 'Tambah',
@@ -168,7 +168,7 @@ export const id = {
     dateLabel: '{day}, {date}',
     status: {
       waiting: 'Menunggu',
-      inProgress: 'Sedang Berjalan',
+      inProgress: 'Proses',
       completed: 'Selesai',
       cancelled: 'Dibatalkan',
       requested: 'Diminta',
@@ -186,7 +186,7 @@ export const id = {
       allBooking: 'Semua Booking',
     },
     emptyDay: 'Sepi nih hari ini',
-    inProgressLabel: 'SEDANG BERJALAN',
+    inProgressLabel: 'PROSES',
     nowLabel: '→ sekarang',
     bookingForm: {
       customerName: 'Nama Pelanggan',
@@ -253,7 +253,7 @@ export const id = {
     complete: 'Selesai',
     acceptDesc: 'Pelanggan akan diberitahu dan booking akan masuk ke antrian.',
     accepting: 'Menerima...',
-    startDesc: 'Ini akan menandai booking sebagai Sedang Berjalan. Pastikan kamu siap melayani pelanggan sebelum melanjutkan.',
+    startDesc: 'Ini akan menandai booking sebagai Proses. Pastikan kamu siap melayani pelanggan sebelum melanjutkan.',
     noNotYet: 'Belum, Nanti',
     takeOverTitle: 'Ambil Alih Booking Ini?',
     takeOverDesc: 'Barber yang diminta berbeda. Apakah kamu ingin mengambil alih booking ini?',
@@ -284,6 +284,8 @@ export const id = {
     more: 'lainnya',
     identityVerification: 'Verifikasi Identitas',
     verifyEmailHint: 'Kami kirim email verifikasi ke pelanggan (minta cek spam juga)',
+    walkIn: 'Walk-in',
+    appointment: 'Appointment'
   },
   calendar: {
     closedDay: 'Hari Tutup',
@@ -648,6 +650,7 @@ export const id = {
     notifications: 'Notifikasi',
     customers: 'Pelanggan',
     services: 'Layanan',
+    profile: 'Profil',
   },
   toast: {
     saveSuccess: 'Sudah tersimpan!',

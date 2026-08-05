@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { BookingCard } from "@/src/components/BookingCard";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import {
@@ -47,7 +48,6 @@ function getDetailTabs(t: (key: string) => string) {
   ];
 }
 
-
 const EMPTY_MESSAGES: MessageItem[] = [];
 
 interface Props {
@@ -87,8 +87,8 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
       <View style={styles.topBar}>
         <TouchableOpacity
           onPress={() => router.back()}
-          style={styles.backBtn}
-          activeOpacity={0.7}
+          style={[styles.backBtn, Neu.soft(Colors.bg.surface)]}
+          activeOpacity={0.85}
         >
           <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
         </TouchableOpacity>
@@ -169,9 +169,9 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
               <AppText style={styles.bookingCount}>({bookings.length})</AppText>
             </AppText>
             <TouchableOpacity
-              style={styles.filterPill}
+              style={[styles.filterPill, Neu.soft(Colors.bg.surface)]}
               onPress={() => setFilterVisible(true)}
-              activeOpacity={0.8}
+              activeOpacity={0.85}
             >
               <AppText style={styles.filterLabel}>
                 {getScheduleStatusOptions(t).find((o) => o.value === statusFilter)
@@ -253,15 +253,12 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: Colors.border.default,
   },
   topBarSpacer: { flex: 1 },
   customerName: {
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: "700",
     color: Colors.text.primary,
     marginTop: 8,
@@ -289,16 +286,13 @@ const styles = StyleSheet.create({
   filterPill: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.bg.default,
     borderRadius: 999,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
     gap: 6,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 2,
   },
   filterLabel: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "600",
     color: Colors.text.primary,
   },

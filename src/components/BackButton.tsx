@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
@@ -12,8 +13,8 @@ export function BackButton({ onPress, style }: Props) {
   return (
     <TouchableOpacity
       onPress={onPress}
-      activeOpacity={0.8}
-      style={[styles.button, style]}
+      activeOpacity={0.85}
+      style={[styles.button, Neu.soft(Colors.bg.surface, 0.8), style]}
     >
       <Ionicons
         name="chevron-back-outline"
@@ -26,10 +27,7 @@ export function BackButton({ onPress, style }: Props) {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: "transparent",
     borderRadius: 999,
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
     height: 52,
     width: 56,
     alignItems: "center",

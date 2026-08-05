@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { useFrame } from "@/src/components/FrameContext";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -108,8 +109,8 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
 
         <View style={styles.buttonsRow}>
           <TouchableOpacity
-            style={styles.bookingBtn}
-            activeOpacity={0.75}
+            style={[styles.bookingBtn, Neu.raised(Colors.bg.surface, 1.1)]}
+            activeOpacity={0.85}
             onPress={() => {
               onClose();
               router.push("/d/new-walk-in");
@@ -124,8 +125,8 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.bookingBtn}
-            activeOpacity={0.75}
+            style={[styles.bookingBtn, Neu.raised(Colors.bg.surface, 1.1)]}
+            activeOpacity={0.85}
             onPress={() => {
               onClose();
               router.push("/d/new-appointment");
@@ -188,9 +189,6 @@ const styles = StyleSheet.create({
     paddingVertical: 28,
     alignItems: "center",
     gap: 10,
-    backgroundColor: Colors.bg.surface,
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
   },
   btnLabel: {
     fontSize: 14,

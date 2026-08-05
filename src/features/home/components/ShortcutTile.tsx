@@ -1,5 +1,6 @@
 import { AppText } from "@/src/components/AppText";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import {
   StyleSheet,
@@ -43,6 +44,7 @@ export function ShortcutTile({
       <View
         style={[
           isLarge ? styles.largeIconCircle : styles.iconCircle,
+          Neu.raised(Colors.bg.surface, 0.6),
           iconBg ? { backgroundColor: iconBg, borderWidth: 0 } : undefined,
         ]}
       >
@@ -67,17 +69,14 @@ export function ShortcutTile({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
     gap: 8,
+    minWidth: 68,
   },
   iconCircle: {
-    width: 58,
-    height: 58,
-    borderRadius: 29,
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
-    backgroundColor: Colors.bg.default,
+    width: 60,
+    height: 60,
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -98,24 +97,17 @@ const styles = StyleSheet.create({
   },
 
   largeContainer: {
-    flex: 1,
     minWidth: "45%",
     height: 142,
-    backgroundColor: Colors.bg.default,
     borderRadius: 24,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
     alignItems: "center",
     justifyContent: "center",
     gap: 14,
   },
   largeIconCircle: {
-    width: 68,
-    height: 68,
-    borderRadius: 34,
-    borderWidth: 1.5,
-    borderColor: Colors.border.light,
-    backgroundColor: Colors.bg.default,
+    width: 72,
+    height: 72,
+    borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -123,8 +115,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     color: Colors.text.primary,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
+    letterSpacing: 0.2,
   },
   badge: {
     position: "absolute",

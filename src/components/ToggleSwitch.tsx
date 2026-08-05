@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { TouchableOpacity, View, StyleSheet, ViewStyle } from "react-native";
 
@@ -13,20 +14,25 @@ export function ToggleSwitch({ value, onValueChange, disabled, style }: Props) {
   return (
     <TouchableOpacity
       onPress={() => onValueChange(!value)}
-      activeOpacity={0.8}
+      activeOpacity={0.85}
       disabled={disabled}
-      style={[styles.track, value ? styles.trackOn : styles.trackOff, disabled && styles.trackDisabled, style]}
+      style={[
+        styles.track,
+        value ? styles.trackOn : styles.trackOff,
+        disabled && styles.trackDisabled,
+        style,
+      ]}
     >
-      <View style={[styles.thumb, value ? styles.thumbOn : styles.thumbOff]} />
+      <View style={[styles.thumb, value ? styles.thumbOn : styles.thumbOff, Neu.soft(Colors.bg.surface)]} />
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   track: {
-    width: 44,
-    height: 24,
-    borderRadius: 12,
+    width: 48,
+    height: 26,
+    borderRadius: 13,
     justifyContent: "center",
     paddingHorizontal: 2,
   },
@@ -40,10 +46,9 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   thumb: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: Colors.bg.default,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
   },
   thumbOn: {
     alignSelf: "flex-end",

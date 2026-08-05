@@ -22,7 +22,7 @@ export function OperationRow({ label, onPress, isLast, style }: Props) {
       <Ionicons
         name="chevron-forward"
         size={16}
-        color={Colors.text.secondary}
+        color={Colors.icon.muted}
       />
     </TouchableOpacity>
   );

@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useI18nContext } from "@/src/lib/i18n/provider";
@@ -189,7 +190,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
         {t("barbers.inviteViaEmail")}
       </AppText>
 
-      <View style={styles.card}>
+      <View style={[styles.card, Neu.raised(Colors.bg.surface, 1.2)]}>
         <View style={styles.cardRow}>
           <Ionicons name="storefront-outline" size={20} color="#666666" />
           <View style={styles.cardTextWrapper}>
@@ -229,9 +230,9 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
           disabled={isPending}
         />
         <TouchableOpacity
-          style={[styles.rejectBtn, isPending && styles.disabled]}
+          style={[styles.rejectBtn, Neu.soft(Colors.bg.surface, 0.7), isPending && styles.disabled]}
           onPress={handleReject}
-          activeOpacity={0.7}
+          activeOpacity={0.85}
           disabled={isPending}
         >
           <AppText style={styles.rejectLabel}>
@@ -313,8 +314,7 @@ const styles = StyleSheet.create({
     color: Colors.text.primary,
   },
   card: {
-    backgroundColor: Colors.bg.default,
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 20,
     marginBottom: 24,
   },
@@ -348,8 +348,6 @@ const styles = StyleSheet.create({
   rejectBtn: {
     height: 52,
     borderRadius: 999,
-    borderWidth: 1.5,
-    borderColor: "#1A1A1A",
     alignItems: "center",
     justifyContent: "center",
   },

@@ -1,6 +1,7 @@
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { FilterPicker } from "@/src/components/FilterPicker";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -101,8 +102,8 @@ export function AnalyticsRevenueScreen() {
       <View style={styles.topBar}>
         <TouchableOpacity
           onPress={() => router.back()}
-          style={styles.backBtn}
-          activeOpacity={0.7}
+          style={[styles.backBtn, Neu.soft(Colors.bg.surface, 0.7)]}
+          activeOpacity={0.85}
         >
           <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
         </TouchableOpacity>
@@ -163,7 +164,7 @@ export function AnalyticsRevenueScreen() {
       ) : null}
 
       {chart && chart.length > 0 ? (
-        <View style={styles.chartCard}>
+        <View style={[styles.chartCard, Neu.raised(Colors.bg.surface)]}>
           <View style={styles.chartCardHeader}>
             <AppText style={styles.chartCardTitle}>{t("services.price")}</AppText>
             {stats ? (
@@ -187,7 +188,7 @@ export function AnalyticsRevenueScreen() {
             options={getTypeOptions(t)}
             selected={typeFilter}
             onSelect={handleTypeChange}
-            pillStyle={styles.filterPill}
+            pillStyle={[styles.filterPill, Neu.soft(Colors.bg.surface, 0.7)]}
             pillTextStyle={styles.filterPillText}
           />
         </View>
@@ -236,7 +237,7 @@ export function AnalyticsRevenueScreen() {
             <TouchableOpacity
               disabled={!meta.hasPrev}
               onPress={() => setPage((p) => p - 1)}
-              style={[styles.pageBtn, !meta.hasPrev && styles.pageBtnDisabled]}
+              style={[styles.pageBtn, Neu.soft(Colors.bg.surface, 0.7), !meta.hasPrev && styles.pageBtnDisabled]}
             >
               <Ionicons
                 name="chevron-back"
@@ -250,7 +251,7 @@ export function AnalyticsRevenueScreen() {
             <TouchableOpacity
               disabled={!meta.hasNext}
               onPress={() => setPage((p) => p + 1)}
-              style={[styles.pageBtn, !meta.hasNext && styles.pageBtnDisabled]}
+              style={[styles.pageBtn, Neu.soft(Colors.bg.surface, 0.7), !meta.hasNext && styles.pageBtnDisabled]}
             >
               <Ionicons
                 name="chevron-forward"
@@ -281,9 +282,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.bg.surface,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
   },
   pageTitle: {
     flex: 1,
@@ -308,13 +306,8 @@ const styles = StyleSheet.create({
   },
   chartCard: {
     marginTop: 14,
-    backgroundColor: Colors.bg.default,
     borderRadius: 20,
     padding: 16,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 2,
   },
   chartCardHeader: {
     flexDirection: "row",
@@ -347,14 +340,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
-    backgroundColor: Colors.bg.default,
     borderRadius: 999,
     paddingHorizontal: 16,
     paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.04)",
-    elevation: 1,
   },
   filterPillText: {
     fontSize: 14,
@@ -415,9 +403,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.bg.surface,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
     alignItems: "center",
     justifyContent: "center",
   },

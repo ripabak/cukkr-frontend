@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React, { useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
 import { useI18nContext } from "@/src/lib/i18n/provider";
@@ -82,13 +83,13 @@ export function SwipeConfirmationModal({
       >
         <TouchableOpacity
           activeOpacity={1}
-          style={[styles.card, { maxWidth: frameWidth - 48 }]}
+          style={[styles.card, Neu.float(Colors.bg.default, 1.2), { maxWidth: frameWidth - 48 }]}
         >
-          <View style={styles.iconWrapper}>
+          <View style={[styles.iconWrapper, Neu.accent(0.8)]}>
             <Ionicons
               name="checkmark"
               size={28}
-              color="#FFFFFF"
+              color={Colors.text.primary}
               style={styles.checkIcon}
             />
           </View>
@@ -98,12 +99,12 @@ export function SwipeConfirmationModal({
           ) : null}
 
           {/* Swipe track */}
-          <View style={styles.track}>
+          <View style={[styles.track, Neu.inset(Colors.bg.surface, 0.6)]}>
             <Animated.View
-              style={[styles.thumb, { transform: [{ translateX: pan }] }]}
+              style={[styles.thumb, Neu.accent(0.8), { transform: [{ translateX: pan }] }]}
               {...panResponder.panHandlers}
             >
-              <Ionicons name="arrow-forward" size={22} color="#FFFFFF" />
+              <Ionicons name="arrow-forward" size={22} color={Colors.text.primary} />
             </Animated.View>
             <AppText style={styles.swipeLabel}>
               {completed ? t("schedule.swipeCompleted") : resolvedSwipeLabel}
@@ -118,13 +119,12 @@ export function SwipeConfirmationModal({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.3)",
+    backgroundColor: Colors.bg.overlay,
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 24,
   },
   card: {
-    backgroundColor: "#FFFFFF",
     borderRadius: 24,
     padding: 28,
     width: "100%",
@@ -135,7 +135,6 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: "#55C46B",
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 16,
@@ -144,13 +143,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#1A1A1A",
+    color: Colors.text.primary,
     textAlign: "center",
     marginBottom: 8,
   },
   description: {
     fontSize: 13,
-    color: "#666666",
+    color: Colors.text.secondary,
     textAlign: "center",
     lineHeight: 18,
     marginBottom: 24,
@@ -158,7 +157,6 @@ const styles = StyleSheet.create({
   track: {
     width: SWIPE_TRACK_WIDTH,
     height: THUMB_SIZE + 8,
-    backgroundColor: "#F0F0E8",
     borderRadius: 999,
     justifyContent: "center",
     overflow: "hidden",
@@ -168,7 +166,6 @@ const styles = StyleSheet.create({
     width: THUMB_SIZE,
     height: THUMB_SIZE,
     borderRadius: THUMB_SIZE / 2,
-    backgroundColor: "#55C46B",
     alignItems: "center",
     justifyContent: "center",
     position: "absolute",
@@ -178,8 +175,8 @@ const styles = StyleSheet.create({
   swipeLabel: {
     textAlign: "center",
     fontSize: 14,
-    fontWeight: "500",
-    color: "#55C46B",
+    fontWeight: "600",
+    color: Colors.status.success,
     marginLeft: THUMB_SIZE + 4,
   },
 });

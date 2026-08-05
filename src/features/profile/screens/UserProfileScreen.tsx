@@ -9,6 +9,7 @@ import { LogoutRow } from "@/src/features/profile/components/LogoutRow";
 import { ProfileSummaryCard } from "@/src/features/profile/components/ProfileSummaryCard";
 import { useToast } from "@/src/lib/providers/toast";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
@@ -24,7 +25,11 @@ import { useProfile, useUploadAvatar } from "../hooks";
 import { useImagePicker } from "@/src/hooks";
 import { getErrorMessage } from "../utils/error-handler";
 
-export function UserProfileScreen() {
+interface Props {
+  hideBack?: boolean;
+}
+
+export function UserProfileScreen({ hideBack = false }: Props = {}) {
   const { t } = useI18nContext();
   const router = useRouter();
   const toast = useToast();
@@ -89,24 +94,28 @@ export function UserProfileScreen() {
     <ScreenShell
       hideAppHeader
       headerSlot={
-        <ScreenHeader title={t("profile.title")} onBack={() => router.back()} />
+        <ScreenHeader
+          title={t("profile.title")}
+          onBack={hideBack ? undefined : () => router.back()}
+        />
       }
       backgroundColor={Colors.bg.default}
       contentStyle={{ paddingTop: 20, gap: 12 }}
     >
       <View style={styles.avatarWrapper}>
         <TouchableOpacity
-          activeOpacity={0.8}
+          activeOpacity={0.85}
           onPress={isUploadingAvatar ? undefined : handleAvatarUpload}
+          style={[styles.avatarBox, Neu.raised(Colors.bg.surface)]}
         >
           {profile.avatarMed ? (
             <Image
               source={{ uri: profile.avatarMed }}
-              style={[styles.avatarImage, styles.clickableBorder]}
+              style={styles.avatarImage}
               contentFit="cover"
             />
           ) : (
-            <View style={[styles.avatar, styles.clickableBorder]}>
+            <View style={styles.avatarPlaceholder}>
               <Ionicons name="camera-outline" size={24} color={Colors.icon.muted} />
             </View>
           )}
@@ -180,30 +189,32 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     position: "relative",
   },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 16,
-    backgroundColor: Colors.bg.surface,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
+  avatarBox: {
+    width: 96,
+    height: 96,
+    borderRadius: 28,
+    padding: 5,
+    overflow: "hidden",
   },
   avatarImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 16,
+    width: "100%",
+    height: "100%",
+    borderRadius: 22,
   },
-
-  clickableBorder: {
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
+  avatarPlaceholder: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 22,
+    backgroundColor: Colors.brand.primarySurface,
+    alignItems: "center",
+    justifyContent: "center",
   },
   sectionLabel: {
     fontSize: 13,
-    color: Colors.icon.muted,
+    fontWeight: "600",
+    color: Colors.text.secondary,
     marginTop: 4,
+    letterSpacing: 0.5,
   },
   card: {
     marginTop: -4,

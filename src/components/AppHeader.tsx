@@ -9,7 +9,7 @@ export function AppHeader() {
         source={require("@/public/cukkr-logo-trans.png")}
         style={styles.logo}
         resizeMode="contain"
-        tintColor={Colors.brand.primary}
+        tintColor={Colors.brand.primaryDark}
       />
     </View>
   );
@@ -20,14 +20,7 @@ const styles = StyleSheet.create({
     height: 48,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.bg.default,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.07,
-    shadowRadius: 8,
-    elevation: 4,
+    backgroundColor: "transparent",
   },
   logo: {
     width: 36,

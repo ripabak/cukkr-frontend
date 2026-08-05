@@ -1,5 +1,6 @@
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { View, Image, StyleSheet, ViewStyle } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -43,12 +44,12 @@ export function ServiceCard({
     : price;
 
   return (
-    <View style={[styles.card, style]}>
+    <View style={[styles.card, Neu.raised(Colors.bg.surface), style]}>
       <View style={styles.imagePlaceholder}>
         {imageUri ? (
           <Image source={{ uri: imageUri }} style={styles.image} />
         ) : (
-          <View style={styles.imageEmpty}>
+          <View style={[styles.imageEmpty, Neu.inset(Colors.bg.surface, 0.6)]}>
             <Ionicons name="cut-outline" size={24} color={Colors.icon.muted} />
           </View>
         )}
@@ -59,7 +60,7 @@ export function ServiceCard({
         </AppText>
         {discountPercent ? (
           <View style={styles.discountRow}>
-            <View style={styles.discountBadge}>
+            <View style={[styles.discountBadge, Neu.soft(Colors.brand.primarySurface)]}>
               <AppText style={styles.discountText}>{t("services.percentOff", { percent: String(discountPercent) })}</AppText>
             </View>
             <AppText style={styles.originalPrice}>{formatPrice(price)}</AppText>
@@ -85,8 +86,7 @@ export function ServiceCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.brand.primarySurface,
-    borderRadius: 16,
+    borderRadius: 20,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
@@ -96,10 +96,8 @@ const styles = StyleSheet.create({
   imagePlaceholder: {
     width: 56,
     height: 56,
-    borderRadius: 8,
+    borderRadius: 14,
     overflow: "hidden",
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
   },
   image: {
     width: "100%",
@@ -109,7 +107,7 @@ const styles = StyleSheet.create({
   imageEmpty: {
     width: "100%",
     height: "100%",
-    backgroundColor: Colors.bg.surface,
+    borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -128,13 +126,12 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   discountBadge: {
-    backgroundColor: Colors.brand.primary,
-    borderRadius: 4,
+    borderRadius: 6,
     paddingHorizontal: 5,
     paddingVertical: 2,
   },
   discountText: {
-    color: Colors.text.primary,
+    color: Colors.brand.primaryDark,
     fontSize: 10,
     fontWeight: "700",
   },

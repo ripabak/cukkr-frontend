@@ -113,7 +113,7 @@ export const en = {
     nameHelper1: 'Enter your name. It will appear in your barber profile and the barber listing on the barbershop booking website.',
   },
   home: {
-    greeting: 'Hello again, {name}',
+    greeting: 'Hi, {name}',
     todayOverview: "Today's Overview",
     totalBookings: 'Total Bookings',
     walkIn: 'Walk-in',
@@ -284,6 +284,8 @@ export const en = {
     more: 'more',
     identityVerification: 'Identity Verification',
     verifyEmailHint: 'Verification email sent to customer (ask them to check spam)',
+    walkIn: 'Walk-in',
+    appointment: 'Appointment'
   },
   calendar: {
     closedDay: 'Closed Day',
@@ -648,6 +650,7 @@ export const en = {
     notifications: 'Notifications',
     customers: 'Customers',
     services: 'Services',
+    profile: 'Profile',
   },
   toast: {
     saveSuccess: 'Saved successfully!',

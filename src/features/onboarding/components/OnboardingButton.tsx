@@ -1,5 +1,6 @@
 import React from "react";
 import { AppText } from "@/src/components/AppText";
+import { Neu } from "@/src/theme/styles";
 import {
   StyleSheet,
   TextStyle,
@@ -27,9 +28,15 @@ export const OnboardingButton: React.FC<OnboardingButtonProps> = ({
 
   return (
     <TouchableOpacity
-      style={[styles.button, isSecondary && styles.buttonSecondary, style]}
+      style={[
+        styles.button,
+        isSecondary
+          ? Neu.soft(OnboardingTheme.colors.white)
+          : Neu.accent(0.9),
+        style,
+      ]}
       onPress={onPress}
-      activeOpacity={0.8}
+      activeOpacity={0.85}
     >
       <AppText
         style={[
@@ -46,18 +53,12 @@ export const OnboardingButton: React.FC<OnboardingButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: OnboardingTheme.colors.primary,
     paddingVertical: OnboardingTheme.spacing.md,
     paddingHorizontal: OnboardingTheme.spacing.lg,
     borderRadius: 999,
     width: "100%",
     alignItems: "center",
     marginTop: OnboardingTheme.spacing.md,
-  },
-  buttonSecondary: {
-    backgroundColor: "transparent",
-    borderWidth: 1.5,
-    borderColor: OnboardingTheme.colors.dark,
   },
   buttonText: {
     color: OnboardingTheme.colors.dark,

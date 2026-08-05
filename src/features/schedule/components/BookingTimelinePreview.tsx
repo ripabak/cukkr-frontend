@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useBookings } from "@/src/features/schedule/hooks";
 import { formatDisplayDate, formatTime12h, toApiDate } from "@/src/utils/date";
@@ -52,7 +53,7 @@ export function BookingTimelinePreview({ scheduledAt, bookingId }: Props) {
 
   if (isLoading) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, Neu.raised(Colors.bg.surface)]}>
         <ActivityIndicator size="small" color={Colors.text.secondary} />
       </View>
     );
@@ -74,10 +75,10 @@ export function BookingTimelinePreview({ scheduledAt, bookingId }: Props) {
       })();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, Neu.raised(Colors.bg.surface)]}>
       <TouchableOpacity
         onPress={() => setExpanded(!expanded)}
-        activeOpacity={0.7}
+        activeOpacity={0.85}
         style={styles.header}
       >
         <View style={styles.headerLeft}>
@@ -136,7 +137,7 @@ export function BookingTimelinePreview({ scheduledAt, bookingId }: Props) {
                     {formatTime12h(timeDate)}
                   </AppText>
                   {isCurrent && (
-                    <View style={styles.youBadge}>
+                    <View style={[styles.youBadge, Neu.soft(Colors.brand.primary)]}>
                       <AppText style={styles.youBadgeText}>
                         {t("bookings.timelineYouAreHere")}
                       </AppText>
@@ -210,13 +211,8 @@ export function BookingTimelinePreview({ scheduledAt, bookingId }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.bg.default,
     borderRadius: 20,
     padding: 16,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 2,
   },
   header: {
     flexDirection: "row",
@@ -299,7 +295,6 @@ const styles = StyleSheet.create({
     color: Colors.brand.primaryDark,
   },
   youBadge: {
-    backgroundColor: Colors.brand.primary,
     borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 2,

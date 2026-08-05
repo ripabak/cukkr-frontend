@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SortMenu } from "@/src/components/SortMenu";
 import { getHistoryStatusOptions } from "@/src/components/StatusFilterMenu";
@@ -26,18 +27,8 @@ function getSortOptions(t: (key: string) => string) {
 
 function formatDatePill(date: Date): string {
   const monthShort = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
   ];
   return `${date.getDate()} ${monthShort[date.getMonth()]} ${date.getFullYear()}`;
 }
@@ -89,8 +80,8 @@ export function HistoryBookingsScreen() {
         <View style={styles.topBar}>
           <TouchableOpacity
             onPress={() => router.back()}
-            activeOpacity={0.7}
-            style={styles.backBtn}
+            activeOpacity={0.85}
+            style={[styles.backBtn, Neu.soft(Colors.bg.surface, 0.7)]}
           >
             <Ionicons
               name="chevron-back"
@@ -102,8 +93,8 @@ export function HistoryBookingsScreen() {
             <TouchableOpacity
               ref={sortBtnRef}
               onPress={handleOpenSortMenu}
-              activeOpacity={0.8}
-              style={styles.iconBtn}
+              activeOpacity={0.85}
+              style={[styles.iconBtn, Neu.soft(Colors.bg.surface, 0.7)]}
             >
               <Ionicons name="filter" size={18} color={Colors.text.primary} />
             </TouchableOpacity>
@@ -192,11 +183,8 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.bg.default,
     alignItems: "center",
     justifyContent: "center",
-    boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.06)",
-    elevation: 2,
   },
   topActions: {
     flexDirection: "row",
@@ -207,11 +195,8 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.bg.default,
     alignItems: "center",
     justifyContent: "center",
-    boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.06)",
-    elevation: 2,
   },
   sectionHeader: {
     flexDirection: "row",
@@ -234,17 +219,14 @@ const styles = StyleSheet.create({
   filterPill: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.bg.default,
     borderRadius: 999,
     paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingVertical: 9,
     gap: 4,
-    boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.05)",
-    elevation: 1,
   },
   filterLabel: {
     fontSize: 14,
-    fontWeight: "500",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   list: {},

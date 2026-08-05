@@ -19,7 +19,7 @@ export const OnboardingContainer: React.FC<OnboardingContainerProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: OnboardingTheme.colors.white,
+    backgroundColor: OnboardingTheme.colors.lightBg,
     justifyContent: "center",
     alignItems: "center",
   },

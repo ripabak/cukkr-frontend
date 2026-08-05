@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { AppText } from "@/src/components/AppText";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
@@ -9,6 +10,7 @@ import {
   View,
   ViewStyle,
   TextStyle,
+  StyleProp,
 } from "react-native";
 
 export interface FilterOption {
@@ -26,8 +28,8 @@ interface Props {
   options: FilterOption[];
   selected: string;
   onSelect: (value: string) => void;
-  pillStyle?: ViewStyle;
-  pillTextStyle?: TextStyle;
+  pillStyle?: StyleProp<ViewStyle>;
+  pillTextStyle?: StyleProp<TextStyle>;
   renderTrigger?: (props: TriggerProps) => React.ReactNode;
 }
 
@@ -57,8 +59,8 @@ export function FilterPicker({
       ) : (
         <TouchableOpacity
           onPress={handleToggle}
-          activeOpacity={0.8}
-          style={[styles.pill, pillStyle]}
+          activeOpacity={0.85}
+          style={[styles.pill, Neu.soft(Colors.bg.surface), pillStyle]}
         >
           <AppText
             style={[
@@ -83,7 +85,7 @@ export function FilterPicker({
             style={styles.backdrop}
             onPress={() => setOpen(false)}
           />
-          <View style={styles.dropdown}>
+          <View style={[styles.dropdown, Neu.float(Colors.bg.surface, 1.2)]}>
             {options.map((opt, index) => (
               <TouchableOpacity
                 key={opt.value}
@@ -121,10 +123,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     gap: 6,
   },
   pillLabel: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "600",
     color: Colors.text.primary,
   },
@@ -140,14 +144,10 @@ const styles = StyleSheet.create({
     top: "100%",
     right: 0,
     marginTop: 6,
-    backgroundColor: Colors.bg.default,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.08)",
-    elevation: 8,
+    borderRadius: 16,
     minWidth: 160,
     zIndex: 20,
+    overflow: "hidden",
   },
   item: {
     paddingHorizontal: 16,

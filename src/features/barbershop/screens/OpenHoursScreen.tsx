@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { DayHoursRow } from "@/src/components/DayHoursRow";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
@@ -112,7 +113,7 @@ export function OpenHoursScreen() {
         {t("createBarbershop.openHoursSubtitle")}
       </AppText>
 
-      <View style={styles.card}>
+      <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
         {days.map((day, index) => (
           <DayHoursRow
             key={day.dayOfWeek}
@@ -146,7 +147,7 @@ export function OpenHoursScreen() {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: "700",
     color: Colors.text.primary,
     marginTop: 8,
@@ -159,12 +160,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   card: {
-    backgroundColor: Colors.bg.default,
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 2,
     marginBottom: 24,
   },
   saveStatus: {

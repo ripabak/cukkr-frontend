@@ -1,4 +1,4 @@
-import type { BookingStatus } from "@/src/components/BookingCard";
+import type { BookingStatus } from "@/src/theme/styles";
 import type { BookingDetailStatus } from "@/src/features/schedule/components/BookingDetailCard";
 
 type ApiStatus =

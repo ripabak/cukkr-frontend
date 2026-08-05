@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { View, StyleSheet, ViewStyle, KeyboardTypeOptions } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -26,9 +27,9 @@ export function PrefixedInputField({
   style,
 }: Props) {
   return (
-    <View style={[label ? styles.rowContainer : styles.container, style]}>
+    <View style={[label ? styles.rowContainer : styles.container, !label && Neu.inset(Colors.bg.surface, 0.6), style]}>
       {label ? <AppText style={styles.label}>{label}</AppText> : null}
-      <View style={[styles.inputWrapper, !label && styles.inputWrapperFull]}>
+      <View style={[styles.inputWrapper, !label && styles.inputWrapperFull, Neu.inset(Colors.bg.surface, 0.6)]}>
         <AppText style={styles.prefix}>{prefix}</AppText>
         <AppTextInput
           value={value}
@@ -53,16 +54,13 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.bg.default,
     borderRadius: 999,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
   label: {
     fontSize: 14,
-    fontWeight: "500",
+    fontWeight: "600",
     color: Colors.text.secondary,
     minWidth: 72,
   },
@@ -70,10 +68,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.bg.default,
     borderRadius: 999,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
@@ -87,7 +82,9 @@ const styles = StyleSheet.create({
   },
   prefix: {
     fontSize: 14,
+    fontWeight: "600",
     color: Colors.text.primary,
+    marginRight: 8,
   },
   input: {
     flex: 1,

@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
@@ -115,8 +116,12 @@ export function DayChipRow({
             <TouchableOpacity
               key={day.dateKey}
               onPress={() => onSelect(day.dateKey)}
-              activeOpacity={0.8}
-              style={[styles.chip, isSelected && styles.chipSelected]}
+              activeOpacity={0.85}
+              style={[
+                styles.chip,
+                Neu.soft(isSelected ? Colors.brand.primary : Colors.bg.surface, 0.8),
+                isSelected && styles.chipSelected,
+              ]}
             >
               <AppText
                 style={[styles.dayLabel, isSelected && styles.dayLabelSelected]}
@@ -146,8 +151,8 @@ export function DayChipRow({
         {onShowMore ? (
           <TouchableOpacity
             onPress={onShowMore}
-            activeOpacity={0.8}
-            style={[styles.chip, styles.moreChip]}
+            activeOpacity={0.85}
+            style={[styles.chip, Neu.soft(Colors.bg.surface, 0.6), styles.moreChip]}
           >
             <Ionicons
               name="chevron-forward"
@@ -175,23 +180,15 @@ const styles = StyleSheet.create({
     width: 66,
     height: 84,
     borderRadius: 20,
-    backgroundColor: Colors.bg.default,
     alignItems: "center",
     justifyContent: "center",
     gap: 2,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 1,
   },
   chipSelected: {
     backgroundColor: Colors.brand.primary,
-    borderColor: Colors.brand.primary,
-    boxShadow: "0px 4px 12px rgba(255, 200, 30, 0.35)",
-    elevation: 3,
   },
   moreChip: {
-    backgroundColor: Colors.bg.default,
+    backgroundColor: Colors.bg.surface,
   },
   dayLabel: {
     fontSize: 12,

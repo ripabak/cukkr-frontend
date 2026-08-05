@@ -2,6 +2,7 @@ import { Colors } from "@/src/theme/colors";
 import React from "react";
 import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
+import { Neu } from "@/src/theme/styles";
 
 interface Props {
   label: string;
@@ -15,8 +16,13 @@ export function PrimaryButton({ label, onPress, disabled, style }: Props) {
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled}
-      activeOpacity={0.8}
-      style={[styles.button, disabled && styles.disabled, style]}
+      activeOpacity={0.85}
+      style={[
+        styles.button,
+        Neu.accent(),
+        disabled && styles.disabled,
+        style,
+      ]}
     >
       <AppText style={styles.label}>{label}</AppText>
     </TouchableOpacity>
@@ -25,7 +31,6 @@ export function PrimaryButton({ label, onPress, disabled, style }: Props) {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: Colors.brand.primary,
     borderRadius: 999,
     height: 52,
     alignItems: "center",

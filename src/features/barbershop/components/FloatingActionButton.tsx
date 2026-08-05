@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
@@ -13,7 +14,7 @@ export function FloatingActionButton({ onPress, style }: Props) {
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.85}
-      style={[styles.btn, style]}
+      style={[styles.btn, Neu.accent(1.2), style]}
     >
       <Ionicons name="send" size={20} color={Colors.text.primary} />
     </TouchableOpacity>
@@ -28,10 +29,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
-    boxShadow: "0px 6px 20px rgba(255, 200, 30, 0.45)",
-    elevation: 6,
   },
 });

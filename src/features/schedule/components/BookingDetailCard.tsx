@@ -3,6 +3,7 @@ import { useI18nContext } from "@/src/lib/i18n/provider";
 import { BookingType } from "@/src/components/BookingCard";
 import { InfoRow } from "@/src/components/InfoRow";
 import { StatusBadge } from "@/src/components/StatusBadge";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
@@ -99,7 +100,7 @@ export function BookingDetailCard({
       showsVerticalScrollIndicator={false}
     >
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, Neu.raised(Colors.bg.surface)]}>
         <View style={styles.headerLeft}>
           {onCustomerPress ? (
             <TouchableOpacity
@@ -111,7 +112,7 @@ export function BookingDetailCard({
               <Ionicons
                 name="chevron-forward"
                 size={18}
-                color={Colors.brand.primary}
+                color={Colors.brand.primaryDark}
               />
             </TouchableOpacity>
           ) : (
@@ -141,7 +142,7 @@ export function BookingDetailCard({
 
       {/* Info rows */}
       {infoRows.length > 0 ? (
-        <View style={styles.section}>
+        <View style={[styles.section, Neu.raised(Colors.bg.surface)]}>
           {infoRows.map((row, i) => (
             <InfoRow
               key={i}
@@ -156,7 +157,7 @@ export function BookingDetailCard({
 
       {/* Services */}
       {services.length > 0 ? (
-        <View style={styles.section}>
+        <View style={[styles.section, Neu.raised(Colors.bg.surface)]}>
           <AppText style={styles.sectionTitle}>{t("bookings.services")}</AppText>
           {services.map((s, i) => (
             <View key={i} style={styles.serviceLine}>
@@ -176,7 +177,7 @@ export function BookingDetailCard({
 
       {/* Payment Summary */}
       {paymentSummary.length > 0 ? (
-        <View style={styles.section}>
+        <View style={[styles.section, Neu.raised(Colors.bg.surface)]}>
           <AppText style={styles.sectionTitle}>{t("bookings.paymentSummary")}</AppText>
           {paymentSummary.map((line, i) => (
             <View key={i} style={styles.paymentLine}>
@@ -206,12 +207,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
+    borderRadius: 24,
+    padding: 20,
   },
   headerLeft: {
     flex: 1,
   },
   customerName: {
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: "700",
     color: Colors.text.primary,
     letterSpacing: -0.8,
@@ -224,7 +227,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   customerNameLink: {
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: "700",
     color: Colors.brand.primaryDark,
     letterSpacing: -0.8,
@@ -252,13 +255,8 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   section: {
-    backgroundColor: Colors.bg.default,
     borderRadius: 20,
     padding: 16,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 2,
   },
   sectionTitle: {
     fontSize: 14,

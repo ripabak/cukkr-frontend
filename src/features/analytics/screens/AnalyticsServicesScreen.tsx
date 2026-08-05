@@ -1,5 +1,6 @@
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -60,8 +61,8 @@ export function AnalyticsServicesScreen() {
         <View style={styles.topBar}>
           <TouchableOpacity
             onPress={() => router.back()}
-            style={styles.backBtn}
-            activeOpacity={0.7}
+            style={[styles.backBtn, Neu.soft(Colors.bg.surface, 0.7)]}
+            activeOpacity={0.85}
           >
             <Ionicons
               name="chevron-back"
@@ -114,7 +115,7 @@ export function AnalyticsServicesScreen() {
       ) : null}
 
       {chart.length > 0 ? (
-        <View style={styles.chartCard}>
+        <View style={[styles.chartCard, Neu.raised(Colors.bg.surface, 1.1)]}>
           <AppText style={styles.chartCardTitle}>{t("services.title")}</AppText>
           <BarChart data={chart} chartHeight={130} maxBars={8} />
         </View>
@@ -142,8 +143,8 @@ export function AnalyticsServicesScreen() {
           services.map((svc, i) => (
             <TouchableOpacity
               key={svc.serviceId}
-              style={styles.serviceRow}
-              activeOpacity={0.75}
+              style={[styles.serviceRow, Neu.soft(Colors.bg.surface, 0.7)]}
+              activeOpacity={0.85}
               onPress={() =>
                 router.push({
                   pathname: "/d/service-detail",
@@ -189,7 +190,7 @@ export function AnalyticsServicesScreen() {
             <TouchableOpacity
               disabled={!meta.hasPrev}
               onPress={() => setPage((p) => p - 1)}
-              style={[styles.pageBtn, !meta.hasPrev && styles.pageBtnDisabled]}
+              style={[styles.pageBtn, Neu.soft(Colors.bg.surface, 0.7), !meta.hasPrev && styles.pageBtnDisabled]}
             >
               <Ionicons
                 name="chevron-back"
@@ -203,7 +204,7 @@ export function AnalyticsServicesScreen() {
             <TouchableOpacity
               disabled={!meta.hasNext}
               onPress={() => setPage((p) => p + 1)}
-              style={[styles.pageBtn, !meta.hasNext && styles.pageBtnDisabled]}
+              style={[styles.pageBtn, Neu.soft(Colors.bg.surface, 0.7), !meta.hasNext && styles.pageBtnDisabled]}
             >
               <Ionicons
                 name="chevron-forward"
@@ -228,8 +229,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     backgroundColor: Colors.bg.default,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border.light,
     gap: 12,
   },
   backBtn: {
@@ -238,9 +237,6 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.bg.surface,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
   },
   pageTitle: {
     flex: 1,
@@ -265,11 +261,8 @@ const styles = StyleSheet.create({
   },
   chartCard: {
     marginTop: 14,
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 16,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
   },
   chartCardTitle: {
     fontSize: 14,
@@ -303,10 +296,10 @@ const styles = StyleSheet.create({
   serviceRow: {
     flexDirection: "row",
     alignItems: "flex-start",
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border.light,
+    padding: 12,
+    borderRadius: 16,
     gap: 12,
+    marginBottom: 8,
   },
   serviceRank: {
     width: 24,
@@ -376,9 +369,6 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: Colors.bg.surface,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
     alignItems: "center",
     justifyContent: "center",
   },

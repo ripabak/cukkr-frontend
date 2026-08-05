@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
 import {
@@ -17,12 +18,12 @@ interface Props {
 
 export function InviteRow({ email, onRemove, style }: Props) {
   return (
-    <View style={[styles.container, style]}>
+    <View style={[styles.container, Neu.inset(Colors.bg.surface, 0.6), style]}>
       <View style={styles.dot} />
       <AppText style={styles.email}>{email}</AppText>
       <TouchableOpacity
         onPress={onRemove}
-        activeOpacity={0.7}
+        activeOpacity={0.85}
         style={styles.removeButton}
       >
         <Ionicons name="close" size={14} color={Colors.text.primary} />
@@ -35,10 +36,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.bg.default,
     borderRadius: 999,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
     paddingHorizontal: 16,
     paddingVertical: 14,
   },
@@ -58,7 +56,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: Colors.status.danger,
+    backgroundColor: Colors.status.dangerSurface,
     alignItems: "center",
     justifyContent: "center",
   },

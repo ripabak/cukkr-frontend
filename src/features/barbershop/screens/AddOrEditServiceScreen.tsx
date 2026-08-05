@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { LabeledInput } from "@/src/components/LabeledInput";
 import { MultilineInputField } from "@/src/components/MultilineInputField";
 import { PriceInput } from "@/src/components/PriceInput";
@@ -138,13 +139,15 @@ export function AddOrEditServiceScreen() {
           activeOpacity={0.8}
         >
           {imageUri ? (
-            <Image
-              source={{ uri: imageUri }}
-              style={styles.serviceImageContent}
-              contentFit="cover"
-            />
+            <View style={[styles.serviceImageContent, Neu.soft(Colors.bg.surface, 0.8)]}>
+              <Image
+                source={{ uri: imageUri }}
+                style={styles.serviceImage}
+                contentFit="cover"
+              />
+            </View>
           ) : (
-            <View style={styles.serviceImagePlaceholder}>
+            <View style={[styles.serviceImagePlaceholder, Neu.inset(Colors.bg.surface, 0.6)]}>
               <Ionicons
                 name="camera-outline"
                 size={24}
@@ -223,18 +226,18 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
+    overflow: "hidden",
+  },
+  serviceImage: {
+    width: 80,
+    height: 80,
   },
   serviceImagePlaceholder: {
     width: 80,
     height: 80,
     borderRadius: 16,
-    backgroundColor: Colors.bg.surface,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1.5,
-    borderColor: Colors.border.default,
   },
   field: {
     marginBottom: 16,
@@ -243,6 +246,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.brand.primarySurface,
     borderRadius: 16,
     marginBottom: 16,
+    padding: 12,
   },
   submitBtn: {
     marginTop: 16,

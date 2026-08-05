@@ -1,6 +1,7 @@
 import { Permission } from "@/src/components/Permission";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { Colors } from "@/src/theme/colors";
+import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -124,7 +125,7 @@ export function AnalyticsOverviewScreen() {
 
           {/* Revenue chart section */}
           <TouchableOpacity
-            style={styles.chartCard}
+            style={[styles.chartCard, Neu.raised(Colors.bg.surface)]}
             activeOpacity={0.85}
             onPress={() => router.push(`/d/analytics-revenue?range=${range}`)}
           >
@@ -155,7 +156,7 @@ export function AnalyticsOverviewScreen() {
 
           {/* Customers chart section */}
           <TouchableOpacity
-            style={styles.chartCard}
+            style={[styles.chartCard, Neu.raised(Colors.bg.surface)]}
             activeOpacity={0.85}
             onPress={() => router.push(`/d/analytics-customers?range=${range}`)}
           >
@@ -235,7 +236,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   pageTitle: {
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: "700",
     color: Colors.text.primary,
     letterSpacing: -0.8,
@@ -260,13 +261,8 @@ const styles = StyleSheet.create({
   },
   chartCard: {
     marginTop: 16,
-    backgroundColor: Colors.bg.default,
     borderRadius: 20,
     padding: 16,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
-    elevation: 2,
   },
   chartCardHeader: {
     flexDirection: "row",
