@@ -2,7 +2,7 @@ import { app } from "@/src/lib/eden-app";
 import { authClient } from "@/src/lib/auth-client";
 import { Platform } from "react-native";
 
-const apiBaseUrl = process.env.EXPO_PUBLIC_ENV_API_URL ?? "";
+const apiBaseUrl = process.env.EXPO_PUBLIC_ENV_API_URL || "https://api.cukkr.com";
 
 async function apiFetch(path: string, options?: RequestInit) {
   const baseOptions: RequestInit =

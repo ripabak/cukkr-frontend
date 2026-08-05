@@ -17,7 +17,7 @@ const webStorage = {
 };
 
 export const authClient = createAuthClient({
-  baseURL: process.env.EXPO_PUBLIC_ENV_AUTH_URL,
+  baseURL: process.env.EXPO_PUBLIC_ENV_AUTH_URL || "https://api.cukkr.com/auth/api",
   plugins: [
     expoClient({
       scheme: "cukkrfrontend",

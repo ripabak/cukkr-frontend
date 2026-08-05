@@ -9,7 +9,7 @@ async function createWebFile(file: { uri: string; name: string; type: string }):
   return new File([blob], file.name, { type: file.type });
 }
 
-const API_URL = process.env.EXPO_PUBLIC_ENV_API_URL!;
+const API_URL = process.env.EXPO_PUBLIC_ENV_API_URL || "https://api.cukkr.com";
 
 async function nativeUpload(apiPath: string, file: { uri: string; name: string; type: string }): Promise<unknown> {
   return new Promise((resolve, reject) => {
