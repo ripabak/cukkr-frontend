@@ -1,17 +1,18 @@
 # Stage 1: build
 FROM node:22-slim AS builder
 
+# Optional build args — the source code already falls back to the
+# production URLs (https://api.cukkr.com / https://cukkr.com), so
+# a plain `docker build` without any --build-arg works correctly.
 ARG EXPO_PUBLIC_ENV_CODE
 ARG EXPO_PUBLIC_ENV_API_URL
 ARG EXPO_PUBLIC_ENV_AUTH_URL
 ARG EXPO_PUBLIC_WEB_URL
-ARG EXPO_PUBLIC_VAPID_PUBLIC_KEY
 
 ENV EXPO_PUBLIC_ENV_CODE=$EXPO_PUBLIC_ENV_CODE
 ENV EXPO_PUBLIC_ENV_API_URL=$EXPO_PUBLIC_ENV_API_URL
 ENV EXPO_PUBLIC_ENV_AUTH_URL=$EXPO_PUBLIC_ENV_AUTH_URL
 ENV EXPO_PUBLIC_WEB_URL=$EXPO_PUBLIC_WEB_URL
-ENV EXPO_PUBLIC_VAPID_PUBLIC_KEY=$EXPO_PUBLIC_VAPID_PUBLIC_KEY
 
 WORKDIR /app
 

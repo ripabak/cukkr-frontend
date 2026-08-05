@@ -22,7 +22,7 @@ export function BarbershopQrScreen() {
   const bannerRef = useRef<View>(null);
 
   const baseUrl = barbershop?.slug
-    ? `${(process.env.EXPO_PUBLIC_WEB_URL ?? "").replace(/\/$/, "")}/${barbershop.slug}`
+    ? `${(process.env.EXPO_PUBLIC_WEB_URL || "https://cukkr.com").replace(/\/$/, "")}/${barbershop.slug}`
     : null;
 
   const handleCapture = async () => {

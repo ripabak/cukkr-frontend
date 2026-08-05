@@ -182,7 +182,7 @@ export function HomeDashboardScreen() {
   };
 
   const bookingUrl = barbershop?.slug
-    ? `${process.env.EXPO_PUBLIC_WEB_URL}/${barbershop.slug}`
+    ? `${process.env.EXPO_PUBLIC_WEB_URL || "https://cukkr.com"}/${barbershop.slug}`
     : null;
 
   const timezone = barbershop?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;

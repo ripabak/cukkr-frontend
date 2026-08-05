@@ -4,7 +4,7 @@ import { Platform } from "react-native";
 import { authClient } from "./auth-client";
 
 const api = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_ENV_API_URL,
+  baseURL: process.env.EXPO_PUBLIC_ENV_API_URL || "https://api.cukkr.com",
 });
 
 api.interceptors.request.use(async (config) => {
