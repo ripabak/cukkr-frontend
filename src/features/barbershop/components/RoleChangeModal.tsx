@@ -40,7 +40,7 @@ export function RoleChangeModal({
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.overlay}>
-        <View style={[styles.card, { width: frameWidth * 0.85 }]}>
+        <View style={[styles.card, Neu.float(Colors.bg.surface, 1.2), { width: frameWidth * 0.85 }]}>
           <View style={styles.iconWrapper}>
             <Ionicons name="shield-checkmark-outline" size={32} color={Colors.text.primary} />
           </View>
