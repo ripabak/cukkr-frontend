@@ -10,15 +10,17 @@ export const SUPPORTED_LANGUAGES: SupportedLanguage[] = [
   { value: 'en', label: 'English', flag: '🇬🇧' },
 ]
 
-type DeepRecord = { [key: string]: string | DeepRecord }
+type DeepRecord = {
+  [key: string]: string | DeepRecord | readonly unknown[]
+}
 
 const locales: Record<Language, DeepRecord> = { id, en } as Record<Language, DeepRecord>
 
 export function resolveKey(obj: DeepRecord, path: string): string | undefined {
-  let current: DeepRecord | string | undefined = obj
+  let current: unknown = obj
   for (const key of path.split('.')) {
-    if (!current || typeof current === 'string') return undefined
-    current = current[key]
+    if (!current || typeof current !== 'object') return undefined
+    current = (current as Record<string, unknown>)[key]
   }
   return typeof current === 'string' ? current : undefined
 }

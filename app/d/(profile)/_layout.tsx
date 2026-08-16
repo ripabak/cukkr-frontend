@@ -9,6 +9,10 @@ export default function ProfileLayout() {
           name="user-profile"
           options={{ animation: "slide_from_left" }}
         />
+        <Stack.Screen
+          name="billing"
+          options={{ animation: "slide_from_right" }}
+        />
       </Stack>
     </ProtectedRoute>
   );

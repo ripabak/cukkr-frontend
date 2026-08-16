@@ -163,6 +163,17 @@ export function UserProfileScreen({ hideBack = false }: Props = {}) {
         />
       </ProfileSummaryCard>
 
+      <AppText style={styles.sectionLabel}>{t("profile.subscription")}</AppText>
+      <ProfileSummaryCard style={styles.card}>
+        <InfoRow
+          label={t("profile.plan")}
+          value="Free"
+          showChevron
+          onPress={() => router.push("/d/billing")}
+          isLast
+        />
+      </ProfileSummaryCard>
+
       <AppText style={styles.sectionLabel}>{t("profile.language")}</AppText>
       <ProfileSummaryCard style={styles.card}>
         <LanguageSwitcher />

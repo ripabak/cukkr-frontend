@@ -3830,6 +3830,52 @@ export declare const app: Elysia<"", {
     };
 } & {
     api: {
+        billing: {
+            plans: {
+                get: {
+                    body: unknown;
+                    params: {};
+                    query: unknown;
+                    headers: unknown;
+                    response: {
+                        200: {
+                            meta?: {
+                                limit: number;
+                                page: number;
+                                totalItems: number;
+                                totalPages: number;
+                                hasNext: boolean;
+                                hasPrev: boolean;
+                            } | undefined;
+                            message: string;
+                            data: {
+                                id: string;
+                                name: string;
+                                price: number;
+                                currency: string;
+                                interval: string;
+                                features: string[];
+                            }[];
+                            status: string | number;
+                            path: string;
+                            timeStamp: string;
+                        };
+                        422: {
+                            type: "validation";
+                            on: string;
+                            summary?: string;
+                            message?: string;
+                            found?: unknown;
+                            property?: string;
+                            expected?: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+} & {
+    api: {
         public: {
             barbershop: {
                 ":slug": {
@@ -3886,6 +3932,10 @@ export declare const app: Elysia<"", {
                                         openTime: string | null;
                                         closeTime: string | null;
                                     }[];
+                                    bookingWindow: {
+                                        minAdvanceHours: number;
+                                        maxAdvanceDays: number;
+                                    };
                                 };
                                 status: string | number;
                                 path: string;
