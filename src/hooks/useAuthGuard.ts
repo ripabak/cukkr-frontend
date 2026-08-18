@@ -26,7 +26,7 @@ export function useAuthGuard() {
       const redirectTo = queryString ? `${pathname}?${queryString}` : pathname;
       router.replace({
         pathname: "/d/(auth)/login",
-        params: { redirect: redirectTo },
+        params: { callbackURL: redirectTo },
       });
     }
   }, [isPending, isAuthenticated, segments, router, pathname, globalParams]);

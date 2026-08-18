@@ -1,7 +1,14 @@
 import { useMemo, useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  Linking,
+  Pressable,
+  StyleSheet,
+  View,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { AppText } from "@/src/components/AppText";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
@@ -10,42 +17,105 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
-import { usePlans } from "../hooks";
+import { usePlans, useSubscription, usePayments } from "../hooks";
 import { PAYMENT_GROUPS, PAYMENT_METHODS } from "../methods";
-import type { PlanDto } from "../services";
+import { billingService, type PlanDto } from "../services";
 import { formatIDR } from "../utils/format";
 
+// Channels the backend currently accepts (see billing ENABLED_PAYMENT_METHODS).
+// Only QRIS is open in the sandbox MVP — expand here + in backend to enable more.
+const ENABLED_METHOD_IDS = ["qris"];
+
 export function BillingScreen() {
-  const { t } = useI18nContext();
+  const { t, language } = useI18nContext();
   const router = useRouter();
-  const { data: plans, isLoading, error } = usePlans();
+  const queryClient = useQueryClient();
+  // Preselect dari handoff landing: /d/billing?plan=premium|business
+  const { plan: preselectedPlan } = useLocalSearchParams<{ plan?: string }>();
+  const {
+    data: plans,
+    isLoading: plansLoading,
+    error: plansError,
+  } = usePlans();
+  const { data: subscription } = useSubscription();
+  const { data: payments } = usePayments();
 
-  const methods = PAYMENT_METHODS;
-  const groups = useMemo(() => {
-    const seen = new Set<string>();
-    return PAYMENT_GROUPS.filter((g) => {
-      if (methods.some((m) => m.group === g)) {
-        seen.add(g);
-        return true;
-      }
-      return false;
-    });
-  }, [methods]);
-
-  const [selectedPlanId, setSelectedPlanId] = useState<string>("premium");
+  const [selectedPlanId, setSelectedPlanId] = useState<string>(
+    preselectedPlan === "premium" || preselectedPlan === "business"
+      ? preselectedPlan
+      : "premium"
+  );
   const [methodId, setMethodId] = useState<string>("qris");
-  const [showUnavailable, setShowUnavailable] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [showPending, setShowPending] = useState(false);
+  const [payError, setPayError] = useState<{ title: string; body: string } | null>(
+    null
+  );
 
-  const currentPlan = plans?.find((p) => p.id === "free");
+  const methods = useMemo(
+    () => PAYMENT_METHODS.filter((m) => ENABLED_METHOD_IDS.includes(m.id)),
+    []
+  );
+  const groups = useMemo(
+    () => PAYMENT_GROUPS.filter((g) => methods.some((m) => m.group === g)),
+    [methods]
+  );
+
+  const activePlanId = subscription?.planId ?? "free";
+  const activePlan = plans?.find((p) => p.id === activePlanId);
   const selectedPlan = plans?.find((p) => p.id === selectedPlanId);
-  const isPaidPlan = !!selectedPlan && selectedPlan.id !== "free";
+  const isPaidPlan =
+    !!selectedPlan && selectedPlan.id !== "free" && !selectedPlan.requiresContact;
+  const isContactPlan = !!selectedPlan && selectedPlan.requiresContact;
   const selectedPlanPrice = selectedPlan ? formatIDR(selectedPlan.price) : "";
+  const isSubscribed = subscription?.status === "active";
+  const pendingPayments =
+    payments?.filter((p) => p.status === "pending" && p.invoiceUrl) ?? [];
 
   const planBadge = (plan: PlanDto) => t(`billing.planCopy.${plan.id}.badge`);
   const planDesc = (plan: PlanDto) => t(`billing.planCopy.${plan.id}.desc`);
   const featureLabel = (key: string) => t(`billing.features.${key}`);
 
-  if (isLoading) {
+  const formatDate = (iso: string | null) => {
+    if (!iso) return "";
+    return new Date(iso).toLocaleDateString(language === "en" ? "en-US" : "id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  };
+
+  const handlePay = async () => {
+    if (!selectedPlan || selectedPlan.id === "free" || submitting) return;
+    setSubmitting(true);
+    try {
+      const checkout = await billingService.startCheckout(
+        selectedPlan.id as "premium" | "business",
+        methodId.toUpperCase()
+      );
+      // Open the Xendit-hosted payment page (QRIS sandbox).
+      await Linking.openURL(checkout.invoiceUrl);
+      // The webhook will flip the subscription server-side; refresh when the
+      // user comes back or closes the pending dialog.
+      queryClient.invalidateQueries({ queryKey: ["billing", "subscription"] });
+      queryClient.invalidateQueries({ queryKey: ["billing", "payments"] });
+      setShowPending(true);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Payment could not be processed";
+      // Backend reports "not configured" when XENDIT_SECRET_API_KEY is missing.
+      const notConfigured = message.includes("XENDIT_SECRET_API_KEY");
+      setPayError(
+        notConfigured
+          ? { title: t("billing.unavailableTitle"), body: t("billing.unavailableBody") }
+          : { title: t("billing.payFailedTitle"), body: message }
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (plansLoading) {
     return (
       <ScreenShell
         backgroundColor={Colors.bg.default}
@@ -56,7 +126,7 @@ export function BillingScreen() {
     );
   }
 
-  if (error || !plans) {
+  if (plansError || !plans) {
     return (
       <ScreenShell
         hideAppHeader
@@ -80,26 +150,71 @@ export function BillingScreen() {
       backgroundColor={Colors.bg.default}
       contentStyle={{ paddingTop: 20, gap: 12 }}
     >
-      {/* Current plan banner */}
-      {currentPlan ? (
+      {/* Current plan banner — from the live subscription, not hardcoded */}
+      {activePlan ? (
         <View style={[styles.currentPlanCard, Neu.soft(Colors.brand.primarySurface)]}>
           <View style={styles.currentPlanRow}>
             <View style={styles.currentPlanIcon}>
               <Ionicons name="sparkles" size={16} color={Colors.brand.primaryDark} />
             </View>
             <View style={styles.currentPlanText}>
-              <AppText style={styles.currentPlanLabel}>{t("billing.currentLabel")}</AppText>
-              <AppText style={styles.currentPlanName}>{currentPlan.name}</AppText>
+              <AppText style={styles.currentPlanLabel}>
+                {isSubscribed ? t("billing.currentLabel") : t("profile.plan")}
+              </AppText>
+              <AppText style={styles.currentPlanName}>{activePlan.name}</AppText>
+              {isSubscribed && subscription?.currentPeriodEnd ? (
+                <AppText style={styles.currentPlanExpiry}>
+                  {t("billing.expiresAt")}:{" "}
+                  {formatDate(subscription.currentPeriodEnd)}
+                </AppText>
+              ) : null}
             </View>
           </View>
         </View>
+      ) : null}
+
+      {/* Pending invoices — tagihan yang belum dibayar, bisa dilanjutkan */}
+      {pendingPayments.length > 0 ? (
+        <>
+          <AppText style={styles.sectionLabel}>{t("billing.unpaidTitle")}</AppText>
+          {pendingPayments.map((p) => {
+            const planName =
+              plans?.find((pl) => pl.id === p.planId)?.name ?? p.planId;
+            return (
+              <View
+                key={p.id}
+                style={[styles.pendingCard, Neu.raised(Colors.bg.surface)]}
+              >
+                <View style={styles.pendingRow}>
+                  <View style={styles.pendingInfo}>
+                    <AppText style={styles.pendingPlan}>{planName}</AppText>
+                    <AppText style={styles.pendingMeta}>
+                      {formatIDR(p.amount)} · {t("billing.expiresAt")}:{" "}
+                      {formatDate(p.expiresAt)}
+                    </AppText>
+                  </View>
+                  <Pressable
+                    style={styles.pendingButton}
+                    onPress={() => {
+                      if (p.invoiceUrl) void Linking.openURL(p.invoiceUrl);
+                    }}
+                  >
+                    <AppText style={styles.pendingButtonText}>
+                      {t("billing.continuePay")}
+                    </AppText>
+                  </Pressable>
+                </View>
+              </View>
+            );
+          })}
+        </>
       ) : null}
 
       <AppText style={styles.sectionLabel}>{t("billing.choosePlan")}</AppText>
 
       {/* Plan cards */}
       {plans.map((plan) => {
-        const isCurrent = plan.id === "free";
+        const isCurrent = plan.id === activePlanId;
         const selected = plan.id === selectedPlanId;
         const popular = plan.id === "premium";
         const price = formatIDR(plan.price);
@@ -171,6 +286,31 @@ export function BillingScreen() {
         );
       })}
 
+      {/* Plan enterprise — tidak bisa bayar langsung, hubungi tim Cukkr */}
+      {isContactPlan && selectedPlan ? (
+        <View style={[styles.contactCard, Neu.raised(Colors.bg.surface)]}>
+          <AppText style={styles.contactTitle}>
+            {t("billing.contactPlanTitle")}
+          </AppText>
+          <AppText style={styles.contactBody}>
+            {t("billing.contactPlanBody")}
+          </AppText>
+          <Pressable
+            style={styles.contactButton}
+            onPress={() =>
+              Linking.openURL(
+                "mailto:hello@cukkr.com?subject=" +
+                  encodeURIComponent("Business Plan Cukkr")
+              )
+            }
+          >
+            <AppText style={styles.contactButtonText}>
+              {t("billing.contactCta")}
+            </AppText>
+          </Pressable>
+        </View>
+      ) : null}
+
       {/* Checkout section for paid plans */}
       {isPaidPlan && selectedPlan ? (
         <>
@@ -231,21 +371,38 @@ export function BillingScreen() {
             <AppText style={styles.taxNote}>{t("billing.taxIncluded")}</AppText>
           </View>
 
-          <PrimaryButton label={t("billing.payNow")} onPress={() => setShowUnavailable(true)} />
+          <PrimaryButton
+            label={submitting ? "…" : t("billing.payNow")}
+            disabled={submitting}
+            onPress={handlePay}
+          />
 
-          <AppText style={styles.planNote}>
-            {t("billing.planNote")}
-          </AppText>
+          <AppText style={styles.planNote}>{t("billing.planNote")}</AppText>
         </>
       ) : null}
 
+      {/* Awaiting payment — invoice URL already opened */}
       <ConfirmationModal
-        visible={showUnavailable}
-        icon="information-circle-outline"
-        title={t("billing.unavailableTitle")}
-        description={t("billing.unavailableBody")}
+        visible={showPending}
+        icon="time-outline"
+        title={t("billing.pendingTitle")}
+        description={t("billing.pendingBody")}
         confirmLabel={t("common.ok")}
-        onConfirm={() => setShowUnavailable(false)}
+        onConfirm={() => {
+          setShowPending(false);
+          queryClient.invalidateQueries({ queryKey: ["billing", "subscription"] });
+          queryClient.invalidateQueries({ queryKey: ["billing", "payments"] });
+        }}
+      />
+
+      {/* Payment error / gateway not configured */}
+      <ConfirmationModal
+        visible={!!payError}
+        icon="alert-circle-outline"
+        title={payError?.title ?? ""}
+        description={payError?.body ?? ""}
+        confirmLabel={t("common.ok")}
+        onConfirm={() => setPayError(null)}
       />
     </ScreenShell>
   );
@@ -278,6 +435,73 @@ const styles = StyleSheet.create({
   },
   currentPlanName: {
     fontSize: 18,
+    fontWeight: "700",
+    color: Colors.text.primary,
+  },
+  currentPlanExpiry: {
+    fontSize: 12,
+    color: Colors.text.secondary,
+    marginTop: 2,
+  },
+  pendingCard: {
+    borderRadius: 16,
+    padding: 14,
+  },
+  pendingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 12,
+  },
+  pendingInfo: {
+    flex: 1,
+    gap: 2,
+  },
+  pendingPlan: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: Colors.text.primary,
+  },
+  pendingMeta: {
+    fontSize: 12,
+    color: Colors.text.secondary,
+  },
+  pendingButton: {
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    borderRadius: 12,
+    backgroundColor: Colors.brand.primary,
+  },
+  pendingButtonText: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: Colors.text.primary,
+  },
+  contactCard: {
+    borderRadius: 16,
+    padding: 16,
+    gap: 6,
+  },
+  contactTitle: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: Colors.text.primary,
+  },
+  contactBody: {
+    fontSize: 13,
+    lineHeight: 19,
+    color: Colors.text.secondary,
+  },
+  contactButton: {
+    marginTop: 8,
+    alignSelf: "flex-start",
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
+    backgroundColor: Colors.brand.primary,
+  },
+  contactButtonText: {
+    fontSize: 13,
     fontWeight: "700",
     color: Colors.text.primary,
   },

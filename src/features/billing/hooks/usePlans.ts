@@ -4,6 +4,7 @@ import { billingService } from "../services";
 export const BILLING_QUERY_KEYS = {
   all: ["billing"] as const,
   plans: () => [...BILLING_QUERY_KEYS.all, "plans"] as const,
+  subscription: () => [...BILLING_QUERY_KEYS.all, "subscription"] as const,
 };
 
 export function usePlans() {

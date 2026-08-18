@@ -1,8 +1,16 @@
 import { authClient } from "@/src/lib/auth-client";
 
 export const authService = {
-  async signIn(email: string, password: string) {
-    const { data, error } = await authClient.signIn.email({ email, password });
+  /**
+   * Sign in dengan callbackURL milik Better Auth — target redirect di-bawa
+   * oleh SDK dan dikembalikan sebagai `data.url` setelah login sukses.
+   */
+  async signIn(email: string, password: string, callbackURL?: string) {
+    const { data, error } = await authClient.signIn.email({
+      email,
+      password,
+      callbackURL,
+    });
 
     if (error) {
       const err = new Error(error.message || "Failed to sign in");

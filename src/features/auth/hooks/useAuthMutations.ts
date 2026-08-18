@@ -4,8 +4,15 @@ import { authService } from "../services";
 
 export function useSignIn() {
   return useMutation({
-    mutationFn: ({ email, password }: { email: string; password: string }) =>
-      authService.signIn(email, password),
+    mutationFn: ({
+      email,
+      password,
+      callbackURL,
+    }: {
+      email: string;
+      password: string;
+      callbackURL?: string;
+    }) => authService.signIn(email, password, callbackURL),
     onSuccess: () => {
       queryClient.clear();
     },

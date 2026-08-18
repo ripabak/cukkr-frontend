@@ -1,7 +1,8 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
+import { authClient } from "@/src/lib/auth-client";
 
 import { useToast } from "@/src/lib/providers";
 import { useI18nContext } from "@/src/lib/i18n/provider";
@@ -12,12 +13,15 @@ import { AuthScreenShell } from "../components/AuthScreenShell";
 import { AuthTextField } from "../components/AuthTextField";
 import { useSignIn, useSendVerificationOtp } from "../hooks";
 import { getErrorMessage } from "../utils/error-handler";
+import { getUrlParam, resolveRedirect } from "../utils/redirect";
 
 export function LoginScreen() {
   const { t } = useI18nContext();
   const router = useRouter();
   const toast = useToast();
-  const { redirect } = useLocalSearchParams<{ redirect?: string }>();
+  const {
+    callbackURL: callbackURLParam,
+  } = useLocalSearchParams<{ callbackURL?: string }>();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const { mutateAsync: signIn, isPending: signingIn } = useSignIn();
@@ -25,12 +29,32 @@ export function LoginScreen() {
     useSendVerificationOtp();
   const isPending = signingIn || sendingOtp;
 
+  // Sudah login? Langsung lanjut ke target redirect (handoff dari landing):
+  // tanpa perlu submit form login lagi.
+  const { data: session, isPending: sessionPending } = authClient.useSession();
+
+  useEffect(() => {
+    if (sessionPending || !session?.user) return;
+    const raw = getUrlParam("callbackURL", callbackURLParam);
+    if (!raw) return; // belum ada param → tunggu render berikutnya
+    const target = resolveRedirect(raw);
+    router.replace(target ?? "/d/(tabs)/home");
+  }, [session, sessionPending, callbackURLParam, router]);
+
   const handleLogin = async () => {
     if (!identifier || !password) return;
 
     try {
-      await signIn({ email: identifier, password });
-      router.replace((redirect as any) ?? "/d/(tabs)/home");
+      const callbackURL = getUrlParam("callbackURL", callbackURLParam);
+      // Better Auth membawa target redirect sendiri (callbackURL) dan
+      // mengembalikannya sebagai `data.url` — kita tinggal navigasi ke sana.
+      const data = await signIn({
+        email: identifier,
+        password,
+        callbackURL,
+      });
+      const target = resolveRedirect(data?.url ?? callbackURL);
+      router.replace(target ?? "/d/(tabs)/home");
     } catch (error) {
       if (
         error instanceof Error &&
@@ -39,7 +63,10 @@ export function LoginScreen() {
         sendOtp({ email: identifier, type: "email-verification" });
         router.replace({
           pathname: "/d/verify-account",
-          params: { email: identifier },
+          params: {
+            email: identifier,
+            ...(callbackURLParam ? { callbackURL: callbackURLParam } : {}),
+          },
         });
         return;
       }
@@ -58,7 +85,7 @@ export function LoginScreen() {
           onPress={() =>
             router.push({
               pathname: "/d/register",
-              params: redirect ? { redirect } : {},
+              params: callbackURLParam ? { callbackURL: callbackURLParam } : {},
             })
           }
         />
@@ -87,7 +114,7 @@ export function LoginScreen() {
           onPress={() =>
             router.push({
               pathname: "/d/forgot-password",
-              params: redirect ? { redirect } : {},
+              params: callbackURLParam ? { callbackURL: callbackURLParam } : {},
             })
           }
         >

@@ -17,10 +17,10 @@ export function CreatePasswordScreen() {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
-  const { email, otp, redirect } = useLocalSearchParams<{
+  const { email, otp, callbackURL } = useLocalSearchParams<{
     email: string;
     otp: string;
-    redirect?: string;
+    callbackURL?: string;
   }>();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -54,7 +54,7 @@ export function CreatePasswordScreen() {
       toast.success(t("auth.passwordReset"));
       router.replace({
         pathname: "/d/login",
-        params: redirect ? { redirect } : {},
+        params: callbackURL ? { callbackURL } : {},
       });
     } catch (error) {
       toast.error(getErrorMessage(error));
@@ -75,7 +75,7 @@ export function CreatePasswordScreen() {
           onPress={() =>
             router.replace({
               pathname: "/d/login",
-              params: redirect ? { redirect } : {},
+              params: callbackURL ? { callbackURL } : {},
             })
           }
         />

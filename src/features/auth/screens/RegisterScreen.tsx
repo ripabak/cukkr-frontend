@@ -21,7 +21,7 @@ export function RegisterScreen() {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
-  const { redirect } = useLocalSearchParams<{ redirect?: string }>();
+  const { callbackURL } = useLocalSearchParams<{ callbackURL?: string }>();
   const [name, setName] = useState("");
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -57,7 +57,10 @@ export function RegisterScreen() {
       await sendOtp({ email: identifier, type: "email-verification" });
       router.push({
         pathname: "/d/verify-account",
-        params: { email: identifier, ...(redirect ? { redirect } : {}) },
+        params: {
+          email: identifier,
+          ...(callbackURL ? { callbackURL } : {}),
+        },
       });
     } catch (error) {
       toast.error(getErrorMessage(error));
@@ -75,7 +78,7 @@ export function RegisterScreen() {
           onPress={() =>
             router.push({
               pathname: "/d/login",
-              params: redirect ? { redirect } : {},
+              params: callbackURL ? { callbackURL } : {},
             })
           }
         />
