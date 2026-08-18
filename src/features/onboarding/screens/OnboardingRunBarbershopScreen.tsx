@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 26,
-    fontWeight: "700",
+    fontWeight: "600",
     color: OnboardingTheme.colors.textDark,
     textAlign: "center",
     marginBottom: OnboardingTheme.spacing.sm,

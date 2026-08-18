@@ -181,7 +181,6 @@ export function EditServiceInfoScreen() {
 
   return (
     <ScreenShell
-      hideAppHeader
       headerSlot={
         <EditFieldHeader
           title={t(config.titleKey)}

@@ -33,7 +33,6 @@ export function SelectBarberScreen() {
 
   return (
     <ScreenShell
-      hideAppHeader
       headerSlot={
         <ScreenHeader title={t("schedule.selectBarber")} onBack={() => router.back()} />
       }
@@ -101,7 +100,7 @@ const styles = StyleSheet.create({
   barberName: {
     flex: 1,
     fontSize: 15,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   avatarImage: {

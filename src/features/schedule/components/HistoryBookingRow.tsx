@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   },
   dateTime: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   barberRow: {
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   },
   customerName: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "500",
   },
   duration: {
     fontSize: 12,

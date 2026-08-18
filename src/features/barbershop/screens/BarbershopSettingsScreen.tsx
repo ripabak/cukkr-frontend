@@ -87,7 +87,7 @@ export function BarbershopSettingsScreen() {
   };
 
   return (
-    <ScreenShell contentStyle={styles.scrollContentPadding} hideAppHeader>
+    <ScreenShell contentStyle={styles.scrollContentPadding}>
       <View style={styles.titleRow}>
         <AppText style={styles.title}>{t("barbershop.settings")}</AppText>
       </View>
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     letterSpacing: -0.8,
   },
@@ -325,13 +325,13 @@ const styles = StyleSheet.create({
   },
   avatarInitials: {
     fontSize: 32,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.brand.primaryDark,
     letterSpacing: 1,
   },
   sectionLabel: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
     marginBottom: 8,
     letterSpacing: 0.5,

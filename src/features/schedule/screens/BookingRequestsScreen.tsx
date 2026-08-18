@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   },
   dateHeader: {
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     marginBottom: 12,
   },
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
     textAlign: "center",
     marginBottom: 8,

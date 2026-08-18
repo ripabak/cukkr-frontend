@@ -111,7 +111,6 @@ export function BarbersManagementScreen() {
 
   return (
     <ScreenShell
-      hideAppHeader
       headerSlot={<ScreenHeader onBack={() => router.back()} />}
       contentStyle={{ paddingBottom: 200 }}
     >
@@ -251,7 +250,7 @@ export function BarbersManagementScreen() {
 const styles = StyleSheet.create({
   title: {
     fontSize: 30,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     marginTop: 8,
     letterSpacing: -0.8,
@@ -268,7 +267,7 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
     marginBottom: 8,
     letterSpacing: 0.5,

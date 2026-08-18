@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   },
   qrBrandText: {
     fontSize: 28,
-    fontWeight: "800",
+    fontWeight: "700",
     color: Colors.text.primary,
     lineHeight: 32,
     letterSpacing: 1,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   },
   shopName: {
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     textAlign: "center",
     marginBottom: 6,

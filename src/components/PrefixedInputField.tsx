@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
     minWidth: 72,
   },
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   },
   prefix: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
     marginRight: 8,
   },

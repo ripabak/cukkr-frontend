@@ -94,6 +94,6 @@ const styles = StyleSheet.create({
   cellText: {
     color: authTheme.colors.textPrimary,
     fontSize: 24,
-    fontWeight: "700",
+    fontWeight: "600",
   },
 });

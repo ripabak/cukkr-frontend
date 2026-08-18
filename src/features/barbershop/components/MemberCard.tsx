@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     flexShrink: 1,
   },
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   },
   roleBtnText: {
     fontSize: 11,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   removeBtn: {

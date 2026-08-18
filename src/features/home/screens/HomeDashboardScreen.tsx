@@ -1,5 +1,7 @@
 import { BookingCard } from "@/src/components/BookingCard";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
+import { SoftPressable } from "@/src/components/SoftPressable";
+import { AppText } from "@/src/components/AppText";
 import { useBarbershopCurrent } from "@/src/features/barbershop/hooks";
 import { BarbershopSwitcherModal } from "@/src/features/home/components/BarbershopSwitcherModal";
 import { NewBookBottomSheet } from "@/src/components/NewBookBottomSheet";
@@ -18,12 +20,13 @@ import { notificationsService } from "@/src/features/notifications/services/noti
 import { pwaNotificationService } from "@/src/services/pwa-notification.service";
 import { mapApiStatusToBookingStatus } from "@/src/features/schedule/utils/booking-formatters";
 import { useRequestedBookings } from "@/src/features/schedule/hooks";
-import { useAuthUser } from "@/src/hooks";
+import { useAuthUser, useMemberRole } from "@/src/hooks";
+import { usePwaTheme } from "@/src/hooks/usePwaTheme";
 import { authClient } from "@/src/lib/auth-client";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { haptics } from "@/src/utils/haptics";
 import { formatDateShort, formatTime12h, parseTime24, toApiDate } from "@/src/utils/date";
 import { formatTimeRange } from "@/src/utils/time-format";
 import { Ionicons } from "@expo/vector-icons";
@@ -31,7 +34,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import * as Clipboard from "expo-clipboard";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { AppText } from "@/src/components/AppText";
 import {
   ActivityIndicator,
   Animated,
@@ -44,21 +46,57 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const TOP_BAR_HEIGHT = 64;
-const OPEN_HOURS_STRIP_HEIGHT = 34;
+const TOP_BAR_HEIGHT = 58;
+const OPEN_HOURS_STRIP_HEIGHT = 38;
 
 function getSummaryItems(t: (key: string) => string): {
   key: string;
   label: string;
   icon: React.ComponentProps<typeof Ionicons>["name"];
+  tint: string;
+  surface: string;
 }[] {
   return [
-    { key: "walkIn", label: t("home.walkInShort"), icon: "walk" },
-    { key: "appointment", label: t("home.appointShort"), icon: "calendar" },
-    { key: "waiting", label: t("home.waiting"), icon: "time" },
-    { key: "inProgress", label: t("home.inProgress"), icon: "cut" },
+    {
+      key: "walkIn",
+      label: t("home.walkInShort"),
+      icon: "walk",
+      tint: Colors.status.info,
+      surface: Colors.status.infoSurface,
+    },
+    {
+      key: "appointment",
+      label: t("home.appointShort"),
+      icon: "calendar",
+      tint: Colors.status.requested,
+      surface: Colors.status.requestedSurface,
+    },
+    {
+      key: "waiting",
+      label: t("home.waiting"),
+      icon: "time",
+      tint: Colors.status.warning,
+      surface: Colors.status.warningSurface,
+    },
+    {
+      key: "inProgress",
+      label: t("home.inProgress"),
+      icon: "cut",
+      tint: Colors.status.success,
+      surface: Colors.status.successSurface,
+    },
   ];
 }
+
+/**
+ * Compact layout variants for the "Today" summary card.
+ * Pick one to preview — flip the value between 1 | 2 | 3:
+ *   1 → "bar"   : single row of 4 mini stats, most compact
+ *   2 → "grid"  : 2×2 tinted tiles (total shown as a header badge)
+ *   3 → "split" : small hero number + 2×2 tiles, tight
+ */
+type TodayLayout = 1 | 2 | 3;
+const TODAY_LAYOUT: TodayLayout = 1;
 
 export function HomeDashboardScreen() {
   const { t } = useI18nContext();
@@ -92,6 +130,9 @@ export function HomeDashboardScreen() {
   const [switcherVisible, setSwitcherVisible] = useState(false);
   const [newBookVisible, setNewBookVisible] = useState(false);
   const [notifConsentVisible, setNotifConsentVisible] = useState(false);
+
+  // Keep the PWA status bar / browser chrome tinted with the app background.
+  usePwaTheme({ color: Colors.bg.default });
 
   // Silently renew push subscription on mount if permission was already granted
   useEffect(() => {
@@ -174,10 +215,64 @@ export function HomeDashboardScreen() {
     },
   );
 
+  // Staggered entrance animation for the page sections.
+  const sections = [
+    useRef(new Animated.Value(0)).current,
+    useRef(new Animated.Value(0)).current,
+    useRef(new Animated.Value(0)).current,
+    useRef(new Animated.Value(0)).current,
+  ];
+  const didAnimate = useRef(false);
+
+  useEffect(() => {
+    if (didAnimate.current) return;
+    didAnimate.current = true;
+    Animated.stagger(
+      70,
+      sections.map((s) =>
+        Animated.parallel([
+          Animated.timing(s, {
+            toValue: 1,
+            duration: 420,
+            useNativeDriver: true,
+          }),
+        ]),
+      ),
+    ).start();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const sectionStyle = (index: number) => ({
+    opacity: sections[index],
+    transform: [
+      {
+        translateY: sections[index].interpolate({
+          inputRange: [0, 1],
+          outputRange: [14, 0],
+        }),
+      },
+    ],
+  });
+
+  // PIN pulse when a new one is generated.
+  const pinScale = useRef(new Animated.Value(1)).current;
+  const animatePin = () => {
+    pinScale.setValue(0.9);
+    Animated.spring(pinScale, {
+      toValue: 1,
+      stiffness: 320,
+      damping: 14,
+      useNativeDriver: true,
+    }).start();
+  };
+
   const handleGeneratePin = () => {
+    haptics.success();
     generatePin(undefined, {
-      onSuccess: () =>
-        queryClient.invalidateQueries({ queryKey: HOME_QUERY_KEYS.currentPin }),
+      onSuccess: () => {
+        animatePin();
+        queryClient.invalidateQueries({ queryKey: HOME_QUERY_KEYS.currentPin });
+      },
     });
   };
 
@@ -185,18 +280,21 @@ export function HomeDashboardScreen() {
     ? `${process.env.EXPO_PUBLIC_WEB_URL || "https://cukkr.com"}/${barbershop.slug}`
     : null;
 
-  const timezone = barbershop?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const timezone =
+    barbershop?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const todayOpenHours = React.useMemo(() => {
     const dayMap: Record<string, number> = {
       Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6,
     };
-    const parts = new Intl.DateTimeFormat('en-US', {
+    const parts = new Intl.DateTimeFormat("en-US", {
       timeZone: timezone,
-      weekday: 'short',
+      weekday: "short",
     }).formatToParts(new Date());
-    const localDay = parts.find((p) => p.type === 'weekday')?.value;
-    const dayOfWeek = localDay ? dayMap[localDay] ?? new Date().getDay() : new Date().getDay();
+    const localDay = parts.find((p) => p.type === "weekday")?.value;
+    const dayOfWeek = localDay
+      ? dayMap[localDay] ?? new Date().getDay()
+      : new Date().getDay();
     return openHoursData?.find((d) => d.dayOfWeek === dayOfWeek) ?? null;
   }, [openHoursData, timezone]);
 
@@ -209,16 +307,16 @@ export function HomeDashboardScreen() {
       ? parseTime24(todayOpenHours.closeTime)
       : null;
     if (!open || !close) return false;
-    const parts = new Intl.DateTimeFormat('en-US', {
+    const parts = new Intl.DateTimeFormat("en-US", {
       timeZone: timezone,
-      hour: '2-digit',
-      minute: '2-digit',
+      hour: "2-digit",
+      minute: "2-digit",
       hour12: false,
     }).formatToParts(new Date());
     let nowMinutes = 0;
     for (const p of parts) {
-      if (p.type === 'hour') nowMinutes += parseInt(p.value) * 60;
-      else if (p.type === 'minute') nowMinutes += parseInt(p.value);
+      if (p.type === "hour") nowMinutes += parseInt(p.value) * 60;
+      else if (p.type === "minute") nowMinutes += parseInt(p.value);
     }
     const openMinutes = open.hour24 * 60 + open.minute;
     const closeMinutes = close.hour24 * 60 + close.minute;
@@ -227,6 +325,7 @@ export function HomeDashboardScreen() {
 
   const handleShareLink = async () => {
     if (!bookingUrl) return;
+    haptics.light();
     const shareData = {
       title: t("home.walkinCheckinTitle"),
       text: t("home.walkinCheckinText"),
@@ -245,11 +344,23 @@ export function HomeDashboardScreen() {
     }
   };
 
+  const handleCopyLink = async () => {
+    if (!bookingUrl) return;
+    haptics.light();
+    try {
+      await Clipboard.setStringAsync(bookingUrl);
+      toast.success(t("home.linkCopied"));
+    } catch {
+      toast.error(t("home.shareLinkFailed"));
+    }
+  };
+
   const waitingBookings = activeBookings
     .filter((b) => b.status === "waiting")
     .slice(0, 2);
 
   const handleBookingPress = (bookingId: string) => {
+    haptics.light();
     router.push({ pathname: "/d/booking-detail", params: { id: bookingId } });
   };
 
@@ -259,6 +370,7 @@ export function HomeDashboardScreen() {
     inProgress: summary?.inProgress ?? 0,
     waiting: summary?.waiting ?? 0,
   };
+  const totalToday = (summary?.walkIn ?? 0) + (summary?.appointment ?? 0);
 
   const avatarInitials = user?.name
     ? user.name
@@ -268,6 +380,24 @@ export function HomeDashboardScreen() {
         .map((w: string) => w[0].toUpperCase())
         .join("")
     : "";
+
+  const { role } = useMemberRole();
+  const roleLabel =
+    role === "owner"
+      ? t("barbers.owner")
+      : role === "admin"
+        ? t("barbers.admin")
+        : role === "member"
+          ? t("barbers.member")
+          : "";
+
+  const SHOP_NAME_MAX = 16;
+  const shopDisplayName =
+    barbershop?.name && barbershop.name.length > SHOP_NAME_MAX
+      ? `${barbershop.name.slice(0, SHOP_NAME_MAX).trimEnd()}…`
+      : barbershop?.name ?? "...";
+
+  const isOpen = isCurrentlyOpen;
 
   return (
     <View style={styles.root}>
@@ -281,245 +411,319 @@ export function HomeDashboardScreen() {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
-        <View style={[styles.page, { paddingTop: stickyHeaderHeight + 36 }]}>
-          {/* Quick Actions */}
-          <View style={styles.quickActionsRow}>
-            <Animated.ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.quickActionsScroll}
-            >
-            <ShortcutTile
-              label={t("home.newBooking")}
-              variant="small"
-              icon={
-                <Ionicons
-                  name="calendar"
-                  size={22}
-                  color={Colors.text.primary}
-                />
-              }
-              onPress={() => setNewBookVisible(true)}
-            />
-            <ShortcutTile
-              label={t("home.requests")}
-              variant="small"
-              badgeCount={requestCount}
-              icon={
-                <Ionicons
-                  name="calendar-number"
-                  size={22}
-                  color={Colors.text.primary}
-                />
-              }
-              onPress={() => router.push("/d/booking-requests")}
-            />
-            <ShortcutTile
-              label={t("barbers.title")}
-              variant="small"
-              icon={
-                <Ionicons
-                  name="people"
-                  size={22}
-                  color={Colors.text.primary}
-                />
-              }
-              onPress={() => router.push("/d/barbers-management")}
-            />
-            <ShortcutTile
-              label={t("customers.title")}
-              variant="small"
-              icon={
-                <Ionicons
-                  name="person"
-                  size={22}
-                  color={Colors.text.primary}
-                />
-              }
-              onPress={() => router.push("/d/customer-management")}
-            />
-            <ShortcutTile
-              label={t("services.title")}
-              variant="small"
-              icon={
-                <Ionicons
-                  name="cut"
-                  size={22}
-                  color={Colors.text.primary}
-                />
-              }
-              onPress={() => router.push("/d/services-management")}
-            />
-            <ShortcutTile
-              label={t("home.openHours")}
-              variant="small"
-              icon={
-                <Ionicons
-                  name="time"
-                  size={22}
-                  color={Colors.text.primary}
-                />
-              }
-              onPress={() => router.push("/d/open-hours")}
-            />
-            </Animated.ScrollView>
-          </View>
-
-          {/* Walk-In Check-In */}
-          <View style={[styles.walkInCard, Neu.raised(Colors.bg.surface)]}>
-            <View style={styles.walkInHeader}>
-              <AppText style={styles.walkInLabel}>{t("home.walkinCheckin")}</AppText>
-              <View style={styles.walkInActions}>
-                <TouchableOpacity
-                  onPress={handleGeneratePin}
-                  disabled={isGenerating}
-                  style={[styles.walkInIconBtn, Neu.inset(Colors.bg.surface, 0.6)]}
-                >
-                  {isGenerating ? (
-                    <ActivityIndicator
-                      size="small"
-                      color={Colors.text.secondary}
-                    />
-                  ) : (
-                    <Ionicons
-                      name="refresh-outline"
-                      size={20}
-                      color={Colors.text.secondary}
-                    />
-                  )}
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => router.push("/d/barbershop-qr")}
-                  style={[styles.walkInIconBtn, Neu.inset(Colors.bg.surface, 0.6)]}
-                >
-                  <Ionicons
-                    name="qr-code-outline"
-                    size={20}
-                    color={Colors.text.secondary}
-                  />
-                </TouchableOpacity>
+        <View style={[styles.page, { paddingTop: stickyHeaderHeight + 20 }]}>
+          {/* ===== Z1 → Hero: Today overview (compact, layout-selectable) ===== */}
+          <Animated.View style={sectionStyle(0)}>
+            <View style={styles.todayCard}>
+              <View style={styles.todayHeader}>
+                <AppText style={styles.todayEyebrow}>
+                  {t("home.todayOverview")}
+                </AppText>
+                {TODAY_LAYOUT === 2 ? (
+                  <View style={styles.totalBadge}>
+                    <AppText style={styles.totalBadgeText}>{totalToday}</AppText>
+                  </View>
+                ) : (
+                  <View style={styles.todayDateChip}>
+                    <AppText style={styles.todayDate}>
+                      {formatDateShort(new Date())}
+                    </AppText>
+                  </View>
+                )}
               </View>
+
+              {TODAY_LAYOUT === 1 && (
+                <View style={styles.statBar}>
+                  {getSummaryItems(t).map((item) => (
+                    <TouchableOpacity
+                      key={item.key}
+                      style={styles.statBarCol}
+                      activeOpacity={0.8}
+                      onPress={() => {
+                        haptics.selection();
+                        router.push("/d/schedule");
+                      }}
+                    >
+                      <View
+                        style={[
+                          styles.statBarIcon,
+                          { backgroundColor: item.surface },
+                        ]}
+                      >
+                        <Ionicons name={item.icon} size={15} color={item.tint} />
+                      </View>
+                      <AppText style={styles.statBarValue}>
+                        {statValues[item.key]}
+                      </AppText>
+                      <AppText style={styles.statBarLabel} numberOfLines={1}>
+                        {item.label}
+                      </AppText>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+
+              {TODAY_LAYOUT === 2 && (
+                <View style={styles.todayGrid}>
+                  {getSummaryItems(t).map((item) => (
+                    <TouchableOpacity
+                      key={item.key}
+                      style={styles.statTile}
+                      activeOpacity={0.8}
+                      onPress={() => {
+                        haptics.selection();
+                        router.push("/d/schedule");
+                      }}
+                    >
+                      <View
+                        style={[styles.statChip, { backgroundColor: item.surface }]}
+                      >
+                        <Ionicons name={item.icon} size={17} color={item.tint} />
+                      </View>
+                      <AppText style={styles.statValue}>
+                        {statValues[item.key]}
+                      </AppText>
+                      <AppText style={styles.statLabel} numberOfLines={1}>
+                        {item.label}
+                      </AppText>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+
+              {TODAY_LAYOUT === 3 && (
+                <View style={styles.todayContent}>
+                  <View style={styles.todayLeft}>
+                    <AppText style={styles.todayTotalSmall}>{totalToday}</AppText>
+                    <AppText style={styles.todayCaption}>
+                      {t("home.bookingsScheduled")}
+                    </AppText>
+                  </View>
+                  <View style={styles.todayStats}>
+                    {getSummaryItems(t).map((item) => (
+                      <TouchableOpacity
+                        key={item.key}
+                        style={styles.statTile}
+                        activeOpacity={0.8}
+                        onPress={() => {
+                          haptics.selection();
+                          router.push("/d/schedule");
+                        }}
+                      >
+                        <View
+                          style={[
+                            styles.statChip,
+                            { backgroundColor: item.surface },
+                          ]}
+                        >
+                          <Ionicons name={item.icon} size={17} color={item.tint} />
+                        </View>
+                        <AppText style={styles.statValue}>
+                          {statValues[item.key]}
+                        </AppText>
+                        <AppText style={styles.statLabel} numberOfLines={1}>
+                          {item.label}
+                        </AppText>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+              )}
             </View>
+          </Animated.View>
 
-            <AppText style={styles.walkInPin} numberOfLines={1}>
-              {activePin ?? "----"}
-            </AppText>
+          {/* ===== Z2 → Walk-in PIN: primary action ===== */}
+          <Animated.View style={[sectionStyle(1), { marginTop: 16 }]}>
+            <View style={styles.pinCard}>
+              <View style={styles.pinHeader}>
+                <View style={styles.pinTitleGroup}>
+                  <View style={styles.pinChip}>
+                    <Ionicons name="walk-outline" size={20} color={Colors.brand.primaryDark} />
+                  </View>
+                  <View>
+                    <AppText style={styles.pinLabel}>{t("home.walkinPin")}</AppText>
+                    <AppText style={styles.pinHint} numberOfLines={1}>
+                      {t("home.walkinPinHint")}
+                    </AppText>
+                  </View>
+                </View>
+                <View style={styles.pinActions}>
+                  <TouchableOpacity
+                    onPress={handleGeneratePin}
+                    disabled={isGenerating}
+                    style={styles.pinIconBtn}
+                    activeOpacity={0.8}
+                  >
+                    {isGenerating ? (
+                      <ActivityIndicator size="small" color={Colors.text.secondary} />
+                    ) : (
+                      <Ionicons name="refresh" size={18} color={Colors.text.secondary} />
+                    )}
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      haptics.light();
+                      router.push("/d/barbershop-qr");
+                    }}
+                    style={styles.pinIconBtn}
+                    activeOpacity={0.8}
+                  >
+                    <Ionicons name="qr-code-outline" size={18} color={Colors.text.secondary} />
+                  </TouchableOpacity>
+                </View>
+              </View>
 
-            {bookingUrl && (
-              <View style={styles.walkInLinkRow}>
-                <TouchableOpacity
-                  onPress={handleShareLink}
-                  onLongPress={() => {
-                    Clipboard.setStringAsync(bookingUrl);
-                    toast.success(t("home.linkCopied"));
-                  }}
-                  activeOpacity={0.85}
-                  style={[styles.walkInLinkPill, Neu.inset(Colors.bg.surface, 0.6)]}
-                >
-                  <AppText style={styles.walkInLinkText} numberOfLines={1}>
-                    {bookingUrl}
-                  </AppText>
-                  <Ionicons
-                    name="share-outline"
-                    size={18}
-                    color={Colors.text.secondary}
+              <Animated.View
+                style={[styles.pinValueRow, { transform: [{ scale: pinScale }] }]}
+              >
+                <AppText style={styles.pinValue} numberOfLines={1}>
+                  {activePin ?? "----"}
+                </AppText>
+                <View style={styles.pinActionRow}>
+                  <TouchableOpacity
+                    onPress={handleCopyLink}
+                    disabled={!bookingUrl}
+                    style={styles.pinCopyBtn}
+                    activeOpacity={0.8}
+                  >
+                    <Ionicons name="copy-outline" size={18} color={Colors.text.primary} />
+                    <AppText style={styles.pinCopyLabel}>{t("common.copy")}</AppText>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={handleShareLink}
+                    disabled={!bookingUrl}
+                    style={styles.pinCopyBtn}
+                    activeOpacity={0.8}
+                  >
+                    <Ionicons name="share-outline" size={18} color={Colors.text.primary} />
+                    <AppText style={styles.pinCopyLabel}>{t("walkIn.share")}</AppText>
+                  </TouchableOpacity>
+                </View>
+              </Animated.View>
+            </View>
+          </Animated.View>
+
+          {/* ===== Z3 → Quick actions (horizontal scan) ===== */}
+          <Animated.View style={[sectionStyle(2), { marginTop: 22 }]}>
+            <View style={styles.quickHeader}>
+              <AppText style={styles.sectionTitle}>{t("home.quickActions")}</AppText>
+            </View>
+            <View style={styles.quickRow}>
+              <Animated.ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.quickScroll}
+              >
+                <ShortcutTile
+                  label={t("home.newBooking")}
+                  variant="small"
+                  icon={
+                    <Ionicons name="calendar" size={22} color={Colors.brand.primaryDark} />
+                  }
+                  iconBg={Colors.brand.primarySurface}
+                  onPress={() => setNewBookVisible(true)}
+                />
+                <ShortcutTile
+                  label={t("home.requests")}
+                  variant="small"
+                  badgeCount={requestCount}
+                  dotColor={requestCount > 0 ? Colors.status.danger : undefined}
+                  icon={
+                    <Ionicons name="calendar-number" size={22} color={Colors.status.requested} />
+                  }
+                  iconBg={Colors.status.requestedSurface}
+                  onPress={() => router.push("/d/booking-requests")}
+                />
+                <ShortcutTile
+                  label={t("barbers.title")}
+                  variant="small"
+                  icon={
+                    <Ionicons name="people" size={22} color={Colors.status.info} />
+                  }
+                  iconBg={Colors.status.infoSurface}
+                  onPress={() => router.push("/d/barbers-management")}
+                />
+                <ShortcutTile
+                  label={t("customers.title")}
+                  variant="small"
+                  icon={
+                    <Ionicons name="person" size={22} color={Colors.status.success} />
+                  }
+                  iconBg={Colors.status.successSurface}
+                  onPress={() => router.push("/d/customer-management")}
+                />
+                <ShortcutTile
+                  label={t("services.title")}
+                  variant="small"
+                  icon={
+                    <Ionicons name="cut" size={22} color={Colors.status.warning} />
+                  }
+                  iconBg={Colors.status.warningSurface}
+                  onPress={() => router.push("/d/services-management")}
+                />
+                <ShortcutTile
+                  label={t("home.openHours")}
+                  variant="small"
+                  icon={
+                    <Ionicons name="time" size={22} color={Colors.text.secondary} />
+                  }
+                  iconBg={Colors.bg.default}
+                  onPress={() => router.push("/d/open-hours")}
+                />
+              </Animated.ScrollView>
+            </View>
+          </Animated.View>
+
+          {/* ===== Z4 → Up next (F-pattern list) ===== */}
+          <Animated.View style={[sectionStyle(3), { marginTop: 24 }]}>
+            <View style={styles.sectionRow}>
+              <AppText style={styles.sectionTitle}>{t("home.upNext")}</AppText>
+              <TouchableOpacity
+                onPress={() => {
+                  haptics.selection();
+                  router.push("/d/schedule");
+                }}
+              >
+                <AppText style={styles.seeAll}>{t("home.seeAll")}</AppText>
+              </TouchableOpacity>
+            </View>
+            {waitingBookings.length > 0 ? (
+              waitingBookings.map((booking, i) => {
+                const timeDate =
+                  booking.type === "appointment" && booking.scheduledAt
+                    ? new Date(booking.scheduledAt as Date)
+                    : new Date(booking.createdAt as Date);
+                return (
+                  <BookingCard
+                    key={booking.id}
+                    customerName={booking.customerName}
+                    barberName={booking.barber?.name ?? "-"}
+                    timeLabel={formatTime12h(timeDate)}
+                    duration={`${booking.totalDuration} mins`}
+                    status={mapApiStatusToBookingStatus(booking.status)}
+                    bookingType={booking.type}
+                    onPress={() => handleBookingPress(booking.id)}
+                    style={
+                      i < waitingBookings.length - 1
+                        ? styles.cardMargin
+                        : undefined
+                    }
                   />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    Clipboard.setStringAsync(bookingUrl);
-                    toast.success(t("home.linkCopied"));
-                  }}
-                  activeOpacity={0.85}
-                  style={[styles.walkInCopyBtn, Neu.inset(Colors.bg.surface, 0.6)]}
-                >
-                  <Ionicons
-                    name="copy-outline"
-                    size={18}
-                    color={Colors.text.secondary}
-                  />
-                </TouchableOpacity>
+                );
+              })
+            ) : (
+              <View style={styles.emptyState}>
+                <View style={styles.emptyIcon}>
+                  <Ionicons name="checkmark-done" size={24} color={Colors.status.success} />
+                </View>
+                <AppText style={styles.emptyText}>{t("home.noBookingsToday")}</AppText>
               </View>
             )}
-          </View>
-
-          {/* Today&apos;s Overview */}
-          <View style={[styles.summaryCard, Neu.raised(Colors.bg.surface)]}>
-            <View style={styles.summaryHeader}>
-              <AppText style={styles.summaryTitle}>
-                {t("home.todayOverview")}
-              </AppText>
-              <AppText style={styles.summaryDate}>
-                {formatDateShort(new Date())}
-              </AppText>
-            </View>
-            <View style={styles.summaryItems}>
-              {getSummaryItems(t).map((item) => (
-                <TouchableOpacity
-                  key={item.key}
-                  style={styles.summaryItem}
-                  activeOpacity={0.85}
-                  onPress={() => router.push("/d/schedule")}
-                >
-                  <View
-                    style={[
-                      styles.summaryItemIcon,
-                      Neu.inset(Colors.bg.surface, 0.6),
-                    ]}
-                  >
-                    <Ionicons
-                      name={item.icon}
-                      size={20}
-                      color={Colors.brand.primaryDark}
-                    />
-                  </View>
-                  <AppText style={styles.summaryItemValue}>
-                    {statValues[item.key]}
-                  </AppText>
-                  <AppText style={styles.summaryItemLabel} numberOfLines={1}>
-                    {item.label}
-                  </AppText>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-
-          {/* Up Next */}
-          <View style={styles.sectionRow}>
-            <AppText style={styles.sectionTitle}>{t("home.upNext")}</AppText>
-            <TouchableOpacity onPress={() => router.push("/d/schedule")}>
-              <AppText style={styles.seeAll}>{t("home.seeAll")}</AppText>
-            </TouchableOpacity>
-          </View>
-          {waitingBookings.length > 0 ? (
-            waitingBookings.map((booking, i) => {
-              const timeDate =
-                booking.type === "appointment" && booking.scheduledAt
-                  ? new Date(booking.scheduledAt as Date)
-                  : new Date(booking.createdAt as Date);
-              return (
-                <BookingCard
-                  key={booking.id}
-                  customerName={booking.customerName}
-                  barberName={booking.barber?.name ?? "—"}
-                  timeLabel={formatTime12h(timeDate)}
-                  duration={`${booking.totalDuration} mins`}
-                  status={mapApiStatusToBookingStatus(booking.status)}
-                  bookingType={booking.type}
-                  onPress={() => handleBookingPress(booking.id)}
-                  style={
-                    i < waitingBookings.length - 1 ? styles.cardMargin : undefined
-                  }
-                />
-              );
-            })
-          ) : (
-            <AppText style={styles.emptyText}>{t("home.noBookingsToday")}</AppText>
-          )}
+          </Animated.View>
         </View>
       </Animated.ScrollView>
 
-      {/* Sticky header */}
+      {/* Sticky header — F1 scan line */}
       <Animated.View
         style={[
           styles.stickyHeader,
@@ -531,44 +735,42 @@ export function HomeDashboardScreen() {
         ]}
       >
         <View style={styles.headerRow}>
-          <TouchableOpacity
-            style={styles.profileBtn}
-            activeOpacity={0.85}
-            onPress={() => router.push("/d/user-profile")}
-          >
-            {user?.image ? (
-              <Image source={{ uri: user.image }} style={styles.profileAvatar} />
-            ) : (
-              <View style={styles.profileAvatarFallback}>
-                <AppText style={styles.profileInitials}>
-                  {avatarInitials || "?"}
+          {/* Workspace switcher — far left (display only; tap the chevron) */}
+          <View style={styles.shopWrap}>
+            <View style={styles.shopDisplay}>
+              <View style={styles.shopTextCol}>
+                <AppText style={styles.shopName} numberOfLines={1}>
+                  {shopDisplayName}
                 </AppText>
+                {roleLabel ? (
+                  <AppText style={styles.shopRole} numberOfLines={1}>
+                    {roleLabel}
+                  </AppText>
+                ) : null}
               </View>
-            )}
-          </TouchableOpacity>
-          <View style={styles.greetingCol}>
-            <AppText style={styles.greetingText} numberOfLines={1}>
-              {t("home.greeting", { name: user?.name ?? "..." })}
-            </AppText>
+            </View>
             <TouchableOpacity
-              style={styles.changeShopBtn}
+              style={styles.chevronBtn}
               activeOpacity={0.85}
-              onPress={() => setSwitcherVisible(true)}
+              onPress={() => {
+                haptics.light();
+                setSwitcherVisible(true);
+              }}
             >
-              <AppText style={styles.changeShopName} numberOfLines={1}>
-                {barbershop?.name ?? "..."}
-              </AppText>
               <Ionicons
                 name="chevron-down"
-                size={12}
+                size={16}
                 color={Colors.text.secondary}
               />
-              {otherOrgHasUnread && <View style={styles.shopDot} />}
+              {otherOrgHasUnread ? <View style={styles.shopDot} /> : null}
             </TouchableOpacity>
           </View>
+
+          {/* Notification — center-right */}
           <TouchableOpacity
             style={styles.notifBtn}
             onPress={async () => {
+              haptics.light();
               if (
                 typeof window === "undefined" ||
                 !("Notification" in window)
@@ -584,7 +786,6 @@ export function HomeDashboardScreen() {
                 setNotifConsentVisible(true);
                 return;
               }
-              // Permission already granted — silently renew subscription then navigate
               try {
                 const { subscription } =
                   await pwaNotificationService.requestPermission();
@@ -616,27 +817,50 @@ export function HomeDashboardScreen() {
             />
             {(unreadCount ?? 0) > 0 ? <View style={styles.notifDot} /> : null}
           </TouchableOpacity>
+
+          {/* Profile — far right */}
+          <SoftPressable
+            style={styles.profileBtn}
+            contentStyle={styles.profileContent}
+            onPress={() => router.push("/d/user-profile")}
+          >
+            {user?.image ? (
+              <Image source={{ uri: user.image }} style={styles.profileAvatar} />
+            ) : (
+              <View style={styles.profileFallback}>
+                <AppText style={styles.profileInitials}>
+                  {avatarInitials || "?"}
+                </AppText>
+              </View>
+            )}
+          </SoftPressable>
         </View>
+
+        {/* Open/closed status pill */}
         <TouchableOpacity
           style={[
             styles.openHoursStrip,
-            {
-              backgroundColor: isCurrentlyOpen
-                ? Colors.status.success
-                : Colors.status.danger,
-            },
+            isOpen ? styles.openStripOpen : styles.openStripClosed,
           ]}
           activeOpacity={0.9}
-          onPress={() => router.push("/d/open-hours")}
+          onPress={() => {
+            haptics.light();
+            router.push("/d/open-hours");
+          }}
         >
-          <View style={styles.openHoursStripDot} />
-          <AppText style={styles.openHoursStripStatus}>
-            {isCurrentlyOpen ? t("barbershop.open") : t("barbershop.closed")}
+          <View
+            style={[
+              styles.openStripDot,
+              { backgroundColor: isOpen ? Colors.status.success : Colors.status.danger },
+            ]}
+          />
+          <AppText style={styles.openStripStatus}>
+            {isOpen ? t("barbershop.open") : t("barbershop.closed")}
           </AppText>
           {todayOpenHours ? (
             <>
-              <View style={styles.openHoursStripDivider} />
-              <AppText style={styles.openHoursStripRange}>
+              <View style={styles.openStripDivider} />
+              <AppText style={styles.openStripRange}>
                 {formatTimeRange(
                   todayOpenHours.openTime,
                   todayOpenHours.closeTime,
@@ -644,16 +868,16 @@ export function HomeDashboardScreen() {
               </AppText>
             </>
           ) : null}
-          <View style={styles.openHoursStripSpacer} />
+          <View style={styles.openStripSpacer} />
           <Ionicons
             name="chevron-forward"
             size={14}
-            color="rgba(255, 255, 255, 0.85)"
+            color={Colors.text.secondary}
           />
         </TouchableOpacity>
       </Animated.View>
 
-      {/* Modals */}
+      {/* Sheets */}
       <BarbershopSwitcherModal
         visible={switcherVisible}
         onClose={() => setSwitcherVisible(false)}
@@ -671,8 +895,6 @@ export function HomeDashboardScreen() {
         confirmLabel={t("home.notNow")}
         onCancel={() => {
           setNotifConsentVisible(false);
-          // Defer until after the modal overlay is fully removed from DOM,
-          // otherwise some browsers block the native permission dialog.
           setTimeout(async () => {
             try {
               const { subscription } =
@@ -726,7 +948,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
 
-  // Sticky header
+  /* Sticky header */
   stickyHeader: {
     position: "absolute",
     top: 0,
@@ -739,192 +961,417 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 28,
-    paddingVertical: 10,
-    gap: 14,
-  },
-  openHoursStrip: {
-    height: OPEN_HOURS_STRIP_HEIGHT,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    paddingHorizontal: 28,
-  },
-  openHoursStripDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: Colors.text.inverse,
-  },
-  openHoursStripStatus: {
-    fontSize: 13,
-    fontWeight: "700",
-    color: Colors.text.inverse,
-  },
-  openHoursStripDivider: {
-    width: 1,
-    height: 12,
-    backgroundColor: "rgba(255, 255, 255, 0.35)",
-    marginHorizontal: 2,
-  },
-  openHoursStripRange: {
-    fontSize: 13,
-    fontWeight: "500",
-    color: "rgba(255, 255, 255, 0.92)",
-  },
-  openHoursStripSpacer: {
-    flex: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    gap: 12,
   },
   profileBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 42,
+    height: 42,
+  },
+  profileContent: {
+    flex: 1,
+    borderRadius: 21,
     overflow: "hidden",
   },
   profileAvatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
   },
-  profileAvatarFallback: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: Colors.brand.primarySurface,
-    borderWidth: 1,
-    borderColor: Colors.brand.primary,
+  profileFallback: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: Colors.brand.primary,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: Colors.brand.primaryDark,
   },
   profileInitials: {
     fontSize: 14,
-    fontWeight: "700",
-    color: Colors.brand.primaryDark,
-  },
-  greetingCol: {
-    flex: 1,
-    gap: 4,
-  },
-  greetingText: {
-    fontSize: 15,
     fontWeight: "600",
+    color: Colors.text.primary,
+  },
+  shopWrap: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  shopDisplay: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 7,
+    flexShrink: 1,
+  },
+  shopTextCol: {
+    flexShrink: 1,
+    gap: 1,
+  },
+  shopName: {
+    fontSize: 14,
+    fontWeight: "500",
     color: Colors.text.primary,
     letterSpacing: -0.2,
   },
-  changeShopBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5,
-    alignSelf: "flex-start",
+  shopRole: {
+    fontSize: 11,
+    fontWeight: "500",
+    color: Colors.brand.primaryDark,
   },
-  changeShopName: {
-    maxWidth: 160,
-    fontSize: 12,
-    fontWeight: "600",
-    color: Colors.text.secondary,
-    flexShrink: 1,
+  chevronBtn: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: Colors.bg.surface,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    alignItems: "center",
+    justifyContent: "center",
   },
   shopDot: {
+    position: "absolute",
+    top: 3,
+    right: 3,
     width: 8,
     height: 8,
     borderRadius: 4,
     backgroundColor: Colors.status.danger,
+    borderWidth: 1.5,
+    borderColor: Colors.bg.surface,
   },
   notifBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: Colors.bg.surface,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
     alignItems: "center",
     justifyContent: "center",
   },
   notifDot: {
     position: "absolute",
-    top: 4,
-    right: 4,
+    top: 5,
+    right: 5,
+    width: 9,
+    height: 9,
+    borderRadius: 5,
+    backgroundColor: Colors.status.danger,
+    borderWidth: 1.5,
+    borderColor: Colors.bg.surface,
+  },
+
+  /* Open status pill */
+  openHoursStrip: {
+    height: OPEN_HOURS_STRIP_HEIGHT,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginHorizontal: 20,
+    borderRadius: 19,
+    paddingHorizontal: 14,
+  },
+  openStripOpen: {
+    backgroundColor: Colors.status.successSurface,
+  },
+  openStripClosed: {
+    backgroundColor: Colors.status.dangerSurface,
+  },
+  openStripDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: Colors.status.danger,
+  },
+  openStripStatus: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: Colors.text.primary,
+  },
+  openStripDivider: {
+    width: 1,
+    height: 12,
+    backgroundColor: Colors.border.default,
+    marginHorizontal: 2,
+  },
+  openStripRange: {
+    fontSize: 13,
+    fontWeight: "500",
+    color: Colors.text.secondary,
+  },
+  openStripSpacer: {
+    flex: 1,
   },
 
-  // Quick Actions
-  quickActionsRow: {
-    marginTop: 16,
-    marginBottom: 24,
-  },
-  quickActionsScroll: {
-    flexDirection: "row",
-    gap: 16,
-    paddingVertical: 4,
-  },
-
-  // Walk-In Check-In
-  walkInCard: {
+  /* Today hero card — asymmetric split */
+  todayCard: {
+    backgroundColor: Colors.bg.surface,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
     borderRadius: 24,
-    padding: 18,
-    marginBottom: 28,
+    padding: 16,
+    shadowColor: "rgba(23, 28, 35, 0.06)",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 1,
+    shadowRadius: 20,
+    elevation: 3,
   },
-  walkInHeader: {
+  todayHeader: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 8,
+    marginBottom: 12,
   },
-  walkInLabel: {
+  todayEyebrow: {
     fontSize: 12,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.secondary,
     letterSpacing: 0.5,
+    textTransform: "uppercase",
   },
-  walkInActions: {
+  todayDateChip: {
+    backgroundColor: Colors.bg.default,
+    borderRadius: 999,
+    paddingHorizontal: 11,
+    paddingVertical: 5,
+  },
+  todayDate: {
+    fontSize: 12,
+    fontWeight: "500",
+    color: Colors.text.secondary,
+  },
+  totalBadge: {
+    backgroundColor: Colors.brand.primarySurface,
+    borderRadius: 999,
+    paddingHorizontal: 11,
+    paddingVertical: 4,
+  },
+  totalBadgeText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: Colors.brand.primaryDark,
+  },
+
+  /* Layout 1 — single-row stat bar (most compact) */
+  statBar: {
     flexDirection: "row",
-    alignItems: "center",
     gap: 8,
   },
-  walkInIconBtn: {
-    width: 36,
-    height: 36,
+  statBarCol: {
+    flex: 1,
+    alignItems: "center",
+    gap: 3,
+    backgroundColor: Colors.bg.default,
+    borderRadius: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 4,
+  },
+  statBarIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 2,
+  },
+  statBarValue: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: Colors.text.primary,
+    letterSpacing: -0.5,
+    lineHeight: 24,
+  },
+  statBarLabel: {
+    fontSize: 10.5,
+    fontWeight: "500",
+    color: Colors.text.muted,
+    textAlign: "center",
+  },
+
+  /* Layout 2 — full-width 2×2 grid */
+  todayGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+  },
+
+  /* Layout 3 — tight split */
+  todayContent: {
+    flexDirection: "row",
+    gap: 12,
+    alignItems: "stretch",
+  },
+  todayLeft: {
+    flex: 1,
+    justifyContent: "center",
+    gap: 2,
+  },
+  todayTotalSmall: {
+    fontSize: 32,
+    fontWeight: "700",
+    color: Colors.text.primary,
+    letterSpacing: -1,
+    lineHeight: 36,
+  },
+  todayCaption: {
+    fontSize: 12.5,
+    fontWeight: "500",
+    color: Colors.text.muted,
+  },
+  todayStats: {
+    flex: 1.1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    alignContent: "center",
+  },
+  statTile: {
+    width: "47%",
+    flexGrow: 1,
+    backgroundColor: Colors.bg.surface,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
     borderRadius: 18,
+    paddingVertical: 11,
+    paddingHorizontal: 10,
+    gap: 5,
+    justifyContent: "center",
+  },
+  statChip: {
+    width: 34,
+    height: 34,
+    borderRadius: 11,
     alignItems: "center",
     justifyContent: "center",
   },
-  walkInPin: {
-    fontSize: 48,
-    fontWeight: "800",
+  statValue: {
+    fontSize: 20,
+    fontWeight: "700",
     color: Colors.text.primary,
-    letterSpacing: 4,
-    marginBottom: 12,
+    letterSpacing: -0.5,
   },
-  walkInLinkPill: {
+  statLabel: {
+    fontSize: 11,
+    fontWeight: "500",
+    color: Colors.text.secondary,
+  },
+
+  /* Walk-in PIN card */
+  pinCard: {
+    backgroundColor: Colors.bg.surface,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    borderRadius: 26,
+    padding: 18,
+    shadowColor: "rgba(23, 28, 35, 0.06)",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 1,
+    shadowRadius: 20,
+    elevation: 3,
+  },
+  pinHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  pinTitleGroup: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    gap: 8,
-    marginBottom: 12,
   },
-  walkInLinkRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  walkInCopyBtn: {
+  pinChip: {
     width: 40,
     height: 40,
-    borderRadius: 12,
+    borderRadius: 13,
+    backgroundColor: Colors.brand.primarySurface,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 12,
   },
-  walkInLinkText: {
-    flex: 1,
+  pinLabel: {
     fontSize: 13,
-    color: Colors.text.secondary,
-    fontWeight: "500",
+    fontWeight: "600",
+    color: Colors.text.primary,
   },
-  // Section
+  pinHint: {
+    fontSize: 11.5,
+    color: Colors.text.muted,
+    marginTop: 1,
+  },
+  pinActions: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  pinIconBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 13,
+    backgroundColor: Colors.bg.default,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  pinValueRow: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "space-between",
+    marginTop: 14,
+  },
+  pinValue: {
+    fontSize: 38,
+    fontWeight: "700",
+    color: Colors.brand.primaryDark,
+    letterSpacing: 5,
+    lineHeight: 48,
+    flexShrink: 1,
+  },
+  pinActionRow: {
+    flexDirection: "row",
+    gap: 8,
+    paddingBottom: 2,
+  },
+  pinCopyBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    backgroundColor: Colors.bg.surface,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
+    borderRadius: 14,
+    paddingHorizontal: 11,
+    paddingVertical: 8,
+  },
+  pinCopyLabel: {
+    fontSize: 12,
+    fontWeight: "500",
+    color: Colors.text.primary,
+  },
+
+  /* Quick actions */
+  quickHeader: {
+    marginBottom: 12,
+    paddingHorizontal: 2,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: Colors.text.primary,
+    letterSpacing: -0.3,
+  },
+  quickRow: {
+    marginHorizontal: -20,
+  },
+  quickScroll: {
+    flexDirection: "row",
+    gap: 14,
+    paddingHorizontal: 20,
+    paddingVertical: 2,
+  },
+
+  /* Up next */
   sectionRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -932,81 +1379,35 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     paddingHorizontal: 2,
   },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: "700",
-    color: Colors.text.primary,
-    letterSpacing: -0.3,
-  },
   seeAll: {
     fontSize: 13,
     color: Colors.brand.primaryDark,
     fontWeight: "600",
   },
-
-  // Today&apos;s Overview card
-  summaryCard: {
-    borderRadius: 24,
-    padding: 18,
-    marginBottom: 28,
-  },
-  summaryHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 16,
-  },
-  summaryTitle: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: Colors.text.primary,
-    letterSpacing: -0.2,
-  },
-  summaryDate: {
-    fontSize: 12,
-    fontWeight: "500",
-    color: Colors.text.secondary,
-  },
-  summaryItems: {
-    flexDirection: "row",
-    gap: 10,
-  },
-  summaryItem: {
-    flex: 1,
-    alignItems: "center",
-    gap: 6,
-    borderRadius: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 4,
-  },
-  summaryItemIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  summaryItemValue: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: Colors.text.primary,
-    letterSpacing: -0.5,
-  },
-  summaryItemLabel: {
-    fontSize: 11,
-    fontWeight: "600",
-    color: Colors.text.secondary,
-    textAlign: "center",
-  },
-
   cardMargin: {
     marginBottom: 12,
   },
+  emptyState: {
+    alignItems: "center",
+    backgroundColor: Colors.bg.surface,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    borderRadius: 22,
+    paddingVertical: 28,
+    paddingHorizontal: 20,
+    gap: 12,
+  },
+  emptyIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 16,
+    backgroundColor: Colors.status.successSurface,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   emptyText: {
-    fontSize: 13,
+    fontSize: 13.5,
     color: Colors.text.muted,
     textAlign: "center",
-    marginTop: 16,
-    paddingHorizontal: 16,
   },
 });

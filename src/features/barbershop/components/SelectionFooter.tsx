@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 15,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
 });

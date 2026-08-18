@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: OnboardingTheme.colors.dark,
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "600",
   },
   buttonTextSecondary: {
     color: OnboardingTheme.colors.dark,

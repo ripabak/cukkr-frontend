@@ -22,6 +22,7 @@ export const id = {
     noPermission: 'Kamu gabisa akses ini. Cuma owner/admin yang bisa.',
     noData: 'Belum ada data nih',
     retry: 'Coba Lagi',
+    copy: 'Salin',
     search: 'Cari',
     filter: 'Filter',
     all: 'Semua',
@@ -34,6 +35,7 @@ export const id = {
     deleteConfirm: 'Yakin hapus? Nanti gabisa dikembalikan lho.',
     loadFailed: 'Gagal memuat data',
     logout: 'Keluar',
+    to: 'sampai',
   },
   auth: {
     login: 'Masuk',
@@ -214,6 +216,12 @@ export const id = {
     notifConsentDesc: 'Dapatkan notifikasi tentang permintaan booking baru dan kedatangan walk-in secara real-time.',
     enable: 'Aktifkan',
     notNow: 'Nanti',
+    newBookingHint: 'Mau mulai booking apa hari ini?',
+    walkInHint: 'Pelanggan datang langsung tanpa janji.',
+    appointmentHint: 'Pelanggan sudah punya jadwal.',
+    walkinPin: 'PIN Walk-in',
+    walkinPinHint: 'PIN check-in pelanggan',
+    bookingsScheduled: 'booking hari ini',
   },
   walkIn: {
     hint: 'Pelanggan scan QR code ini untuk check-in sebagai walk-in. PIN akan terisi otomatis di halaman booking.',
@@ -359,6 +367,8 @@ export const id = {
     appointment: 'Appointment'
   },
   calendar: {
+    title: 'Pilih Tanggal',
+    pickDate: 'Geser tanggal untuk booking',
     closedDay: 'Hari Tutup',
     hasRequests: 'Ada Permintaan',
     hasWaiting: 'Ada Menunggu',
@@ -447,6 +457,8 @@ export const id = {
   },
   barbershop: {
     settings: 'Pengaturan Barbershop',
+    switcherTitle: 'Pilih Barbershop',
+    switchSubtitle: 'Langsung pindah ke barbershop lain',
     switchingWorkspace: 'Beralih workspace',
     pleaseWait: 'Tunggu sebentar...',
     searchPlaceholder: 'Cari barbershop...',

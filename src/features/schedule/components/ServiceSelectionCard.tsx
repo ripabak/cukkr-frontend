@@ -141,12 +141,12 @@ const styles = StyleSheet.create({
   },
   serviceName: {
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   servicePrice: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   defaultBadge: {
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
   },
   defaultText: {
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   changeRow: {

@@ -94,7 +94,6 @@ export function UserProfileScreen({ hideBack = false }: Props = {}) {
 
   return (
     <ScreenShell
-      hideAppHeader
       headerSlot={
         <ScreenHeader
           title={t("profile.title")}
@@ -224,7 +223,7 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
     marginTop: 4,
     letterSpacing: 0.5,

@@ -1,5 +1,9 @@
 /**
- * Neumorphic / native-style shared styling utilities.
+ * Soft Flat Design System — shared styling utilities.
+ *
+ * Replaces the legacy neumorphic helpers (kept as a deprecated alias) with a
+ * Modern Soft Flat system: pure surfaces, hairline borders, soft tinted
+ * shadows. No dual-light/dark neumorphic offsets.
  *
  * Use these helpers to keep surfaces, shadows, and status tints consistent.
  */
@@ -14,150 +18,143 @@ export type BookingStatus =
   | "requested"
   | "declined";
 
-/** Shadow color derived from the background for tinted shadows. */
-const SHADOW_DARK = "rgba(174, 178, 192, 0.45)";
-const SHADOW_LIGHT = "rgba(255, 255, 255, 0.85)";
+/* ------------------------------------------------------------------ */
+/* Soft Flat primitives                                                */
+/* ------------------------------------------------------------------ */
+
+const HAIRLINE = "rgba(21, 26, 34, 0.07)"; // card outlines
+const HAIRLINE_STRONG = "rgba(21, 26, 34, 0.12)"; // pressed outlines
+const SHADOW_COLOR = "rgba(23, 28, 35, 0.08)"; // soft tinted shadow
+const SHADOW_ACCENT = "rgba(245, 185, 35, 0.38)"; // amber glow
 
 const isWeb = Platform.OS === "web";
 
-/**
- * Raised neumorphic surface shadow.
- * On web it uses a CSS `boxShadow` string with two offset shadows.
- * On native it falls back to a single subtle shadow.
- */
-export function neuRaised(
+/** Flat elevated surface: hairline border + soft drop shadow. */
+export function softRaised(
   bg: string = Colors.bg.surface,
   intensity: number = 1,
 ): ViewStyle {
-  const dark = `rgba(174, 178, 192, ${0.35 * intensity})`;
-  const light = "rgba(255, 255, 255, 0.85)";
   if (isWeb) {
     return {
       backgroundColor: bg,
-      boxShadow: `${6 * intensity}px ${6 * intensity}px ${
-        12 * intensity
-      }px ${dark}, -${6 * intensity}px -${6 * intensity}px ${
-        12 * intensity
-      }px ${light}`,
+      borderWidth: 1,
+      borderColor: HAIRLINE,
+      boxShadow: `0 1px 2px rgba(23, 28, 35, 0.03), 0 ${6 * intensity}px ${
+        20 * intensity
+      }px ${SHADOW_COLOR}`,
     };
   }
   return {
     backgroundColor: bg,
-    shadowColor: dark,
-    shadowOffset: { width: 3 * intensity, height: 3 * intensity },
-    shadowOpacity: 1,
-    shadowRadius: 6 * intensity,
-    elevation: 4 * intensity,
-  };
-}
-
-/** Inset / pressed neumorphic surface. */
-export function neuInset(
-  bg: string = Colors.bg.surface,
-  intensity: number = 1,
-): ViewStyle {
-  const dark = `rgba(174, 178, 192, ${0.3 * intensity})`;
-  const light = "rgba(255, 255, 255, 0.75)";
-  if (isWeb) {
-    return {
-      backgroundColor: bg,
-      boxShadow: `inset ${4 * intensity}px ${4 * intensity}px ${
-        8 * intensity
-      }px ${dark}, inset -${4 * intensity}px -${4 * intensity}px ${
-        8 * intensity
-      }px ${light}`,
-    };
-  }
-  return {
-    backgroundColor: bg,
-    shadowColor: dark,
-    shadowOffset: { width: 0, height: 2 * intensity },
-    shadowOpacity: 0.25 * intensity,
-    shadowRadius: 4 * intensity,
-    elevation: 1,
-  };
-}
-
-/** Soft floating shadow for cards, modals, bottom sheets. */
-export function neuFloat(
-  bg: string = Colors.bg.surface,
-  intensity: number = 1,
-): ViewStyle {
-  const dark = `rgba(31, 35, 40, ${0.08 * intensity})`;
-  if (isWeb) {
-    return {
-      backgroundColor: bg,
-      boxShadow: `0px ${6 * intensity}px ${18 * intensity}px ${dark}`,
-    };
-  }
-  return {
-    backgroundColor: bg,
-    shadowColor: dark,
+    borderWidth: 1,
+    borderColor: HAIRLINE,
+    shadowColor: SHADOW_COLOR,
     shadowOffset: { width: 0, height: 4 * intensity },
     shadowOpacity: 1,
     shadowRadius: 12 * intensity,
-    elevation: 6 * intensity,
+    elevation: 2 * intensity,
   };
 }
 
-/** Small shadow for buttons, chips, inputs. */
-export function neuSoft(
+/** Flat recessed well (inputs, icon wells): hairline border only. */
+export function softInset(
   bg: string = Colors.bg.surface,
   intensity: number = 1,
 ): ViewStyle {
-  const dark = `rgba(174, 178, 192, ${0.4 * intensity})`;
-  const light = "rgba(255, 255, 255, 0.8)";
+  return {
+    backgroundColor: bg,
+    borderWidth: 1,
+    borderColor: intensity > 0.7 ? HAIRLINE : Colors.border.light,
+  };
+}
+
+/** Floating sheet / modal surface: strong soft elevation. */
+export function softFloat(
+  bg: string = Colors.bg.elevated,
+  intensity: number = 1,
+): ViewStyle {
   if (isWeb) {
     return {
       backgroundColor: bg,
-      boxShadow: `${3 * intensity}px ${3 * intensity}px ${
-        6 * intensity
-      }px ${dark}, -${3 * intensity}px -${3 * intensity}px ${
-        6 * intensity
-      }px ${light}`,
+      borderWidth: 1,
+      borderColor: HAIRLINE,
+      boxShadow: `0 -2px 12px rgba(23, 28, 35, 0.04), 0 ${
+        10 * intensity
+      }px ${32 * intensity}px rgba(23, 28, 35, 0.12)`,
     };
   }
   return {
     backgroundColor: bg,
-    shadowColor: dark,
-    shadowOffset: { width: 2 * intensity, height: 2 * intensity },
-    shadowOpacity: 1,
-    shadowRadius: 4 * intensity,
-    elevation: 3 * intensity,
+    borderWidth: 1,
+    borderColor: HAIRLINE,
+    shadowColor: SHADOW_COLOR,
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.9,
+    shadowRadius: 24 * intensity,
+    elevation: 10 * intensity,
   };
 }
 
-/** Pressed / active state for a soft button. */
-export function neuPressed(
+/** Small chip / button surface: lighter shadow than raised. */
+export function softSoft(
   bg: string = Colors.bg.surface,
   intensity: number = 1,
 ): ViewStyle {
-  return neuInset(bg, intensity);
+  if (isWeb) {
+    return {
+      backgroundColor: bg,
+      borderWidth: 1,
+      borderColor: HAIRLINE,
+      boxShadow: `0 1px 2px rgba(23, 28, 35, 0.03), 0 ${
+        3 * intensity
+      }px ${8 * intensity}px rgba(23, 28, 35, 0.06)`,
+    };
+  }
+  return {
+    backgroundColor: bg,
+    borderWidth: 1,
+    borderColor: HAIRLINE,
+    shadowColor: SHADOW_COLOR,
+    shadowOffset: { width: 0, height: 2 * intensity },
+    shadowOpacity: 1,
+    shadowRadius: 6 * intensity,
+    elevation: 2,
+  };
 }
 
-/** Brand accent surface with soft tinted shadow. */
-export function neuAccent(intensity: number = 1): ViewStyle {
-  const dark = `rgba(217, 154, 10, ${0.35 * intensity})`;
-  const light = "rgba(255, 255, 255, 0.8)";
+/** Pressed / active state: slightly darker hairline, no lift. */
+export function softPressed(
+  bg: string = Colors.bg.surface,
+  _intensity: number = 1,
+): ViewStyle {
+  return {
+    backgroundColor: bg,
+    borderWidth: 1,
+    borderColor: HAIRLINE_STRONG,
+  };
+}
+
+/** Brand accent surface with a soft amber-tinted glow. */
+export function softAccent(intensity: number = 1): ViewStyle {
   if (isWeb) {
     return {
       backgroundColor: Colors.brand.primary,
-      boxShadow: `${3 * intensity}px ${3 * intensity}px ${
-        8 * intensity
-      }px ${dark}, -${3 * intensity}px -${3 * intensity}px ${
-        8 * intensity
-      }px ${light}`,
+      boxShadow: `0 ${5 * intensity}px ${14 * intensity}px ${SHADOW_ACCENT}`,
     };
   }
   return {
     backgroundColor: Colors.brand.primary,
-    shadowColor: dark,
-    shadowOffset: { width: 0, height: 3 * intensity },
+    shadowColor: SHADOW_ACCENT,
+    shadowOffset: { width: 0, height: 4 * intensity },
     shadowOpacity: 1,
-    shadowRadius: 8 * intensity,
-    elevation: 5 * intensity,
+    shadowRadius: 10 * intensity,
+    elevation: 3 * intensity,
   };
 }
+
+/* ------------------------------------------------------------------ */
+/* Status styling (unchanged semantics)                                */
+/* ------------------------------------------------------------------ */
 
 const STATUS_STYLE: Record<
   BookingStatus,
@@ -207,16 +204,24 @@ export function getStatusSurface(status: BookingStatus) {
   return STATUS_STYLE[status]?.surface ?? Colors.bg.surface;
 }
 
-export const Neu = {
-  raised: neuRaised,
-  inset: neuInset,
-  float: neuFloat,
-  soft: neuSoft,
-  pressed: neuPressed,
-  accent: neuAccent,
-  SHADOW_DARK,
-  SHADOW_LIGHT,
+/**
+ * Soft Flat helpers — the current design system.
+ * Use these in new code.
+ */
+export const Soft = {
+  raised: softRaised,
+  inset: softInset,
+  float: softFloat,
+  soft: softSoft,
+  pressed: softPressed,
+  accent: softAccent,
 };
+
+/**
+ * Deprecated alias kept for compatibility with legacy screens.
+ * Same soft-flat implementation — the neumorphic look is gone.
+ */
+export const Neu = Soft;
 
 export const Status = {
   getStyle: getStatusStyle,

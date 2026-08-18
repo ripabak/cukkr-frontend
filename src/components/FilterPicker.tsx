@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   },
   pillLabel: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   backdrop: {
@@ -163,6 +163,6 @@ const styles = StyleSheet.create({
     color: Colors.text.primary,
   },
   itemTextBold: {
-    fontWeight: "700",
+    fontWeight: "600",
   },
 });

@@ -80,7 +80,6 @@ export function CustomerManagementScreen() {
   return (
     <ScreenShell
       backgroundColor={bgColor}
-      hideAppHeader
       headerSlot={
         <ScreenHeader
           title={selectionMode ? t("common.select") : undefined}
@@ -247,12 +246,12 @@ const styles = StyleSheet.create({
   },
   selectText: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   title: {
     fontSize: 30,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     lineHeight: 36,
     letterSpacing: -0.8,

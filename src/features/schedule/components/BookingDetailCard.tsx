@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
   },
   customerName: {
     fontSize: 30,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     letterSpacing: -0.8,
     marginBottom: 2,
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   },
   customerNameLink: {
     fontSize: 30,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.brand.primaryDark,
     letterSpacing: -0.8,
   },
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
     marginBottom: 10,
   },

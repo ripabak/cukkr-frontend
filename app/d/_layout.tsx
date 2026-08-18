@@ -1,6 +1,7 @@
 import { FrameProvider } from "@/src/components/FrameContext";
 import { MobileFrame } from "@/src/components/MobileFrame";
 import { ToastProvider } from "@/src/lib/providers";
+import { Colors } from "@/src/theme/colors";
 import {
   Inter_400Regular,
   Inter_500Medium,
@@ -74,7 +75,15 @@ export default function DashboardLayout() {
           <ThemeProvider
             value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
           >
-            <Stack screenOptions={{ headerShown: false }} />
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                animation: "slide_from_right",
+                animationDuration: 240,
+                gestureEnabled: true,
+                contentStyle: { backgroundColor: Colors.bg.default },
+              }}
+            />
           </ThemeProvider>
         </MobileFrame>
       </ToastProvider>

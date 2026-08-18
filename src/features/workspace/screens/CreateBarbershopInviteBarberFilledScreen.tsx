@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   subtitle: {
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   },
   barbersLabel: {
     fontSize: 15,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
     marginBottom: 12,
   },

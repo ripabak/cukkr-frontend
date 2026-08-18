@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
   pageTitle: {
     flex: 1,
     fontSize: 17,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   topBarRight: {
@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
   },
   chartCardTitle: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
   },
   listSection: {
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 17,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   filterPill: {
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
   },
   filterPillText: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   listLoader: {
@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
   },
   bookingCustomer: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
     flex: 1,
   },
@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
   },
   bookingRevenue: {
     fontSize: 14,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   pagination: {
@@ -411,7 +411,7 @@ const styles = StyleSheet.create({
   },
   pageLabel: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
 });

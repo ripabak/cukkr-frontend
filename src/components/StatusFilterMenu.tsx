@@ -133,6 +133,6 @@ const styles = StyleSheet.create({
     color: Colors.text.primary,
   },
   itemTextBold: {
-    fontWeight: "700",
+    fontWeight: "600",
   },
 });

@@ -1,193 +1,129 @@
+import { AppText } from "@/src/components/AppText";
+import { BottomSheet } from "@/src/components/BottomSheet";
+import { SoftPressable } from "@/src/components/SoftPressable";
 import { Colors } from "@/src/theme/colors";
-import { useFrame } from "@/src/components/FrameContext";
-import { useI18nContext } from "@/src/lib/i18n/provider";
+import { haptics } from "@/src/utils/haptics";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
-import { AppText } from "@/src/components/AppText";
-import {
-  Animated,
-  Modal,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-  useWindowDimensions,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Neu } from "@/src/theme/styles";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { useFrame } from "@/src/components/FrameContext";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 
 interface Props {
   visible: boolean;
   onClose: () => void;
 }
 
-const FALLBACK_PANEL_HEIGHT = 280;
-
+/**
+ * "New booking" action sheet: pick Walk-in or Appointment.
+ * Gesture drag-to-dismiss via the shared BottomSheet.
+ */
 export function NewBookBottomSheet({ visible, onClose }: Props) {
   const router = useRouter();
   const { t } = useI18nContext();
-  const insets = useSafeAreaInsets();
   const { frameWidth } = useFrame();
-  const { width: viewportWidth } = useWindowDimensions();
-  const frameOffset = (viewportWidth - frameWidth) / 2;
 
-  const [panelHeight, setPanelHeight] = useState(FALLBACK_PANEL_HEIGHT);
-  const translateY = useRef(new Animated.Value(FALLBACK_PANEL_HEIGHT)).current;
-  const backdropOpacity = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    if (visible) {
-      Animated.parallel([
-        Animated.spring(translateY, {
-          toValue: 0,
-          tension: 100,
-          friction: 14,
-          useNativeDriver: true,
-        }),
-        Animated.timing(backdropOpacity, {
-          toValue: 1,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    } else {
-      Animated.parallel([
-        Animated.timing(translateY, {
-          toValue: panelHeight,
-          duration: 250,
-          useNativeDriver: true,
-        }),
-        Animated.timing(backdropOpacity, {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }
-  }, [visible]);
+  const go = (href: "/d/new-walk-in" | "/d/new-appointment", action: "medium" | "success" = "medium") => {
+    haptics[action]();
+    onClose();
+    router.push(href);
+  };
 
   return (
-    <Modal
+    <BottomSheet
       visible={visible}
-      transparent
-      statusBarTranslucent
-      animationType="none"
+      onClose={onClose}
+      title={t("home.newBooking")}
+      subtitle={t("home.newBookingHint")}
     >
-      <TouchableWithoutFeedback onPress={onClose}>
-        <Animated.View
-          style={[
-            StyleSheet.absoluteFill,
-            styles.backdrop,
-            { opacity: backdropOpacity },
-          ]}
-        />
-      </TouchableWithoutFeedback>
-
-      <Animated.View
-        style={[
-          styles.panel,
-          Neu.float(Colors.bg.surface, 1.2),
-          {
-            left: frameOffset,
-            right: frameOffset,
-            paddingBottom: insets.bottom + 16,
-            transform: [{ translateY }],
-          },
-        ]}
-        onLayout={(e) => {
-          const h = e.nativeEvent.layout.height;
-          if (h > 0 && h !== panelHeight) {
-            setPanelHeight(h);
-            if (!visible) {
-              translateY.setValue(h);
-            }
-          }
-        }}
-      >
-        <View style={styles.handle} />
-        <AppText style={styles.title}>{t("home.newBooking")}</AppText>
-
-        <View style={styles.buttonsRow}>
-          <TouchableOpacity
-            style={[styles.bookingBtn, Neu.raised(Colors.bg.surface)]}
-            activeOpacity={0.75}
-            onPress={() => {
-              onClose();
-              router.push("/d/new-walk-in");
-            }}
+      <View style={styles.sheetBody}>
+        <View style={[styles.optionsRow, { maxWidth: frameWidth - 40 }]}>
+          <SoftPressable
+            onPress={() => go("/d/new-walk-in")}
+            style={styles.option}
+            contentStyle={styles.optionSurface}
           >
-            <Ionicons
-              name="walk-outline"
-              size={36}
-              color={Colors.text.primary}
-            />
-            <AppText style={styles.btnLabel}>{t("bookings.walkIn")}</AppText>
-          </TouchableOpacity>
+            <View style={[styles.iconChip, styles.walkInChip]}>
+              <Ionicons name="walk-outline" size={24} color={Colors.status.inProgress} />
+            </View>
+            <AppText style={styles.optionLabel}>{t("bookings.walkIn")}</AppText>
+            <AppText style={styles.optionHint} numberOfLines={2}>
+              {t("home.walkInHint")}
+            </AppText>
+          </SoftPressable>
 
-          <TouchableOpacity
-            style={[styles.bookingBtn, Neu.raised(Colors.bg.surface)]}
-            activeOpacity={0.75}
-            onPress={() => {
-              onClose();
-              router.push("/d/new-appointment");
-            }}
+          <SoftPressable
+            onPress={() => go("/d/new-appointment", "success")}
+            style={styles.option}
+            contentStyle={styles.optionSurface}
           >
-            <Ionicons
-              name="calendar-outline"
-              size={36}
-              color={Colors.text.primary}
-            />
-            <AppText style={styles.btnLabel}>{t("bookings.appointment")}</AppText>
-          </TouchableOpacity>
+            <View style={[styles.iconChip, styles.apptChip]}>
+              <Ionicons
+                name="calendar-outline"
+                size={24}
+                color={Colors.status.info}
+              />
+            </View>
+            <AppText style={styles.optionLabel}>{t("bookings.appointment")}</AppText>
+            <AppText style={styles.optionHint} numberOfLines={2}>
+              {t("home.appointmentHint")}
+            </AppText>
+          </SoftPressable>
         </View>
-      </Animated.View>
-    </Modal>
+      </View>
+    </BottomSheet>
   );
 }
 
 const styles = StyleSheet.create({
-  backdrop: {
-    backgroundColor: Colors.bg.overlay,
+  sheetBody: {
+    paddingVertical: 4,
+    paddingBottom: 8,
   },
-  panel: {
-    position: "absolute",
-    bottom: 0,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    paddingTop: 12,
-    paddingHorizontal: 20,
-  },
-  handle: {
-    width: 36,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: Colors.border.default,
-    alignSelf: "center",
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: Colors.text.primary,
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  buttonsRow: {
+  optionsRow: {
     flexDirection: "row",
     gap: 12,
-    marginBottom: 8,
+    alignSelf: "center",
+    width: "100%",
   },
-  bookingBtn: {
+  option: {
     flex: 1,
-    borderRadius: 24,
-    paddingVertical: 28,
-    alignItems: "center",
-    gap: 10,
+    minHeight: 132,
   },
-  btnLabel: {
-    fontSize: 14,
+  optionSurface: {
+    flex: 1,
+    borderRadius: 20,
+    backgroundColor: Colors.bg.surface,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    paddingHorizontal: 16,
+    paddingVertical: 18,
+    gap: 8,
+  },
+  iconChip: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 4,
+  },
+  walkInChip: {
+    backgroundColor: Colors.status.inProgressSurface,
+  },
+  apptChip: {
+    backgroundColor: Colors.status.infoSurface,
+  },
+  optionLabel: {
+    fontSize: 15,
     fontWeight: "600",
     color: Colors.text.primary,
+    letterSpacing: -0.2,
+  },
+  optionHint: {
+    fontSize: 12,
+    color: Colors.text.muted,
+    lineHeight: 16,
   },
 });

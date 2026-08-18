@@ -1,11 +1,12 @@
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Modal, StyleSheet, TouchableOpacity, View } from "react-native";
+import { BottomSheet } from "@/src/components/BottomSheet";
+import { SoftPressable } from "@/src/components/SoftPressable";
 import { AppText } from "@/src/components/AppText";
-import { useFrame } from "@/src/components/FrameContext";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { haptics } from "@/src/utils/haptics";
 
 interface DayHourInfo {
   dayOfWeek: number;
@@ -46,7 +47,6 @@ export function CalendarModal({
   onClose,
 }: Props) {
   const { t, language } = useI18nContext();
-  const { frameWidth } = useFrame();
   const today = new Date();
 
   const locale = language === 'id' ? 'id-ID' : 'en-US';
@@ -148,183 +148,170 @@ export function CalendarModal({
   };
 
   return (
-    <Modal visible={visible} transparent animationType="fade">
-      <TouchableOpacity
-        style={styles.overlay}
-        activeOpacity={1}
-        onPress={onClose}
-      >
-        <TouchableOpacity
-          activeOpacity={1}
-          style={[styles.card, Neu.float(Colors.bg.surface, 1.2), { maxWidth: frameWidth - 48 }]}
+    <BottomSheet
+      visible={visible}
+      onClose={onClose}
+      title={t("calendar.title")}
+      subtitle={t("calendar.pickDate")}
+    >
+      {/* Month navigation */}
+      <View style={styles.monthRow}>
+        <SoftPressable
+          onPress={prevMonth}
+          haptic="selection"
+          style={styles.navBtn}
+          contentStyle={styles.navBtnSurface}
         >
-          {/* Month navigation */}
-          <View style={styles.monthRow}>
-            <TouchableOpacity
-              onPress={prevMonth}
-              activeOpacity={0.85}
-              style={[styles.navBtn, Neu.soft(Colors.bg.surface, 0.6)]}
-            >
-              <Ionicons
-                name="chevron-back"
-                size={18}
-                color={Colors.text.primary}
-              />
-            </TouchableOpacity>
-            <AppText style={styles.monthTitle}>
-              {localizedMonths[viewMonth]} {viewYear}
-            </AppText>
-            <TouchableOpacity
-              onPress={nextMonth}
-              activeOpacity={0.85}
-              style={[styles.navBtn, Neu.soft(Colors.bg.surface, 0.6)]}
-            >
-              <Ionicons
-                name="chevron-forward"
-                size={18}
-                color={Colors.text.primary}
-              />
-            </TouchableOpacity>
-          </View>
+          <Ionicons name="chevron-back" size={18} color={Colors.text.primary} />
+        </SoftPressable>
+        <AppText style={styles.monthTitle}>
+          {localizedMonths[viewMonth]} {viewYear}
+        </AppText>
+        <SoftPressable
+          onPress={nextMonth}
+          haptic="selection"
+          style={styles.navBtn}
+          contentStyle={styles.navBtnSurface}
+        >
+          <Ionicons name="chevron-forward" size={18} color={Colors.text.primary} />
+        </SoftPressable>
+      </View>
 
-          {/* Day labels */}
-          <View style={styles.dayLabelRow}>
-            {DAY_LABELS.map((d, i) => (
-              <AppText
-                key={d}
-                style={[
-                  styles.dayLabel,
-                  hasOpenHours && closedDaySet.has(i) && styles.dayLabelClosed,
-                ]}
-              >
-                {d}
-              </AppText>
-            ))}
-          </View>
+      {/* Day labels */}
+      <View style={styles.dayLabelRow}>
+        {DAY_LABELS.map((d, i) => (
+          <AppText
+            key={d}
+            style={[
+              styles.dayLabel,
+              hasOpenHours && closedDaySet.has(i) && styles.dayLabelClosed,
+            ]}
+          >
+            {d}
+          </AppText>
+        ))}
+      </View>
 
-          {/* Calendar grid */}
-          {rows.map((row, ri) => (
-            <View key={ri} style={styles.week}>
-              {row.map((day, di) => {
-                if (day === null)
-                  return <View key={di} style={styles.dayCell} />;
+      {/* Calendar grid */}
+      {rows.map((row, ri) => (
+        <View key={ri} style={styles.week}>
+          {row.map((day, di) => {
+            if (day === null) return <View key={di} style={styles.dayCell} />;
 
-                const past = isDayPast(day);
-                const closed = isDayClosed(day);
-                const disabled = past || closed;
-                const selected = isSelected(day);
-                const todayMark = isToday(day);
-                const hasRequest =
-                  !selected && highlightDates?.has(toDayKey(day));
-                const hasWaiting =
-                  !selected && waitingDates?.has(toDayKey(day));
+            const past = isDayPast(day);
+            const closed = isDayClosed(day);
+            const disabled = past || closed;
+            const selected = isSelected(day);
+            const todayMark = isToday(day);
+            const hasRequest =
+              !selected && highlightDates?.has(toDayKey(day));
+            const hasWaiting =
+              !selected && waitingDates?.has(toDayKey(day));
 
-                return (
-                  <View key={di} style={styles.dayCell}>
-                    <TouchableOpacity
-                      onPress={
-                        disabled
-                          ? undefined
-                          : () => onSelect(new Date(viewYear, viewMonth, day))
-                      }
-                      activeOpacity={disabled ? 1 : 0.85}
-                      style={[
-                        styles.dayBtn,
-                        selected && styles.dayBtnSelected,
-                        todayMark && !selected && styles.dayBtnToday,
-                        disabled && styles.dayBtnDisabled,
-                      ]}
-                    >
-                      <AppText
-                        style={[
-                          styles.dayText,
-                          selected && styles.dayTextSelected,
-                          past && styles.dayTextPast,
-                          closed && !past && styles.dayTextClosed,
-                        ]}
-                      >
-                        {day}
-                      </AppText>
-                      {closed && !past && <View style={styles.closedDot} />}
-                      <View style={styles.dotsRow}>
-                        {hasRequest && <View style={styles.requestDot} />}
-                        {hasWaiting && <View style={styles.waitingDot} />}
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                );
-              })}
-            </View>
-          ))}
-
-          {/* Legend */}
-          {(hasOpenHours && closedDaySet.size > 0) ||
-          highlightDates?.size ||
-          waitingDates?.size ? (
-            <View style={styles.legend}>
-              {hasOpenHours && closedDaySet.size > 0 && (
-                <>
-                  <View style={styles.legendDot} />
-                  <AppText style={styles.legendText}>{t("calendar.closedDay")}</AppText>
-                </>
-              )}
-              {highlightDates?.size ? (
-                <>
-                  <View
+            return (
+              <View key={di} style={styles.dayCell}>
+                <TouchableOpacity
+                  onPress={
+                    disabled
+                      ? undefined
+                      : () => {
+                          haptics.selection();
+                          onSelect(
+                            new Date(viewYear, viewMonth, day),
+                          );
+                        }
+                  }
+                  activeOpacity={disabled ? 1 : 0.85}
+                  style={[
+                    styles.dayBtn,
+                    selected && styles.dayBtnSelected,
+                    todayMark && !selected && styles.dayBtnToday,
+                    disabled && styles.dayBtnDisabled,
+                  ]}
+                >
+                  <AppText
                     style={[
-                      styles.legendRequestDot,
-                      hasOpenHours && closedDaySet.size > 0
-                        ? undefined
-                        : styles.legendDotFirst,
+                      styles.dayText,
+                      selected && styles.dayTextSelected,
+                      past && styles.dayTextPast,
+                      closed && !past && styles.dayTextClosed,
                     ]}
-                  />
-                  <AppText style={styles.legendText}>{t("calendar.hasRequests")}</AppText>
-                </>
-              ) : null}
-              {waitingDates?.size ? (
-                <>
-                  <View style={styles.legendWaitingDot} />
-                  <AppText style={styles.legendText}>{t("calendar.hasWaiting")}</AppText>
-                </>
-              ) : null}
-            </View>
+                  >
+                    {day}
+                  </AppText>
+                  {closed && !past && <View style={styles.closedDot} />}
+                  <View style={styles.dotsRow}>
+                    {hasRequest && <View style={styles.requestDot} />}
+                    {hasWaiting && <View style={styles.waitingDot} />}
+                  </View>
+                </TouchableOpacity>
+              </View>
+            );
+          })}
+        </View>
+      ))}
+
+      {/* Legend */}
+      {(hasOpenHours && closedDaySet.size > 0) ||
+      highlightDates?.size ||
+      waitingDates?.size ? (
+        <View style={styles.legend}>
+          {hasOpenHours && closedDaySet.size > 0 && (
+            <>
+              <View style={styles.legendDot} />
+              <AppText style={styles.legendText}>{t("calendar.closedDay")}</AppText>
+            </>
+          )}
+          {highlightDates?.size ? (
+            <>
+              <View
+                style={[
+                  styles.legendRequestDot,
+                  hasOpenHours && closedDaySet.size > 0
+                    ? undefined
+                    : styles.legendDotFirst,
+                ]}
+              />
+              <AppText style={styles.legendText}>{t("calendar.hasRequests")}</AppText>
+            </>
           ) : null}
-        </TouchableOpacity>
-      </TouchableOpacity>
-    </Modal>
+          {waitingDates?.size ? (
+            <>
+              <View style={styles.legendWaitingDot} />
+              <AppText style={styles.legendText}>{t("calendar.hasWaiting")}</AppText>
+            </>
+          ) : null}
+        </View>
+      ) : null}
+    </BottomSheet>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: Colors.bg.overlay,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 24,
-  },
-  card: {
-    borderRadius: 24,
-    padding: 20,
-    width: "100%",
-    alignSelf: "center",
-  },
   monthRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 16,
+    marginHorizontal: 4,
+    marginTop: 4,
   },
   navBtn: {
     width: 36,
     height: 36,
-    borderRadius: 18,
+  },
+  navBtnSurface: {
+    flex: 1,
+    borderRadius: 12,
+    backgroundColor: Colors.bg.default,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
     alignItems: "center",
     justifyContent: "center",
   },
   monthTitle: {
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   dayLabelRow: {
@@ -335,7 +322,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: "center",
     fontSize: 11,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.muted,
   },
   dayLabelClosed: {
@@ -375,7 +362,7 @@ const styles = StyleSheet.create({
   },
   dayTextSelected: {
     color: Colors.text.primary,
-    fontWeight: "700",
+    fontWeight: "600",
   },
   dayTextPast: {
     color: Colors.text.muted,

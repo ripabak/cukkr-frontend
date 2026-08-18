@@ -29,7 +29,10 @@ import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
 import {
+  Animated,
   Image,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -143,6 +146,33 @@ export function ScheduleActiveBookingsScreen() {
   const [newBookVisible, setNewBookVisible] = useState(false);
   const requestScrollRef = useRef<ScrollView>(null);
 
+  // Collapsing sticky header (mirrors HomeDashboard).
+  const headerTranslateY = useRef(new Animated.Value(0)).current;
+  const lastScrollY = useRef(0);
+  const isHeaderVisible = useRef(true);
+  const [stickyHeaderHeight, setStickyHeaderHeight] = useState(0);
+
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const y = event.nativeEvent.contentOffset.y;
+    const diff = y - lastScrollY.current;
+    if (diff > 10 && y > stickyHeaderHeight && isHeaderVisible.current) {
+      isHeaderVisible.current = false;
+      Animated.timing(headerTranslateY, {
+        toValue: -stickyHeaderHeight,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    } else if ((diff < -5 || y <= 0) && !isHeaderVisible.current) {
+      isHeaderVisible.current = true;
+      Animated.timing(headerTranslateY, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    }
+    lastScrollY.current = y;
+  };
+
   const days = generateDayChips(today, language);
 
   const reqDateFrom = toApiDate(today);
@@ -223,9 +253,18 @@ export function ScheduleActiveBookingsScreen() {
     <ScreenShell
       backgroundColor={Colors.bg.default}
       contentStyle={styles.scrollContentPadding}
-      hideAppHeader
+      stickyHeader
+      stickyHeaderHeight={stickyHeaderHeight}
+      onScroll={handleScroll}
+      scrollEventThrottle={16}
       headerSlot={
-        <>
+        <Animated.View
+          style={{
+            transform: [{ translateY: headerTranslateY }],
+            backgroundColor: Colors.bg.default,
+          }}
+          onLayout={(e) => setStickyHeaderHeight(e.nativeEvent.layout.height)}
+        >
           <View style={styles.topBar}>
             <DateSelectorPill
               label={formatDatePill(selectedDate, language)}
@@ -263,7 +302,7 @@ export function ScheduleActiveBookingsScreen() {
               waitingDates={waitingDateSet}
             />
           </View>
-        </>
+        </Animated.View>
       }
       overlaySlot={
         <TouchableOpacity
@@ -410,7 +449,7 @@ const styles = StyleSheet.create({
   },
   requestsBtnLabel: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   requestsBadge: {
@@ -424,7 +463,7 @@ const styles = StyleSheet.create({
   },
   requestsBadgeText: {
     fontSize: 11,
-    fontWeight: "700",
+    fontWeight: "600",
     color: "#FFFFFF",
   },
   dayChipsWrapper: {
@@ -442,7 +481,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 26,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     letterSpacing: -0.6,
   },
@@ -457,7 +496,7 @@ const styles = StyleSheet.create({
   },
   filterLabel: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   list: {
@@ -480,7 +519,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
     textAlign: "center",
     marginBottom: 8,
@@ -500,7 +539,7 @@ const styles = StyleSheet.create({
   },
   requestsTitle: {
     fontSize: 17,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     marginBottom: 12,
     marginTop: 8,
@@ -543,12 +582,12 @@ const reqStyles = StyleSheet.create({
   },
   time: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
   },
   customerName: {
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   barberRow: {
@@ -572,7 +611,7 @@ const reqStyles = StyleSheet.create({
   },
   declineText: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.status.danger,
   },
   acceptBtn: {
@@ -584,7 +623,7 @@ const reqStyles = StyleSheet.create({
   },
   acceptText: {
     fontSize: 13,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
 });

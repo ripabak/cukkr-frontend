@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   icon: {},
   value: {
     fontSize: 22,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
 });

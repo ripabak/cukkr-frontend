@@ -43,6 +43,6 @@ const styles = StyleSheet.create({
   label: {
     color: Colors.text.primary,
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "600",
   },
 });

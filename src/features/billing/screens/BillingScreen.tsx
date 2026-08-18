@@ -129,7 +129,6 @@ export function BillingScreen() {
   if (plansError || !plans) {
     return (
       <ScreenShell
-        hideAppHeader
         headerSlot={
           <ScreenHeader title={t("billing.title")} onBack={() => router.back()} />
         }
@@ -143,7 +142,6 @@ export function BillingScreen() {
 
   return (
     <ScreenShell
-      hideAppHeader
       headerSlot={
         <ScreenHeader title={t("billing.title")} onBack={() => router.back()} />
       }
@@ -435,7 +433,7 @@ const styles = StyleSheet.create({
   },
   currentPlanName: {
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   currentPlanExpiry: {
@@ -459,7 +457,7 @@ const styles = StyleSheet.create({
   },
   pendingPlan: {
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   pendingMeta: {
@@ -474,7 +472,7 @@ const styles = StyleSheet.create({
   },
   pendingButtonText: {
     fontSize: 13,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   contactCard: {
@@ -484,7 +482,7 @@ const styles = StyleSheet.create({
   },
   contactTitle: {
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   contactBody: {
@@ -502,12 +500,12 @@ const styles = StyleSheet.create({
   },
   contactButtonText: {
     fontSize: 13,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   sectionLabel: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
     marginTop: 4,
     letterSpacing: 0.5,
@@ -535,7 +533,7 @@ const styles = StyleSheet.create({
   },
   planBadge: {
     fontSize: 11,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
     textTransform: "uppercase",
     letterSpacing: 0.8,
@@ -550,7 +548,7 @@ const styles = StyleSheet.create({
   },
   planName: {
     fontSize: 20,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   currentBadge: {
@@ -564,7 +562,7 @@ const styles = StyleSheet.create({
   },
   currentBadgeText: {
     fontSize: 10,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.secondary,
     textTransform: "uppercase",
     letterSpacing: 0.5,
@@ -579,7 +577,7 @@ const styles = StyleSheet.create({
   },
   planPrice: {
     fontSize: 26,
-    fontWeight: "800",
+    fontWeight: "700",
     color: Colors.text.primary,
   },
   planMonthly: {
@@ -618,7 +616,7 @@ const styles = StyleSheet.create({
   },
   featuresLabel: {
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
     textTransform: "uppercase",
     letterSpacing: 0.5,
@@ -643,7 +641,7 @@ const styles = StyleSheet.create({
   },
   methodGroupLabel: {
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
     textTransform: "uppercase",
     letterSpacing: 0.5,
@@ -672,7 +670,7 @@ const styles = StyleSheet.create({
   },
   methodName: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   methodNameActive: {
@@ -695,7 +693,7 @@ const styles = StyleSheet.create({
   },
   summaryValue: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   summaryMonthly: {
@@ -710,12 +708,12 @@ const styles = StyleSheet.create({
   },
   summaryTotalLabel: {
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   summaryTotalValue: {
     fontSize: 20,
-    fontWeight: "800",
+    fontWeight: "700",
     color: Colors.text.primary,
   },
   taxNote: {

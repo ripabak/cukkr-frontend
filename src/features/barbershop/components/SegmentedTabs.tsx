@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
   },
   labelActive: {
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
 });

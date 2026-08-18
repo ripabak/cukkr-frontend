@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   timeline: {
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
   },
   timeLabel: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
   },
   timeLabelHighlight: {
@@ -301,17 +301,17 @@ const styles = StyleSheet.create({
   },
   youBadgeText: {
     fontSize: 10,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   customerName: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
     marginBottom: 2,
   },
   customerNameHighlight: {
-    fontWeight: "700",
+    fontWeight: "600",
   },
   serviceRow: {
     flexDirection: "row",

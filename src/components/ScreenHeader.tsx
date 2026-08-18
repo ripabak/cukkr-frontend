@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: "center",
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     letterSpacing: -0.3,
   },

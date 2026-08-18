@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   },
   day: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
     width: 36,
   },

@@ -1,10 +1,12 @@
+import { AppText } from "@/src/components/AppText";
+import { BottomSheet } from "@/src/components/BottomSheet";
+import { useFrame } from "@/src/components/FrameContext";
+import { SoftPressable } from "@/src/components/SoftPressable";
 import { Colors } from "@/src/theme/colors";
+import { haptics } from "@/src/utils/haptics";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { Modal, View, TouchableOpacity, StyleSheet } from "react-native";
-import { AppText } from "@/src/components/AppText";
-import { useFrame } from "./FrameContext";
-import { Neu } from "@/src/theme/styles";
+import { StyleSheet, View } from "react-native";
 
 interface Props {
   visible: boolean;
@@ -17,6 +19,10 @@ interface Props {
   onCancel?: () => void;
 }
 
+/**
+ * Confirmation dialog presented as a gesture drag-to-dismiss bottom sheet.
+ * Drag down, tap the scrim, or hit the buttons — every path animates out.
+ */
 export function ConfirmationModal({
   visible,
   icon,
@@ -30,76 +36,83 @@ export function ConfirmationModal({
   const { frameWidth } = useFrame();
   const hasBoth = !!confirmLabel && !!cancelLabel;
 
+  const handleDismiss = () => {
+    // Drag / scrim dismiss has "cancel" semantics.
+    onCancel?.();
+  };
+
   return (
-    <Modal visible={visible} transparent animationType="fade">
-      <View style={styles.overlay}>
-        <View style={[styles.card, Neu.float(Colors.bg.surface, 1.2), { width: frameWidth * 0.85 }]}>
-          {icon ? (
-            <View style={[styles.iconWrapper, Neu.soft(Colors.brand.primarySurface)]}>
-              <Ionicons
-                name={icon as React.ComponentProps<typeof Ionicons>["name"]}
-                size={28}
-                color={Colors.brand.primaryDark}
-              />
-            </View>
-          ) : null}
-          <AppText style={styles.title}>{title}</AppText>
-          {description ? (
-            <AppText style={styles.description}>{description}</AppText>
-          ) : null}
-          <View style={[styles.buttons, hasBoth && styles.buttonsRow]}>
-            {cancelLabel ? (
-              <TouchableOpacity
-                onPress={onCancel}
-                activeOpacity={0.85}
-                style={[styles.btn, Neu.soft(Colors.bg.surface), hasBoth && styles.btnFlex]}
-              >
-                <AppText style={styles.btnDarkLabel}>{cancelLabel}</AppText>
-              </TouchableOpacity>
-            ) : null}
-            {confirmLabel ? (
-              <TouchableOpacity
-                onPress={onConfirm}
-                activeOpacity={0.85}
-                style={[
-                  styles.btn,
-                  Neu.accent(),
-                  hasBoth && styles.btnFlex,
-                ]}
-              >
-                <AppText style={styles.btnOutlineLabel}>{confirmLabel}</AppText>
-              </TouchableOpacity>
-            ) : null}
+    <BottomSheet
+      visible={visible}
+      onClose={handleDismiss}
+      showHandle={false}
+    >
+      <View style={[styles.content, { maxWidth: frameWidth - 40 }]}>
+        {icon ? (
+          <View style={styles.iconWrapper}>
+            <Ionicons
+              name={icon as React.ComponentProps<typeof Ionicons>["name"]}
+              size={26}
+              color={Colors.brand.primaryDark}
+            />
           </View>
+        ) : null}
+
+        <AppText style={styles.title}>{title}</AppText>
+        {description ? (
+          <AppText style={styles.description}>{description}</AppText>
+        ) : null}
+
+        <View style={[styles.buttons, hasBoth && styles.buttonsStack]}>
+          {confirmLabel ? (
+            <SoftPressable
+              onPress={() => {
+                haptics.medium();
+                onConfirm?.();
+              }}
+              style={styles.btn}
+              contentStyle={styles.btnPrimary}
+            >
+              <AppText style={styles.btnPrimaryLabel}>{confirmLabel}</AppText>
+            </SoftPressable>
+          ) : null}
+          {cancelLabel ? (
+            <SoftPressable
+              onPress={() => {
+                haptics.light();
+                onCancel?.();
+              }}
+              style={styles.btn}
+              contentStyle={styles.btnSecondary}
+            >
+              <AppText style={styles.btnSecondaryLabel}>{cancelLabel}</AppText>
+            </SoftPressable>
+          ) : null}
         </View>
       </View>
-    </Modal>
+    </BottomSheet>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: Colors.bg.overlay,
-    justifyContent: "center",
+  content: {
+    alignSelf: "center",
+    width: "100%",
     alignItems: "center",
-  },
-  card: {
-    borderRadius: 24,
-    padding: 28,
-    alignItems: "center",
+    paddingTop: 6,
   },
   iconWrapper: {
     width: 56,
     height: 56,
-    borderRadius: 28,
+    borderRadius: 18,
+    backgroundColor: Colors.brand.primarySurface,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 16,
   },
   title: {
-    fontSize: 20,
-    fontWeight: "700",
+    fontSize: 19,
+    fontWeight: "600",
     textAlign: "center",
     color: Colors.text.primary,
     letterSpacing: -0.3,
@@ -110,32 +123,42 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 8,
     lineHeight: 20,
+    maxWidth: 300,
   },
   buttons: {
     marginTop: 24,
     gap: 12,
     width: "100%",
   },
-  buttonsRow: {
-    flexDirection: "row",
+  buttonsStack: {
+    marginBottom: 4,
   },
   btn: {
-    height: 52,
-    borderRadius: 999,
+    height: 54,
+    width: "100%",
+  },
+  btnPrimary: {
+    backgroundColor: Colors.brand.primary,
+    borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
   },
-  btnFlex: {
-    flex: 1,
-  },
-  btnDarkLabel: {
+  btnPrimaryLabel: {
     color: Colors.text.primary,
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "600",
   },
-  btnOutlineLabel: {
+  btnSecondary: {
+    backgroundColor: Colors.bg.surface,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  btnSecondaryLabel: {
     color: Colors.text.primary,
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "500",
   },
 });

@@ -1,8 +1,11 @@
+import { AppText } from "@/src/components/AppText";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useMemberRole } from "@/src/hooks";
 import { Colors } from "@/src/theme/colors";
+import { haptics } from "@/src/utils/haptics";
 import { Ionicons } from "@expo/vector-icons";
-import { AppText } from "@/src/components/AppText";
+import { LinearGradient } from "expo-linear-gradient";
+import React from "react";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -10,7 +13,6 @@ import {
   ViewStyle,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Neu } from "@/src/theme/styles";
 
 type Tab = "home" | "stats" | "schedule" | "barbershop";
 
@@ -20,6 +22,15 @@ interface Props {
   style?: ViewStyle;
 }
 
+const BRAND_RGB = "245, 185, 35";
+
+/**
+ * Sticky full-width bottom tab bar.
+ * Each tab is a square button. The active one gets:
+ *  - a bright brand-colored top border only, and
+ *  - a spotlight that fades downward from that border inside the box.
+ * The icon highlights in brand color; the label stays neutral.
+ */
 export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
   const { t } = useI18nContext();
   const insets = useSafeAreaInsets();
@@ -36,35 +47,64 @@ export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
     { key: "barbershop", label: t("tabs.settings"), icon: "storefront" },
   ];
 
-  const visibleTabs =
-    role === "member"
-      ? TABS.filter((tb) => tb.key !== "stats")
-      : TABS;
+  const visibleTabs = role === "member"
+    ? TABS.filter((tb) => tb.key !== "stats")
+    : TABS;
 
   return (
     <View
       style={[
         styles.container,
-        Neu.raised(Colors.bg.surface, 0.8),
-        { paddingBottom: insets.bottom || 12 },
+        { paddingBottom: insets.bottom || 0 },
         style,
       ]}
     >
       {visibleTabs.map((tab) => {
         const isActive = tab.key === activeTab;
-        const color = isActive ? Colors.brand.primaryDark : Colors.icon.muted;
         return (
           <TouchableOpacity
             key={tab.key}
-            onPress={() => onTabPress?.(tab.key)}
+            onPress={() => {
+              haptics.selection();
+              onTabPress?.(tab.key);
+            }}
             activeOpacity={0.7}
             accessibilityLabel={tab.label}
-            style={[styles.tab, isActive && styles.tabActive]}
+            accessibilityState={{ selected: isActive }}
+            style={styles.tab}
           >
-            <View
-              style={[styles.iconRing, isActive && styles.iconRingActive]}
-            >
-              <Ionicons name={tab.icon} size={22} color={color} />
+            {isActive ? (
+              <>
+                <LinearGradient
+                  colors={[
+                    `rgba(${BRAND_RGB}, 0.22)`,
+                    `rgba(${BRAND_RGB}, 0.07)`,
+                    "rgba(255,255,255,0)",
+                  ]}
+                  locations={[0, 0.5, 1]}
+                  start={{ x: 0.5, y: 0 }}
+                  end={{ x: 0.5, y: 1 }}
+                  style={StyleSheet.absoluteFill}
+                  pointerEvents="none"
+                />
+                <View style={styles.activeBorder} />
+              </>
+            ) : null}
+
+            <View style={styles.tabContent}>
+              <Ionicons
+                name={tab.icon}
+                size={18}
+                color={
+                  isActive ? Colors.brand.primaryDark : Colors.icon.muted
+                }
+              />
+              <AppText
+                style={[styles.label, isActive && styles.labelActive]}
+                numberOfLines={1}
+              >
+                {tab.label}
+              </AppText>
             </View>
           </TouchableOpacity>
         );
@@ -76,27 +116,41 @@ export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    marginHorizontal: 16,
-    marginBottom: 12,
-    paddingTop: 10,
-    borderRadius: 28,
+    backgroundColor: Colors.bg.elevated,
   },
   tab: {
     flex: 1,
+    position: "relative",
     alignItems: "center",
     justifyContent: "center",
+    height: 68,
+    paddingHorizontal: 4,
   },
-  tabActive: {
-    transform: [{ translateY: -2 }],
-  },
-  iconRing: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+  tabContent: {
     alignItems: "center",
     justifyContent: "center",
+    gap: 2,
+    paddingTop: 3, // balance: same optical space above icon as below label
   },
-  iconRingActive: {
-    backgroundColor: Colors.brand.primarySurface,
+  activeBorder: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 3,
+    backgroundColor: Colors.brand.primary,
+    borderBottomLeftRadius: 3,
+    borderBottomRightRadius: 3,
+    zIndex: 1,
+  },
+  label: {
+    fontSize: 9.5,
+    fontWeight: "400",
+    color: Colors.icon.muted,
+  },
+  labelActive: {
+    // Neutral on purpose — the icon carries the brand accent.
+    color: Colors.text.secondary,
+    fontWeight: "400",
   },
 });

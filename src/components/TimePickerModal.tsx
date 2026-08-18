@@ -1,11 +1,10 @@
 import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
+import { BottomSheet } from "@/src/components/BottomSheet";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
-  Modal,
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
@@ -14,7 +13,6 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { useFrame } from "./FrameContext";
 
 const ITEM_HEIGHT = 44;
 const VISIBLE_COUNT = 3;
@@ -182,7 +180,7 @@ const pickerStyles = StyleSheet.create({
   itemTextSelected: {
     fontSize: 22,
     color: Colors.text.primary,
-    fontWeight: "700",
+    fontWeight: "600",
   },
   selectionBar: {
     position: "absolute",
@@ -301,143 +299,121 @@ export function TimePickerModal({
     setHourIndex(idx);
   }
 
-  const { frameWidth } = useFrame();
-
-  if (!visible) return null;
-
   const safeHourIdx = Math.min(hourIndex, validHours.length - 1);
   const safeMinIdx = Math.min(minuteIndex, validMinutes.length - 1);
 
   return (
-    <Modal visible={visible} transparent animationType="fade">
-      <TouchableOpacity
-        style={styles.overlay}
-        activeOpacity={1}
-        onPress={onClose}
-      >
+    <BottomSheet
+      visible={visible}
+      onClose={onClose ?? (() => {})}
+      title={t("components.timePicker.selectTime")}
+      showHandle
+      scrollable
+      maxHeightFraction={0.92}
+    >
+      <View style={styles.header}>
+        {minTime && maxTime && (
+          <View style={styles.rangeChip}>
+            <AppText style={styles.rangeText}>
+              {formatTimePoint(minTime)} {t("common.to")} {formatTimePoint(maxTime)}
+            </AppText>
+          </View>
+        )}
+      </View>
+
+      {/* Pickers */}
+      <View style={styles.columns}>
+        <ScrollPicker
+          key={validHours.join(",")}
+          items={validHours}
+          selectedIndex={safeHourIdx}
+          onSelect={handleHourChange}
+          renderItem={(h) => pad(h as number)}
+        />
+        <AppText style={styles.separator}>:</AppText>
+        <ScrollPicker
+          key={`m-${currentHour}-${currentAmPm}`}
+          items={validMinutes}
+          selectedIndex={safeMinIdx}
+          onSelect={setMinuteIndex}
+          renderItem={(m) => pad(m as number)}
+        />
+        <ScrollPicker
+          items={AM_PM}
+          selectedIndex={amPmIndex}
+          onSelect={handleAmPmChange}
+          renderItem={(a) => a as string}
+        />
+      </View>
+
+      {/* Confirm Button */}
+      <View style={styles.footer}>
         <TouchableOpacity
-          activeOpacity={1}
-          style={[
-            styles.container,
-            Neu.float(Colors.bg.default, 1.2),
-            { maxWidth: frameWidth - 48 },
-            style,
-          ]}
+          onPress={() =>
+            onConfirm(
+              validHours[safeHourIdx],
+              validMinutes[safeMinIdx],
+              AM_PM[amPmIndex],
+            )
+          }
+          activeOpacity={0.9}
+          style={styles.confirmSurface}
         >
-          {/* Header */}
-          <View style={styles.header}>
-            <AppText style={styles.title}>{t("components.timePicker.selectTime")}</AppText>
-            {minTime && maxTime && (
-              <View style={[styles.rangeChip, Neu.soft(Colors.bg.surface, 0.6)]}>
-                <AppText style={styles.rangeText}>
-                  {formatTimePoint(minTime)} – {formatTimePoint(maxTime)}
-                </AppText>
-              </View>
-            )}
-          </View>
-
-          {/* Pickers */}
-          <View style={styles.columns}>
-            <ScrollPicker
-              key={validHours.join(",")}
-              items={validHours}
-              selectedIndex={safeHourIdx}
-              onSelect={handleHourChange}
-              renderItem={(h) => pad(h as number)}
-            />
-            <AppText style={styles.separator}>:</AppText>
-            <ScrollPicker
-              key={`m-${currentHour}-${currentAmPm}`}
-              items={validMinutes}
-              selectedIndex={safeMinIdx}
-              onSelect={setMinuteIndex}
-              renderItem={(m) => pad(m as number)}
-            />
-            <ScrollPicker
-              items={AM_PM}
-              selectedIndex={amPmIndex}
-              onSelect={handleAmPmChange}
-              renderItem={(a) => a as string}
-            />
-          </View>
-
-          {/* Confirm Button */}
-          <TouchableOpacity
-            onPress={() =>
-              onConfirm(
-                validHours[safeHourIdx],
-                validMinutes[safeMinIdx],
-                AM_PM[amPmIndex],
-              )
-            }
-            activeOpacity={0.85}
-            style={[styles.confirmBtn, Neu.accent(0.9)]}
-          >
-            <Ionicons name="checkmark" size={18} color={Colors.text.primary} />
-            <AppText style={styles.confirmText}>{t("common.confirm")}</AppText>
-          </TouchableOpacity>
+          <Ionicons name="checkmark" size={18} color={Colors.text.primary} />
+          <AppText style={styles.confirmText}>{t("common.confirm")}</AppText>
         </TouchableOpacity>
-      </TouchableOpacity>
-    </Modal>
+      </View>
+    </BottomSheet>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: Colors.bg.overlay,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 24,
-  },
-  container: {
-    borderRadius: 24,
-    padding: 20,
-    paddingBottom: 16,
-    width: "100%",
-    gap: 16,
-  },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: Colors.text.primary,
+    justifyContent: "center",
+    marginBottom: 4,
   },
   rangeChip: {
     borderRadius: 20,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    backgroundColor: Colors.bg.default,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
   },
   rangeText: {
-    fontSize: 11,
-    fontWeight: "600",
+    fontSize: 12,
+    fontWeight: "500",
     color: Colors.text.secondary,
   },
   columns: {
     flexDirection: "row",
     alignItems: "center",
+    marginTop: 6,
   },
   separator: {
     fontSize: 22,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     marginHorizontal: 2,
   },
-  confirmBtn: {
-    borderRadius: 14,
-    height: 48,
+  footer: {
+    marginTop: 10,
+    marginBottom: 4,
+  },
+  confirmSurface: {
+    borderRadius: 18,
+    height: 54,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
+    backgroundColor: Colors.brand.primary,
   },
   confirmText: {
-    fontSize: 15,
-    fontWeight: "700",
+    fontSize: 16,
+    fontWeight: "600",
     color: Colors.text.primary,
   },
 });

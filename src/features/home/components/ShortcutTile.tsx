@@ -1,6 +1,6 @@
 import { AppText } from "@/src/components/AppText";
 import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { haptics } from "@/src/utils/haptics";
 import React from "react";
 import {
   StyleSheet,
@@ -34,8 +34,11 @@ export function ShortcutTile({
 
   return (
     <TouchableOpacity
-      onPress={onPress}
-      activeOpacity={0.85}
+      onPress={() => {
+        haptics.light();
+        onPress?.();
+      }}
+      activeOpacity={0.8}
       style={[
         isLarge ? styles.largeContainer : styles.container,
         style,
@@ -44,8 +47,7 @@ export function ShortcutTile({
       <View
         style={[
           isLarge ? styles.largeIconCircle : styles.iconCircle,
-          Neu.raised(Colors.bg.surface, 0.6),
-          iconBg ? { backgroundColor: iconBg, borderWidth: 0 } : undefined,
+          iconBg ? { backgroundColor: iconBg } : undefined,
         ]}
       >
         {dotColor ? (
@@ -79,6 +81,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: Colors.bg.surface,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
   },
   dot: {
     position: "absolute",
@@ -91,7 +96,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: "400",
     color: Colors.text.primary,
     textAlign: "center",
   },
@@ -110,10 +115,13 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: Colors.bg.surface,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
   },
   largeLabel: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "400",
     color: Colors.text.primary,
     letterSpacing: 0.2,
   },
@@ -131,7 +139,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: 11,
-    fontWeight: "700",
+    fontWeight: "600",
     color: "#fff",
   },
 });

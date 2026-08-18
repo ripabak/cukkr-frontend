@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.border.light,
   },
   label: {
-    fontWeight: "700",
+    fontWeight: "600",
     fontSize: 14,
     color: Colors.text.primary,
     flex: 1,

@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#FFFFFF",
     marginRight: 12,
-    fontWeight: "600",
+    fontWeight: "500",
   },
   message: {
     flex: 1,

@@ -59,7 +59,6 @@ export function SelectServicesScreen() {
 
   return (
     <ScreenShell
-      hideAppHeader
       headerSlot={
         <ScreenHeader
           title={t("schedule.selectServices")}

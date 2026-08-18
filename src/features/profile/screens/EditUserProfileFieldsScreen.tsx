@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
   forgotText: {
     fontSize: 13,
     color: Colors.brand.primary,
-    fontWeight: "600",
+    fontWeight: "500",
   },
   errorText: {
     fontSize: 12,

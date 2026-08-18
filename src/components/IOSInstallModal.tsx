@@ -1,14 +1,12 @@
 import React, { useState, useMemo } from "react";
 import { AppText } from "@/src/components/AppText";
+import { BottomSheet } from "@/src/components/BottomSheet";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
-  Modal,
   View,
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  Pressable,
-  Platform,
   Image,
   ImageSourcePropType,
 } from "react-native";
@@ -141,139 +139,114 @@ export function IOSInstallModal({ visible, isSafari, onClose }: Props) {
   const { t } = useI18nContext();
   const isNewSafari = useMemo(() => isNewSafariBrowser(), []);
 
-  if (Platform.OS !== "web") return null;
-
   return (
-    <Modal
+    <BottomSheet
       visible={visible}
-      transparent
-      animationType="slide"
-      onRequestClose={onClose}
+      onClose={onClose}
+      showHandle
+      scrollable
+      maxHeightFraction={0.92}
     >
-      <Pressable style={styles.backdrop} onPress={onClose}>
-        <Pressable style={styles.sheet} onPress={() => {}}>
-          <View style={styles.handle} />
-
-          <View style={styles.header}>
-            <View style={styles.headerLeft}>
-              <Ionicons
-                name="phone-portrait-outline"
-                size={22}
-                color={AppTheme.colors.accent}
-              />
-              <AppText style={styles.title}>{t("components.pwaInstall.modalTitle")}</AppText>
-            </View>
-            <TouchableOpacity
-              onPress={onClose}
-              style={styles.closeBtn}
-              hitSlop={8}
-            >
-              <Ionicons name="close" size={20} color={AppTheme.colors.gray} />
-            </TouchableOpacity>
+      <View style={styles.header}>
+        <View style={styles.headerLeft}>
+          <View style={styles.headerIcon}>
+            <Ionicons
+              name="phone-portrait-outline"
+              size={20}
+              color={AppTheme.colors.accent}
+            />
           </View>
+          <AppText style={styles.title}>{t("components.pwaInstall.modalTitle")}</AppText>
+        </View>
+        <TouchableOpacity
+          onPress={onClose}
+          style={styles.closeBtn}
+          hitSlop={8}
+        >
+          <Ionicons name="close" size={20} color={AppTheme.colors.gray} />
+        </TouchableOpacity>
+      </View>
 
-          <ScrollView
-            style={styles.scroll}
-            showsVerticalScrollIndicator={false}
-          >
-            <View style={styles.safariHeader}>
-              <Image
-                source={IMAGES.safariIcon}
-                style={styles.safariIcon}
-                resizeMode="contain"
-              />
-              <View style={styles.safariHeaderTextWrap}>
-                <AppText style={styles.safariHeaderTitle}>
-                  {t("components.pwaInstall.safariHeaderTitle")}
-                </AppText>
-                <AppText style={styles.safariHeaderDesc}>
-                  {t("components.pwaInstall.safariHeaderDesc")}
-                </AppText>
+      <ScrollView
+        style={styles.scroll}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.safariHeader}>
+          <Image
+            source={IMAGES.safariIcon}
+            style={styles.safariIcon}
+            resizeMode="contain"
+          />
+          <View style={styles.safariHeaderTextWrap}>
+            <AppText style={styles.safariHeaderTitle}>
+              {t("components.pwaInstall.safariHeaderTitle")}
+            </AppText>
+            <AppText style={styles.safariHeaderDesc}>
+              {t("components.pwaInstall.safariHeaderDesc")}
+            </AppText>
+          </View>
+        </View>
+
+        {STEPS.map((step, index) => {
+          const i18n = STEP_I18N[step];
+          const { source, aspect, variantSource, variantAspect } = getImageSource(step, isNewSafari && isSafari);
+          return (
+            <View key={step}>
+              {index > 0 && <View style={styles.divider} />}
+              <View style={styles.stepContainer}>
+                <View style={styles.stepNumber}>
+                  <AppText style={styles.stepNumberText}>{index + 1}</AppText>
+                </View>
+                <View style={styles.stepContent}>
+                  <AppText style={styles.stepTitle}>{t(i18n.title)}</AppText>
+                  {source && <StepImage source={source} aspect={aspect} step={step} />}
+                  <AppText style={styles.stepDesc}>{t(i18n.desc)}</AppText>
+                  <View style={styles.variantRow}>
+                    <Ionicons name="bulb-outline" size={13} color={AppTheme.colors.accent} />
+                    <AppText style={styles.variantText}>{t(i18n.variant)}</AppText>
+                  </View>
+                  {variantSource && variantAspect && (
+                    <View style={styles.variantImageWrap}>
+                      <Image
+                        source={variantSource}
+                        style={[styles.variantImage, { aspectRatio: variantAspect }]}
+                        resizeMode="contain"
+                      />
+                    </View>
+                  )}
+                </View>
               </View>
             </View>
+          );
+        })}
 
-            {STEPS.map((step, index) => {
-              const i18n = STEP_I18N[step];
-              const { source, aspect, variantSource, variantAspect } = getImageSource(step, isNewSafari && isSafari);
-              return (
-                <View key={step}>
-                  {index > 0 && <View style={styles.divider} />}
-                  <View style={styles.stepContainer}>
-                    <View style={styles.stepNumber}>
-                      <AppText style={styles.stepNumberText}>{index + 1}</AppText>
-                    </View>
-                    <View style={styles.stepContent}>
-                      <AppText style={styles.stepTitle}>{t(i18n.title)}</AppText>
-                      {source && <StepImage source={source} aspect={aspect} step={step} />}
-                      <AppText style={styles.stepDesc}>{t(i18n.desc)}</AppText>
-                      <View style={styles.variantRow}>
-                        <Ionicons name="bulb-outline" size={13} color={AppTheme.colors.accent} />
-                        <AppText style={styles.variantText}>{t(i18n.variant)}</AppText>
-                      </View>
-                      {variantSource && variantAspect && (
-                        <View style={styles.variantImageWrap}>
-                          <Image
-                            source={variantSource}
-                            style={[styles.variantImage, { aspectRatio: variantAspect }]}
-                            resizeMode="contain"
-                          />
-                        </View>
-                      )}
-                    </View>
-                  </View>
-                </View>
-              );
-            })}
+        <View style={styles.divider} />
 
-            <View style={styles.divider} />
+        <View style={styles.successSection}>
+          <Image
+            source={IMAGES.appInstalled}
+            style={[styles.successImage, { aspectRatio: IMAGE_ASPECT.appInstalled }]}
+            resizeMode="contain"
+          />
+          <AppText style={styles.successText}>
+            {t("components.pwaInstall.installSuccess")}
+          </AppText>
+        </View>
 
-            <View style={styles.successSection}>
-              <Image
-                source={IMAGES.appInstalled}
-                style={[styles.successImage, { aspectRatio: IMAGE_ASPECT.appInstalled }]}
-                resizeMode="contain"
-              />
-              <AppText style={styles.successText}>
-                {t("components.pwaInstall.installSuccess")}
-              </AppText>
-            </View>
-
-            <TouchableOpacity style={styles.doneBtn} onPress={onClose}>
-              <AppText style={styles.doneBtnText}>{t("components.pwaInstall.gotIt")}</AppText>
-            </TouchableOpacity>
-          </ScrollView>
-        </Pressable>
-      </Pressable>
-    </Modal>
+        <TouchableOpacity style={styles.doneBtn} onPress={onClose}>
+          <AppText style={styles.doneBtnText}>{t("components.pwaInstall.gotIt")}</AppText>
+        </TouchableOpacity>
+      </ScrollView>
+    </BottomSheet>
   );
 }
 
 const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.4)",
-    justifyContent: "flex-end",
-  },
-  sheet: {
-    backgroundColor: AppTheme.colors.bg,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingHorizontal: AppTheme.spacing.xl,
-    paddingTop: 12,
-    maxHeight: "90%",
-  },
-  handle: {
-    width: 36,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: AppTheme.colors.border,
-    alignSelf: "center",
-    marginBottom: 12,
-  },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    marginTop: 4,
     marginBottom: 8,
   },
   headerLeft: {
@@ -281,9 +254,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
   },
+  headerIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: AppTheme.colors.surface,
+    borderWidth: 1,
+    borderColor: AppTheme.colors.border,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   title: {
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: "600",
     color: AppTheme.colors.dark,
   },
   closeBtn: {
@@ -309,7 +292,7 @@ const styles = StyleSheet.create({
   },
   safariHeaderTitle: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "500",
     color: AppTheme.colors.dark,
   },
   safariHeaderDesc: {
@@ -335,7 +318,7 @@ const styles = StyleSheet.create({
   },
   stepNumberText: {
     fontSize: 12,
-    fontWeight: "700",
+    fontWeight: "600",
     color: AppTheme.colors.dark,
   },
   stepContent: {
@@ -343,7 +326,7 @@ const styles = StyleSheet.create({
   },
   stepTitle: {
     fontSize: 15,
-    fontWeight: "600",
+    fontWeight: "500",
     color: AppTheme.colors.dark,
     marginBottom: 8,
   },
@@ -386,7 +369,7 @@ const styles = StyleSheet.create({
   },
   doneBtnText: {
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "600",
     color: AppTheme.colors.dark,
   },
   scroll: {

@@ -70,7 +70,6 @@ export function NewWalkInScreen() {
   return (
     <FormShell
       keyboardAvoid
-      hideAppHeader
       headerSlot={
         <ScreenHeader
           title={t("schedule.newWalkIn")}

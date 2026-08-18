@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   },
   dayLabel: {
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.muted,
     letterSpacing: 0.5,
   },
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   },
   dayNumber: {
     fontSize: 22,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   dayNumberSelected: {

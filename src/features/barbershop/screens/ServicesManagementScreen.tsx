@@ -57,7 +57,7 @@ export function ServicesManagementScreen() {
   };
 
   return (
-    <ScreenShell hideAppHeader
+    <ScreenShell
       headerSlot={
         <ScreenHeader
           onBack={() => router.back()}
@@ -149,7 +149,7 @@ export function ServicesManagementScreen() {
 const styles = StyleSheet.create({
   title: {
     fontSize: 30,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     marginTop: 8,
     letterSpacing: -0.8,

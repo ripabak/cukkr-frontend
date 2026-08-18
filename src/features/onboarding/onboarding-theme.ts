@@ -21,13 +21,13 @@ export const OnboardingTheme = {
   typography: {
     heading: {
       fontSize: 30,
-      fontWeight: "700" as const,
+      fontWeight: "600" as const,
       fontFamily: "PlusJakartaSans_700Bold" as const,
       lineHeight: 36,
     },
     subheading: {
       fontSize: 18,
-      fontWeight: "600" as const,
+      fontWeight: "500" as const,
       fontFamily: "PlusJakartaSans_600SemiBold" as const,
       lineHeight: 24,
     },

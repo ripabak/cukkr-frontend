@@ -41,7 +41,7 @@ export function AnalyticsOverviewScreen() {
 
   return (
     <Permission roles={["owner", "admin"]}>
-    <ScreenShell contentStyle={styles.scrollContent} hideAppHeader>
+    <ScreenShell contentStyle={styles.scrollContent}>
       <View style={styles.topBar}>
         <AppText style={styles.pageTitle}>{t("tabs.analytics")}</AppText>
         <AppText style={styles.pageSubtitle}>
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   },
   pageTitle: {
     fontSize: 30,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     letterSpacing: -0.8,
   },
@@ -277,12 +277,12 @@ const styles = StyleSheet.create({
   },
   chartCardTitle: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
   },
   chartCardValue: {
     fontSize: 26,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     letterSpacing: -0.5,
     marginTop: 4,
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 17,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
 });

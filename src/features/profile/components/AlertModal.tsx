@@ -1,8 +1,10 @@
-import { Colors } from "@/src/theme/colors";
-import React from "react";
-import { Modal, View, TouchableOpacity, StyleSheet } from "react-native";
 import { AppText } from "@/src/components/AppText";
-import { useFrame } from "@/src/components/FrameContext";
+import { BottomSheet } from "@/src/components/BottomSheet";
+import { SoftPressable } from "@/src/components/SoftPressable";
+import { Colors } from "@/src/theme/colors";
+import { haptics } from "@/src/utils/haptics";
+import React from "react";
+import { StyleSheet, View } from "react-native";
 
 interface Props {
   visible: boolean;
@@ -19,63 +21,81 @@ export function AlertModal({
   actionLabel,
   onAction,
 }: Props) {
-  const { frameWidth } = useFrame();
-
   return (
-    <Modal visible={visible} transparent animationType="fade">
-      <View style={styles.overlay}>
-        <View style={[styles.card, { width: frameWidth * 0.85 }]}>
-          <AppText style={styles.title}>{title}</AppText>
-          {description ? (
-            <AppText style={styles.description}>{description}</AppText>
-          ) : null}
-          {actionLabel ? (
-            <TouchableOpacity
-              onPress={onAction}
-              activeOpacity={0.8}
-              style={styles.btn}
-            >
-              <AppText style={styles.btnLabel}>{actionLabel}</AppText>
-            </TouchableOpacity>
-          ) : null}
+    <BottomSheet visible={visible} onClose={onAction ?? (() => {})}>
+      <View style={styles.body}>
+        <View style={styles.iconWrapper}>
+          <AppText style={styles.iconGlyph}>i</AppText>
         </View>
+        <AppText style={styles.title}>{title}</AppText>
+        {description ? (
+          <AppText style={styles.description}>{description}</AppText>
+        ) : null}
+        {actionLabel ? (
+          <SoftPressable
+            onPress={() => {
+              haptics.medium();
+              onAction?.();
+            }}
+            style={styles.btnWrap}
+            contentStyle={styles.btn}
+          >
+            <AppText style={styles.btnLabel}>{actionLabel}</AppText>
+          </SoftPressable>
+        ) : null}
       </View>
-    </Modal>
+    </BottomSheet>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.4)",
-    justifyContent: "center",
+  body: {
     alignItems: "center",
+    paddingTop: 6,
+    paddingBottom: 4,
   },
-  card: {
+  iconWrapper: {
+    width: 40,
+    height: 40,
+    borderRadius: 14,
     backgroundColor: Colors.bg.default,
-    borderRadius: 24,
-    padding: 28,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 14,
   },
-  title: {
+  iconGlyph: {
     fontSize: 20,
     fontWeight: "700",
+    color: Colors.text.secondary,
+    lineHeight: 22,
+  },
+  title: {
+    fontSize: 19,
+    fontWeight: "600",
     textAlign: "center",
     color: Colors.text.primary,
+    letterSpacing: -0.3,
   },
   description: {
     fontSize: 14,
     color: Colors.text.secondary,
     textAlign: "center",
     marginTop: 8,
+    lineHeight: 20,
+    maxWidth: 300,
   },
-  btn: {
+  btnWrap: {
     marginTop: 24,
     height: 52,
-    borderRadius: 999,
+    width: "100%",
+  },
+  btn: {
     backgroundColor: Colors.brand.primary,
+    borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
-    width: "100%",
   },
   btnLabel: {
     color: Colors.text.primary,

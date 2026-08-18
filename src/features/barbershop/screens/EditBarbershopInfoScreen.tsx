@@ -119,7 +119,6 @@ export function EditBarbershopInfoScreen() {
 
   return (
     <ScreenShell
-      hideAppHeader
       headerSlot={
         <EditFieldHeader
           title={config.title}

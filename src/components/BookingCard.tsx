@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   },
   timeLabel: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   barberRow: {
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   },
   customerName: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
   },
   duration: {
     fontSize: 13,

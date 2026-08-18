@@ -63,7 +63,7 @@ const trendStyles = StyleSheet.create({
   },
   text: {
     fontSize: 11,
-    fontWeight: "600",
+    fontWeight: "500",
   },
 });
 
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   },
   value: {
     fontSize: 22,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     letterSpacing: -0.5,
   },

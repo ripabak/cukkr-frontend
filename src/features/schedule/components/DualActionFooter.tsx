@@ -70,12 +70,12 @@ const styles = StyleSheet.create({
   },
   declineLabel: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.status.danger,
   },
   acceptLabel: {
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
 });

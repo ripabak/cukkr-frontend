@@ -22,6 +22,7 @@ export const en = {
     noPermission: "You don't have permission to do this. Only owner/admin can.",
     noData: 'No data yet',
     retry: 'Retry',
+    copy: 'Copy',
     search: 'Search',
     filter: 'Filter',
     all: 'All',
@@ -34,6 +35,7 @@ export const en = {
     deleteConfirm: 'Are you sure you want to delete this? This action cannot be undone.',
     loadFailed: 'Failed to load data',
     logout: 'Logout',
+    to: 'to',
   },
   auth: {
     login: 'Sign In',
@@ -214,6 +216,12 @@ export const en = {
     notifConsentDesc: 'Get notified about new booking requests and walk-in arrivals in real time.',
     enable: 'Enable',
     notNow: 'Not Now',
+    newBookingHint: 'What kind of booking do you want to start?',
+    walkInHint: 'Customer walked in without an appointment.',
+    appointmentHint: 'Customer already has a scheduled slot.',
+    walkinPin: 'Walk-in PIN',
+    walkinPinHint: 'Customer check-in PIN',
+    bookingsScheduled: 'bookings today',
   },
   walkIn: {
     hint: 'Customer scan this QR code to check-in as a walk-in. PIN will be auto-filled on the booking page.',
@@ -359,6 +367,8 @@ export const en = {
     appointment: 'Appointment'
   },
   calendar: {
+    title: 'Pick a Date',
+    pickDate: 'Drag to choose a booking date',
     closedDay: 'Closed Day',
     hasRequests: 'Has Requests',
     hasWaiting: 'Has Waiting',
@@ -447,6 +457,8 @@ export const en = {
   },
   barbershop: {
     settings: 'Barbershop Settings',
+    switcherTitle: 'Switch Barbershop',
+    switchSubtitle: 'Jump straight to another barbershop',
     switchingWorkspace: 'Switching workspace',
     pleaseWait: 'Please wait a moment...',
     searchPlaceholder: 'Search barbershop...',

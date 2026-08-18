@@ -125,7 +125,6 @@ export function AddOrEditServiceScreen() {
   return (
     <ScreenShell
       keyboardAvoid
-      hideAppHeader
       headerSlot={
         <ScreenHeader
           title={t("services.addService")}

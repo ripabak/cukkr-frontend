@@ -78,7 +78,6 @@ export function NotificationsListScreen() {
 
   return (
     <ScreenShell
-      hideAppHeader
       headerSlot={<ScreenHeader onBack={() => router.back()} />}
       contentStyle={styles.content}
     >
@@ -190,7 +189,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   emptySubtitle: {

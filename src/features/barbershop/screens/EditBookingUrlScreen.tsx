@@ -151,7 +151,6 @@ export function EditBookingUrlScreen() {
 
   return (
     <ScreenShell
-      hideAppHeader
       headerSlot={
         <EditFieldHeader
           title={t("barbershop.slugLabel")}

@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   meta: {
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
   },
   metaBold: {
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
 });

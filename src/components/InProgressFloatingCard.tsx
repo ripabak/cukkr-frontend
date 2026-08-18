@@ -1,7 +1,7 @@
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
 import { formatTime12h } from "@/src/utils/date";
+import { haptics } from "@/src/utils/haptics";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
@@ -91,14 +91,15 @@ export function InProgressFloatingCard({
 
   return (
     <TouchableOpacity
-      onPress={() =>
+      onPress={() => {
+        haptics.light();
         router.push({
           pathname: "/d/booking-detail",
           params: { id: bookingId },
-        })
-      }
+        });
+      }}
       activeOpacity={0.9}
-      style={[styles.card, Neu.float(Colors.status.inProgress, 1.1)]}
+      style={styles.card}
     >
       <Animated.View
         style={[
@@ -143,6 +144,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     overflow: "hidden",
+    backgroundColor: Colors.status.inProgress,
+    shadowColor: "rgba(59, 130, 246, 0.4)",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 1,
+    shadowRadius: 16,
+    elevation: 5,
   },
   left: {
     flexDirection: "row",
@@ -161,7 +168,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 10,
-    fontWeight: "600",
+    fontWeight: "500",
     color: "rgba(255,255,255,0.8)",
     letterSpacing: 0.5,
     textTransform: "uppercase",
@@ -169,7 +176,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "600",
     color: "#fff",
   },
   right: {
@@ -187,7 +194,7 @@ const styles = StyleSheet.create({
   },
   elapsed: {
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "600",
     color: "#fff",
     letterSpacing: 0.3,
   },

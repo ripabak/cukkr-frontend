@@ -71,7 +71,6 @@ export function BookingPreferencesScreen() {
 
   return (
     <ScreenShell
-      hideAppHeader
       headerSlot={
         <EditFieldHeader
           title={t("barbershop.bookingPreferences")}

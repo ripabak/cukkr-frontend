@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   title: {
     color: authTheme.colors.textPrimary,
     fontSize: 32,
-    fontWeight: "800",
+    fontWeight: "700",
     fontFamily: "PlusJakartaSans_700Bold",
     letterSpacing: -0.8,
   },

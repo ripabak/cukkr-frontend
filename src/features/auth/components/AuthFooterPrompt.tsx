@@ -38,6 +38,6 @@ const styles = StyleSheet.create({
   link: {
     color: authTheme.colors.accentDark,
     fontSize: 14,
-    fontWeight: "700",
+    fontWeight: "600",
   },
 });

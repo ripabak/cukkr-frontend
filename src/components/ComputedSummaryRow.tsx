@@ -37,12 +37,12 @@ const styles = StyleSheet.create({
   label: {
     flex: 1,
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   value: {
     fontSize: 14,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
 });

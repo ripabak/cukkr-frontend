@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   label: {
     flex: 1,
     fontSize: 15,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   labelDisabled: {

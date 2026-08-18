@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   },
   pillText: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
   },
   pillTextActive: {

@@ -1,7 +1,5 @@
 import AppTheme from "@/src/app-theme";
-import { AppHeader } from "@/src/components/AppHeader";
 import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
 import React from "react";
 import {
   KeyboardAvoidingView,
@@ -11,7 +9,10 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 interface Props {
   children: React.ReactNode;
@@ -29,10 +30,16 @@ interface Props {
   style?: ViewStyle;
   /** Safe area edges to apply — default: all */
   edges?: ("top" | "bottom" | "left" | "right")[];
-  /** Hide the global app logo header — default: false */
-  hideAppHeader?: boolean;
   /** Wrap scroll content in KeyboardAvoidingView — use for form screens */
   keyboardAvoid?: boolean;
+  /**
+   * Render headerSlot as an absolute overlay above the ScrollView so it can
+   * collapse on scroll (drive the transform from `onScroll`).
+   * Content is top-padded by `stickyHeaderHeight` so it clears the header.
+   */
+  stickyHeader?: boolean;
+  /** Measured height of the header slot (used for the content top-pad & collapse math). */
+  stickyHeaderHeight?: number;
   /** Scroll event callback — attach for scroll-aware headers */
   onScroll?: (event: any) => void;
   /** Throttle for onScroll (ms) — default: 16 */
@@ -52,17 +59,24 @@ export function ScreenShell({
   contentStyle,
   style,
   edges,
-  hideAppHeader = false,
   keyboardAvoid = false,
+  stickyHeader = false,
+  stickyHeaderHeight = 0,
   onScroll,
   scrollEventThrottle = 16,
   onScrollEndDrag,
   onMomentumScrollEnd,
 }: Props) {
+  const insets = useSafeAreaInsets();
+
   const scrollView = (
     <ScrollView
       style={styles.scroll}
-      contentContainerStyle={[styles.scrollContent, contentStyle]}
+      contentContainerStyle={[
+        styles.scrollContent,
+        stickyHeader ? { paddingTop: stickyHeaderHeight } : null,
+        contentStyle,
+      ]}
       showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="handled"
       onScroll={onScroll}
@@ -79,12 +93,16 @@ export function ScreenShell({
       style={[styles.safeArea, { backgroundColor }, style]}
       edges={edges}
     >
-      {!hideAppHeader && (
-        <View style={[styles.headerWrapper, Neu.soft(Colors.bg.surface, 0.6)]}>
-          <AppHeader />
+      {headerSlot ? (
+        <View
+          style={[
+            styles.headerSlotWrapper,
+            stickyHeader && [styles.stickyHeaderWrapper, { top: insets.top }],
+          ]}
+        >
+          {headerSlot}
         </View>
-      )}
-      {headerSlot ? <View style={styles.headerSlotWrapper}>{headerSlot}</View> : null}
+      ) : null}
       {keyboardAvoid ? (
         <KeyboardAvoidingView
           style={styles.keyboardView}
@@ -108,11 +126,18 @@ const styles = StyleSheet.create({
   keyboardView: {
     flex: 1,
   },
-  headerWrapper: {
-    marginHorizontal: 16,
-    marginTop: 8,
-    borderRadius: 16,
-    overflow: "hidden",
+  headerSlotWrapper: {
+    position: "relative",
+    zIndex: 100,
+  },
+  stickyHeaderWrapper: {
+    // Transparent by design: the collapsible header paints its own
+    // background on the animated element so no white band lingers behind
+    // once it slides away.
+    position: "absolute",
+    left: 0,
+    right: 0,
+    zIndex: 100,
   },
   scroll: {
     flex: 1,
@@ -120,9 +145,5 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: AppTheme.spacing.xl,
     paddingBottom: 40,
-  },
-  headerSlotWrapper: {
-    position: "relative",
-    zIndex: 100,
   },
 });

@@ -60,7 +60,7 @@ const statusStyles = StyleSheet.create({
   pill: { borderRadius: 999, paddingHorizontal: 8, paddingVertical: 2 },
   new: { backgroundColor: Colors.status.successSurface },
   return: { backgroundColor: Colors.status.infoSurface },
-  text: { fontSize: 11, fontWeight: "600" },
+  text: { fontSize: 11, fontWeight: "500" },
   newText: { color: Colors.status.success },
   returnText: { color: Colors.status.info },
 });
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
   pageTitle: {
     flex: 1,
     fontSize: 17,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   topBarRight: {
@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
   },
   splitValue: {
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   chartCard: {
@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
   },
   chartCardTitle: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
   },
   listSection: {
@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 17,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   filterPill: {
@@ -423,7 +423,7 @@ const styles = StyleSheet.create({
   },
   filterPillText: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   listLoader: {
@@ -455,7 +455,7 @@ const styles = StyleSheet.create({
   },
   customerInitial: {
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.brand.primaryDark,
   },
   customerInfo: {
@@ -469,7 +469,7 @@ const styles = StyleSheet.create({
   },
   customerName: {
     fontSize: 15,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
     flex: 1,
   },
@@ -479,7 +479,7 @@ const styles = StyleSheet.create({
   },
   customerRevenue: {
     fontSize: 14,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   pagination: {
@@ -501,7 +501,7 @@ const styles = StyleSheet.create({
   },
   pageLabel: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
 });

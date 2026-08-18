@@ -1,8 +1,10 @@
 /**
  * Cukkr Design System — Color Tokens
  *
- * Modern native app palette with a soft neumorphic base. The brand amber is used
- * sparingly as an accent. Status colors are tuned to feel calm and consistent.
+ * Modern Soft Flat palette. Calm cool-neutral base, pure-white surfaces with
+ * hairline borders, and a single amber brand accent used sparingly on
+ * interactive elements (CTAs, active states, highlights). No neumorphic
+ * dual shadows — elevation is expressed with soft tinted shadows only.
  *
  * Usage guide:
  *   Brand    → primary CTA buttons, active tab, toggle ON, key highlights
@@ -16,32 +18,34 @@ export const Colors = {
   brand: {
     primary: "#f5b923", // amber — CTAs, active states, highlights
     primaryDark: "#d99a0a", // dark amber — pressed, selected, emphasis
-    primarySurface: "#fff6db", // very light amber — subtle tinted backgrounds
+    primarySurface: "#fdf4dc", // soft amber — subtle tinted backgrounds
   },
 
   bg: {
-    default: "#f0f2f5", // main screen background — soft cool gray
-    surface: "#f7f9fc", // cards, sections, raised surfaces
+    default: "#ffffff", // main screen background — white
+    surface: "#ffffff", // cards, sections, raised surfaces
+    elevated: "#ffffff", // sheets, popovers
     cream: "#f7f5f0", // warm off-white (schedule, legacy)
-    overlay: "rgba(23, 28, 35, 0.55)",
+    overlay: "rgba(15, 19, 26, 0.45)", // scrim behind sheets / modals
+    chrome: "#e9ebee", // desktop frame around the mobile web app
   },
 
   text: {
-    primary: "#1f2328", // headings, body copy
-    secondary: "#5e6670", // labels, captions, hints
-    muted: "#9aa2ad", // placeholders, disabled
-    inverse: "#ffffff", // text on dark/brand backgrounds
+    primary: "#191c20", // headings, body copy
+    secondary: "#5c6470", // labels, captions, hints
+    muted: "#98a0ac", // placeholders, disabled
+    inverse: "#ffffff", // text on dark backgrounds
   },
 
   icon: {
-    muted: "#8b95a3", // inactive / decorative icons
-    default: "#3a3f47", // active / emphasis icons
-    light: "#b4bcc8", // very subtle icon tint
+    muted: "#8a93a3", // inactive / decorative icons
+    default: "#2c3138", // active / emphasis icons
+    light: "#b7bdc8", // very subtle icon tint
   },
 
   border: {
-    default: "#e1e5eb", // standard input borders, card outlines
-    light: "#eef1f5", // very subtle dividers/separators
+    default: "#e3e6eb", // standard input borders, card outlines
+    light: "#eef0f4", // very subtle dividers/separators
     focus: "#f5b923", // focused input border (brand amber)
   },
 

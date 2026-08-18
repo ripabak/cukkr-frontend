@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   forgotPasswordLink: {
     color: authTheme.colors.accentDark,
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "500",
   },
   fontDemo: {
     gap: 8,

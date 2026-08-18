@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   },
   errorTitle: {
     fontSize: 22,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     textAlign: "center",
   },
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
   backLinkText: {
     fontSize: 14,
     color: Colors.text.primary,
-    fontWeight: "600",
+    fontWeight: "500",
     textDecorationLine: "underline",
   },
   iconWrapper: {
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     textAlign: "center",
   },
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
   },
   registerLinkBold: {
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   card: {
@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
   },
   cardValue: {
     fontSize: 15,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   divider: {
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
   },
   rejectLabel: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   disabled: {

@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
     marginBottom: 8,
     letterSpacing: 0.5,
@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
   },
   defaultLabel: {
     flex: 1,
-    fontWeight: "700",
+    fontWeight: "600",
     fontSize: 14,
     color: Colors.text.primary,
   },

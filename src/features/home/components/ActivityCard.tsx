@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   },
   time: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "500",
     flex: 1,
   },
   rightStack: {
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "500",
   },
   duration: {
     fontSize: 12,

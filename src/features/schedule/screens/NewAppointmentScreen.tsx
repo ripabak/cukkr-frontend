@@ -14,6 +14,8 @@ import { useI18nContext } from "@/src/lib/i18n/provider";
 import { getErrorMessage } from "@/src/lib/utils/error-handler";
 import { useRouter } from "expo-router";
 import React, { useMemo, useState } from "react";
+import { BottomSheet } from "@/src/components/BottomSheet";
+
 import { Modal, Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
 import DateTimePicker, { DateTimePickerAndroid, DateTimePickerEvent } from '@react-native-community/datetimepicker';
@@ -259,7 +261,6 @@ export function NewAppointmentScreen() {
   return (
     <FormShell
       keyboardAvoid
-      hideAppHeader
       headerSlot={
         <ScreenHeader
           title={t("schedule.newAppointment")}
@@ -400,25 +401,24 @@ export function NewAppointmentScreen() {
       )}
 
       {Platform.OS === 'ios' && showIosPicker && (
-        <Modal transparent animationType="fade">
-          <TouchableOpacity
-            style={styles.pickerOverlay}
-            activeOpacity={1}
-            onPress={() => setShowIosPicker(false)}
-          >
-            <TouchableOpacity activeOpacity={1} style={[styles.pickerCard, Neu.float(Colors.bg.default, 1.2)]}>
-              <DateTimePicker
-                value={tempDate}
-                mode="date"
-                display="spinner"
-                minimumDate={minDate}
-                maximumDate={maxDate}
-                onChange={handleIosDateChange}
-              />
-              <PrimaryButton label="Done" onPress={confirmIosDate} />
-            </TouchableOpacity>
-          </TouchableOpacity>
-        </Modal>
+        <BottomSheet
+          visible={showIosPicker}
+          onClose={() => setShowIosPicker(false)}
+          title={t("calendar.title")}
+          showHandle
+        >
+          <View style={styles.iosPickerWrap}>
+            <DateTimePicker
+              value={tempDate}
+              mode="date"
+              display="spinner"
+              minimumDate={minDate}
+              maximumDate={maxDate}
+              onChange={handleIosDateChange}
+            />
+            <PrimaryButton label="Done" onPress={confirmIosDate} />
+          </View>
+        </BottomSheet>
       )}
     </FormShell>
   );
@@ -441,20 +441,10 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     gap: 10,
   },
-  pickerOverlay: {
-    flex: 1,
-    backgroundColor: Colors.bg.overlay,
-    justifyContent: "center",
+  iosPickerWrap: {
     alignItems: "center",
-    paddingHorizontal: 24,
-  },
-  pickerCard: {
-    borderRadius: 24,
-    padding: 20,
-    width: "100%",
-    maxWidth: 320,
-    alignSelf: "center",
     gap: 16,
+    paddingBottom: 8,
   },
   footer: {
     paddingHorizontal: 20,
@@ -468,7 +458,7 @@ const styles = StyleSheet.create({
   },
   timeSectionLabel: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
     marginBottom: 12,
     textTransform: "uppercase",
@@ -499,7 +489,7 @@ const styles = StyleSheet.create({
   },
   slotText: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
 });

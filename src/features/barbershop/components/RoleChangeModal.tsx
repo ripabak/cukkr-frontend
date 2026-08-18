@@ -1,11 +1,12 @@
-import { useI18nContext } from "@/src/lib/i18n/provider";
+import { AppText } from "@/src/components/AppText";
+import { BottomSheet } from "@/src/components/BottomSheet";
+import { SoftPressable } from "@/src/components/SoftPressable";
 import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { haptics } from "@/src/utils/haptics";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Modal, View, TouchableOpacity, StyleSheet } from "react-native";
-import { AppText } from "@/src/components/AppText";
-import { useFrame } from "@/src/components/FrameContext";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 interface Props {
   visible: boolean;
@@ -17,10 +18,12 @@ interface Props {
 
 type TFunction = (key: string, params?: Record<string, string>) => string;
 
-function getRoleOptions(t: TFunction): { value: "admin" | "member"; label: string }[] {
+function getRoleOptions(
+  t: TFunction,
+): { value: "admin" | "member"; label: string; icon: string }[] {
   return [
-    { value: "admin", label: t("barbers.admin") },
-    { value: "member", label: t("barbers.member") },
+    { value: "admin", label: t("barbers.admin"), icon: "shield-checkmark" },
+    { value: "member", label: t("barbers.member"), icon: "person" },
   ];
 }
 
@@ -32,121 +35,116 @@ export function RoleChangeModal({
   onCancel,
 }: Props) {
   const { t } = useI18nContext();
-  const { frameWidth } = useFrame();
   const initialRole = currentRole === "admin" ? "admin" : "member";
   const [selectedRole, setSelectedRole] = useState<"admin" | "member">(initialRole);
   const hasChanged = selectedRole !== initialRole;
 
+  const handleSave = () => {
+    haptics.medium();
+    onSave(selectedRole);
+  };
+
   return (
-    <Modal visible={visible} transparent animationType="fade">
-      <View style={styles.overlay}>
-        <View style={[styles.card, Neu.float(Colors.bg.surface, 1.2), { width: frameWidth * 0.85 }]}>
-          <View style={styles.iconWrapper}>
-            <Ionicons name="shield-checkmark-outline" size={32} color={Colors.text.primary} />
-          </View>
-
-          <AppText style={styles.title}>{t("barbers.changeRole")}</AppText>
-          <AppText style={styles.description}>
-            {memberName}
-          </AppText>
-          <AppText style={styles.currentRole}>
-            {t("barbers.currentRole", { role: currentRole.charAt(0).toUpperCase() + currentRole.slice(1) })}
-          </AppText>
-
-          <View style={styles.optionsRow}>
-            {getRoleOptions(t).map((opt) => {
-              const isSelected = selectedRole === opt.value;
-              return (
-                <TouchableOpacity
-                  key={opt.value}
-                  onPress={() => setSelectedRole(opt.value)}
-                  activeOpacity={0.8}
-                  style={[
-                    styles.option,
-                    isSelected
-                      ? [styles.optionSelected, Neu.accent(0.75)]
-                      : Neu.soft(Colors.bg.surface, 0.7),
-                  ]}
-                >
-                  <AppText
-                    style={[
-                      styles.optionText,
-                      isSelected && styles.optionTextSelected,
-                    ]}
-                  >
-                    {opt.label}
-                  </AppText>
-                </TouchableOpacity>
-              );
+    <BottomSheet
+      visible={visible}
+      onClose={() => {
+        haptics.light();
+        onCancel();
+      }}
+      title={t("barbers.changeRole")}
+      subtitle={memberName}
+    >
+      <View style={styles.body}>
+        <View style={styles.currentRoleRow}>
+          <AppText style={styles.currentRoleLabel}>
+            {t("barbers.currentRole", {
+              role:
+                currentRole.charAt(0).toUpperCase() + currentRole.slice(1),
             })}
-          </View>
+          </AppText>
+        </View>
 
-          <View style={styles.actions}>
-            <TouchableOpacity
-              onPress={onCancel}
-              activeOpacity={0.85}
-              style={[styles.btn, Neu.soft(Colors.bg.surface, 0.7)]}
-            >
-              <AppText style={styles.btnCancelText}>{t("common.cancel")}</AppText>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => onSave(selectedRole)}
-              activeOpacity={0.8}
-              disabled={!hasChanged}
-              style={[
-                styles.btn,
-                !hasChanged ? styles.btnSaveDisabled : Neu.accent(0.9),
-              ]}
-            >
-              <AppText
+        <View style={styles.optionsRow}>
+          {getRoleOptions(t).map((opt) => {
+            const isSelected = selectedRole === opt.value;
+            return (
+              <TouchableOpacity
+                key={opt.value}
+                onPress={() => {
+                  haptics.selection();
+                  setSelectedRole(opt.value);
+                }}
+                activeOpacity={0.8}
                 style={[
-                  styles.btnSaveText,
-                  !hasChanged && styles.btnSaveTextDisabled,
+                  styles.option,
+                  isSelected && styles.optionSelected,
                 ]}
               >
-                {t("common.save")}
-              </AppText>
-            </TouchableOpacity>
-          </View>
+                <View
+                  style={[
+                    styles.optionIconChip,
+                    isSelected && styles.optionIconSelected,
+                  ]}
+                >
+                  <Ionicons
+                    name={opt.icon as React.ComponentProps<typeof Ionicons>["name"]}
+                    size={22}
+                    color={isSelected ? Colors.text.primary : Colors.text.secondary}
+                  />
+                </View>
+                <AppText
+                  style={[
+                    styles.optionText,
+                    isSelected && styles.optionTextSelected,
+                  ]}
+                >
+                  {opt.label}
+                </AppText>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+
+        <View style={styles.actions}>
+          <SoftPressable
+            onPress={() => {
+              haptics.light();
+              onCancel();
+            }}
+            style={styles.btn}
+            contentStyle={styles.btnSecondary}
+          >
+            <AppText style={styles.btnSecondaryText}>{t("common.cancel")}</AppText>
+          </SoftPressable>
+          <SoftPressable
+            onPress={handleSave}
+            haptic="medium"
+            disabled={!hasChanged}
+            style={styles.btn}
+            contentStyle={[
+              !hasChanged ? styles.btnSaveDisabled : styles.btnPrimary,
+            ]}
+          >
+            <AppText style={styles.btnPrimaryText}>{t("common.save")}</AppText>
+          </SoftPressable>
         </View>
       </View>
-    </Modal>
+    </BottomSheet>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: Colors.bg.overlay,
-    justifyContent: "center",
-    alignItems: "center",
+  body: {
+    paddingTop: 4,
   },
-  card: {
-    borderRadius: 24,
-    padding: 28,
-  },
-  iconWrapper: {
+  currentRoleRow: {
     alignItems: "center",
     marginBottom: 16,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "700",
-    textAlign: "center",
-    color: Colors.text.primary,
-  },
-  description: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    textAlign: "center",
-    marginTop: 4,
-  },
-  currentRole: {
+  currentRoleLabel: {
     fontSize: 13,
+    fontWeight: "500",
     color: Colors.text.muted,
-    textAlign: "center",
-    marginTop: 2,
-    marginBottom: 20,
   },
   optionsRow: {
     flexDirection: "row",
@@ -155,47 +153,81 @@ const styles = StyleSheet.create({
   },
   option: {
     flex: 1,
-    height: 48,
-    borderRadius: 999,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    backgroundColor: Colors.bg.surface,
+    paddingVertical: 18,
+    alignItems: "center",
+    gap: 8,
+  },
+  optionSelected: {
+    backgroundColor: Colors.brand.primarySurface,
+    borderColor: Colors.brand.primary,
+  },
+  optionIconChip: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    backgroundColor: Colors.bg.default,
     alignItems: "center",
     justifyContent: "center",
   },
-  optionSelected: {
+  optionIconSelected: {
     backgroundColor: Colors.brand.primary,
   },
   optionText: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
   },
   optionTextSelected: {
     color: Colors.text.primary,
+    fontWeight: "600",
   },
   actions: {
     flexDirection: "row",
     gap: 12,
+    marginBottom: 4,
   },
   btn: {
     flex: 1,
     height: 52,
-    borderRadius: 999,
+  },
+  btnSecondary: {
+    flex: 1,
+    backgroundColor: Colors.bg.surface,
+    borderWidth: 1,
+    borderColor: Colors.border.default,
+    borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
   },
-  btnCancelText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: Colors.text.primary,
+  btnPrimary: {
+    flex: 1,
+    backgroundColor: Colors.brand.primary,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
   },
   btnSaveDisabled: {
-    opacity: 0.4,
+    flex: 1,
+    backgroundColor: Colors.bg.surface,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    opacity: 0.5,
   },
-  btnSaveText: {
+  btnSecondaryText: {
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
-  btnSaveTextDisabled: {
+  btnPrimaryText: {
+    fontSize: 16,
+    fontWeight: "600",
     color: Colors.text.primary,
   },
 });

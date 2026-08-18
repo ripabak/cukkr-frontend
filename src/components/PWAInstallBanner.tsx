@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   },
   appName: {
     fontSize: 14,
-    fontWeight: "700",
+    fontWeight: "600",
     color: AppTheme.colors.dark,
   },
   desc: {
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   },
   installBtnText: {
     fontSize: 13,
-    fontWeight: "700",
+    fontWeight: "600",
     color: "#1a1a1a",
   },
   closeBtn: {

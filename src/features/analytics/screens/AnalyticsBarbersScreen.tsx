@@ -43,7 +43,6 @@ export function AnalyticsBarbersScreen() {
   return (
     <ScreenShell
       contentStyle={styles.scrollContent}
-      hideAppHeader
       headerSlot={
         <View style={styles.topBar}>
           <TouchableOpacity
@@ -195,7 +194,7 @@ const styles = StyleSheet.create({
   pageTitle: {
     flex: 1,
     fontSize: 17,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   topBarRight: {
@@ -212,7 +211,7 @@ const styles = StyleSheet.create({
   },
   chartCardTitle: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
     marginBottom: 12,
   },
@@ -228,12 +227,12 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   totalLabel: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
   },
   barberRow: {
@@ -263,7 +262,7 @@ const styles = StyleSheet.create({
   },
   rankText: {
     fontSize: 11,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.secondary,
   },
   barberAvatar: {
@@ -289,7 +288,7 @@ const styles = StyleSheet.create({
   },
   barberInitial: {
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.brand.primaryDark,
   },
   barberInfo: {
@@ -298,7 +297,7 @@ const styles = StyleSheet.create({
   },
   barberName: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   barberMeta: {
@@ -311,7 +310,7 @@ const styles = StyleSheet.create({
   },
   barberRevenue: {
     fontSize: 14,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   barberShare: {
@@ -325,7 +324,7 @@ const styles = StyleSheet.create({
   },
   shareSectionTitle: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
     marginBottom: 4,
   },
@@ -355,7 +354,7 @@ const styles = StyleSheet.create({
   sharePercent: {
     width: 32,
     fontSize: 11,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.muted,
     textAlign: "right",
   },

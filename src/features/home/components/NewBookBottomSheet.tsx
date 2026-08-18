@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     marginBottom: 20,
     textAlign: "center",
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   },
   btnLabel: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
 });

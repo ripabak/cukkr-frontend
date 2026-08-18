@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   discountRow: {
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   discountText: {
     color: Colors.brand.primaryDark,
     fontSize: 10,
-    fontWeight: "700",
+    fontWeight: "600",
   },
   originalPrice: {
     fontSize: 12,
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   },
   finalPrice: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   right: {

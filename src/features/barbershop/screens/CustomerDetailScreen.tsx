@@ -72,7 +72,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
 
   if (isLoadingCustomer) {
     return (
-      <ScreenShell hideAppHeader>
+      <ScreenShell>
         <ActivityIndicator
           size="large"
           color={Colors.brand.primary}
@@ -83,7 +83,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
   }
 
   return (
-    <ScreenShell hideAppHeader contentStyle={styles.content}>
+    <ScreenShell contentStyle={styles.content}>
       <View style={styles.topBar}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   topBarSpacer: { flex: 1 },
   customerName: {
     fontSize: 30,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
     marginTop: 8,
     letterSpacing: -0.8,
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 8,
   },
-  bookingTitle: { fontSize: 22, fontWeight: "700", color: Colors.text.primary, letterSpacing: -0.5 },
+  bookingTitle: { fontSize: 22, fontWeight: "600", color: Colors.text.primary, letterSpacing: -0.5 },
   bookingCount: { color: Colors.icon.muted, fontWeight: "500" },
   filterPill: {
     flexDirection: "row",
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
   },
   filterLabel: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   bookingList: { gap: 12 },

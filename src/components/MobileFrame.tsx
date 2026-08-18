@@ -1,6 +1,7 @@
 import React from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { useFrame } from "./FrameContext";
+import { Colors } from "@/src/theme/colors";
 
 interface Props {
   children: React.ReactNode;
@@ -27,7 +28,7 @@ const styles = StyleSheet.create({
   webOuter: {
     flex: 1,
     height: "100dvh" as any,
-    backgroundColor: "#e8eaed",
+    backgroundColor: Colors.bg.chrome,
     alignItems: "center",
   },
   webInner: {

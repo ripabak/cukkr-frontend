@@ -61,13 +61,13 @@ const styles = StyleSheet.create({
   },
   value: {
     fontSize: 34,
-    fontWeight: "800",
+    fontWeight: "700",
     color: Colors.text.primary,
     letterSpacing: -0.8,
   },
   label: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.secondary,
   },
 });

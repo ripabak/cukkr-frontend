@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 26,
-    fontWeight: "700",
+    fontWeight: "600",
     color: Colors.text.primary,
   },
   titleCount: {
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
   },
   filterLabel: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "500",
     color: Colors.text.primary,
   },
   list: {},
