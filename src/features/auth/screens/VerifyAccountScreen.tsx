@@ -11,14 +11,15 @@ import { AuthScreenShell } from "../components/AuthScreenShell";
 import { OtpCodeInput } from "../components/OtpCodeInput";
 import { useCountdown, useVerifyEmail, useSendVerificationOtp } from "../hooks";
 import { getErrorMessage } from "../utils/error-handler";
+import { resolveRedirect } from "../utils/redirect";
 
 export function VerifyAccountScreen() {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
-  const { email, redirect } = useLocalSearchParams<{
+  const { email, callbackURL } = useLocalSearchParams<{
     email: string;
-    redirect?: string;
+    callbackURL?: string;
   }>();
   const [otp, setOtp] = useState("");
   const countdown = useCountdown(300);
@@ -30,7 +31,8 @@ export function VerifyAccountScreen() {
     if (!otp) return;
     try {
       await verifyEmail({ email, otp });
-      router.replace((redirect as any) ?? "/d/(tabs)/home");
+      const target = resolveRedirect(callbackURL);
+      router.replace(target ?? "/d/(tabs)/home");
     } catch (error) {
       toast.error(getErrorMessage(error));
     }

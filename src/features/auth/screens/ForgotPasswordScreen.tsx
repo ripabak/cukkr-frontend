@@ -19,7 +19,7 @@ export function ForgotPasswordScreen() {
   const toast = useToast();
   const { t } = useI18nContext();
   const insets = useSafeAreaInsets();
-  const { redirect } = useLocalSearchParams<{ redirect?: string }>();
+  const { callbackURL } = useLocalSearchParams<{ callbackURL?: string }>();
   const [email, setEmail] = useState("");
   const { mutateAsync: sendOtp, isPending } = useSendVerificationOtp();
 
@@ -39,7 +39,7 @@ export function ForgotPasswordScreen() {
       await sendOtp({ email, type: "forget-password" });
       router.push({
         pathname: "/d/verify-otp",
-        params: { email, ...(redirect ? { redirect } : {}) },
+        params: { email, ...(callbackURL ? { callbackURL } : {}) },
       });
     } catch (error) {
       toast.error(getErrorMessage(error));

@@ -19,9 +19,9 @@ export function VerifyOtpScreen() {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
-  const { email, redirect } = useLocalSearchParams<{
+  const { email, callbackURL } = useLocalSearchParams<{
     email: string;
-    redirect?: string;
+    callbackURL?: string;
   }>();
   const [otp, setOtp] = useState("");
   const countdown = useCountdown(300);
@@ -47,7 +47,7 @@ export function VerifyOtpScreen() {
 
     router.push({
       pathname: "/d/create-password",
-      params: { email, otp, ...(redirect ? { redirect } : {}) },
+      params: { email, otp, ...(callbackURL ? { callbackURL } : {}) },
     });
   };
 

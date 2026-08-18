@@ -4,7 +4,9 @@ import { en } from './locales/en'
 import type { Language } from './index'
 import { resolveKey, interpolate } from './index'
 
-type DeepRecord = { [key: string]: string | DeepRecord }
+type DeepRecord = {
+  [key: string]: string | DeepRecord | readonly unknown[]
+}
 
 const locales: Record<Language, DeepRecord> = { id, en } as Record<Language, DeepRecord>
 

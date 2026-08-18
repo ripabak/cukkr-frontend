@@ -22,6 +22,7 @@ import {
   View,
 } from "react-native";
 import { useProfile, useUploadAvatar } from "../hooks";
+import { useSubscription } from "@/src/features/billing/hooks";
 import { useImagePicker } from "@/src/hooks";
 import { getErrorMessage } from "../utils/error-handler";
 
@@ -35,6 +36,7 @@ export function UserProfileScreen({ hideBack = false }: Props = {}) {
   const toast = useToast();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const { data: profile, isLoading, error } = useProfile();
+  const { data: subscription } = useSubscription();
   const { mutateAsync: signOut, isPending: signingOut } = useSignOut();
   const { pickAndGetFile } = useImagePicker();
   const { mutate: uploadAvatar, isPending: isUploadingAvatar } =
@@ -159,6 +161,17 @@ export function UserProfileScreen({ hideBack = false }: Props = {}) {
               params: { mode: "password" },
             })
           }
+          isLast
+        />
+      </ProfileSummaryCard>
+
+      <AppText style={styles.sectionLabel}>{t("profile.subscription")}</AppText>
+      <ProfileSummaryCard style={styles.card}>
+        <InfoRow
+          label={t("profile.plan")}
+          value={subscription?.plan?.name ?? "Free"}
+          showChevron
+          onPress={() => router.push("/d/billing")}
           isLast
         />
       </ProfileSummaryCard>
