@@ -9,10 +9,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
 import {
   Animated,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
+import { USE_NATIVE_DRIVER } from "@/src/utils/nativeDriver";
 
 interface Props {
   bookingId: string;
@@ -69,12 +71,12 @@ export function InProgressFloatingCard({
         Animated.timing(pulseAnim, {
           toValue: 1,
           duration: 850,
-          useNativeDriver: true,
+          useNativeDriver: USE_NATIVE_DRIVER,
         }),
         Animated.timing(pulseAnim, {
           toValue: 0,
           duration: 850,
-          useNativeDriver: true,
+          useNativeDriver: USE_NATIVE_DRIVER,
         }),
       ]),
     );
@@ -148,11 +150,18 @@ const createStyles = (c: ThemeColors) =>
       justifyContent: "space-between",
       overflow: "hidden",
       backgroundColor: c.status.inProgress,
-      shadowColor: "rgba(59, 130, 246, 0.4)",
-      shadowOffset: { width: 0, height: 6 },
-      shadowOpacity: 1,
-      shadowRadius: 16,
-      elevation: 5,
+      ...Platform.select({
+        web: {
+          boxShadow: "0 6px 16px rgba(59, 130, 246, 0.4)",
+        },
+        default: {
+          shadowColor: "rgba(59, 130, 246, 0.4)",
+          shadowOffset: { width: 0, height: 6 },
+          shadowOpacity: 1,
+          shadowRadius: 16,
+          elevation: 5,
+        },
+      }),
     },
     left: {
       flexDirection: "row",

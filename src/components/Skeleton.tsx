@@ -9,6 +9,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import { USE_NATIVE_DRIVER } from "@/src/utils/nativeDriver";
 
 /**
  * Shared skeleton primitives — native-feeling loading placeholders.
@@ -33,12 +34,12 @@ const pulse = () => {
         Animated.timing(value, {
           toValue: 1,
           duration: 750,
-          useNativeDriver: true,
+          useNativeDriver: USE_NATIVE_DRIVER,
         }),
         Animated.timing(value, {
           toValue: 0.4,
           duration: 750,
-          useNativeDriver: true,
+          useNativeDriver: USE_NATIVE_DRIVER,
         }),
       ]),
     );

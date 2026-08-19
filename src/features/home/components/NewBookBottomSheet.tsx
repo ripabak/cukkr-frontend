@@ -10,12 +10,14 @@ import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   Animated,
   Modal,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
   useWindowDimensions,
 } from "react-native";
+import { USE_NATIVE_DRIVER } from "@/src/utils/nativeDriver";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface Props {
@@ -46,12 +48,12 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
           toValue: 0,
           tension: 100,
           friction: 14,
-          useNativeDriver: true,
+          useNativeDriver: USE_NATIVE_DRIVER,
         }),
         Animated.timing(backdropOpacity, {
           toValue: 1,
           duration: 200,
-          useNativeDriver: true,
+          useNativeDriver: USE_NATIVE_DRIVER,
         }),
       ]).start();
     } else {
@@ -59,12 +61,12 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
         Animated.timing(translateY, {
           toValue: panelHeight,
           duration: 250,
-          useNativeDriver: true,
+          useNativeDriver: USE_NATIVE_DRIVER,
         }),
         Animated.timing(backdropOpacity, {
           toValue: 0,
           duration: 200,
-          useNativeDriver: true,
+          useNativeDriver: USE_NATIVE_DRIVER,
         }),
       ]).start();
     }
@@ -161,11 +163,18 @@ const createStyles = (c: ThemeColors) =>
     borderTopRightRadius: 24,
     paddingTop: 12,
     paddingHorizontal: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 16,
-    elevation: 16,
+    ...Platform.select({
+      web: {
+        boxShadow: "0 -4px 16px rgba(0, 0, 0, 0.1)",
+      },
+      default: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: -4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 16,
+        elevation: 16,
+      },
+    }),
   },
   handle: {
     width: 36,

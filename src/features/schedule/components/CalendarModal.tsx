@@ -389,16 +389,18 @@ const createStyles = (c: ThemeColors) =>
     bottom: 2,
   },
   requestDot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: c.status.danger,
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
+    // indigo — matches the “requested” booking status color
+    backgroundColor: c.status.requested,
   },
   waitingDot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: c.brand.primary,
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
+    // orange — matches the “waiting” booking status color
+    backgroundColor: c.status.waiting,
   },
   legend: {
     flexDirection: "row",
@@ -422,14 +424,14 @@ const createStyles = (c: ThemeColors) =>
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: c.status.danger,
+    backgroundColor: c.status.requested,
     marginLeft: 12,
   },
   legendWaitingDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: c.brand.primary,
+    backgroundColor: c.status.waiting,
     marginLeft: 12,
   },
   legendText: {

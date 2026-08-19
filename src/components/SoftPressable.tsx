@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ViewStyle,
 } from "react-native";
+import { USE_NATIVE_DRIVER } from "@/src/utils/nativeDriver";
 
 interface Props extends Omit<PressableProps, "style"> {
   /** Outer wrapper style (size, margins). */
@@ -48,7 +49,7 @@ export function SoftPressable({
       toValue: scaleTo,
       stiffness: 400,
       damping: 18,
-      useNativeDriver: true,
+      useNativeDriver: USE_NATIVE_DRIVER,
     }).start();
     onPressIn?.(e);
   };
@@ -60,7 +61,7 @@ export function SoftPressable({
       toValue: 1,
       stiffness: 300,
       damping: 16,
-      useNativeDriver: true,
+      useNativeDriver: USE_NATIVE_DRIVER,
     }).start();
     onPressOut?.(e);
   };

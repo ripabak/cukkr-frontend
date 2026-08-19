@@ -14,6 +14,7 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
+import { USE_NATIVE_DRIVER } from "@/src/utils/nativeDriver";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface Props {
@@ -108,12 +109,12 @@ export function BottomSheet({
             stiffness: 220,
             damping: 24,
             mass: 0.8,
-            useNativeDriver: true,
+            useNativeDriver: USE_NATIVE_DRIVER,
           }).start();
           Animated.timing(backdropOpacity, {
             toValue: 1,
             duration: 160,
-            useNativeDriver: true,
+            useNativeDriver: USE_NATIVE_DRIVER,
           }).start();
         }
       },
@@ -123,7 +124,7 @@ export function BottomSheet({
           stiffness: 220,
           damping: 24,
           mass: 0.8,
-          useNativeDriver: true,
+          useNativeDriver: USE_NATIVE_DRIVER,
         }).start();
       },
     }),
@@ -149,12 +150,12 @@ export function BottomSheet({
           stiffness: 260,
           damping: 28,
           mass: 0.9,
-          useNativeDriver: true,
+          useNativeDriver: USE_NATIVE_DRIVER,
         }),
         Animated.timing(backdropOpacity, {
           toValue: 1,
           duration: 200,
-          useNativeDriver: true,
+          useNativeDriver: USE_NATIVE_DRIVER,
         }),
       ]).start();
     } else {
@@ -164,12 +165,12 @@ export function BottomSheet({
           toValue: height + 40,
           duration: 230,
           easing: Easing.out(Easing.cubic),
-          useNativeDriver: true,
+          useNativeDriver: USE_NATIVE_DRIVER,
         }),
         Animated.timing(backdropOpacity, {
           toValue: 0,
           duration: 210,
-          useNativeDriver: true,
+          useNativeDriver: USE_NATIVE_DRIVER,
         }),
       ]).start(() => setPresented(false));
     }

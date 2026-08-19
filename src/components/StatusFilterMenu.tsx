@@ -29,7 +29,11 @@ type TFunction = (key: string, params?: Record<string, string>) => string;
 export function getScheduleStatusOptions(c: ThemeColors, t: TFunction): StatusOption[] {
   return [
     { label: t("common.all"), value: "all" },
-    { label: t("schedule.status.requested"), value: "requested" },
+    {
+      label: t("schedule.status.requested"),
+      value: "requested",
+      color: c.status.requested,
+    },
     { label: t("schedule.status.waiting"), value: "waiting", color: c.status.waiting },
     {
       label: t("schedule.status.inProgress"),

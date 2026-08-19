@@ -87,8 +87,7 @@ export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
                   locations={[0, 0.5, 1]}
                   start={{ x: 0.5, y: 0 }}
                   end={{ x: 0.5, y: 1 }}
-                  style={StyleSheet.absoluteFill}
-                  pointerEvents="none"
+                  style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}
                 />
                 <View style={styles.activeBorder} />
               </>

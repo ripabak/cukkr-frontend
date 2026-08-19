@@ -41,10 +41,12 @@ import {
   Image,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
+import { USE_NATIVE_DRIVER } from "@/src/utils/nativeDriver";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const TOP_BAR_HEIGHT = 64;
@@ -212,7 +214,7 @@ export function HomeDashboardScreen() {
   const handleScroll = Animated.event(
     [{ nativeEvent: { contentOffset: { y: scrollY } } }],
     {
-      useNativeDriver: true,
+      useNativeDriver: USE_NATIVE_DRIVER,
       listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const y = event.nativeEvent.contentOffset.y;
         const diff = y - lastScrollY.current;
@@ -222,14 +224,14 @@ export function HomeDashboardScreen() {
           Animated.timing(headerTranslateY, {
             toValue: -stickyHeaderHeight,
             duration: 200,
-            useNativeDriver: true,
+            useNativeDriver: USE_NATIVE_DRIVER,
           }).start();
         } else if ((diff < -5 || y <= 0) && !isHeaderVisible.current) {
           isHeaderVisible.current = true;
           Animated.timing(headerTranslateY, {
             toValue: 0,
             duration: 200,
-            useNativeDriver: true,
+            useNativeDriver: USE_NATIVE_DRIVER,
           }).start();
         }
 
@@ -257,7 +259,7 @@ export function HomeDashboardScreen() {
           Animated.timing(s, {
             toValue: 1,
             duration: 420,
-            useNativeDriver: true,
+            useNativeDriver: USE_NATIVE_DRIVER,
           }),
         ]),
       ),
@@ -285,7 +287,7 @@ export function HomeDashboardScreen() {
       toValue: 1,
       stiffness: 320,
       damping: 14,
-      useNativeDriver: true,
+      useNativeDriver: USE_NATIVE_DRIVER,
     }).start();
   };
 
@@ -1182,11 +1184,18 @@ const createStyles = (c: ThemeColors) =>
     borderColor: c.border.light,
     borderRadius: 24,
     padding: 16,
-    shadowColor: "rgba(23, 28, 35, 0.06)",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 1,
-    shadowRadius: 20,
-    elevation: 3,
+    ...Platform.select({
+      web: {
+        boxShadow: "0 8px 20px rgba(23, 28, 35, 0.06)",
+      },
+      default: {
+        shadowColor: "rgba(23, 28, 35, 0.06)",
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 1,
+        shadowRadius: 20,
+        elevation: 3,
+      },
+    }),
   },
   todayHeader: {
     flexDirection: "row",
@@ -1335,11 +1344,18 @@ const createStyles = (c: ThemeColors) =>
     borderColor: c.border.light,
     borderRadius: 26,
     padding: 18,
-    shadowColor: "rgba(23, 28, 35, 0.06)",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 1,
-    shadowRadius: 20,
-    elevation: 3,
+    ...Platform.select({
+      web: {
+        boxShadow: "0 8px 20px rgba(23, 28, 35, 0.06)",
+      },
+      default: {
+        shadowColor: "rgba(23, 28, 35, 0.06)",
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 1,
+        shadowRadius: 20,
+        elevation: 3,
+      },
+    }),
   },
   pinHeader: {
     flexDirection: "row",

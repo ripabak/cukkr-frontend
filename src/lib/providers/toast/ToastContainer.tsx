@@ -10,6 +10,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
+import { USE_NATIVE_DRIVER } from "@/src/utils/nativeDriver";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useToastContext } from "./ToastContext";
 import type { Toast, ToastType } from "./ToastContext";
@@ -45,10 +46,10 @@ function AnimatedToast({ toast, onDismiss, toastWidth }: AnimatedToastProps) {
       Animated.timing(translateY, {
         toValue: -24,
         duration: 220,
-        useNativeDriver: true,
+        useNativeDriver: USE_NATIVE_DRIVER,
       }),
-      Animated.timing(opacity, { toValue: 0, duration: 200, useNativeDriver: true }),
-      Animated.timing(scale, { toValue: 0.97, duration: 200, useNativeDriver: true }),
+      Animated.timing(opacity, { toValue: 0, duration: 200, useNativeDriver: USE_NATIVE_DRIVER }),
+      Animated.timing(scale, { toValue: 0.97, duration: 200, useNativeDriver: USE_NATIVE_DRIVER }),
     ]).start(onDismiss);
   };
 
@@ -59,14 +60,14 @@ function AnimatedToast({ toast, onDismiss, toastWidth }: AnimatedToastProps) {
         stiffness: 320,
         damping: 26,
         mass: 0.9,
-        useNativeDriver: true,
+        useNativeDriver: USE_NATIVE_DRIVER,
       }),
-      Animated.timing(opacity, { toValue: 1, duration: 240, useNativeDriver: true }),
+      Animated.timing(opacity, { toValue: 1, duration: 240, useNativeDriver: USE_NATIVE_DRIVER }),
       Animated.spring(scale, {
         toValue: 1,
         stiffness: 320,
         damping: 26,
-        useNativeDriver: true,
+        useNativeDriver: USE_NATIVE_DRIVER,
       }),
     ]).start();
   };
@@ -141,9 +142,11 @@ export function ToastContainer() {
     <View
       style={[
         styles.root,
-        { paddingTop: Platform.OS === "web" ? 12 : insets.top + 4 },
+        {
+          paddingTop: Platform.OS === "web" ? 12 : insets.top + 4,
+          pointerEvents: "box-none",
+        },
       ]}
-      pointerEvents="box-none"
     >
       {toasts.map((toast) => (
         <AnimatedToast
