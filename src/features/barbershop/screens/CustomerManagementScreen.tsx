@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { CustomerCard } from "@/src/features/barbershop/components/CustomerCard";
 import { FloatingActionButton } from "@/src/features/barbershop/components/FloatingActionButton";
 import { SearchInput } from "@/src/components/SearchInput";
@@ -31,6 +32,8 @@ function getSortOptions(t: (key: string) => string) {
 export function CustomerManagementScreen() {
   const router = useRouter();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [search, setSearch] = useState("");
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -76,7 +79,7 @@ export function CustomerManagementScreen() {
     setSelectedIds(new Set());
   }
 
-  const bgColor = selectionMode ? Colors.brand.primary : Colors.bg.default;
+  const bgColor = selectionMode ? colors.brand.primary : colors.bg.default;
 
   return (
     <ScreenShell
@@ -96,7 +99,7 @@ export function CustomerManagementScreen() {
                     <TouchableOpacity
                       style={[
                         styles.headerActionBtn,
-                        Neu.soft(Colors.bg.surface),
+                        Neu.soft(colors.bg.surface),
                       ]}
                       onPress={onPress}
                       activeOpacity={0.85}
@@ -104,7 +107,7 @@ export function CustomerManagementScreen() {
                       <Ionicons
                         name="filter"
                         size={18}
-                        color={Colors.text.primary}
+                        color={colors.text.primary}
                       />
                     </TouchableOpacity>
                   )}
@@ -116,7 +119,7 @@ export function CustomerManagementScreen() {
                     styles.headerActionBtn,
                     hasContact
                       ? [styles.headerActionActive, Neu.accent(0.75)]
-                      : Neu.soft(Colors.bg.surface),
+                      : Neu.soft(colors.bg.surface),
                   ]}
                   activeOpacity={0.85}
                   onPress={() => setHasContact((prev) => !prev)}
@@ -125,13 +128,13 @@ export function CustomerManagementScreen() {
                     name={hasContact ? "call" : "call-outline"}
                     size={18}
                     color={
-                      hasContact ? Colors.text.primary : Colors.icon.muted
+                      hasContact ? colors.text.primary : colors.icon.muted
                     }
                   />
                 </TouchableOpacity>
               ) : null}
               <TouchableOpacity
-                style={[styles.selectBtn, Neu.soft(Colors.bg.surface)]}
+                style={[styles.selectBtn, Neu.soft(colors.bg.surface)]}
                 activeOpacity={0.85}
                 onPress={
                   selectionMode
@@ -229,51 +232,52 @@ export function CustomerManagementScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  content: { paddingBottom: 200 },
-  headerActions: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  headerActionBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  headerActionActive: {
-    backgroundColor: Colors.brand.primary,
-  },
-  selectBtn: {
-    borderRadius: 20,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  selectText: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: Colors.text.primary,
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: "600",
-    color: Colors.text.primary,
-    lineHeight: 36,
-    letterSpacing: -0.8,
-    marginTop: 8,
-  },
-  subtitle: { fontSize: 14, color: Colors.text.secondary, marginTop: 8 },
-  hint: { fontSize: 14, color: Colors.text.secondary, marginTop: 4 },
-  searchWrapper: { marginTop: 24, marginBottom: 16 },
-  empty: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    textAlign: "center",
-    marginTop: 40,
-  },
-  list: { gap: 12 },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    content: { paddingBottom: 200 },
+    headerActions: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+    },
+    headerActionBtn: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    headerActionActive: {
+      backgroundColor: c.brand.primary,
+    },
+    selectBtn: {
+      borderRadius: 20,
+      paddingHorizontal: 14,
+      paddingVertical: 8,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    selectText: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: c.text.primary,
+    },
+    title: {
+      fontSize: 30,
+      fontWeight: "600",
+      color: c.text.primary,
+      lineHeight: 36,
+      letterSpacing: -0.8,
+      marginTop: 8,
+    },
+    subtitle: { fontSize: 14, color: c.text.secondary, marginTop: 8 },
+    hint: { fontSize: 14, color: c.text.secondary, marginTop: 4 },
+    searchWrapper: { marginTop: 24, marginBottom: 16 },
+    empty: {
+      fontSize: 14,
+      color: c.text.secondary,
+      textAlign: "center",
+      marginTop: 40,
+    },
+    list: { gap: 12 },
+  });

@@ -1,4 +1,5 @@
-import { Colors } from "@/src/theme/colors";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
@@ -8,7 +9,6 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { Neu } from "@/src/theme/styles";
 
 interface Props {
   title?: string;
@@ -25,15 +25,17 @@ export function ScreenHeader({
   rightAction,
   style,
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <View style={[styles.container, style]}>
       {onBack ? (
         <TouchableOpacity
           onPress={onBack}
-          style={[styles.backButton, Neu.soft(Colors.bg.surface)]}
+          style={[styles.backButton, Neu.soft(colors.bg.surface)]}
           activeOpacity={0.7}
         >
-          <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
+          <Ionicons name="chevron-back" size={20} color={colors.text.primary} />
         </TouchableOpacity>
       ) : (
         <View style={styles.placeholder} />
@@ -54,38 +56,39 @@ export function ScreenHeader({
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    gap: 12,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  placeholder: {
-    width: 40,
-    height: 40,
-  },
-  title: {
-    flex: 1,
-    textAlign: "center",
-    fontSize: 18,
-    fontWeight: "600",
-    color: Colors.text.primary,
-    letterSpacing: -0.3,
-  },
-  titleSpacer: {
-    flex: 1,
-  },
-  rightSlot: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 20,
+      paddingVertical: 12,
+      gap: 12,
+    },
+    backButton: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    placeholder: {
+      width: 40,
+      height: 40,
+    },
+    title: {
+      flex: 1,
+      textAlign: "center",
+      fontSize: 18,
+      fontWeight: "600",
+      color: c.text.primary,
+      letterSpacing: -0.3,
+    },
+    titleSpacer: {
+      flex: 1,
+    },
+    rightSlot: {
+      alignItems: "center",
+      justifyContent: "center",
+    },
+  });

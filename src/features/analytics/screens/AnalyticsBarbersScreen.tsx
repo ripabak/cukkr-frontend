@@ -1,7 +1,7 @@
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { Skeleton } from "@/src/components/Skeleton";
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -22,6 +22,8 @@ export function AnalyticsBarbersScreen() {
     range?: AnalyticsRange;
   }>();
   const [range, setRange] = useState<AnalyticsRange>(rangeParam ?? "month");
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const { data: chartData, isLoading: chartLoading } =
     useAnalyticsBarbers(range);
@@ -43,13 +45,13 @@ export function AnalyticsBarbersScreen() {
         <View style={styles.topBar}>
           <TouchableOpacity
             onPress={() => router.back()}
-            style={[styles.backBtn, Neu.soft(Colors.bg.surface, 0.7)]}
+            style={[styles.backBtn, Neu.soft(colors.bg.surface, 0.7)]}
             activeOpacity={0.85}
           >
             <Ionicons
               name="chevron-back"
               size={20}
-              color={Colors.text.primary}
+              color={colors.text.primary}
             />
           </TouchableOpacity>
           <AppText style={styles.pageTitle}>{t("barbers.title")}</AppText>
@@ -62,7 +64,7 @@ export function AnalyticsBarbersScreen() {
       {(chartLoading || listLoading) && barbers.length === 0 ? (
         <View style={styles.skeletonWrap}>
           {/* Revenue by barber chart */}
-          <View style={[styles.chartCard, Neu.raised(Colors.bg.surface, 1.1)]}>
+          <View style={[styles.chartCard, Neu.raised(colors.bg.surface, 1.1)]}>
             <Skeleton width="30%" height={13} style={styles.skeletonChartTitle} />
             <Skeleton width="100%" height={150} radius={12} />
           </View>
@@ -106,7 +108,7 @@ export function AnalyticsBarbersScreen() {
 
       {/* Revenue by barber chart */}
       {chartPoints.length > 0 ? (
-        <View style={[styles.chartCard, Neu.raised(Colors.bg.surface, 1.1)]}>
+        <View style={[styles.chartCard, Neu.raised(colors.bg.surface, 1.1)]}>
           <AppText style={styles.chartCardTitle}>{t("services.price")}</AppText>
           <View style={styles.chartWrap}>
             <BarChart data={chartPoints} chartHeight={130} />
@@ -132,7 +134,7 @@ export function AnalyticsBarbersScreen() {
             const revenueShare =
               totalRevenue > 0 ? (barber.totalRevenue / totalRevenue) * 100 : 0;
             return (
-              <View key={barber.barberId} style={[styles.barberRow, Neu.soft(Colors.bg.surface, 0.7)]}>
+              <View key={barber.barberId} style={[styles.barberRow, Neu.soft(colors.bg.surface, 0.7)]}>
                 <View style={styles.barberLeft}>
                   <View style={styles.rankBadge}>
                     <AppText style={styles.rankText}>{i + 1}</AppText>
@@ -207,7 +209,8 @@ export function AnalyticsBarbersScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   scrollContent: {
     paddingBottom: 100,
   },
@@ -216,7 +219,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
     gap: 12,
   },
   backBtn: {
@@ -230,7 +233,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 17,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   topBarRight: {
     width: 36,
@@ -267,7 +270,7 @@ const styles = StyleSheet.create({
   chartCardTitle: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     marginBottom: 12,
   },
   chartWrap: {},
@@ -283,12 +286,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   totalLabel: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   barberRow: {
     flexDirection: "row",
@@ -309,16 +312,16 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     borderRadius: 11,
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
     borderWidth: 1,
-    borderColor: Colors.border.default,
+    borderColor: c.border.default,
     alignItems: "center",
     justifyContent: "center",
   },
   rankText: {
     fontSize: 11,
     fontWeight: "600",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   barberAvatar: {
     width: 40,
@@ -335,16 +338,16 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.brand.primarySurface,
+    backgroundColor: c.brand.primarySurface,
     borderWidth: 1,
-    borderColor: Colors.brand.primary,
+    borderColor: c.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   barberInitial: {
     fontSize: 16,
     fontWeight: "600",
-    color: Colors.brand.primaryDark,
+    color: c.brand.primaryDark,
   },
   barberInfo: {
     flex: 1,
@@ -353,11 +356,11 @@ const styles = StyleSheet.create({
   barberName: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   barberMeta: {
     fontSize: 12,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   barberRight: {
     alignItems: "flex-end",
@@ -366,11 +369,11 @@ const styles = StyleSheet.create({
   barberRevenue: {
     fontSize: 14,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   barberShare: {
     fontSize: 11,
-    color: Colors.text.muted,
+    color: c.text.muted,
     fontWeight: "500",
   },
   shareSection: {
@@ -380,7 +383,7 @@ const styles = StyleSheet.create({
   shareSectionTitle: {
     fontSize: 13,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     marginBottom: 4,
   },
   shareRow: {
@@ -391,32 +394,32 @@ const styles = StyleSheet.create({
   shareName: {
     width: 64,
     fontSize: 12,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     fontWeight: "500",
   },
   shareBarWrap: {
     flex: 1,
     height: 8,
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
     borderRadius: 4,
     overflow: "hidden",
   },
   shareBar: {
     height: 8,
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
     borderRadius: 4,
   },
   sharePercent: {
     width: 32,
     fontSize: 11,
     fontWeight: "500",
-    color: Colors.text.muted,
+    color: c.text.muted,
     textAlign: "right",
   },
   emptyText: {
     textAlign: "center",
     marginTop: 48,
     fontSize: 14,
-    color: Colors.text.muted,
+    color: c.text.muted,
   },
-});
+  });

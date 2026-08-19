@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import React from "react";
 import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -17,6 +18,8 @@ export function IconActionButton({
   size = 48,
   style,
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -31,15 +34,16 @@ export function IconActionButton({
       <Ionicons
         name={iconName}
         size={size * 0.42}
-        color={Colors.text.primary}
+        color={colors.text.primary}
       />
     </TouchableOpacity>
   );
 }
 
-const styles = StyleSheet.create({
-  button: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    button: {
+      alignItems: "center",
+      justifyContent: "center",
+    },
+  });

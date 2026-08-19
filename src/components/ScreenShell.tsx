@@ -1,5 +1,5 @@
 import AppTheme from "@/src/app-theme";
-import { Colors } from "@/src/theme/colors";
+import { useTheme } from "@/src/theme/ThemeContext";
 import React from "react";
 import {
   KeyboardAvoidingView,
@@ -36,13 +36,14 @@ export function ScreenShell({
   headerSlot,
   footerSlot,
   overlaySlot,
-  backgroundColor = Colors.bg.default,
+  backgroundColor,
   contentStyle,
   style,
   edges,
   keyboardAvoid = false,
 }: Props) {
-
+  const { colors } = useTheme();
+  const bg = backgroundColor ?? colors.bg.default;
   const scrollView = (
     <ScrollView
       style={styles.scroll}
@@ -56,7 +57,7 @@ export function ScreenShell({
 
   return (
     <SafeAreaView
-      style={[styles.safeArea, { backgroundColor }, style]}
+      style={[styles.safeArea, { backgroundColor: bg }, style]}
       edges={edges}
     >
       {headerSlot ? (

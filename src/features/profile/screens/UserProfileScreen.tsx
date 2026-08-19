@@ -3,13 +3,14 @@ import { InfoRow } from "@/src/components/InfoRow";
 import { LanguageSwitcher } from "@/src/components/LanguageSwitcher";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { ThemePickerSheet } from "@/src/components/ThemePickerSheet";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useSignOut } from "@/src/features/auth/hooks";
 import { LogoutRow } from "@/src/features/profile/components/LogoutRow";
 import { ProfileSummaryCard } from "@/src/features/profile/components/ProfileSummaryCard";
 import { useToast } from "@/src/lib/providers/toast";
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
@@ -32,6 +33,7 @@ interface Props {
 
 /** Skeleton for a single profile info row — mirrors InfoRow's label/value layout. */
 function SkeletonInfoRow({ isLast = false }: { isLast?: boolean }) {
+  const styles = useThemedStyles(createStyles);
   return (
     <View
       style={[
@@ -51,7 +53,10 @@ export function UserProfileScreen({ hideBack = false }: Props = {}) {
   const { t } = useI18nContext();
   const router = useRouter();
   const toast = useToast();
+  const { colors, mode } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [showThemePicker, setShowThemePicker] = useState(false);
   const { data: profile, isLoading, error } = useProfile();
   const { data: subscription } = useSubscription();
   const { mutateAsync: signOut, isPending: signingOut } = useSignOut();
@@ -99,7 +104,7 @@ export function UserProfileScreen({ hideBack = false }: Props = {}) {
             onBack={hideBack ? undefined : () => router.back()}
           />
         }
-        backgroundColor={Colors.bg.default}
+        backgroundColor={colors.bg.default}
         contentStyle={{ paddingTop: 20, gap: 12 }}
       >
         <View style={styles.avatarWrapper}>
@@ -123,7 +128,7 @@ export function UserProfileScreen({ hideBack = false }: Props = {}) {
 
   if (error || !profile) {
     return (
-      <ScreenShell backgroundColor={Colors.bg.default}>
+      <ScreenShell backgroundColor={colors.bg.default}>
         <AppText style={styles.errorText}>{t("profile.loadFailed")}</AppText>
       </ScreenShell>
     );
@@ -137,14 +142,14 @@ export function UserProfileScreen({ hideBack = false }: Props = {}) {
           onBack={hideBack ? undefined : () => router.back()}
         />
       }
-      backgroundColor={Colors.bg.default}
+      backgroundColor={colors.bg.default}
       contentStyle={{ paddingTop: 20, gap: 12 }}
     >
       <View style={styles.avatarWrapper}>
         <TouchableOpacity
           activeOpacity={0.85}
           onPress={isUploadingAvatar ? undefined : handleAvatarUpload}
-          style={[styles.avatarBox, Neu.raised(Colors.bg.surface)]}
+          style={[styles.avatarBox, Neu.raised(colors.bg.surface)]}
         >
           {profile.avatarMed ? (
             <Image
@@ -154,7 +159,7 @@ export function UserProfileScreen({ hideBack = false }: Props = {}) {
             />
           ) : (
             <View style={styles.avatarPlaceholder}>
-              <Ionicons name="camera-outline" size={24} color={Colors.icon.muted} />
+              <Ionicons name="camera-outline" size={24} color={colors.icon.muted} />
             </View>
           )}
         </TouchableOpacity>
@@ -217,6 +222,23 @@ export function UserProfileScreen({ hideBack = false }: Props = {}) {
         <LanguageSwitcher />
       </ProfileSummaryCard>
 
+      <AppText style={styles.sectionLabel}>{t("profile.appearance")}</AppText>
+      <ProfileSummaryCard style={styles.card}>
+        <InfoRow
+          label={t("profile.themeMode")}
+          value={
+            mode === "light"
+              ? t("profile.themeLight")
+              : mode === "dark"
+                ? t("profile.themeDark")
+                : t("profile.themeSystem")
+          }
+          showChevron
+          onPress={() => setShowThemePicker(true)}
+          isLast
+        />
+      </ProfileSummaryCard>
+
       <AppText style={styles.sectionLabel}>{t("profile.logout")}</AppText>
       <LogoutRow onPress={() => setShowLogoutConfirm(true)} />
       <ConfirmationModal
@@ -228,67 +250,72 @@ export function UserProfileScreen({ hideBack = false }: Props = {}) {
         onConfirm={handleLogout}
         onCancel={() => setShowLogoutConfirm(false)}
       />
+      <ThemePickerSheet
+        visible={showThemePicker}
+        onClose={() => setShowThemePicker(false)}
+      />
     </ScreenShell>
   );
 }
 
-const styles = StyleSheet.create({
-  avatarWrapper: {
-    alignSelf: "center",
-    marginBottom: 8,
-    position: "relative",
-  },
-  skLabel: {
-    marginTop: 8,
-    marginBottom: 4,
-  },
-  skRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-  },
-  skRowBorder: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: Colors.border.light,
-  },
-  skRowValue: {
-    flex: 1,
-    alignItems: "flex-end",
-  },
-  avatarBox: {
-    width: 96,
-    height: 96,
-    borderRadius: 28,
-    padding: 5,
-    overflow: "hidden",
-  },
-  avatarImage: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 22,
-  },
-  avatarPlaceholder: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 22,
-    backgroundColor: Colors.brand.primarySurface,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  sectionLabel: {
-    fontSize: 13,
-    fontWeight: "500",
-    color: Colors.text.secondary,
-    marginTop: 4,
-    letterSpacing: 0.5,
-  },
-  card: {
-    marginTop: -4,
-  },
-  errorText: {
-    fontSize: 16,
-    color: Colors.status.danger,
-    textAlign: "center",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    avatarWrapper: {
+      alignSelf: "center",
+      marginBottom: 8,
+      position: "relative",
+    },
+    skLabel: {
+      marginTop: 8,
+      marginBottom: 4,
+    },
+    skRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 16,
+      paddingVertical: 16,
+    },
+    skRowBorder: {
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: c.border.light,
+    },
+    skRowValue: {
+      flex: 1,
+      alignItems: "flex-end",
+    },
+    avatarBox: {
+      width: 96,
+      height: 96,
+      borderRadius: 28,
+      padding: 5,
+      overflow: "hidden",
+    },
+    avatarImage: {
+      width: "100%",
+      height: "100%",
+      borderRadius: 22,
+    },
+    avatarPlaceholder: {
+      width: "100%",
+      height: "100%",
+      borderRadius: 22,
+      backgroundColor: c.brand.primarySurface,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    sectionLabel: {
+      fontSize: 13,
+      fontWeight: "500",
+      color: c.text.secondary,
+      marginTop: 4,
+      letterSpacing: 0.5,
+    },
+    card: {
+      marginTop: -4,
+    },
+    errorText: {
+      fontSize: 16,
+      color: c.status.danger,
+      textAlign: "center",
+    },
+  });

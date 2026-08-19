@@ -1,7 +1,9 @@
 import { Pressable, StyleSheet, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 
-import { authTheme } from "../auth-theme";
+import { authSpacing } from "../auth-theme";
 
 type AuthFooterPromptProps = {
   prompt: string;
@@ -14,6 +16,8 @@ export function AuthFooterPrompt({
   actionLabel,
   onPress,
 }: AuthFooterPromptProps) {
+  const styles = useThemedStyles(createStyles);
+
   return (
     <View style={styles.row}>
       <AppText style={styles.prompt}>{prompt}</AppText>
@@ -24,20 +28,21 @@ export function AuthFooterPrompt({
   );
 }
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: authTheme.spacing.xs,
-  },
-  prompt: {
-    color: authTheme.colors.textSecondary,
-    fontSize: 14,
-  },
-  link: {
-    color: authTheme.colors.accentDark,
-    fontSize: 14,
-    fontWeight: "600",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    row: {
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: authSpacing.xs,
+    },
+    prompt: {
+      color: c.text.secondary,
+      fontSize: 14,
+    },
+    link: {
+      color: c.brand.primaryDark,
+      fontSize: 14,
+      fontWeight: "600",
+    },
+  });

@@ -22,8 +22,9 @@ import {
 } from "@/src/features/schedule/utils/booking-formatters";
 import { getErrorMessage } from "@/src/lib/utils/error-handler";
 import { useToast } from "@/src/lib/providers";
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { formatDateLabel, formatTime12h } from "@/src/utils/date";
 import { Ionicons } from "@expo/vector-icons";
 import { useI18nContext } from "@/src/lib/i18n/provider";
@@ -56,6 +57,8 @@ export function BookingDetailScreen() {
   }>();
   const toast = useToast();
   const queryClient = useQueryClient();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const [orgReady, setOrgReady] = useState(!orgId);
   const [showSwitchModal, setShowSwitchModal] = useState(false);
@@ -240,7 +243,7 @@ export function BookingDetailScreen() {
           {/* Header card — mirrors BookingDetailCard header */}
           <View
             style={[
-              Neu.raised(Colors.bg.surface),
+              Neu.raised(colors.bg.surface),
               styles.skeletonHeaderSection,
             ]}
           >
@@ -259,7 +262,7 @@ export function BookingDetailScreen() {
           {/* Info rows section */}
           <View
             style={[
-              Neu.raised(Colors.bg.surface),
+              Neu.raised(colors.bg.surface),
               styles.skeletonSection,
               styles.skeletonRowsGap,
             ]}
@@ -275,7 +278,7 @@ export function BookingDetailScreen() {
           {/* Services section */}
           <View
             style={[
-              Neu.raised(Colors.bg.surface),
+              Neu.raised(colors.bg.surface),
               styles.skeletonSection,
               styles.skeletonRowsGap,
             ]}
@@ -292,7 +295,7 @@ export function BookingDetailScreen() {
           {/* Payment summary section */}
           <View
             style={[
-              Neu.raised(Colors.bg.surface),
+              Neu.raised(colors.bg.surface),
               styles.skeletonSection,
               styles.skeletonRowsGap,
             ]}
@@ -352,7 +355,7 @@ export function BookingDetailScreen() {
         noEllipsis: true,
         valueStyle: {
           fontSize: 13,
-          color: Colors.text.secondary,
+          color: colors.text.secondary,
           letterSpacing: 0.3,
         },
       },
@@ -500,7 +503,7 @@ export function BookingDetailScreen() {
                 <Ionicons
                   name="ellipsis-horizontal"
                   size={20}
-                  color={Colors.text.primary}
+                  color={colors.text.primary}
                 />
               </TouchableOpacity>
             ) : undefined
@@ -586,10 +589,11 @@ export function BookingDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
   },
   outer: {
     flex: 1,
@@ -601,7 +605,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 14,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   skeletonScroll: {
     flex: 1,
@@ -655,4 +659,4 @@ const styles = StyleSheet.create({
     bottom: 0,
     zIndex: 50,
   },
-});
+  });

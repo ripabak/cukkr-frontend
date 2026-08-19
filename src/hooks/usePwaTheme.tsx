@@ -1,4 +1,5 @@
 import { Colors } from "@/src/theme/colors";
+import { useTheme } from "@/src/theme/ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { Platform } from "react-native";
@@ -67,11 +68,17 @@ export function usePwaTheme({
  * Renders an expo-status-bar on native; manages meta tags on web.
  */
 export function PwaStatusBar({
-  color = Colors.bg.default,
-  barStyle = "dark",
-}: UsePwaThemeOptions) {
-  usePwaTheme({ color, barStyle });
+  color,
+  barStyle,
+}: UsePwaThemeOptions = {}) {
+  const { colors, isDark } = useTheme();
+  const resolvedColor = color ?? colors.bg.default;
+  const resolvedStyle = barStyle ?? (isDark ? "light" : "dark");
+
+  usePwaTheme({ color: resolvedColor });
 
   if (Platform.OS === "web") return null;
-  return <StatusBar style={barStyle} backgroundColor={color} />;
+  return (
+    <StatusBar style={resolvedStyle} backgroundColor={resolvedColor} />
+  );
 }

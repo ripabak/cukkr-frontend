@@ -2,8 +2,9 @@ import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useCurrentBarbershop } from "@/src/features/home/hooks";
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useRouter } from "expo-router";
 import React, { useRef } from "react";
@@ -17,6 +18,8 @@ import { useToast } from "@/src/lib/providers";
 export function BarbershopQrScreen() {
   const router = useRouter();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const toast = useToast();
   const { data: barbershop } = useCurrentBarbershop();
   const bannerRef = useRef<View>(null);
@@ -64,7 +67,7 @@ export function BarbershopQrScreen() {
         />
       }
     >
-      <View ref={bannerRef} style={[styles.banner, Neu.raised(Colors.bg.default, 1.3)]} collapsable={false}>
+      <View ref={bannerRef} style={[styles.banner, Neu.raised(colors.bg.default, 1.3)]} collapsable={false}>
         <View style={styles.headerRow}>
           <View style={styles.qrBrand}>
             <AppText style={styles.qrBrandText}>QR</AppText>
@@ -106,8 +109,8 @@ export function BarbershopQrScreen() {
               <QRCode
                 value={baseUrl}
                 size={200}
-                backgroundColor={Colors.bg.default}
-                color={Colors.text.primary}
+                backgroundColor={colors.bg.default}
+                color={colors.text.primary}
               />
             ) : (
               <View style={styles.qrPlaceholder}>
@@ -133,7 +136,8 @@ export function BarbershopQrScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   content: {
     alignItems: "center",
     paddingTop: 24,
@@ -156,7 +160,7 @@ const styles = StyleSheet.create({
     left: -12,
     width: 36,
     height: 4,
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
   },
   accentTopLeftV: {
     position: "absolute",
@@ -164,7 +168,7 @@ const styles = StyleSheet.create({
     left: -12,
     width: 4,
     height: 36,
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
   },
   accentBottomRightH: {
     position: "absolute",
@@ -172,7 +176,7 @@ const styles = StyleSheet.create({
     right: -12,
     width: 36,
     height: 4,
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
   },
   accentBottomRightV: {
     position: "absolute",
@@ -180,7 +184,7 @@ const styles = StyleSheet.create({
     right: -12,
     width: 4,
     height: 36,
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
   },
   headerRow: {
     flexDirection: "row",
@@ -193,7 +197,7 @@ const styles = StyleSheet.create({
   qrBrandText: {
     fontSize: 28,
     fontWeight: "700",
-    color: Colors.text.primary,
+    color: c.text.primary,
     lineHeight: 32,
     letterSpacing: 1,
   },
@@ -204,7 +208,7 @@ const styles = StyleSheet.create({
   },
   descriptionLine: {
     fontSize: 13,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     lineHeight: 18,
     fontWeight: "500",
   },
@@ -215,14 +219,14 @@ const styles = StyleSheet.create({
   shopName: {
     fontSize: 16,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
     textAlign: "center",
     marginBottom: 6,
     paddingHorizontal: 12,
   },
   shopLink: {
     fontSize: 12,
-    color: Colors.text.muted,
+    color: c.text.muted,
     textAlign: "center",
     marginBottom: 20,
     paddingHorizontal: 8,
@@ -244,14 +248,14 @@ const styles = StyleSheet.create({
   },
   placeholderText: {
     fontSize: 14,
-    color: Colors.text.muted,
+    color: c.text.muted,
     textAlign: "center",
   },
   printedOn: {
     fontSize: 11,
-    color: Colors.text.muted,
+    color: c.text.muted,
     textAlign: "center",
     fontWeight: "400",
   },
 
-});
+  });

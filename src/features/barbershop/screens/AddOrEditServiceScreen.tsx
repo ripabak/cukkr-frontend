@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { LabeledInput } from "@/src/components/LabeledInput";
 import { MultilineInputField } from "@/src/components/MultilineInputField";
 import { PriceInput } from "@/src/components/PriceInput";
@@ -31,6 +32,8 @@ export function AddOrEditServiceScreen() {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const { mutate: createService, isPending: isCreating } = useCreateService();
 
@@ -138,7 +141,7 @@ export function AddOrEditServiceScreen() {
           activeOpacity={0.8}
         >
           {imageUri ? (
-            <View style={[styles.serviceImageContent, Neu.soft(Colors.bg.surface, 0.8)]}>
+            <View style={[styles.serviceImageContent, Neu.soft(colors.bg.surface, 0.8)]}>
               <Image
                 source={{ uri: imageUri }}
                 style={styles.serviceImage}
@@ -146,11 +149,11 @@ export function AddOrEditServiceScreen() {
               />
             </View>
           ) : (
-            <View style={[styles.serviceImagePlaceholder, Neu.inset(Colors.bg.surface, 0.6)]}>
+            <View style={[styles.serviceImagePlaceholder, Neu.inset(colors.bg.surface, 0.6)]}>
               <Ionicons
                 name="camera-outline"
                 size={24}
-                color={Colors.icon.muted}
+                color={colors.icon.muted}
               />
             </View>
           )}
@@ -216,38 +219,39 @@ export function AddOrEditServiceScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  imageWrapper: {
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  serviceImageContent: {
-    width: 80,
-    height: 80,
-    borderRadius: 16,
-    overflow: "hidden",
-  },
-  serviceImage: {
-    width: 80,
-    height: 80,
-  },
-  serviceImagePlaceholder: {
-    width: 80,
-    height: 80,
-    borderRadius: 16,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  field: {
-    marginBottom: 16,
-  },
-  card: {
-    backgroundColor: Colors.brand.primarySurface,
-    borderRadius: 16,
-    marginBottom: 16,
-    padding: 12,
-  },
-  submitBtn: {
-    marginTop: 16,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    imageWrapper: {
+      alignItems: "center",
+      marginBottom: 20,
+    },
+    serviceImageContent: {
+      width: 80,
+      height: 80,
+      borderRadius: 16,
+      overflow: "hidden",
+    },
+    serviceImage: {
+      width: 80,
+      height: 80,
+    },
+    serviceImagePlaceholder: {
+      width: 80,
+      height: 80,
+      borderRadius: 16,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    field: {
+      marginBottom: 16,
+    },
+    card: {
+      backgroundColor: c.brand.primarySurface,
+      borderRadius: 16,
+      marginBottom: 16,
+      padding: 12,
+    },
+    submitBtn: {
+      marginTop: 16,
+    },
+  });

@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import React from "react";
 import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -15,22 +16,27 @@ interface Props {
 export function StickyCta({
   label,
   onPress,
-  color = Colors.brand.primary,
-  textColor = Colors.text.primary,
+  color,
+  textColor,
   style,
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
+  const bg = color ?? colors.brand.primary;
+  const fg = textColor ?? colors.text.primary;
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.85}
-      style={[styles.cta, Neu.accent(1.1), { backgroundColor: color }, style]}
+      style={[styles.cta, Neu.accent(1.1), { backgroundColor: bg }, style]}
     >
-      <AppText style={[styles.label, { color: textColor }]}>{label}</AppText>
+      <AppText style={[styles.label, { color: fg }]}>{label}</AppText>
     </TouchableOpacity>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (_c: ThemeColors) =>
+  StyleSheet.create({
   cta: {
     position: "absolute",
     bottom: 32,
@@ -45,4 +51,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-});
+  });

@@ -8,9 +8,10 @@ import {
 } from "react-native";
 import { AppText } from "@/src/components/AppText";
 import { AppTextInput } from "@/src/components/AppTextInput";
-import { Neu } from "@/src/theme/styles";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 
-import { authTheme } from "../auth-theme";
+import { authRadius, authSpacing } from "../auth-theme";
 
 type AuthTextFieldProps = TextInputProps & {
   label: string;
@@ -24,15 +25,17 @@ export function AuthTextField({
   style,
   ...props
 }: AuthTextFieldProps) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [isSecure, setIsSecure] = useState(Boolean(secureTextEntry));
 
   return (
     <View style={styles.container}>
       <AppText style={styles.label}>{label}</AppText>
 
-      <View style={[styles.inputShell, Neu.inset(authTheme.colors.inputBackground, 0.6)]}>
+      <View style={[styles.inputShell, Neu.inset(colors.bg.surface, 0.6)]}>
         <AppTextInput
-          placeholderTextColor={authTheme.colors.textSecondary}
+          placeholderTextColor={colors.text.secondary}
           style={[styles.input, style]}
           secureTextEntry={secureToggle ? isSecure : secureTextEntry}
           {...props}
@@ -46,7 +49,7 @@ export function AuthTextField({
             style={styles.iconButton}
           >
             <Ionicons
-              color={authTheme.colors.textSecondary}
+              color={colors.text.secondary}
               name={isSecure ? "eye-off-outline" : "eye-outline"}
               size={20}
             />
@@ -57,29 +60,30 @@ export function AuthTextField({
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    gap: authTheme.spacing.xs,
-  },
-  label: {
-    color: authTheme.colors.textSecondary,
-    fontSize: 14,
-    fontWeight: "500",
-  },
-  inputShell: {
-    flexDirection: "row",
-    alignItems: "center",
-    minHeight: 54,
-    borderRadius: authTheme.radius.input,
-    paddingHorizontal: authTheme.spacing.md,
-  },
-  input: {
-    flex: 1,
-    color: authTheme.colors.textPrimary,
-    fontSize: 16,
-    paddingVertical: authTheme.spacing.sm,
-  },
-  iconButton: {
-    marginLeft: authTheme.spacing.sm,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    container: {
+      gap: authSpacing.xs,
+    },
+    label: {
+      color: c.text.secondary,
+      fontSize: 14,
+      fontWeight: "500",
+    },
+    inputShell: {
+      flexDirection: "row",
+      alignItems: "center",
+      minHeight: 54,
+      borderRadius: authRadius.input,
+      paddingHorizontal: authSpacing.md,
+    },
+    input: {
+      flex: 1,
+      color: c.text.primary,
+      fontSize: 16,
+      paddingVertical: authSpacing.sm,
+    },
+    iconButton: {
+      marginLeft: authSpacing.sm,
+    },
+  });

@@ -1,8 +1,8 @@
 import { Permission } from "@/src/components/Permission";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { Skeleton } from "@/src/components/Skeleton";
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -28,6 +28,8 @@ export function AnalyticsOverviewScreen() {
   const router = useRouter();
   const { t } = useI18nContext();
   const [range, setRange] = useState<AnalyticsRange>("month");
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const { data, isLoading } = useAnalyticsOverview(range);
 
@@ -53,7 +55,7 @@ export function AnalyticsOverviewScreen() {
           <Skeleton.StatTiles perRow={2} count={4} height={104} />
 
           {/* Revenue chart card */}
-          <View style={[styles.chartCard, Neu.raised(Colors.bg.surface)]}>
+          <View style={[styles.chartCard, Neu.raised(colors.bg.surface)]}>
             <View style={styles.chartCardHeader}>
               <Skeleton width="34%" height={13} />
               <Skeleton width={52} height={20} radius={10} />
@@ -66,7 +68,7 @@ export function AnalyticsOverviewScreen() {
           </View>
 
           {/* Customers chart card */}
-          <View style={[styles.chartCard, Neu.raised(Colors.bg.surface)]}>
+          <View style={[styles.chartCard, Neu.raised(colors.bg.surface)]}>
             <View style={styles.chartCardHeader}>
               <Skeleton width="34%" height={13} />
               <Skeleton width={52} height={20} radius={10} />
@@ -112,7 +114,7 @@ export function AnalyticsOverviewScreen() {
                 <Ionicons
                   name="cash"
                   size={16}
-                  color={Colors.brand.primary}
+                  color={colors.brand.primary}
                 />
               }
               stat={stats.totalSales ?? EMPTY_STAT}
@@ -125,7 +127,7 @@ export function AnalyticsOverviewScreen() {
                 <Ionicons
                   name="person"
                   size={16}
-                  color={Colors.brand.primary}
+                  color={colors.brand.primary}
                 />
               }
               stat={stats.totalCustomers ?? EMPTY_STAT}
@@ -142,7 +144,7 @@ export function AnalyticsOverviewScreen() {
                 <Ionicons
                   name="walk"
                   size={16}
-                  color={Colors.brand.primary}
+                  color={colors.brand.primary}
                 />
               }
               stat={stats.walkIns ?? EMPTY_STAT}
@@ -157,7 +159,7 @@ export function AnalyticsOverviewScreen() {
                 <Ionicons
                   name="calendar"
                   size={16}
-                  color={Colors.brand.primary}
+                  color={colors.brand.primary}
                 />
               }
               stat={stats.appointments ?? EMPTY_STAT}
@@ -169,7 +171,7 @@ export function AnalyticsOverviewScreen() {
 
           {/* Revenue chart section */}
           <TouchableOpacity
-            style={[styles.chartCard, Neu.raised(Colors.bg.surface)]}
+            style={[styles.chartCard, Neu.raised(colors.bg.surface)]}
             activeOpacity={0.85}
             onPress={() => router.push(`/d/analytics-revenue?range=${range}`)}
           >
@@ -183,7 +185,7 @@ export function AnalyticsOverviewScreen() {
                 <Ionicons
                   name="chevron-forward"
                   size={14}
-                  color={Colors.text.muted}
+                  color={colors.text.muted}
                 />
               </View>
             </View>
@@ -200,7 +202,7 @@ export function AnalyticsOverviewScreen() {
 
           {/* Customers chart section */}
           <TouchableOpacity
-            style={[styles.chartCard, Neu.raised(Colors.bg.surface)]}
+            style={[styles.chartCard, Neu.raised(colors.bg.surface)]}
             activeOpacity={0.85}
             onPress={() => router.push(`/d/analytics-customers?range=${range}`)}
           >
@@ -214,7 +216,7 @@ export function AnalyticsOverviewScreen() {
                 <Ionicons
                   name="chevron-forward"
                   size={14}
-                  color={Colors.text.muted}
+                  color={colors.text.muted}
                 />
               </View>
             </View>
@@ -226,7 +228,7 @@ export function AnalyticsOverviewScreen() {
               <View style={styles.chartWrap}>
                 <BarChart
                   data={charts.customers}
-                  barColor={Colors.brand.primary}
+                  barColor={colors.brand.primary}
                 />
               </View>
             ) : null}
@@ -271,7 +273,8 @@ export function AnalyticsOverviewScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   scrollContent: {
     paddingBottom: 200,
   },
@@ -282,13 +285,13 @@ const styles = StyleSheet.create({
   pageTitle: {
     fontSize: 30,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
     letterSpacing: -0.8,
   },
   pageSubtitle: {
     fontSize: 14,
     fontWeight: "400",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     marginTop: 4,
   },
   skeletonWrap: {
@@ -330,19 +333,19 @@ const styles = StyleSheet.create({
   chartCardTitle: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   chartCardValue: {
     fontSize: 26,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
     letterSpacing: -0.5,
     marginTop: 4,
   },
   chartCardPeriod: {
     fontSize: 13,
     fontWeight: "400",
-    color: Colors.text.muted,
+    color: c.text.muted,
     marginBottom: 16,
     marginTop: 2,
     textTransform: "capitalize",
@@ -362,6 +365,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 17,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
-});
+  });

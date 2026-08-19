@@ -1,4 +1,5 @@
-import { Colors } from "@/src/theme/colors";
+import { useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
@@ -41,6 +42,8 @@ export function InfoRow({
   valueSuffix,
   style,
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const displayValue = value || null;
   const displayPlaceholder = !value && placeholder ? placeholder : null;
 
@@ -53,7 +56,7 @@ export function InfoRow({
             <Ionicons
               name={valueIconName as any}
               size={13}
-              color={Colors.text.secondary}
+              color={colors.text.secondary}
             />
           ) : null}
           <AppText
@@ -75,7 +78,7 @@ export function InfoRow({
         </AppText>
       ) : null}
       {showChevron ? (
-        <Ionicons name="chevron-forward" size={16} color={Colors.icon.muted} />
+        <Ionicons name="chevron-forward" size={16} color={colors.icon.muted} />
       ) : null}
     </View>
   );
@@ -91,54 +94,55 @@ export function InfoRow({
   return content;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-  },
-  borderBottom: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border.light,
-  },
-  label: {
-    fontWeight: "600",
-    fontSize: 14,
-    color: Colors.text.primary,
-    flex: 0.5,
-  },
-  valueRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-    flex: 0.5,
-    justifyContent: "flex-end",
-  },
-  valueRowMultiline: {
-    alignItems: "flex-start",
-  },
-  value: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    textAlign: "right",
-    flexShrink: 1,
-  },
-  placeholder: {
-    fontSize: 14,
-    color: Colors.text.muted,
-    flex: 0.5,
-    textAlign: "right",
-  },
-  suffixPill: {
-    backgroundColor: Colors.brand.primarySurface,
-    borderRadius: 6,
-    paddingHorizontal: 5,
-    paddingVertical: 1,
-  },
-  suffixPillText: {
-    fontSize: 10,
-    fontWeight: "600",
-    color: Colors.brand.text,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 16,
+      paddingVertical: 16,
+    },
+    borderBottom: {
+      borderBottomWidth: 1,
+      borderBottomColor: c.border.light,
+    },
+    label: {
+      fontWeight: "600",
+      fontSize: 14,
+      color: c.text.primary,
+      flex: 0.5,
+    },
+    valueRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 4,
+      flex: 0.5,
+      justifyContent: "flex-end",
+    },
+    valueRowMultiline: {
+      alignItems: "flex-start",
+    },
+    value: {
+      fontSize: 14,
+      color: c.text.secondary,
+      textAlign: "right",
+      flexShrink: 1,
+    },
+    placeholder: {
+      fontSize: 14,
+      color: c.text.muted,
+      flex: 0.5,
+      textAlign: "right",
+    },
+    suffixPill: {
+      backgroundColor: c.brand.primarySurface,
+      borderRadius: 6,
+      paddingHorizontal: 5,
+      paddingVertical: 1,
+    },
+    suffixPillText: {
+      fontSize: 10,
+      fontWeight: "600",
+      color: c.brand.text,
+    },
+  });

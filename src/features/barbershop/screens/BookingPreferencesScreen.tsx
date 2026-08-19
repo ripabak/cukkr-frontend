@@ -9,7 +9,8 @@ import {
 import { useMemberRole } from "@/src/hooks";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -20,6 +21,8 @@ export function BookingPreferencesScreen() {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const { data: barbershop, isLoading: isFetching } = useBarbershopCurrent();
   const { mutate: updateBookingWindow, isPending: isSaving } =
@@ -146,35 +149,36 @@ export function BookingPreferencesScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  content: {
-    paddingTop: 24,
-    paddingBottom: 200,
-  },
-  loader: {
-    marginTop: 20,
-  },
-  secondField: {
-    marginTop: 8,
-  },
-  helper: {
-    marginTop: 8,
-  },
-  feedbackError: {
-    fontSize: 13,
-    color: Colors.status.danger,
-    marginTop: 4,
-  },
-  viewOnlyBanner: {
-    marginTop: 24,
-    padding: 12,
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  viewOnlyText: {
-    fontSize: 13,
-    color: Colors.text.muted,
-    textAlign: "center",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    content: {
+      paddingTop: 24,
+      paddingBottom: 200,
+    },
+    loader: {
+      marginTop: 20,
+    },
+    secondField: {
+      marginTop: 8,
+    },
+    helper: {
+      marginTop: 8,
+    },
+    feedbackError: {
+      fontSize: 13,
+      color: c.status.danger,
+      marginTop: 4,
+    },
+    viewOnlyBanner: {
+      marginTop: 24,
+      padding: 12,
+      backgroundColor: c.bg.surface,
+      borderRadius: 8,
+      alignItems: "center",
+    },
+    viewOnlyText: {
+      fontSize: 13,
+      color: c.text.muted,
+      textAlign: "center",
+    },
+  });

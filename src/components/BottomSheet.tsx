@@ -1,7 +1,7 @@
 import { AppText } from "@/src/components/AppText";
 import { useFrame } from "@/src/components/FrameContext";
-import { Colors } from "@/src/theme/colors";
-import { Soft } from "@/src/theme/styles";
+import { Soft, useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import { haptics } from "@/src/utils/haptics";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -68,6 +68,8 @@ export function BottomSheet({
   const { frameWidth } = useFrame();
   const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
   const frameOffset = (viewportWidth - frameWidth) / 2;
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const [panelHeight, setPanelHeight] = useState(0);
   const [presented, setPresented] = useState(false);
@@ -210,7 +212,7 @@ export function BottomSheet({
       <Animated.View
         style={[
           styles.panel,
-          Soft.float(Colors.bg.elevated, 1),
+          Soft.float(colors.bg.elevated, 1),
           {
             left: frameOffset,
             right: frameOffset,
@@ -250,46 +252,47 @@ export function BottomSheet({
   );
 }
 
-const styles = StyleSheet.create({
-  backdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: Colors.bg.overlay,
-  },
-  panel: {
-    position: "absolute",
-    bottom: 0,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    paddingHorizontal: 20,
-    paddingTop: 10,
-  },
-  grabZone: {
-    alignItems: "center",
-    paddingBottom: 2,
-  },
-  handle: {
-    width: 40,
-    height: 5,
-    borderRadius: 3,
-    backgroundColor: Colors.border.default,
-    marginBottom: 12,
-  },
-  header: {
-    alignSelf: "stretch",
-    marginBottom: 6,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: Colors.text.primary,
-    letterSpacing: -0.3,
-    textAlign: "center",
-  },
-  subtitle: {
-    fontSize: 13,
-    color: Colors.text.secondary,
-    textAlign: "center",
-    marginTop: 4,
-    lineHeight: 18,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    backdrop: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: c.bg.overlay,
+    },
+    panel: {
+      position: "absolute",
+      bottom: 0,
+      borderTopLeftRadius: 28,
+      borderTopRightRadius: 28,
+      paddingHorizontal: 20,
+      paddingTop: 10,
+    },
+    grabZone: {
+      alignItems: "center",
+      paddingBottom: 2,
+    },
+    handle: {
+      width: 40,
+      height: 5,
+      borderRadius: 3,
+      backgroundColor: c.border.default,
+      marginBottom: 12,
+    },
+    header: {
+      alignSelf: "stretch",
+      marginBottom: 6,
+    },
+    title: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: c.text.primary,
+      letterSpacing: -0.3,
+      textAlign: "center",
+    },
+    subtitle: {
+      fontSize: 13,
+      color: c.text.secondary,
+      textAlign: "center",
+      marginTop: 4,
+      lineHeight: 18,
+    },
+  });

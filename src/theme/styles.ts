@@ -8,7 +8,10 @@
  * Use these helpers to keep surfaces, shadows, and status tints consistent.
  */
 import { Colors } from "./colors";
-import { Platform, ViewStyle } from "react-native";
+import { DarkColors } from "./darkColors";
+import { useTheme, type ThemeColors } from "./ThemeContext";
+import { useMemo } from "react";
+import { Platform, StyleSheet, ViewStyle } from "react-native";
 
 export type BookingStatus =
   | "waiting"
@@ -28,6 +31,33 @@ const SHADOW_COLOR = "rgba(23, 28, 35, 0.08)"; // soft tinted shadow
 const SHADOW_ACCENT = "rgba(245, 185, 35, 0.38)"; // amber glow
 
 const isWeb = Platform.OS === "web";
+
+/**
+ * Build component styles from the active palette.
+ *
+ * Pass a factory that ALWAYS returns `StyleSheet.create({ ... })`:
+ *
+ * ```ts
+ * const createStyles = (c: ThemeColors) =>
+ *   StyleSheet.create({
+ *     card: { backgroundColor: c.bg.surface, borderColor: c.border.light },
+ *     title: { color: c.text.primary, fontSize: 16 },
+ *   });
+ *
+ * const styles = useThemedStyles(createStyles);
+ * ```
+ *
+ * The `StyleSheet.create` inside the factory gives exact per-style types, and
+ * the hook memoizes the result so colours swap reactively on theme change.
+ */
+export function useThemedStyles<T>(factory: (colors: ThemeColors) => T): T {
+  const { colors } = useTheme();
+  return useMemo(() => factory(colors), [colors, factory]);
+}
+
+/** Dark variant type helper — keeps palette references type-safe in factories. */
+export type ThemedColors = ThemeColors;
+export type DarkColorsType = typeof DarkColors;
 
 /** Flat elevated surface: hairline border + soft drop shadow. */
 export function softRaised(

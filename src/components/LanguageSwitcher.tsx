@@ -1,7 +1,8 @@
 import { AppText } from '@/src/components/AppText'
 import { useI18n } from '@/src/lib/i18n/hooks'
 import { SUPPORTED_LANGUAGES } from '@/src/lib/i18n'
-import { Colors } from '@/src/theme/colors'
+import { useThemedStyles } from '@/src/theme/styles'
+import { useTheme, type ThemeColors } from '@/src/theme/ThemeContext'
 import { useToast } from '@/src/lib/providers/toast'
 import { getErrorMessage } from '@/src/lib/utils/error-handler'
 import { Ionicons } from '@expo/vector-icons'
@@ -11,6 +12,8 @@ import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native'
 export function LanguageSwitcher() {
   const { t, language, setLanguage } = useI18n()
   const toast = useToast()
+  const { colors } = useTheme()
+  const styles = useThemedStyles(createStyles)
   const [changingLang, setChangingLang] = useState<typeof language | null>(null)
 
   const handleChange = useCallback(
@@ -53,9 +56,9 @@ export function LanguageSwitcher() {
                 {lang.label}
               </AppText>
               {isLoading ? (
-                <ActivityIndicator size="small" color={Colors.text.primary} />
+                <ActivityIndicator size="small" color={colors.text.primary} />
               ) : isSelected ? (
-                <Ionicons name="checkmark-circle" size={20} color={Colors.brand.primary} />
+                <Ionicons name="checkmark-circle" size={20} color={colors.brand.primary} />
               ) : null}
             </View>
           </Pressable>
@@ -65,31 +68,32 @@ export function LanguageSwitcher() {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {},
-  option: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-  },
-  borderBottom: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border.light,
-  },
-  rowContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  flag: {
-    fontSize: 22,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: Colors.text.primary,
-    flex: 1,
-  },
-  labelSelected: {
-    color: Colors.brand.text,
-  },
-})
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    container: {},
+    option: {
+      paddingHorizontal: 16,
+      paddingVertical: 16,
+    },
+    borderBottom: {
+      borderBottomWidth: 1,
+      borderBottomColor: c.border.light,
+    },
+    rowContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+    },
+    flag: {
+      fontSize: 22,
+    },
+    label: {
+      fontSize: 14,
+      fontWeight: '700',
+      color: c.text.primary,
+      flex: 1,
+    },
+    labelSelected: {
+      color: c.brand.text,
+    },
+  })

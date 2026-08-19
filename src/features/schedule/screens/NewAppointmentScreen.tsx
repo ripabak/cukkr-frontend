@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { useOpenHours } from "@/src/hooks/useOpenHours";
@@ -81,6 +82,8 @@ export function NewAppointmentScreen() {
   const { mutateAsync: createBooking, isPending } = useCreateBooking();
   const { data: openHoursData } = useOpenHours();
   const { data: barbershop } = useBarbershopCurrent();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const minAdvanceHours = barbershop?.minAdvanceHours ?? 0;
   const maxAdvanceDays = barbershop?.maxAdvanceDays ?? 365;
   const timezone = barbershop?.timezone ?? 'UTC';
@@ -282,7 +285,7 @@ export function NewAppointmentScreen() {
           />
         </View>
       }
-      backgroundColor={Colors.bg.default}
+      backgroundColor={colors.bg.default}
       contentStyle={{ paddingTop: 24, gap: 14 }}
     >
       {(minAdvanceHours > 0 || maxAdvanceDays < 365) && (
@@ -313,7 +316,7 @@ export function NewAppointmentScreen() {
             <AppText style={styles.label}>
               {t("schedule.bookingForm.dateTime")} <AppText style={styles.asterisk}>*</AppText>
             </AppText>
-            <View style={[styles.webDateWrapper, Neu.inset(Colors.bg.surface)]}>
+            <View style={[styles.webDateWrapper, Neu.inset(colors.bg.surface)]}>
               <input
                 id="native-date-input"
                 type="date"
@@ -328,7 +331,7 @@ export function NewAppointmentScreen() {
                   background: 'transparent',
                   fontSize: 14,
                   fontFamily: 'inherit',
-                  color: selectedDate ? Colors.text.primary : Colors.text.muted,
+                  color: selectedDate ? colors.text.primary : colors.text.muted,
                   padding: 0,
                   WebkitAppearance: 'none',
                   appearance: 'none',
@@ -386,7 +389,7 @@ export function NewAppointmentScreen() {
                       styles.slotBtn,
                       selectedTimeSlot === slot
                         ? Neu.accent(0.85)
-                        : Neu.soft(Colors.bg.surface, 0.6),
+                        : Neu.soft(colors.bg.surface, 0.6),
                     ]}
                     activeOpacity={0.85}
                     onPress={() => handleTimeSlotSelect(slot)}
@@ -430,14 +433,15 @@ export function NewAppointmentScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   label: {
     fontSize: 13,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     marginBottom: 6,
   },
   asterisk: {
-    color: Colors.status.danger,
+    color: c.status.danger,
   },
   webDateWrapper: {
     flexDirection: 'row',
@@ -459,25 +463,25 @@ const styles = StyleSheet.create({
   },
   bookingWindowHint: {
     fontSize: 12,
-    color: Colors.text.muted,
+    color: c.text.muted,
     lineHeight: 18,
   },
   timeSectionLabel: {
     fontSize: 13,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     marginBottom: 12,
     textTransform: "uppercase",
     letterSpacing: 0.4,
   },
   closedBox: {
     borderRadius: 16,
-    backgroundColor: Colors.status.dangerSurface,
+    backgroundColor: c.status.dangerSurface,
     padding: 14,
   },
   closedText: {
     fontSize: 14,
-    color: Colors.status.danger,
+    color: c.status.danger,
     lineHeight: 20,
   },
   slotsGrid: {
@@ -496,6 +500,6 @@ const styles = StyleSheet.create({
   slotText: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
-});
+  });

@@ -1,5 +1,5 @@
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import React, { useState } from "react";
 import { AppText } from "@/src/components/AppText";
 import {
@@ -50,6 +50,8 @@ export function DayHoursRow({
 }: Props) {
   const [showOpenPicker, setShowOpenPicker] = useState(false);
   const [showClosePicker, setShowClosePicker] = useState(false);
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   return (
     <View style={[styles.wrapper, !isLast && styles.borderBottom, style]}>
@@ -62,7 +64,7 @@ export function DayHoursRow({
             activeOpacity={0.85}
             style={[
               styles.timePill,
-              Neu.inset(Colors.bg.surface, 0.6),
+              Neu.inset(colors.bg.surface, 0.6),
               (!enabled || !editable) && styles.timePillDisabled,
             ]}
             disabled={!enabled || !editable}
@@ -79,7 +81,7 @@ export function DayHoursRow({
             activeOpacity={0.85}
             style={[
               styles.timePill,
-              Neu.inset(Colors.bg.surface, 0.6),
+              Neu.inset(colors.bg.surface, 0.6),
               (!enabled || !editable) && styles.timePillDisabled,
             ]}
             disabled={!enabled || !editable}
@@ -128,57 +130,58 @@ export function DayHoursRow({
   );
 }
 
-const styles = StyleSheet.create({
-  wrapper: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  borderBottom: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border.light,
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
-  day: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: Colors.text.primary,
-    width: 36,
-  },
-  dayDisabled: {
-    color: Colors.text.muted,
-  },
-  times: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    gap: 6,
-  },
-  timePill: {
-    borderRadius: 999,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-  },
-  timePillDisabled: {
-    opacity: 0.4,
-  },
-  timeText: {
-    fontSize: 12,
-    fontWeight: "500",
-    color: Colors.text.primary,
-  },
-  timeTextDisabled: {
-    color: Colors.text.muted,
-  },
-  dash: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-  },
-  pickerWrapper: {
-    marginTop: 8,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    wrapper: {
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+    },
+    borderBottom: {
+      borderBottomWidth: 1,
+      borderBottomColor: c.border.light,
+    },
+    row: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+    },
+    day: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: c.text.primary,
+      width: 36,
+    },
+    dayDisabled: {
+      color: c.text.muted,
+    },
+    times: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "flex-end",
+      gap: 6,
+    },
+    timePill: {
+      borderRadius: 999,
+      paddingHorizontal: 10,
+      paddingVertical: 6,
+    },
+    timePillDisabled: {
+      opacity: 0.4,
+    },
+    timeText: {
+      fontSize: 12,
+      fontWeight: "500",
+      color: c.text.primary,
+    },
+    timeTextDisabled: {
+      color: c.text.muted,
+    },
+    dash: {
+      fontSize: 14,
+      color: c.text.secondary,
+    },
+    pickerWrapper: {
+      marginTop: 8,
+    },
+  });

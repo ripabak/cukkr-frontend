@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -49,11 +50,13 @@ const MOCK_POINTS: ChartPoint[] = [
 export function ChartCard({
   title,
   subtitle,
-  subtitleColor = Colors.brand.primary,
+  subtitleColor,
   xLabels: xLabelsProp,
   yLabels = ["100K", "50K", "00"],
   style,
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const CHART_HEIGHT = 100;
   const defaultXLabels = [0, 5, 11].map(
     (m) => new Intl.DateTimeFormat(undefined, { month: "short" }).format(new Date(2024, m, 1)),
@@ -61,10 +64,10 @@ export function ChartCard({
   const xLabels = xLabelsProp ?? defaultXLabels;
 
   return (
-    <View style={[styles.card, Neu.raised(Colors.bg.surface), style]}>
+    <View style={[styles.card, Neu.raised(colors.bg.surface), style]}>
       <AppText style={styles.title}>{title}</AppText>
       {subtitle && (
-        <AppText style={[styles.subtitle, { color: subtitleColor }]}>
+        <AppText style={[styles.subtitle, { color: subtitleColor ?? colors.brand.primary }]}>
           {subtitle}
         </AppText>
       )}
@@ -104,7 +107,7 @@ export function ChartCard({
                     top: y1,
                     width: len * 1.5,
                     height: 2,
-                    backgroundColor: Colors.brand.primary,
+                    backgroundColor: colors.brand.primary,
                     transformOrigin: "0 50%",
                     transform: [{ rotate: `${angle}deg` }],
                   }}
@@ -126,66 +129,67 @@ export function ChartCard({
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    borderRadius: 20,
-    padding: 16,
-    gap: 4,
-  },
-  title: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: Colors.text.primary,
-  },
-  subtitle: {
-    fontSize: 12,
-    fontWeight: "500",
-    marginBottom: 8,
-  },
-  chartArea: {
-    flexDirection: "row",
-    height: 120,
-    marginTop: 4,
-  },
-  yAxis: {
-    width: 36,
-    justifyContent: "space-between",
-    alignItems: "flex-end",
-    paddingRight: 6,
-    paddingBottom: 18,
-  },
-  chartBody: {
-    flex: 1,
-    position: "relative",
-  },
-  gridLine: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 1,
-    borderStyle: "dashed",
-    borderWidth: 1,
-    borderColor: Colors.border.default,
-  },
-  lineContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 100,
-    overflow: "hidden",
-  },
-  xAxis: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  axisLabel: {
-    fontSize: 10,
-    color: Colors.icon.muted,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    card: {
+      borderRadius: 20,
+      padding: 16,
+      gap: 4,
+    },
+    title: {
+      fontSize: 15,
+      fontWeight: "600",
+      color: c.text.primary,
+    },
+    subtitle: {
+      fontSize: 12,
+      fontWeight: "500",
+      marginBottom: 8,
+    },
+    chartArea: {
+      flexDirection: "row",
+      height: 120,
+      marginTop: 4,
+    },
+    yAxis: {
+      width: 36,
+      justifyContent: "space-between",
+      alignItems: "flex-end",
+      paddingRight: 6,
+      paddingBottom: 18,
+    },
+    chartBody: {
+      flex: 1,
+      position: "relative",
+    },
+    gridLine: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 1,
+      borderStyle: "dashed",
+      borderWidth: 1,
+      borderColor: c.border.default,
+    },
+    lineContainer: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 100,
+      overflow: "hidden",
+    },
+    xAxis: {
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
+    axisLabel: {
+      fontSize: 10,
+      color: c.icon.muted,
+    },
+  });

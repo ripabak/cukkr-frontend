@@ -1,4 +1,5 @@
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
@@ -8,13 +9,16 @@ import { OnboardingButton } from "../components/OnboardingButton";
 import { OnboardingCard } from "../components/OnboardingCard";
 import { OnboardingContainer } from "../components/OnboardingContainer";
 import { OnboardingIndicator } from "../components/OnboardingIndicator";
-import { OnboardingTheme } from "../onboarding-theme";
+import { buildOnboardingTheme } from "../onboarding-theme";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 export function OnboardingEasyBookingScreen() {
   const router = useRouter();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const theme = buildOnboardingTheme(colors);
+  const styles = useThemedStyles(createStyles);
 
   return (
     <OnboardingContainer style={styles.container}>
@@ -68,17 +72,19 @@ export function OnboardingEasyBookingScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) => {
+  const theme = buildOnboardingTheme(c);
+  return StyleSheet.create({
   container: {
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
     justifyContent: "flex-start",
     alignItems: "flex-start",
   },
   content: {
     flex: 1,
     width: "100%",
-    paddingHorizontal: OnboardingTheme.spacing.lg,
-    paddingBottom: OnboardingTheme.spacing.xl,
+    paddingHorizontal: theme.spacing.lg,
+    paddingBottom: theme.spacing.xl,
   },
   card: {
     height: SCREEN_HEIGHT * 0.42,
@@ -90,8 +96,8 @@ const styles = StyleSheet.create({
   illustration: {
     flex: 1,
     flexDirection: "row",
-    gap: OnboardingTheme.spacing.xs,
-    padding: OnboardingTheme.spacing.md,
+    gap: theme.spacing.xs,
+    padding: theme.spacing.md,
   },
   calendarGrid: {
     flex: 1,
@@ -106,12 +112,12 @@ const styles = StyleSheet.create({
     height: 22,
     borderRadius: 4,
     borderWidth: 1.5,
-    borderColor: OnboardingTheme.colors.dark,
+    borderColor: theme.colors.dark,
     backgroundColor: "transparent",
   },
   calendarCellAccent: {
-    backgroundColor: OnboardingTheme.colors.primary,
-    borderColor: OnboardingTheme.colors.primary,
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
   },
   calendarSide: {
     width: 50,
@@ -122,27 +128,27 @@ const styles = StyleSheet.create({
     height: 16,
     borderRadius: 4,
     borderWidth: 1.5,
-    borderColor: OnboardingTheme.colors.dark,
+    borderColor: theme.colors.dark,
     backgroundColor: "transparent",
   },
   sideCellAccent: {
-    backgroundColor: OnboardingTheme.colors.primary,
-    borderColor: OnboardingTheme.colors.primary,
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
   },
   textContent: {
-    marginTop: OnboardingTheme.spacing.xl,
+    marginTop: theme.spacing.xl,
     alignItems: "center",
   },
   heading: {
     fontSize: 26,
     fontWeight: "600",
-    color: OnboardingTheme.colors.textDark,
+    color: theme.colors.textDark,
     textAlign: "center",
-    marginBottom: OnboardingTheme.spacing.sm,
+    marginBottom: theme.spacing.sm,
   },
   body: {
     fontSize: 14,
-    color: OnboardingTheme.colors.textGray,
+    color: theme.colors.textGray,
     textAlign: "center",
     lineHeight: 22,
   },
@@ -152,4 +158,5 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 0,
   },
-});
+  });
+};

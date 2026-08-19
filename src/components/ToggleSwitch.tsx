@@ -1,5 +1,5 @@
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import React from "react";
 import { TouchableOpacity, View, StyleSheet, ViewStyle } from "react-native";
 
@@ -11,6 +11,8 @@ interface Props {
 }
 
 export function ToggleSwitch({ value, onValueChange, disabled, style }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <TouchableOpacity
       onPress={() => onValueChange(!value)}
@@ -23,37 +25,38 @@ export function ToggleSwitch({ value, onValueChange, disabled, style }: Props) {
         style,
       ]}
     >
-      <View style={[styles.thumb, value ? styles.thumbOn : styles.thumbOff, Neu.soft(Colors.bg.surface)]} />
+      <View style={[styles.thumb, value ? styles.thumbOn : styles.thumbOff, Neu.soft(colors.bg.surface)]} />
     </TouchableOpacity>
   );
 }
 
-const styles = StyleSheet.create({
-  track: {
-    width: 48,
-    height: 26,
-    borderRadius: 13,
-    justifyContent: "center",
-    paddingHorizontal: 2,
-  },
-  trackOn: {
-    backgroundColor: Colors.brand.primary,
-  },
-  trackOff: {
-    backgroundColor: Colors.border.default,
-  },
-  trackDisabled: {
-    opacity: 0.5,
-  },
-  thumb: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-  },
-  thumbOn: {
-    alignSelf: "flex-end",
-  },
-  thumbOff: {
-    alignSelf: "flex-start",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    track: {
+      width: 48,
+      height: 26,
+      borderRadius: 13,
+      justifyContent: "center",
+      paddingHorizontal: 2,
+    },
+    trackOn: {
+      backgroundColor: c.brand.primary,
+    },
+    trackOff: {
+      backgroundColor: c.border.default,
+    },
+    trackDisabled: {
+      opacity: 0.5,
+    },
+    thumb: {
+      width: 22,
+      height: 22,
+      borderRadius: 11,
+    },
+    thumbOn: {
+      alignSelf: "flex-end",
+    },
+    thumbOff: {
+      alignSelf: "flex-start",
+    },
+  });

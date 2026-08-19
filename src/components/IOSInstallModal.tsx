@@ -11,6 +11,8 @@ import {
   ImageSourcePropType,
 } from "react-native";
 import { AppTheme } from "@/src/app-theme";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 
 const IMAGES = {
@@ -101,6 +103,8 @@ function StepImage({
   aspect: number;
   step: StepKey;
 }) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [errored, setErrored] = useState(false);
 
   if (errored) {
@@ -109,7 +113,7 @@ function StepImage({
         <Ionicons
           name={STEP_FALLBACK_ICON[step]}
           size={32}
-          color={AppTheme.colors.accent}
+          color={colors.brand.primary}
         />
       </View>
     );
@@ -137,6 +141,8 @@ function isNewSafariBrowser(): boolean {
 
 export function IOSInstallModal({ visible, isSafari, onClose }: Props) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const isNewSafari = useMemo(() => isNewSafariBrowser(), []);
 
   return (
@@ -153,7 +159,7 @@ export function IOSInstallModal({ visible, isSafari, onClose }: Props) {
             <Ionicons
               name="phone-portrait-outline"
               size={20}
-              color={AppTheme.colors.accent}
+              color={colors.brand.primary}
             />
           </View>
           <AppText style={styles.title}>{t("components.pwaInstall.modalTitle")}</AppText>
@@ -163,7 +169,7 @@ export function IOSInstallModal({ visible, isSafari, onClose }: Props) {
           style={styles.closeBtn}
           hitSlop={8}
         >
-          <Ionicons name="close" size={20} color={AppTheme.colors.gray} />
+          <Ionicons name="close" size={20} color={colors.text.secondary} />
         </TouchableOpacity>
       </View>
 
@@ -202,7 +208,7 @@ export function IOSInstallModal({ visible, isSafari, onClose }: Props) {
                   {source && <StepImage source={source} aspect={aspect} step={step} />}
                   <AppText style={styles.stepDesc}>{t(i18n.desc)}</AppText>
                   <View style={styles.variantRow}>
-                    <Ionicons name="bulb-outline" size={13} color={AppTheme.colors.accent} />
+                    <Ionicons name="bulb-outline" size={13} color={colors.brand.primary} />
                     <AppText style={styles.variantText}>{t(i18n.variant)}</AppText>
                   </View>
                   {variantSource && variantAspect && (
@@ -241,172 +247,173 @@ export function IOSInstallModal({ visible, isSafari, onClose }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 4,
-    marginBottom: 8,
-  },
-  headerLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  headerIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 12,
-    backgroundColor: AppTheme.colors.surface,
-    borderWidth: 1,
-    borderColor: AppTheme.colors.border,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: AppTheme.colors.dark,
-  },
-  closeBtn: {
-    padding: 4,
-  },
-  safariHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    backgroundColor: AppTheme.colors.surface,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    borderRadius: AppTheme.borderRadius.md,
-    marginBottom: 16,
-  },
-  safariIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 8,
-  },
-  safariHeaderTextWrap: {
-    flex: 1,
-  },
-  safariHeaderTitle: {
-    fontSize: 13,
-    fontWeight: "500",
-    color: AppTheme.colors.dark,
-  },
-  safariHeaderDesc: {
-    fontSize: 11,
-    color: AppTheme.colors.gray,
-    marginTop: 1,
-    lineHeight: 15,
-  },
-  stepContainer: {
-    flexDirection: "row",
-    gap: 12,
-    marginBottom: 4,
-  },
-  stepNumber: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: AppTheme.colors.accent,
-    alignItems: "center",
-    justifyContent: "center",
-    flexShrink: 0,
-    marginTop: 2,
-  },
-  stepNumberText: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: AppTheme.colors.dark,
-  },
-  stepContent: {
-    flex: 1,
-  },
-  stepTitle: {
-    fontSize: 15,
-    fontWeight: "500",
-    color: AppTheme.colors.dark,
-    marginBottom: 8,
-  },
-  stepImage: {
-    width: "100%",
-    height: "auto",
-    borderRadius: AppTheme.borderRadius.lg,
-    backgroundColor: AppTheme.colors.surface,
-    marginBottom: 8,
-  },
-  stepDesc: {
-    fontSize: 13,
-    color: AppTheme.colors.gray,
-    lineHeight: 18,
-    marginBottom: 6,
-  },
-  variantRow: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 4,
-  },
-  variantText: {
-    fontSize: 12,
-    color: AppTheme.colors.gray,
-    lineHeight: 16,
-    flex: 1,
-    fontStyle: "italic",
-  },
-  divider: {
-    height: 1,
-    backgroundColor: AppTheme.colors.border,
-    marginVertical: 12,
-  },
-  doneBtn: {
-    marginTop: 12,
-    backgroundColor: AppTheme.colors.accent,
-    paddingVertical: 14,
-    borderRadius: AppTheme.borderRadius.lg,
-    alignItems: "center",
-  },
-  doneBtnText: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: AppTheme.colors.dark,
-  },
-  scroll: {
-    paddingBottom: 36,
-  },
-  stepImageFallback: {
-    width: "100%",
-    height: "auto",
-    borderRadius: AppTheme.borderRadius.lg,
-    backgroundColor: AppTheme.colors.surface,
-    marginBottom: 8,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  variantImageWrap: {
-    marginTop: 8,
-    paddingLeft: 0,
-  },
-  variantImage: {
-    width: "100%",
-    height: "auto",
-    borderRadius: AppTheme.borderRadius.lg,
-    backgroundColor: AppTheme.colors.surface,
-  },
-  successSection: {
-    alignItems: "center",
-    gap: 10,
-  },
-  successImage: {
-    width: "100%",
-    height: "auto",
-    borderRadius: AppTheme.borderRadius.lg,
-  },
-  successText: {
-    fontSize: 13,
-    color: AppTheme.colors.gray,
-    textAlign: "center",
-    lineHeight: 18,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginTop: 4,
+      marginBottom: 8,
+    },
+    headerLeft: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+    },
+    headerIcon: {
+      width: 36,
+      height: 36,
+      borderRadius: 12,
+      backgroundColor: c.bg.surface,
+      borderWidth: 1,
+      borderColor: c.border.default,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    title: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: c.text.primary,
+    },
+    closeBtn: {
+      padding: 4,
+    },
+    safariHeader: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 10,
+      backgroundColor: c.bg.surface,
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+      borderRadius: AppTheme.borderRadius.md,
+      marginBottom: 16,
+    },
+    safariIcon: {
+      width: 36,
+      height: 36,
+      borderRadius: 8,
+    },
+    safariHeaderTextWrap: {
+      flex: 1,
+    },
+    safariHeaderTitle: {
+      fontSize: 13,
+      fontWeight: "500",
+      color: c.text.primary,
+    },
+    safariHeaderDesc: {
+      fontSize: 11,
+      color: c.text.secondary,
+      marginTop: 1,
+      lineHeight: 15,
+    },
+    stepContainer: {
+      flexDirection: "row",
+      gap: 12,
+      marginBottom: 4,
+    },
+    stepNumber: {
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      backgroundColor: c.brand.primary,
+      alignItems: "center",
+      justifyContent: "center",
+      flexShrink: 0,
+      marginTop: 2,
+    },
+    stepNumberText: {
+      fontSize: 12,
+      fontWeight: "600",
+      color: c.text.primary,
+    },
+    stepContent: {
+      flex: 1,
+    },
+    stepTitle: {
+      fontSize: 15,
+      fontWeight: "500",
+      color: c.text.primary,
+      marginBottom: 8,
+    },
+    stepImage: {
+      width: "100%",
+      height: "auto",
+      borderRadius: AppTheme.borderRadius.lg,
+      backgroundColor: c.bg.surface,
+      marginBottom: 8,
+    },
+    stepDesc: {
+      fontSize: 13,
+      color: c.text.secondary,
+      lineHeight: 18,
+      marginBottom: 6,
+    },
+    variantRow: {
+      flexDirection: "row",
+      alignItems: "flex-start",
+      gap: 4,
+    },
+    variantText: {
+      fontSize: 12,
+      color: c.text.secondary,
+      lineHeight: 16,
+      flex: 1,
+      fontStyle: "italic",
+    },
+    divider: {
+      height: 1,
+      backgroundColor: c.border.default,
+      marginVertical: 12,
+    },
+    doneBtn: {
+      marginTop: 12,
+      backgroundColor: c.brand.primary,
+      paddingVertical: 14,
+      borderRadius: AppTheme.borderRadius.lg,
+      alignItems: "center",
+    },
+    doneBtnText: {
+      fontSize: 15,
+      fontWeight: "600",
+      color: c.text.primary,
+    },
+    scroll: {
+      paddingBottom: 36,
+    },
+    stepImageFallback: {
+      width: "100%",
+      height: "auto",
+      borderRadius: AppTheme.borderRadius.lg,
+      backgroundColor: c.bg.surface,
+      marginBottom: 8,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    variantImageWrap: {
+      marginTop: 8,
+      paddingLeft: 0,
+    },
+    variantImage: {
+      width: "100%",
+      height: "auto",
+      borderRadius: AppTheme.borderRadius.lg,
+      backgroundColor: c.bg.surface,
+    },
+    successSection: {
+      alignItems: "center",
+      gap: 10,
+    },
+    successImage: {
+      width: "100%",
+      height: "auto",
+      borderRadius: AppTheme.borderRadius.lg,
+    },
+    successText: {
+      fontSize: 13,
+      color: c.text.secondary,
+      textAlign: "center",
+      lineHeight: 18,
+    },
+  });

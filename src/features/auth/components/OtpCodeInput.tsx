@@ -2,9 +2,10 @@ import { useEffect, useRef } from "react";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
 import { AppTextInput } from "@/src/components/AppTextInput";
-import { Neu } from "@/src/theme/styles";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 
-import { authTheme } from "../auth-theme";
+import { authRadius, authSpacing } from "../auth-theme";
 
 type OtpCodeInputProps = {
   value: string;
@@ -19,6 +20,8 @@ export function OtpCodeInput({
   onChange,
   value,
 }: OtpCodeInputProps) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
@@ -53,7 +56,7 @@ export function OtpCodeInput({
           return (
             <View
               key={index}
-              style={[styles.cell, Neu.inset(authTheme.colors.inputBackground, 0.6), isActive && styles.activeCell]}
+              style={[styles.cell, Neu.inset(colors.bg.surface, 0.6), isActive && styles.activeCell]}
             >
               <AppText style={styles.cellText}>{digit}</AppText>
             </View>
@@ -64,37 +67,37 @@ export function OtpCodeInput({
   );
 }
 
-const styles = StyleSheet.create({
-  wrapper: {
-    alignItems: "center",
-  },
-  hiddenInput: {
-    position: "absolute",
-    opacity: 0,
-    width: 1,
-    height: 1,
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    gap: authTheme.spacing.sm,
-  },
-  cell: {
-    flex: 1,
-    aspectRatio: 1,
-    maxWidth: 64,
-    borderRadius: authTheme.radius.input,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  activeCell: {
-    backgroundColor:
-      authTheme.colors.accentSurface ?? "rgba(245, 185, 35, 0.12)",
-  },
-  cellText: {
-    color: authTheme.colors.textPrimary,
-    fontSize: 24,
-    fontWeight: "600",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    wrapper: {
+      alignItems: "center",
+    },
+    hiddenInput: {
+      position: "absolute",
+      opacity: 0,
+      width: 1,
+      height: 1,
+    },
+    row: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      width: "100%",
+      gap: authSpacing.sm,
+    },
+    cell: {
+      flex: 1,
+      aspectRatio: 1,
+      maxWidth: 64,
+      borderRadius: authRadius.input,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    activeCell: {
+      backgroundColor: c.brand.primarySurface,
+    },
+    cellText: {
+      color: c.text.primary,
+      fontSize: 24,
+      fontWeight: "600",
+    },
+  });

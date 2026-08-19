@@ -1,6 +1,8 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { OnboardingTheme } from "../onboarding-theme";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
+import { buildOnboardingTheme } from "../onboarding-theme";
 
 interface OnboardingIndicatorProps {
   current: number;
@@ -11,6 +13,8 @@ export const OnboardingIndicator: React.FC<OnboardingIndicatorProps> = ({
   current,
   total,
 }) => {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <View style={styles.container}>
       {Array.from({ length: total }).map((_, index) => (
@@ -26,28 +30,31 @@ export const OnboardingIndicator: React.FC<OnboardingIndicatorProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) => {
+  const theme = buildOnboardingTheme(c);
+  return StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    gap: OnboardingTheme.spacing.xs,
-    marginTop: OnboardingTheme.spacing.lg,
+    gap: theme.spacing.xs,
+    marginTop: theme.spacing.lg,
   },
   dot: {
     height: 6,
-    borderRadius: OnboardingTheme.borderRadius.full,
+    borderRadius: theme.borderRadius.full,
   },
   dotInactive: {
     width: 6,
-    backgroundColor: OnboardingTheme.colors.dark,
+    backgroundColor: theme.colors.dark,
     opacity: 0.2,
   },
   dotActive: {
     width: 22,
-    backgroundColor: OnboardingTheme.colors.primary,
+    backgroundColor: theme.colors.primary,
     opacity: 1,
   },
-});
+  });
+};
 
 export default OnboardingIndicator;

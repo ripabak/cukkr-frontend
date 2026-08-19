@@ -2,8 +2,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useImagePicker } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SecondaryButton } from "@/src/components/SecondaryButton";
@@ -22,6 +23,8 @@ export function CreateBarbershopNameLogoScreen() {
   const router = useRouter();
   const { t } = useI18nContext();
   const toast = useToast();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { formData, updateFormData } = useCreateBarbershopForm();
   const [name, setName] = useState(formData.name || "");
   const [logoPreviewUri, setLogoPreviewUri] = useState<string | undefined>(
@@ -67,7 +70,7 @@ export function CreateBarbershopNameLogoScreen() {
       <AppText style={styles.logoLabel}>{t("barbershop.logoUpload")}</AppText>
       <TouchableOpacity
         activeOpacity={0.85}
-        style={[styles.logoPicker, Neu.inset(Colors.bg.surface, 0.6)]}
+        style={[styles.logoPicker, Neu.inset(colors.bg.surface, 0.6)]}
         onPress={async () => {
           const file = await pickAndGetFile();
           if (!file) return;
@@ -83,7 +86,7 @@ export function CreateBarbershopNameLogoScreen() {
           />
         ) : (
           <View style={styles.logoPlaceholder}>
-            <Ionicons name="camera-outline" size={24} color={Colors.icon.muted} />
+            <Ionicons name="camera-outline" size={24} color={colors.icon.muted} />
           </View>
         )}
       </TouchableOpacity>
@@ -94,7 +97,7 @@ export function CreateBarbershopNameLogoScreen() {
           <SecondaryButton
             label={t("common.cancel")}
             onPress={handleCancel}
-            color={Colors.status.danger}
+            color={colors.status.danger}
             style={styles.cancelButton}
           />
           <PrimaryButton
@@ -116,59 +119,60 @@ export function CreateBarbershopNameLogoScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  wizard: {
-    marginBottom: 32,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "600",
-    color: Colors.text.primary,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    marginTop: 8,
-    marginBottom: 24,
-  },
-  logoLabel: {
-    fontSize: 13,
-    color: Colors.text.secondary,
-    marginBottom: 6,
-    marginTop: 16,
-  },
-  logoPicker: {
-    width: "100%",
-    aspectRatio: 1,
-    borderRadius: 16,
-    overflow: "hidden",
-  },
-  logoPlaceholder: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  logoPreviewImage: {
-    width: "100%",
-    height: "100%",
-  },
-  flex: {
-    flex: 1,
-    minHeight: 32,
-  },
-  button: {
-    marginBottom: 16,
-  },
-  buttonRow: {
-    flexDirection: "row",
-    gap: 12,
-    marginBottom: 16,
-  },
-  cancelButton: {
-    flex: 1,
-    width: undefined,
-  },
-  nextButton: {
-    flex: 3,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    wizard: {
+      marginBottom: 32,
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: "600",
+      color: c.text.primary,
+    },
+    subtitle: {
+      fontSize: 14,
+      color: c.text.secondary,
+      marginTop: 8,
+      marginBottom: 24,
+    },
+    logoLabel: {
+      fontSize: 13,
+      color: c.text.secondary,
+      marginBottom: 6,
+      marginTop: 16,
+    },
+    logoPicker: {
+      width: "100%",
+      aspectRatio: 1,
+      borderRadius: 16,
+      overflow: "hidden",
+    },
+    logoPlaceholder: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    logoPreviewImage: {
+      width: "100%",
+      height: "100%",
+    },
+    flex: {
+      flex: 1,
+      minHeight: 32,
+    },
+    button: {
+      marginBottom: 16,
+    },
+    buttonRow: {
+      flexDirection: "row",
+      gap: 12,
+      marginBottom: 16,
+    },
+    cancelButton: {
+      flex: 1,
+      width: undefined,
+    },
+    nextButton: {
+      flex: 3,
+    },
+  });

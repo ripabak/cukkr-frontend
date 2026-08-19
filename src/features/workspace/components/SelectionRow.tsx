@@ -1,4 +1,5 @@
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import React from "react";
 import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -19,6 +20,8 @@ export function SelectionRow({
   isActive,
   style,
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -31,32 +34,33 @@ export function SelectionRow({
       <Ionicons
         name="chevron-forward"
         size={18}
-        color={isActive ? Colors.icon.muted : Colors.text.primary}
+        color={isActive ? colors.icon.muted : colors.text.primary}
       />
     </TouchableOpacity>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 18,
-    paddingHorizontal: 8,
-    width: "100%",
-  },
-  borderBottom: {
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(0,0,0,0.08)",
-  },
-  label: {
-    flex: 1,
-    fontSize: 15,
-    fontWeight: "500",
-    color: Colors.text.primary,
-  },
-  labelDisabled: {
-    color: Colors.icon.muted,
-    fontWeight: "400",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingVertical: 18,
+      paddingHorizontal: 8,
+      width: "100%",
+    },
+    borderBottom: {
+      borderBottomWidth: 1,
+      borderBottomColor: "rgba(0,0,0,0.08)",
+    },
+    label: {
+      flex: 1,
+      fontSize: 15,
+      fontWeight: "500",
+      color: c.text.primary,
+    },
+    labelDisabled: {
+      color: c.icon.muted,
+      fontWeight: "400",
+    },
+  });

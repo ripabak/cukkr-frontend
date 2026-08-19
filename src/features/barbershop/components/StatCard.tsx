@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -17,18 +18,20 @@ export function StatCard({
   label,
   value,
   iconName,
-  iconColor = Colors.brand.primary,
+  iconColor,
   style,
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
-    <View style={[styles.card, Neu.raised(Colors.bg.surface), style]}>
+    <View style={[styles.card, Neu.raised(colors.bg.surface), style]}>
       <AppText style={styles.label}>{label}</AppText>
       <View style={styles.valueRow}>
         {iconName && (
           <Ionicons
             name={iconName}
             size={20}
-            color={iconColor}
+            color={iconColor ?? colors.brand.primary}
             style={styles.icon}
           />
         )}
@@ -38,27 +41,28 @@ export function StatCard({
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    borderRadius: 20,
-    padding: 16,
-    flex: 1,
-    gap: 6,
-  },
-  label: {
-    fontSize: 12,
-    color: Colors.icon.muted,
-    fontWeight: "500",
-  },
-  valueRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-  },
-  icon: {},
-  value: {
-    fontSize: 22,
-    fontWeight: "600",
-    color: Colors.text.primary,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    card: {
+      borderRadius: 20,
+      padding: 16,
+      flex: 1,
+      gap: 6,
+    },
+    label: {
+      fontSize: 12,
+      color: c.icon.muted,
+      fontWeight: "500",
+    },
+    valueRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 6,
+    },
+    icon: {},
+    value: {
+      fontSize: 22,
+      fontWeight: "600",
+      color: c.text.primary,
+    },
+  });

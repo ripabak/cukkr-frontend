@@ -1,6 +1,7 @@
-import { Colors } from "@/src/theme/colors";
 import { BookingType } from "@/src/components/BookingCard";
 import { BookingStatus, Status, Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
@@ -32,6 +33,8 @@ export function HistoryBookingRow({
   onPress,
   style,
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const statusStyle = Status.getStyle(status);
   const iconName =
     bookingType === "walk_in"
@@ -44,7 +47,7 @@ export function HistoryBookingRow({
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.85}
-      style={[styles.row, Neu.raised(Colors.bg.surface), style]}
+      style={[styles.row, Neu.raised(colors.bg.surface), style]}
     >
       <View style={[styles.iconCircle, { backgroundColor: statusStyle.surface }]}>
         <Ionicons name={iconName as any} size={20} color={statusStyle.color} />
@@ -54,7 +57,7 @@ export function HistoryBookingRow({
           {dateTimeLabel}
         </AppText>
         <View style={styles.barberRow}>
-          <Ionicons name="cut" size={12} color={Colors.icon.muted} />
+          <Ionicons name="cut" size={12} color={colors.icon.muted} />
           <AppText style={styles.barberName}> {barberName}</AppText>
         </View>
       </View>
@@ -66,7 +69,8 @@ export function HistoryBookingRow({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "center",
@@ -88,7 +92,7 @@ const styles = StyleSheet.create({
   dateTime: {
     fontSize: 13,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   barberRow: {
     flexDirection: "row",
@@ -96,7 +100,7 @@ const styles = StyleSheet.create({
   },
   barberName: {
     fontSize: 12,
-    color: Colors.icon.muted,
+    color: c.icon.muted,
   },
   right: {
     alignItems: "flex-end",
@@ -108,6 +112,6 @@ const styles = StyleSheet.create({
   },
   duration: {
     fontSize: 12,
-    color: Colors.icon.muted,
+    color: c.icon.muted,
   },
-});
+  });

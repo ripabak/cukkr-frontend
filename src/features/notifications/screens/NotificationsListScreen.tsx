@@ -6,7 +6,8 @@ import {
   NotificationType,
 } from "@/src/features/notifications/components/NotificationCard";
 import { pwaNotificationService } from "@/src/services/pwa-notification.service";
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { formatRelativeTime } from "@/src/utils/date";
 import { Ionicons } from "@expo/vector-icons";
@@ -34,6 +35,8 @@ type NotifItem = NonNullable<
 export function NotificationsListScreen() {
   const router = useRouter();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { data, isLoading, isError } = useNotificationsList();
   const acceptMutation = useAcceptNotification();
   const declineMutation = useDeclineNotification();
@@ -107,7 +110,7 @@ export function NotificationsListScreen() {
           <Ionicons
             name="notifications-off-outline"
             size={48}
-            color={Colors.icon.muted}
+            color={colors.icon.muted}
           />
           <AppText style={styles.emptyTitle}>{t("notifications.empty")}</AppText>
           <AppText style={styles.emptySubtitle}>{t("components.emptyState.defaultMessage")}</AppText>
@@ -179,7 +182,8 @@ export function NotificationsListScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   content: {
     flexGrow: 1,
     paddingTop: 8,
@@ -199,16 +203,16 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   errorText: {
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     fontSize: 14,
   },
   emptyTitle: {
     fontSize: 16,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   emptySubtitle: {
     fontSize: 13,
-    color: Colors.text.muted,
+    color: c.text.muted,
   },
-});
+  });

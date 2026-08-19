@@ -1,4 +1,5 @@
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { EditFieldHeader } from "@/src/components/EditFieldHeader";
 import { HelperCopy } from "@/src/components/HelperCopy";
 import { MultilineInputField } from "@/src/components/MultilineInputField";
@@ -63,6 +64,8 @@ export function EditBarbershopInfoScreen() {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const params = useLocalSearchParams<{ mode?: string }>();
   const mode: Mode =
     params.mode === "name" ||
@@ -161,27 +164,28 @@ export function EditBarbershopInfoScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  content: {
-    paddingTop: 24,
-    paddingBottom: 200,
-  },
-  loader: {
-    marginTop: 20,
-  },
-  helper: {
-    marginTop: 16,
-  },
-  viewOnlyBanner: {
-    marginTop: 24,
-    padding: 12,
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  viewOnlyText: {
-    fontSize: 13,
-    color: Colors.text.muted,
-    textAlign: "center",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    content: {
+      paddingTop: 24,
+      paddingBottom: 200,
+    },
+    loader: {
+      marginTop: 20,
+    },
+    helper: {
+      marginTop: 16,
+    },
+    viewOnlyBanner: {
+      marginTop: 24,
+      padding: 12,
+      backgroundColor: c.bg.surface,
+      borderRadius: 8,
+      alignItems: "center",
+    },
+    viewOnlyText: {
+      fontSize: 13,
+      color: c.text.muted,
+      textAlign: "center",
+    },
+  });

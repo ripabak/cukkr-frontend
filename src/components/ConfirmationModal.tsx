@@ -2,7 +2,8 @@ import { AppText } from "@/src/components/AppText";
 import { BottomSheet } from "@/src/components/BottomSheet";
 import { useFrame } from "@/src/components/FrameContext";
 import { SoftPressable } from "@/src/components/SoftPressable";
-import { Colors } from "@/src/theme/colors";
+import { useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import { haptics } from "@/src/utils/haptics";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
@@ -34,6 +35,8 @@ export function ConfirmationModal({
   onCancel,
 }: Props) {
   const { frameWidth } = useFrame();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const hasBoth = !!confirmLabel && !!cancelLabel;
 
   const handleDismiss = () => {
@@ -53,7 +56,7 @@ export function ConfirmationModal({
             <Ionicons
               name={icon as React.ComponentProps<typeof Ionicons>["name"]}
               size={26}
-              color={Colors.brand.primary}
+              color={colors.brand.primary}
             />
           </View>
         ) : null}
@@ -94,71 +97,72 @@ export function ConfirmationModal({
   );
 }
 
-const styles = StyleSheet.create({
-  content: {
-    alignSelf: "center",
-    width: "100%",
-    alignItems: "center",
-    paddingTop: 6,
-  },
-  iconWrapper: {
-    width: 56,
-    height: 56,
-    borderRadius: 18,
-    backgroundColor: Colors.brand.primarySurface,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 19,
-    fontWeight: "600",
-    textAlign: "center",
-    color: Colors.text.primary,
-    letterSpacing: -0.3,
-  },
-  description: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    textAlign: "center",
-    marginTop: 8,
-    lineHeight: 20,
-    maxWidth: 300,
-  },
-  buttons: {
-    marginTop: 24,
-    gap: 12,
-    width: "100%",
-  },
-  buttonsStack: {
-    marginBottom: 4,
-  },
-  btn: {
-    height: 54,
-    width: "100%",
-  },
-  btnPrimary: {
-    backgroundColor: Colors.brand.primary,
-    borderRadius: 18,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  btnPrimaryLabel: {
-    color: Colors.text.primary,
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  btnSecondary: {
-    backgroundColor: Colors.bg.surface,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
-    borderRadius: 18,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  btnSecondaryLabel: {
-    color: Colors.text.primary,
-    fontSize: 16,
-    fontWeight: "500",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    content: {
+      alignSelf: "center",
+      width: "100%",
+      alignItems: "center",
+      paddingTop: 6,
+    },
+    iconWrapper: {
+      width: 56,
+      height: 56,
+      borderRadius: 18,
+      backgroundColor: c.brand.primarySurface,
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 16,
+    },
+    title: {
+      fontSize: 19,
+      fontWeight: "600",
+      textAlign: "center",
+      color: c.text.primary,
+      letterSpacing: -0.3,
+    },
+    description: {
+      fontSize: 14,
+      color: c.text.secondary,
+      textAlign: "center",
+      marginTop: 8,
+      lineHeight: 20,
+      maxWidth: 300,
+    },
+    buttons: {
+      marginTop: 24,
+      gap: 12,
+      width: "100%",
+    },
+    buttonsStack: {
+      marginBottom: 4,
+    },
+    btn: {
+      height: 54,
+      width: "100%",
+    },
+    btnPrimary: {
+      backgroundColor: c.brand.primary,
+      borderRadius: 18,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    btnPrimaryLabel: {
+      color: c.text.primary,
+      fontSize: 16,
+      fontWeight: "600",
+    },
+    btnSecondary: {
+      backgroundColor: c.bg.surface,
+      borderWidth: 1,
+      borderColor: c.border.default,
+      borderRadius: 18,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    btnSecondaryLabel: {
+      color: c.text.primary,
+      fontSize: 16,
+      fontWeight: "500",
+    },
+  });

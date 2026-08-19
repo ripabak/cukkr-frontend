@@ -5,7 +5,8 @@ import { TextInputField } from "@/src/components/TextInputField";
 import { useChangePassword } from "@/src/features/auth/hooks";
 import { useToast } from "@/src/lib/providers/toast";
 import { useI18nContext } from "@/src/lib/i18n/provider";
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useGlobalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -30,6 +31,8 @@ export function EditUserProfileFieldsScreen() {
   const toast = useToast();
   const insets = useSafeAreaInsets();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const rawMode = useGlobalSearchParams().mode;
   const modeStr = Array.isArray(rawMode) ? rawMode[0] : rawMode;
   const mode: EditMode = (modeStr as EditMode) ?? "name";
@@ -151,7 +154,7 @@ export function EditUserProfileFieldsScreen() {
                 <Ionicons
                   name={showCurrentPw ? "eye-off-outline" : "eye-outline"}
                   size={20}
-                  color={Colors.icon.muted}
+                  color={colors.icon.muted}
                 />
               </TouchableOpacity>
             </View>
@@ -179,7 +182,7 @@ export function EditUserProfileFieldsScreen() {
                 <Ionicons
                   name={showNewPw ? "eye-off-outline" : "eye-outline"}
                   size={20}
-                  color={Colors.icon.muted}
+                  color={colors.icon.muted}
                 />
               </TouchableOpacity>
             </View>
@@ -199,7 +202,7 @@ export function EditUserProfileFieldsScreen() {
         </ScrollView>
         {changingPassword && (
           <View style={styles.savingOverlay}>
-            <ActivityIndicator size="small" color={Colors.text.primary} />
+            <ActivityIndicator size="small" color={colors.text.primary} />
           </View>
         )}
       </View>
@@ -259,17 +262,18 @@ export function EditUserProfileFieldsScreen() {
       </ScrollView>
       {savingProfile && (
         <View style={styles.savingOverlay}>
-          <ActivityIndicator size="small" color={Colors.text.primary} />
+          <ActivityIndicator size="small" color={colors.text.primary} />
         </View>
       )}
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
   },
   skLoading: {
     flex: 1,
@@ -290,13 +294,13 @@ const styles = StyleSheet.create({
     bottom: 20,
     right: 20,
     padding: 12,
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
     borderRadius: 8,
     opacity: 0.8,
   },
   fieldLabel: {
     fontSize: 13,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     marginBottom: 6,
   },
   passwordInputRow: {
@@ -314,12 +318,12 @@ const styles = StyleSheet.create({
   },
   forgotText: {
     fontSize: 13,
-    color: Colors.brand.primary,
+    color: c.brand.primary,
     fontWeight: "500",
   },
   errorText: {
     fontSize: 12,
-    color: Colors.status.danger,
+    color: c.status.danger,
     marginTop: 6,
   },
-});
+  });

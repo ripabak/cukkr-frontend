@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { getStatusColor, getStatusSurface, Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { AppText } from "@/src/components/AppText";
 import {
@@ -24,6 +25,8 @@ interface Props {
 }
 
 export function ActivityCard({ item, style, onPress }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const accentColor =
     item.type === "in_progress"
       ? getStatusColor("in_progress")
@@ -36,7 +39,7 @@ export function ActivityCard({ item, style, onPress }: Props) {
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={onPress ? 0.85 : 1}
-      style={[styles.container, Neu.soft(Colors.bg.surface), style]}
+      style={[styles.container, Neu.soft(colors.bg.surface), style]}
     >
       <View style={[styles.circle, { backgroundColor: surface }]}>
         <Ionicons name="people" size={22} color={accentColor} />
@@ -45,12 +48,12 @@ export function ActivityCard({ item, style, onPress }: Props) {
       {item.name ? (
         <View style={styles.rightStack}>
           <AppText style={[styles.name, { color: accentColor }]}>{item.name}</AppText>
-          <AppText style={[styles.duration, { color: Colors.text.secondary }]}>
+          <AppText style={[styles.duration, { color: colors.text.secondary }]}>
             {item.duration}
           </AppText>
         </View>
       ) : (
-        <AppText style={[styles.duration, { color: Colors.text.secondary }]}>
+        <AppText style={[styles.duration, { color: colors.text.secondary }]}>
           {item.duration}
         </AppText>
       )}
@@ -58,7 +61,8 @@ export function ActivityCard({ item, style, onPress }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   container: {
     borderRadius: 50,
     padding: 12,
@@ -90,4 +94,4 @@ const styles = StyleSheet.create({
   duration: {
     fontSize: 12,
   },
-});
+  });

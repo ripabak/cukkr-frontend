@@ -1,6 +1,6 @@
 import { useI18nContext } from "@/src/lib/i18n/provider";
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import React from "react";
 import { View, Image, StyleSheet, ViewStyle } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -39,18 +39,20 @@ export function ServiceCard({
   style,
 }: Props) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const finalPrice = discountPercent
     ? Math.round(price * (1 - discountPercent / 100))
     : price;
 
   return (
-    <View style={[styles.card, Neu.raised(Colors.bg.surface), style]}>
+    <View style={[styles.card, Neu.raised(colors.bg.surface), style]}>
       <View style={styles.imagePlaceholder}>
         {imageUri ? (
           <Image source={{ uri: imageUri }} style={styles.image} />
         ) : (
-          <View style={[styles.imageEmpty, Neu.inset(Colors.bg.surface, 0.6)]}>
-            <Ionicons name="cut-outline" size={24} color={Colors.icon.muted} />
+          <View style={[styles.imageEmpty, Neu.inset(colors.bg.surface, 0.6)]}>
+            <Ionicons name="cut-outline" size={24} color={colors.icon.muted} />
           </View>
         )}
       </View>
@@ -60,7 +62,7 @@ export function ServiceCard({
         </AppText>
         {discountPercent ? (
           <View style={styles.discountRow}>
-            <View style={[styles.discountBadge, Neu.soft(Colors.brand.primarySurface)]}>
+            <View style={[styles.discountBadge, Neu.soft(colors.brand.primarySurface)]}>
               <AppText style={styles.discountText}>{t("services.percentOff", { percent: String(discountPercent) })}</AppText>
             </View>
             <AppText style={styles.originalPrice}>{formatPrice(price)}</AppText>
@@ -84,72 +86,73 @@ export function ServiceCard({
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    borderRadius: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    gap: 12,
-  },
-  imagePlaceholder: {
-    width: 56,
-    height: 56,
-    borderRadius: 14,
-    overflow: "hidden",
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  imageEmpty: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 14,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  info: {
-    flex: 1,
-    gap: 2,
-  },
-  name: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: Colors.text.primary,
-  },
-  discountRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-  },
-  discountBadge: {
-    borderRadius: 6,
-    paddingHorizontal: 5,
-    paddingVertical: 2,
-  },
-  discountText: {
-    color: Colors.brand.primaryDark,
-    fontSize: 10,
-    fontWeight: "600",
-  },
-  originalPrice: {
-    fontSize: 12,
-    color: Colors.text.secondary,
-    textDecorationLine: "line-through",
-  },
-  finalPrice: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: Colors.text.primary,
-  },
-  right: {
-    alignItems: "flex-end",
-    gap: 8,
-  },
-  defaultBadge: {
-    marginBottom: 4,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    card: {
+      borderRadius: 20,
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+      gap: 12,
+    },
+    imagePlaceholder: {
+      width: 56,
+      height: 56,
+      borderRadius: 14,
+      overflow: "hidden",
+    },
+    image: {
+      width: "100%",
+      height: "100%",
+      resizeMode: "cover",
+    },
+    imageEmpty: {
+      width: "100%",
+      height: "100%",
+      borderRadius: 14,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    info: {
+      flex: 1,
+      gap: 2,
+    },
+    name: {
+      fontSize: 15,
+      fontWeight: "600",
+      color: c.text.primary,
+    },
+    discountRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 6,
+    },
+    discountBadge: {
+      borderRadius: 6,
+      paddingHorizontal: 5,
+      paddingVertical: 2,
+    },
+    discountText: {
+      color: c.brand.primaryDark,
+      fontSize: 10,
+      fontWeight: "600",
+    },
+    originalPrice: {
+      fontSize: 12,
+      color: c.text.secondary,
+      textDecorationLine: "line-through",
+    },
+    finalPrice: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: c.text.primary,
+    },
+    right: {
+      alignItems: "flex-end",
+      gap: 8,
+    },
+    defaultBadge: {
+      marginBottom: 4,
+    },
+  });

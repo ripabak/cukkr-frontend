@@ -2,7 +2,8 @@ import { AppText } from "@/src/components/AppText";
 import { BottomSheet } from "@/src/components/BottomSheet";
 import { MultilineInputField } from "@/src/components/MultilineInputField";
 import { SoftPressable } from "@/src/components/SoftPressable";
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { haptics } from "@/src/utils/haptics";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useFrame } from "@/src/components/FrameContext";
@@ -24,6 +25,8 @@ export function DeclineReasonModal({
 }: Props) {
   const { t } = useI18nContext();
   const { frameWidth } = useFrame();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [reason, setReason] = useState("");
 
   const handleSend = () => {
@@ -81,7 +84,8 @@ export function DeclineReasonModal({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   body: {
     alignSelf: "center",
     width: "100%",
@@ -100,15 +104,15 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   btnPrimary: {
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
     borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
   },
   btnSecondary: {
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
     borderWidth: 1,
-    borderColor: Colors.border.default,
+    borderColor: c.border.default,
     borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
@@ -117,13 +121,13 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   btnPrimaryLabel: {
-    color: Colors.text.primary,
+    color: c.text.primary,
     fontSize: 16,
     fontWeight: "600",
   },
   btnSecondaryLabel: {
-    color: Colors.text.primary,
+    color: c.text.primary,
     fontSize: 16,
     fontWeight: "500",
   },
-});
+  });

@@ -1,14 +1,14 @@
-import { Colors } from "@/src/theme/colors";
+import type { ThemeColors } from "@/src/theme/ThemeContext";
 
-export const OnboardingTheme = {
+export const buildOnboardingTheme = (c: ThemeColors) => ({
   colors: {
-    primary: Colors.brand.primary,
-    primaryDark: Colors.brand.primaryDark,
-    dark: Colors.text.primary,
-    white: Colors.bg.default,
-    lightBg: Colors.bg.surface,
-    textDark: Colors.text.primary,
-    textGray: Colors.text.secondary,
+    primary: c.brand.primary,
+    primaryDark: c.brand.primaryDark,
+    dark: c.text.primary,
+    white: c.bg.default,
+    lightBg: c.bg.surface,
+    textDark: c.text.primary,
+    textGray: c.text.secondary,
   },
   spacing: {
     xs: 8,
@@ -51,6 +51,6 @@ export const OnboardingTheme = {
     xl: 24,
     full: 999,
   },
-};
+});
 
-export default OnboardingTheme;
+export type OnboardingTheme = ReturnType<typeof buildOnboardingTheme>;

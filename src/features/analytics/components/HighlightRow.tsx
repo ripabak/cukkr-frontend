@@ -1,5 +1,5 @@
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import React from "react";
@@ -24,14 +24,16 @@ export function HighlightRow({
   onPress,
   fallbackIcon = "person",
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <TouchableOpacity
-      style={[styles.row, Neu.raised(Colors.bg.surface)]}
+      style={[styles.row, Neu.raised(colors.bg.surface)]}
       onPress={onPress}
       activeOpacity={0.85}
       disabled={!onPress}
     >
-      <View style={[styles.avatar, Neu.inset(Colors.bg.surface, 0.6)]}>
+      <View style={[styles.avatar, Neu.inset(colors.bg.surface, 0.6)]}>
         {imageUrl ? (
           <Image
             source={{ uri: imageUrl }}
@@ -43,7 +45,7 @@ export function HighlightRow({
             <Ionicons
               name={fallbackIcon}
               size={20}
-              color={Colors.brand.primary}
+              color={colors.brand.primary}
             />
           </View>
         )}
@@ -63,57 +65,58 @@ export function HighlightRow({
   );
 }
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 20,
-    padding: 16,
-    gap: 14,
-    marginBottom: 12,
-  },
-  avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    overflow: "hidden",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  avatarImg: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-  },
-  avatarPlaceholder: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  info: {
-    flex: 1,
-    gap: 2,
-  },
-  name: {
-    fontSize: 15,
-    fontWeight: "500",
-    color: Colors.text.primary,
-  },
-  subtitle: {
-    fontSize: 13,
-    color: Colors.text.secondary,
-    fontWeight: "400",
-  },
-  revenueBadge: {
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-  },
-  revenueText: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: Colors.text.primary,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    row: {
+      flexDirection: "row",
+      alignItems: "center",
+      borderRadius: 20,
+      padding: 16,
+      gap: 14,
+      marginBottom: 12,
+    },
+    avatar: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      overflow: "hidden",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    avatarImg: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+    },
+    avatarPlaceholder: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    info: {
+      flex: 1,
+      gap: 2,
+    },
+    name: {
+      fontSize: 15,
+      fontWeight: "500",
+      color: c.text.primary,
+    },
+    subtitle: {
+      fontSize: 13,
+      color: c.text.secondary,
+      fontWeight: "400",
+    },
+    revenueBadge: {
+      borderRadius: 12,
+      paddingHorizontal: 14,
+      paddingVertical: 8,
+    },
+    revenueText: {
+      fontSize: 13,
+      fontWeight: "600",
+      color: c.text.primary,
+    },
+  });

@@ -6,7 +6,8 @@ import {
   formatTime12h,
   toApiDate,
 } from "@/src/utils/date";
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useRouter } from "expo-router";
 import React, { useMemo } from "react";
@@ -29,6 +30,8 @@ const NO_BOOKING_PLACEHOLDER = require("@/assets/images/no-booking-placeholder.p
 export function BookingRequestsScreen() {
   const router = useRouter();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const today = new Date();
 
   const dateFrom = toApiDate(today);
@@ -148,10 +151,11 @@ export function BookingRequestsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
   },
   outer: {
     flex: 1,
@@ -170,7 +174,7 @@ const styles = StyleSheet.create({
   dateHeader: {
     fontSize: 15,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
     marginBottom: 12,
   },
   cardMargin: {
@@ -194,15 +198,15 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 18,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
     textAlign: "center",
     marginBottom: 8,
   },
   emptySubtitle: {
     fontSize: 15,
     fontWeight: "400",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     textAlign: "center",
     lineHeight: 22,
   },
-});
+  });

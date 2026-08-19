@@ -15,8 +15,8 @@ import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { Skeleton } from "@/src/components/Skeleton";
 import { useI18nContext } from "@/src/lib/i18n/provider";
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
 import { usePlans, useSubscription, usePayments } from "../hooks";
 import { PAYMENT_GROUPS, PAYMENT_METHODS } from "../methods";
 import { billingService, type PlanDto } from "../services";
@@ -51,6 +51,8 @@ export function BillingScreen() {
   const [payError, setPayError] = useState<{ title: string; body: string } | null>(
     null
   );
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const methods = useMemo(
     () => PAYMENT_METHODS.filter((m) => ENABLED_METHOD_IDS.includes(m.id)),
@@ -121,11 +123,11 @@ export function BillingScreen() {
         headerSlot={
           <ScreenHeader title={t("billing.title")} onBack={() => router.back()} />
         }
-        backgroundColor={Colors.bg.default}
+        backgroundColor={colors.bg.default}
         contentStyle={styles.skeletonContent}
       >
         {/* Current plan banner */}
-        <View style={[styles.currentPlanCard, Neu.soft(Colors.brand.primarySurface)]}>
+        <View style={[styles.currentPlanCard, Neu.soft(colors.brand.primarySurface)]}>
           <View style={styles.currentPlanRow}>
             <Skeleton width={34} height={34} radius={12} />
             <View style={styles.currentPlanText}>
@@ -139,7 +141,7 @@ export function BillingScreen() {
 
         {/* Plan cards */}
         {Array.from({ length: 3 }).map((_, i) => (
-          <View key={i} style={[styles.planCard, Neu.raised(Colors.bg.surface)]}>
+          <View key={i} style={[styles.planCard, Neu.raised(colors.bg.surface)]}>
             <Skeleton width={80} height={11} />
             <Skeleton width={150} height={22} />
             <Skeleton width={110} height={26} />
@@ -156,7 +158,7 @@ export function BillingScreen() {
         headerSlot={
           <ScreenHeader title={t("billing.title")} onBack={() => router.back()} />
         }
-        backgroundColor={Colors.bg.default}
+        backgroundColor={colors.bg.default}
         contentStyle={{ justifyContent: "center", alignItems: "center", gap: 12 }}
       >
         <AppText style={styles.errorText}>{t("billing.loadFailed")}</AppText>
@@ -169,15 +171,15 @@ export function BillingScreen() {
       headerSlot={
         <ScreenHeader title={t("billing.title")} onBack={() => router.back()} />
       }
-      backgroundColor={Colors.bg.default}
+      backgroundColor={colors.bg.default}
       contentStyle={{ paddingTop: 20, gap: 12 }}
     >
       {/* Current plan banner — from the live subscription, not hardcoded */}
       {activePlan ? (
-        <View style={[styles.currentPlanCard, Neu.soft(Colors.brand.primarySurface)]}>
+        <View style={[styles.currentPlanCard, Neu.soft(colors.brand.primarySurface)]}>
           <View style={styles.currentPlanRow}>
             <View style={styles.currentPlanIcon}>
-              <Ionicons name="sparkles" size={16} color={Colors.brand.primary} />
+              <Ionicons name="sparkles" size={16} color={colors.brand.primary} />
             </View>
             <View style={styles.currentPlanText}>
               <AppText style={styles.currentPlanLabel}>
@@ -205,7 +207,7 @@ export function BillingScreen() {
             return (
               <View
                 key={p.id}
-                style={[styles.pendingCard, Neu.raised(Colors.bg.surface)]}
+                style={[styles.pendingCard, Neu.raised(colors.bg.surface)]}
               >
                 <View style={styles.pendingRow}>
                   <View style={styles.pendingInfo}>
@@ -249,7 +251,7 @@ export function BillingScreen() {
             }}
             style={[
               styles.planCard,
-              Neu.raised(Colors.bg.surface),
+              Neu.raised(colors.bg.surface),
               selected && styles.planCardSelected,
               isCurrent && styles.planCardDisabled,
             ]}
@@ -287,7 +289,7 @@ export function BillingScreen() {
                 </View>
               ) : (
                 <View style={styles.radio}>
-                  <Ionicons name="checkmark" size={14} color={Colors.brand.primary} />
+                  <Ionicons name="checkmark" size={14} color={colors.brand.primary} />
                 </View>
               )}
             </View>
@@ -298,7 +300,7 @@ export function BillingScreen() {
                 <AppText style={styles.featuresLabel}>{t("billing.planFeatures")}</AppText>
                 {plan.features.map((key) => (
                   <View key={key} style={styles.featureRow}>
-                    <Ionicons name="checkmark-circle" size={16} color={Colors.brand.primary} />
+                    <Ionicons name="checkmark-circle" size={16} color={colors.brand.primary} />
                     <AppText style={styles.featureText}>{featureLabel(key)}</AppText>
                   </View>
                 ))}
@@ -310,7 +312,7 @@ export function BillingScreen() {
 
       {/* Plan enterprise — tidak bisa bayar langsung, hubungi tim Cukkr */}
       {isContactPlan && selectedPlan ? (
-        <View style={[styles.contactCard, Neu.raised(Colors.bg.surface)]}>
+        <View style={[styles.contactCard, Neu.raised(colors.bg.surface)]}>
           <AppText style={styles.contactTitle}>
             {t("billing.contactPlanTitle")}
           </AppText>
@@ -353,7 +355,7 @@ export function BillingScreen() {
                         onPress={() => setMethodId(m.id)}
                         style={[
                           styles.methodCard,
-                          Neu.raised(Colors.bg.surface),
+                          Neu.raised(colors.bg.surface),
                           active && styles.methodCardActive,
                         ]}
                       >
@@ -371,7 +373,7 @@ export function BillingScreen() {
           ))}
 
           {/* Order summary */}
-          <View style={[styles.summaryCard, Neu.raised(Colors.bg.surface)]}>
+          <View style={[styles.summaryCard, Neu.raised(colors.bg.surface)]}>
             <View style={styles.summaryRow}>
               <AppText style={styles.summaryLabel}>Cukkr {selectedPlan.name}</AppText>
               <AppText style={styles.summaryValue}>
@@ -430,7 +432,8 @@ export function BillingScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   currentPlanCard: {
     borderRadius: 20,
     padding: 16,
@@ -444,7 +447,7 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     borderRadius: 12,
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -453,16 +456,16 @@ const styles = StyleSheet.create({
   },
   currentPlanLabel: {
     fontSize: 12,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   currentPlanName: {
     fontSize: 18,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   currentPlanExpiry: {
     fontSize: 12,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     marginTop: 2,
   },
   pendingCard: {
@@ -482,22 +485,22 @@ const styles = StyleSheet.create({
   pendingPlan: {
     fontSize: 15,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   pendingMeta: {
     fontSize: 12,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   pendingButton: {
     paddingHorizontal: 14,
     paddingVertical: 9,
     borderRadius: 12,
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
   },
   pendingButtonText: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   contactCard: {
     borderRadius: 16,
@@ -507,12 +510,12 @@ const styles = StyleSheet.create({
   contactTitle: {
     fontSize: 15,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   contactBody: {
     fontSize: 13,
     lineHeight: 19,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   contactButton: {
     marginTop: 8,
@@ -520,17 +523,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 12,
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
   },
   contactButtonText: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   sectionLabel: {
     fontSize: 13,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     marginTop: 4,
     letterSpacing: 0.5,
   },
@@ -541,7 +544,7 @@ const styles = StyleSheet.create({
   },
   planCardSelected: {
     borderWidth: 2,
-    borderColor: Colors.brand.primary,
+    borderColor: c.brand.primary,
     padding: 16,
   },
   planCardDisabled: {
@@ -558,12 +561,12 @@ const styles = StyleSheet.create({
   planBadge: {
     fontSize: 11,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     textTransform: "uppercase",
     letterSpacing: 0.8,
   },
   planBadgeSelected: {
-    color: Colors.brand.text,
+    color: c.brand.text,
   },
   planNameRow: {
     flexDirection: "row",
@@ -573,26 +576,26 @@ const styles = StyleSheet.create({
   planName: {
     fontSize: 20,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   currentBadge: {
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 999,
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
   },
   popularBadge: {
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
   },
   currentBadgeText: {
     fontSize: 10,
     fontWeight: "600",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     textTransform: "uppercase",
     letterSpacing: 0.5,
   },
   popularBadgeText: {
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   priceRow: {
     flexDirection: "row",
@@ -602,15 +605,15 @@ const styles = StyleSheet.create({
   planPrice: {
     fontSize: 26,
     fontWeight: "700",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   planMonthly: {
     fontSize: 13,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   planDesc: {
     fontSize: 13,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     lineHeight: 19,
   },
   radio: {
@@ -618,30 +621,30 @@ const styles = StyleSheet.create({
     height: 22,
     borderRadius: 11,
     borderWidth: 2,
-    borderColor: Colors.border.default,
+    borderColor: c.border.default,
     alignItems: "center",
     justifyContent: "center",
   },
   radioSelected: {
-    borderColor: Colors.brand.primary,
+    borderColor: c.brand.primary,
   },
   radioDot: {
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
   },
   featuresBox: {
     marginTop: 12,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: Colors.border.light,
+    borderTopColor: c.border.light,
     gap: 8,
   },
   featuresLabel: {
     fontSize: 12,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     textTransform: "uppercase",
     letterSpacing: 0.5,
   },
@@ -652,12 +655,12 @@ const styles = StyleSheet.create({
   },
   featureText: {
     fontSize: 13,
-    color: Colors.text.primary,
+    color: c.text.primary,
     flex: 1,
   },
   paymentNote: {
     fontSize: 12,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     marginTop: -6,
   },
   methodGroup: {
@@ -666,7 +669,7 @@ const styles = StyleSheet.create({
   methodGroupLabel: {
     fontSize: 12,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     textTransform: "uppercase",
     letterSpacing: 0.5,
   },
@@ -688,17 +691,17 @@ const styles = StyleSheet.create({
   },
   methodCardActive: {
     borderWidth: 2,
-    borderColor: Colors.brand.primary,
+    borderColor: c.brand.primary,
     paddingHorizontal: 12,
     paddingVertical: 10,
   },
   methodName: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   methodNameActive: {
-    color: Colors.brand.text,
+    color: c.brand.text,
   },
   summaryCard: {
     borderRadius: 20,
@@ -713,46 +716,46 @@ const styles = StyleSheet.create({
   },
   summaryLabel: {
     fontSize: 14,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   summaryValue: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   summaryMonthly: {
     fontSize: 11,
     fontWeight: "400",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   summaryTotalRow: {
     borderTopWidth: 1,
-    borderTopColor: Colors.border.light,
+    borderTopColor: c.border.light,
     paddingTop: 10,
   },
   summaryTotalLabel: {
     fontSize: 15,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   summaryTotalValue: {
     fontSize: 20,
     fontWeight: "700",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   taxNote: {
     fontSize: 11,
-    color: Colors.text.muted,
+    color: c.text.muted,
   },
   planNote: {
     fontSize: 12,
-    color: Colors.text.muted,
+    color: c.text.muted,
     textAlign: "center",
     paddingHorizontal: 16,
   },
   errorText: {
     fontSize: 16,
-    color: Colors.status.danger,
+    color: c.status.danger,
     textAlign: "center",
   },
   skeletonContent: {
@@ -765,4 +768,4 @@ const styles = StyleSheet.create({
   skeletonSectionLabel: {
     marginTop: 4,
   },
-});
+  });

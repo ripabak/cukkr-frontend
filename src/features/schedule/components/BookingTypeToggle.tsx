@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
@@ -12,8 +13,10 @@ interface Props {
 }
 
 export function BookingTypeToggle({ value, onChange }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
-    <View style={[styles.container, Neu.inset(Colors.bg.surface, 0.6)]}>
+    <View style={[styles.container, Neu.inset(colors.bg.surface, 0.6)]}>
       <TouchableOpacity
         onPress={() => onChange("appointment")}
         activeOpacity={0.85}
@@ -26,7 +29,7 @@ export function BookingTypeToggle({ value, onChange }: Props) {
           name="calendar-outline"
           size={20}
           color={
-            value === "appointment" ? Colors.text.primary : Colors.icon.muted
+            value === "appointment" ? colors.text.primary : colors.icon.muted
           }
         />
       </TouchableOpacity>
@@ -41,14 +44,15 @@ export function BookingTypeToggle({ value, onChange }: Props) {
         <Ionicons
           name="walk"
           size={20}
-          color={value === "walkin" ? Colors.text.primary : Colors.icon.muted}
+          color={value === "walkin" ? colors.text.primary : colors.icon.muted}
         />
       </TouchableOpacity>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   container: {
     flexDirection: "row",
     gap: 4,
@@ -62,4 +66,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-});
+  });

@@ -1,5 +1,5 @@
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import { AppText } from "@/src/components/AppText";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useRef, useState } from "react";
@@ -60,6 +60,8 @@ export function FilterPicker({
   } | null>(null);
   const wrapperRef = useRef<View>(null);
   const { width: windowWidth } = useWindowDimensions();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const currentColor = options.find((o) => o.value === selected)?.color;
 
@@ -86,7 +88,7 @@ export function FilterPicker({
         <TouchableOpacity
           onPress={handleToggle}
           activeOpacity={0.85}
-          style={[styles.pill, Neu.soft(Colors.bg.surface), pillStyle]}
+          style={[styles.pill, Neu.soft(colors.bg.surface), pillStyle]}
         >
           <AppText
             style={[
@@ -100,7 +102,7 @@ export function FilterPicker({
           <Ionicons
             name={open ? "chevron-up" : "chevron-down"}
             size={14}
-            color={Colors.text.primary}
+            color={colors.text.primary}
           />
         </TouchableOpacity>
       )}
@@ -116,7 +118,7 @@ export function FilterPicker({
           <View
             style={[
               styles.dropdown,
-              Neu.float(Colors.bg.surface, 1.2),
+              Neu.float(colors.bg.surface, 1.2),
               {
                 top: anchor.y + anchor.height + 6,
                 right: Math.max(12, windowWidth - (anchor.x + anchor.width)),
@@ -151,51 +153,52 @@ export function FilterPicker({
   );
 }
 
-const styles = StyleSheet.create({
-  wrapper: {
-    position: "relative",
-    zIndex: 999,
-  },
-  pill: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    gap: 6,
-  },
-  pillLabel: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: Colors.text.primary,
-  },
-  backdrop: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  dropdown: {
-    position: "absolute",
-    borderRadius: 16,
-    minWidth: 160,
-    overflow: "hidden",
-  },
-  item: {
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  itemBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border.light,
-  },
-  itemText: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: Colors.text.primary,
-  },
-  itemTextBold: {
-    fontWeight: "600",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    wrapper: {
+      position: "relative",
+      zIndex: 999,
+    },
+    pill: {
+      flexDirection: "row",
+      alignItems: "center",
+      borderRadius: 999,
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+      gap: 6,
+    },
+    pillLabel: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: c.text.primary,
+    },
+    backdrop: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+    },
+    dropdown: {
+      position: "absolute",
+      borderRadius: 16,
+      minWidth: 160,
+      overflow: "hidden",
+    },
+    item: {
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+    },
+    itemBorder: {
+      borderBottomWidth: 1,
+      borderBottomColor: c.border.light,
+    },
+    itemText: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: c.text.primary,
+    },
+    itemTextBold: {
+      fontWeight: "600",
+    },
+  });

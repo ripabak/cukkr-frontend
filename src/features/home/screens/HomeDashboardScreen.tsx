@@ -25,7 +25,8 @@ import { usePwaTheme } from "@/src/hooks/usePwaTheme";
 import { authClient } from "@/src/lib/auth-client";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { haptics } from "@/src/utils/haptics";
 import { formatDateShort, formatTime12h, parseTime24, toApiDate } from "@/src/utils/date";
 import { formatTimeRange } from "@/src/utils/time-format";
@@ -65,10 +66,7 @@ const QUICK_ICONS = {
 // Same empty-state illustration as the Schedule / Booking Management page.
 const NO_BOOKING_PLACEHOLDER = require("@/assets/images/no-booking-placeholder.png");
 
-// One uniform background for all quick-action icon tiles.
-const QUICK_ICON_BG = Colors.bg.cream;
-
-function getSummaryItems(t: (key: string) => string): {
+function getSummaryItems(t: (key: string) => string, c: ThemeColors): {
   key: string;
   label: string;
   icon: React.ComponentProps<typeof Ionicons>["name"];
@@ -80,29 +78,29 @@ function getSummaryItems(t: (key: string) => string): {
       key: "walkIn",
       label: t("home.walkInShort"),
       icon: "walk",
-      tint: Colors.brand.primary,
-      surface: Colors.brand.primarySurface,
+      tint: c.brand.primary,
+      surface: c.brand.primarySurface,
     },
     {
       key: "appointment",
       label: t("home.appointShort"),
       icon: "calendar",
-      tint: Colors.brand.primary,
-      surface: Colors.brand.primarySurface,
+      tint: c.brand.primary,
+      surface: c.brand.primarySurface,
     },
     {
       key: "waiting",
       label: t("home.waiting"),
       icon: "time",
-      tint: Colors.brand.primary,
-      surface: Colors.brand.primarySurface,
+      tint: c.brand.primary,
+      surface: c.brand.primarySurface,
     },
     {
       key: "inProgress",
       label: t("home.inProgress"),
       icon: "cut",
-      tint: Colors.brand.primary,
-      surface: Colors.brand.primarySurface,
+      tint: c.brand.primary,
+      surface: c.brand.primarySurface,
     },
   ];
 }
@@ -123,6 +121,8 @@ export function HomeDashboardScreen() {
   const insets = useSafeAreaInsets();
   const today = toApiDate(new Date());
   const toast = useToast();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const queryClient = useQueryClient();
   const { data: barbershop } = useBarbershopCurrent();
@@ -151,7 +151,7 @@ export function HomeDashboardScreen() {
   const [notifConsentVisible, setNotifConsentVisible] = useState(false);
 
   // Keep the PWA status bar / browser chrome tinted with the app background.
-  usePwaTheme({ color: Colors.bg.default });
+  usePwaTheme({ color: colors.bg.default });
 
   // Silently renew push subscription on mount if permission was already granted
   useEffect(() => {
@@ -469,7 +469,7 @@ export function HomeDashboardScreen() {
                 <>
               {TODAY_LAYOUT === 1 && (
                 <View style={styles.statBar}>
-                  {getSummaryItems(t).map((item) => (
+                  {getSummaryItems(t, colors).map((item) => (
                     <TouchableOpacity
                       key={item.key}
                       style={styles.statBarCol}
@@ -500,7 +500,7 @@ export function HomeDashboardScreen() {
 
               {TODAY_LAYOUT === 2 && (
                 <View style={styles.todayGrid}>
-                  {getSummaryItems(t).map((item) => (
+                  {getSummaryItems(t, colors).map((item) => (
                     <TouchableOpacity
                       key={item.key}
                       style={styles.statTile}
@@ -535,7 +535,7 @@ export function HomeDashboardScreen() {
                     </AppText>
                   </View>
                   <View style={styles.todayStats}>
-                    {getSummaryItems(t).map((item) => (
+                    {getSummaryItems(t, colors).map((item) => (
                       <TouchableOpacity
                         key={item.key}
                         style={styles.statTile}
@@ -575,7 +575,7 @@ export function HomeDashboardScreen() {
               <View style={styles.pinHeader}>
                 <View style={styles.pinTitleGroup}>
                   <View style={styles.pinChip}>
-                    <Ionicons name="walk" size={20} color={Colors.brand.primary} />
+                    <Ionicons name="walk" size={20} color={colors.brand.primary} />
                   </View>
                   <View>
                     <AppText style={styles.pinLabel}>{t("home.walkinPin")}</AppText>
@@ -592,9 +592,9 @@ export function HomeDashboardScreen() {
                     activeOpacity={0.8}
                   >
                     {isGenerating ? (
-                      <ActivityIndicator size="small" color={Colors.text.secondary} />
+                      <ActivityIndicator size="small" color={colors.text.secondary} />
                     ) : (
-                      <Ionicons name="refresh" size={18} color={Colors.text.secondary} />
+                      <Ionicons name="refresh" size={18} color={colors.text.secondary} />
                     )}
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -605,7 +605,7 @@ export function HomeDashboardScreen() {
                     style={styles.pinIconBtn}
                     activeOpacity={0.8}
                   >
-                    <Ionicons name="qr-code-outline" size={18} color={Colors.text.secondary} />
+                    <Ionicons name="qr-code-outline" size={18} color={colors.text.secondary} />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -627,7 +627,7 @@ export function HomeDashboardScreen() {
                     style={styles.pinCopyBtn}
                     activeOpacity={0.8}
                   >
-                    <Ionicons name="copy-outline" size={18} color={Colors.text.primary} />
+                    <Ionicons name="copy-outline" size={18} color={colors.text.primary} />
                     <AppText style={styles.pinCopyLabel}>{t("common.copy")}</AppText>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -636,7 +636,7 @@ export function HomeDashboardScreen() {
                     style={styles.pinCopyBtn}
                     activeOpacity={0.8}
                   >
-                    <Ionicons name="share-outline" size={18} color={Colors.text.primary} />
+                    <Ionicons name="share-outline" size={18} color={colors.text.primary} />
                     <AppText style={styles.pinCopyLabel}>{t("walkIn.share")}</AppText>
                   </TouchableOpacity>
                 </View>
@@ -665,14 +665,14 @@ export function HomeDashboardScreen() {
                       resizeMode="contain"
                     />
                   }
-                  iconBg={QUICK_ICON_BG}
+                  iconBg={colors.bg.cream}
                   onPress={() => setNewBookVisible(true)}
                 />
                 <ShortcutTile
                   label={t("home.requests")}
                   variant="small"
                   badgeCount={requestCount}
-                  dotColor={requestCount > 0 ? Colors.status.danger : undefined}
+                  dotColor={requestCount > 0 ? colors.status.danger : undefined}
                   icon={
                     <Image
                       source={QUICK_ICONS.requests}
@@ -680,7 +680,7 @@ export function HomeDashboardScreen() {
                       resizeMode="contain"
                     />
                   }
-                  iconBg={QUICK_ICON_BG}
+                  iconBg={colors.bg.cream}
                   onPress={() => router.push("/d/booking-requests")}
                 />
                 <ShortcutTile
@@ -693,7 +693,7 @@ export function HomeDashboardScreen() {
                       resizeMode="contain"
                     />
                   }
-                  iconBg={QUICK_ICON_BG}
+                  iconBg={colors.bg.cream}
                   onPress={() => router.push("/d/barbers-management")}
                 />
                 <ShortcutTile
@@ -706,7 +706,7 @@ export function HomeDashboardScreen() {
                       resizeMode="contain"
                     />
                   }
-                  iconBg={QUICK_ICON_BG}
+                  iconBg={colors.bg.cream}
                   onPress={() => router.push("/d/customer-management")}
                 />
                 <ShortcutTile
@@ -719,7 +719,7 @@ export function HomeDashboardScreen() {
                       resizeMode="contain"
                     />
                   }
-                  iconBg={QUICK_ICON_BG}
+                  iconBg={colors.bg.cream}
                   onPress={() => router.push("/d/services-management")}
                 />
                 <ShortcutTile
@@ -732,7 +732,7 @@ export function HomeDashboardScreen() {
                       resizeMode="contain"
                     />
                   }
-                  iconBg={QUICK_ICON_BG}
+                  iconBg={colors.bg.cream}
                   onPress={() => router.push("/d/open-hours")}
                 />
               </Animated.ScrollView>
@@ -844,7 +844,7 @@ export function HomeDashboardScreen() {
               <Ionicons
                 name="chevron-down"
                 size={18}
-                color={Colors.text.secondary}
+                color={colors.text.secondary}
               />
               {otherOrgHasUnread ? <View style={styles.shopDot} /> : null}
             </View>
@@ -897,7 +897,7 @@ export function HomeDashboardScreen() {
             <Ionicons
               name="notifications"
               size={22}
-              color={Colors.text.primary}
+              color={colors.text.primary}
             />
             {(unreadCount ?? 0) > 0 ? <View style={styles.notifDot} /> : null}
           </TouchableOpacity>
@@ -908,7 +908,7 @@ export function HomeDashboardScreen() {
             activeOpacity={0.85}
             onPress={() => router.push("/d/user-profile")}
           >
-            <Ionicons name="person" size={22} color={Colors.brand.primary} />
+            <Ionicons name="person" size={22} color={colors.brand.primary} />
           </TouchableOpacity>
         </View>
 
@@ -995,21 +995,22 @@ export function HomeDashboardScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
   },
 
   scroll: {
     flex: 1,
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
   },
   scrollContent: {
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
   },
   page: {
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
     paddingHorizontal: 20,
     paddingBottom: 20,
   },
@@ -1020,7 +1021,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
     zIndex: 10,
   },
   headerRow: {
@@ -1035,9 +1036,9 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: c.border.light,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -1048,9 +1049,9 @@ const styles = StyleSheet.create({
     gap: 10,
     height: 48,
     justifyContent: "center",
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: c.border.light,
     borderRadius: 24,
     paddingLeft: 14,
     paddingRight: 6,
@@ -1066,20 +1067,20 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: c.border.light,
   },
   shopAvatarFallback: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: Colors.brand.primarySurface,
+    backgroundColor: c.brand.primarySurface,
     alignItems: "center",
     justifyContent: "center",
   },
   shopAvatarInitials: {
     fontSize: 13,
     fontWeight: "700",
-    color: Colors.brand.text,
+    color: c.brand.text,
   },
   shopTextCol: {
     flexShrink: 1,
@@ -1088,13 +1089,13 @@ const styles = StyleSheet.create({
   shopName: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     letterSpacing: -0.2,
   },
   shopRole: {
     fontSize: 12,
     fontWeight: "500",
-    color: Colors.brand.text,
+    color: c.brand.text,
   },
   chevronBtn: {
     width: 32,
@@ -1110,17 +1111,17 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: Colors.status.danger,
+    backgroundColor: c.status.danger,
     borderWidth: 1.5,
-    borderColor: Colors.bg.surface,
+    borderColor: c.bg.surface,
   },
   notifBtn: {
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: c.border.light,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -1131,9 +1132,9 @@ const styles = StyleSheet.create({
     width: 9,
     height: 9,
     borderRadius: 5,
-    backgroundColor: Colors.status.danger,
+    backgroundColor: c.status.danger,
     borderWidth: 1.5,
-    borderColor: Colors.bg.surface,
+    borderColor: c.bg.surface,
   },
 
   /* Open status pill */
@@ -1149,10 +1150,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
   },
   openStripOpen: {
-    backgroundColor: Colors.status.success,
+    backgroundColor: c.status.success,
   },
   openStripClosed: {
-    backgroundColor: Colors.status.danger,
+    backgroundColor: c.status.danger,
   },
   openStripStatus: {
     fontSize: 13,
@@ -1176,9 +1177,9 @@ const styles = StyleSheet.create({
 
   /* Today hero card — asymmetric split */
   todayCard: {
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: c.border.light,
     borderRadius: 24,
     padding: 16,
     shadowColor: "rgba(23, 28, 35, 0.06)",
@@ -1196,12 +1197,12 @@ const styles = StyleSheet.create({
   todayEyebrow: {
     fontSize: 12,
     fontWeight: "600",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     letterSpacing: 0.5,
     textTransform: "uppercase",
   },
   todayDateChip: {
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
     borderRadius: 999,
     paddingHorizontal: 11,
     paddingVertical: 5,
@@ -1209,10 +1210,10 @@ const styles = StyleSheet.create({
   todayDate: {
     fontSize: 12,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   totalBadge: {
-    backgroundColor: Colors.brand.primarySurface,
+    backgroundColor: c.brand.primarySurface,
     borderRadius: 999,
     paddingHorizontal: 11,
     paddingVertical: 4,
@@ -1220,7 +1221,7 @@ const styles = StyleSheet.create({
   totalBadgeText: {
     fontSize: 12,
     fontWeight: "600",
-    color: Colors.brand.primaryDark,
+    color: c.brand.primaryDark,
   },
 
   /* Layout 1 — single-row stat bar (most compact) */
@@ -1232,7 +1233,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     gap: 3,
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
     borderRadius: 16,
     paddingVertical: 12,
     paddingHorizontal: 4,
@@ -1248,14 +1249,14 @@ const styles = StyleSheet.create({
   statBarValue: {
     fontSize: 20,
     fontWeight: "700",
-    color: Colors.text.primary,
+    color: c.text.primary,
     letterSpacing: -0.5,
     lineHeight: 24,
   },
   statBarLabel: {
     fontSize: 10.5,
     fontWeight: "500",
-    color: Colors.text.muted,
+    color: c.text.muted,
     textAlign: "center",
   },
 
@@ -1280,14 +1281,14 @@ const styles = StyleSheet.create({
   todayTotalSmall: {
     fontSize: 32,
     fontWeight: "700",
-    color: Colors.text.primary,
+    color: c.text.primary,
     letterSpacing: -1,
     lineHeight: 36,
   },
   todayCaption: {
     fontSize: 12.5,
     fontWeight: "500",
-    color: Colors.text.muted,
+    color: c.text.muted,
   },
   todayStats: {
     flex: 1.1,
@@ -1299,9 +1300,9 @@ const styles = StyleSheet.create({
   statTile: {
     width: "47%",
     flexGrow: 1,
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: c.border.light,
     borderRadius: 18,
     paddingVertical: 11,
     paddingHorizontal: 10,
@@ -1318,20 +1319,20 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 20,
     fontWeight: "700",
-    color: Colors.text.primary,
+    color: c.text.primary,
     letterSpacing: -0.5,
   },
   statLabel: {
     fontSize: 11,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
 
   /* Walk-in PIN card */
   pinCard: {
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: c.border.light,
     borderRadius: 26,
     padding: 18,
     shadowColor: "rgba(23, 28, 35, 0.06)",
@@ -1355,18 +1356,18 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 13,
-    backgroundColor: Colors.brand.primarySurface,
+    backgroundColor: c.brand.primarySurface,
     alignItems: "center",
     justifyContent: "center",
   },
   pinLabel: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   pinHint: {
     fontSize: 11.5,
-    color: Colors.text.muted,
+    color: c.text.muted,
     marginTop: 1,
   },
   pinActions: {
@@ -1377,9 +1378,9 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 13,
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: c.border.light,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -1392,7 +1393,7 @@ const styles = StyleSheet.create({
   pinValue: {
     fontSize: 38,
     fontWeight: "700",
-    color: Colors.brand.text,
+    color: c.brand.text,
     letterSpacing: 5,
     lineHeight: 48,
     flexShrink: 1,
@@ -1406,9 +1407,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
     borderWidth: 1,
-    borderColor: Colors.border.default,
+    borderColor: c.border.default,
     borderRadius: 14,
     paddingHorizontal: 11,
     paddingVertical: 8,
@@ -1416,7 +1417,7 @@ const styles = StyleSheet.create({
   pinCopyLabel: {
     fontSize: 12,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
 
   /* Quick actions */
@@ -1427,7 +1428,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
     letterSpacing: -0.3,
   },
   quickRow: {
@@ -1454,7 +1455,7 @@ const styles = StyleSheet.create({
   },
   seeAll: {
     fontSize: 13,
-    color: Colors.brand.text,
+    color: c.brand.text,
     fontWeight: "600",
   },
   cardMargin: {
@@ -1462,9 +1463,9 @@ const styles = StyleSheet.create({
   },
   emptyState: {
     alignItems: "center",
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: c.border.light,
     borderRadius: 22,
     paddingVertical: 28,
     paddingHorizontal: 20,
@@ -1478,7 +1479,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 13.5,
-    color: Colors.text.muted,
+    color: c.text.muted,
     textAlign: "center",
   },
 });

@@ -1,7 +1,6 @@
 import { FrameProvider } from "@/src/components/FrameContext";
 import { MobileFrame } from "@/src/components/MobileFrame";
 import { ToastProvider } from "@/src/lib/providers";
-import { Colors } from "@/src/theme/colors";
 import {
   Inter_400Regular,
   Inter_500Medium,
@@ -26,12 +25,12 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useRef } from "react";
 import "react-native-reanimated";
 
-import { useColorScheme } from "@/src/components/useColorScheme";
+import { useTheme } from "@/src/theme/ThemeContext";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function DashboardLayout() {
-  const colorScheme = useColorScheme();
+  const { isDark, colors } = useTheme();
   const [loaded, error] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
@@ -73,7 +72,7 @@ export default function DashboardLayout() {
       <ToastProvider>
         <MobileFrame>
           <ThemeProvider
-            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+            value={isDark ? DarkTheme : DefaultTheme}
           >
             <Stack
               screenOptions={{
@@ -81,7 +80,7 @@ export default function DashboardLayout() {
                 animation: "slide_from_right",
                 animationDuration: 240,
                 gestureEnabled: true,
-                contentStyle: { backgroundColor: Colors.bg.default },
+                contentStyle: { backgroundColor: colors.bg.default },
               }}
             />
           </ThemeProvider>

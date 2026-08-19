@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { BookingCard } from "@/src/components/BookingCard";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import {
@@ -58,6 +59,8 @@ interface Props {
 export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
   const router = useRouter();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { customerId = "" } = useLocalSearchParams<{ customerId?: string }>();
   const [activeTab, setActiveTab] = useState<string>(defaultTab);
   const [filterVisible, setFilterVisible] = useState(false);
@@ -100,10 +103,10 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
       <View style={styles.topBar}>
         <TouchableOpacity
           onPress={() => router.back()}
-          style={[styles.backBtn, Neu.soft(Colors.bg.surface)]}
+          style={[styles.backBtn, Neu.soft(colors.bg.surface)]}
           activeOpacity={0.85}
         >
-          <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
+          <Ionicons name="chevron-back" size={20} color={colors.text.primary} />
         </TouchableOpacity>
         <View style={styles.topBarSpacer} />
         <IconActionButton
@@ -154,14 +157,14 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
               label={t("home.walkIn")}
               value={String(customer.walkInCount)}
               iconName="people"
-              iconColor={Colors.brand.primary}
+              iconColor={colors.brand.primary}
               style={styles.statCard}
             />
             <StatCard
               label={t("home.appointment")}
               value={String(customer.appointmentCount)}
               iconName="calendar"
-              iconColor={Colors.brand.primary}
+              iconColor={colors.brand.primary}
               style={styles.statCard}
             />
           </View>
@@ -182,18 +185,18 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
               <AppText style={styles.bookingCount}>({bookings.length})</AppText>
             </AppText>
             <TouchableOpacity
-              style={[styles.filterPill, Neu.soft(Colors.bg.surface)]}
+              style={[styles.filterPill, Neu.soft(colors.bg.surface)]}
               onPress={() => setFilterVisible(true)}
               activeOpacity={0.85}
             >
               <AppText style={styles.filterLabel}>
-                {getScheduleStatusOptions(t).find((o) => o.value === statusFilter)
+                {getScheduleStatusOptions(colors, t).find((o) => o.value === statusFilter)
                   ?.label ?? t("common.all")}
               </AppText>
               <Ionicons
                 name="chevron-down"
                 size={14}
-                color={Colors.text.primary}
+                color={colors.text.primary}
               />
             </TouchableOpacity>
           </View>
@@ -238,7 +241,7 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
           )}
           <StatusFilterMenu
             visible={filterVisible}
-            options={getScheduleStatusOptions(t)}
+            options={getScheduleStatusOptions(colors, t)}
             selected={statusFilter}
             onSelect={(s) => {
               setStatusFilter(s as BookingStatus);
@@ -260,71 +263,72 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  content: { paddingBottom: 200 },
-  skName: { marginTop: 8 },
-  skSub: { marginTop: 4, marginBottom: 18 },
-  skTabs: { marginBottom: 16 },
-  skChart: { marginTop: 4 },
-  topBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 12,
-    marginBottom: 4,
-  },
-  backBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  topBarSpacer: { flex: 1 },
-  customerName: {
-    fontSize: 30,
-    fontWeight: "600",
-    color: Colors.text.primary,
-    marginTop: 8,
-    letterSpacing: -0.8,
-  },
-  customerPhone: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    marginTop: 4,
-    marginBottom: 16,
-  },
-  tabs: { marginBottom: 20 },
-  tabContent: { gap: 12 },
-  statRow: { flexDirection: "row", gap: 16 },
-  statCard: { flex: 1 },
-  chartCard: {},
-  bookingHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 8,
-  },
-  bookingTitle: { fontSize: 22, fontWeight: "600", color: Colors.text.primary, letterSpacing: -0.5 },
-  bookingCount: { color: Colors.icon.muted, fontWeight: "500" },
-  filterPill: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 999,
-    paddingHorizontal: 14,
-    paddingVertical: 9,
-    gap: 6,
-  },
-  filterLabel: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: Colors.text.primary,
-  },
-  bookingList: { gap: 12 },
-  statusMenu: { top: 36, right: 0 },
-  noMessages: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    textAlign: "center",
-    marginTop: 24,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    content: { paddingBottom: 200 },
+    skName: { marginTop: 8 },
+    skSub: { marginTop: 4, marginBottom: 18 },
+    skTabs: { marginBottom: 16 },
+    skChart: { marginTop: 4 },
+    topBar: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingVertical: 12,
+      marginBottom: 4,
+    },
+    backBtn: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    topBarSpacer: { flex: 1 },
+    customerName: {
+      fontSize: 30,
+      fontWeight: "600",
+      color: c.text.primary,
+      marginTop: 8,
+      letterSpacing: -0.8,
+    },
+    customerPhone: {
+      fontSize: 14,
+      color: c.text.secondary,
+      marginTop: 4,
+      marginBottom: 16,
+    },
+    tabs: { marginBottom: 20 },
+    tabContent: { gap: 12 },
+    statRow: { flexDirection: "row", gap: 16 },
+    statCard: { flex: 1 },
+    chartCard: {},
+    bookingHeader: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginBottom: 8,
+    },
+    bookingTitle: { fontSize: 22, fontWeight: "600", color: c.text.primary, letterSpacing: -0.5 },
+    bookingCount: { color: c.icon.muted, fontWeight: "500" },
+    filterPill: {
+      flexDirection: "row",
+      alignItems: "center",
+      borderRadius: 999,
+      paddingHorizontal: 14,
+      paddingVertical: 9,
+      gap: 6,
+    },
+    filterLabel: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: c.text.primary,
+    },
+    bookingList: { gap: 12 },
+    statusMenu: { top: 36, right: 0 },
+    noMessages: {
+      fontSize: 14,
+      color: c.text.secondary,
+      textAlign: "center",
+      marginTop: 24,
+    },
+  });

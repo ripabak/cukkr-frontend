@@ -1,5 +1,6 @@
 import { AppText } from "@/src/components/AppText";
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { haptics } from "@/src/utils/haptics";
 import React from "react";
 import {
@@ -31,6 +32,8 @@ export function ShortcutTile({
   variant = "small",
 }: Props) {
   const isLarge = variant === "large";
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   return (
     <TouchableOpacity
@@ -69,7 +72,8 @@ export function ShortcutTile({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   container: {
     alignItems: "center",
     gap: 8,
@@ -81,9 +85,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: c.border.light,
   },
   dot: {
     position: "absolute",
@@ -97,7 +101,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     fontWeight: "400",
-    color: Colors.text.primary,
+    color: c.text.primary,
     textAlign: "center",
   },
 
@@ -115,14 +119,14 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: c.border.light,
   },
   largeLabel: {
     fontSize: 14,
     fontWeight: "400",
-    color: Colors.text.primary,
+    color: c.text.primary,
     letterSpacing: 0.2,
   },
   badge: {
@@ -132,7 +136,7 @@ const styles = StyleSheet.create({
     minWidth: 20,
     height: 20,
     borderRadius: 10,
-    backgroundColor: Colors.status.danger,
+    backgroundColor: c.status.danger,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 5,
@@ -142,4 +146,4 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#fff",
   },
-});
+  });

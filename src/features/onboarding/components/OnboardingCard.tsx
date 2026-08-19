@@ -1,7 +1,8 @@
 import React from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
-import { Neu } from "@/src/theme/styles";
-import { OnboardingTheme } from "../onboarding-theme";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { buildOnboardingTheme } from "../onboarding-theme";
 
 interface OnboardingCardProps {
   children: React.ReactNode;
@@ -12,20 +13,26 @@ export const OnboardingCard: React.FC<OnboardingCardProps> = ({
   children,
   style,
 }) => {
-  return <View style={[styles.card, Neu.raised(OnboardingTheme.colors.white, 1.1), style]}>{children}</View>;
+  const { colors } = useTheme();
+  const theme = buildOnboardingTheme(colors);
+  const styles = useThemedStyles(createStyles);
+  return <View style={[styles.card, Neu.raised(theme.colors.white, 1.1), style]}>{children}</View>;
 };
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) => {
+  const theme = buildOnboardingTheme(c);
+  return StyleSheet.create({
   card: {
-    backgroundColor: OnboardingTheme.colors.white,
-    borderRadius: OnboardingTheme.borderRadius.xl,
-    padding: OnboardingTheme.spacing.lg,
+    backgroundColor: theme.colors.white,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing.lg,
     width: "90%",
     maxWidth: 380,
     minHeight: 500,
     justifyContent: "space-between",
     alignItems: "center",
   },
-});
+  });
+};
 
 export default OnboardingCard;

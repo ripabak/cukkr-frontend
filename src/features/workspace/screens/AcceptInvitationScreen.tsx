@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useI18nContext } from "@/src/lib/i18n/provider";
@@ -31,6 +32,8 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { data: session, isPending: sessionLoading } = authClient.useSession();
 
   const {
@@ -88,7 +91,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
     return (
       <ScreenShell>
         <View style={styles.iconWrapper}>
-          <Ionicons name="mail-outline" size={56} color={Colors.text.primary} />
+          <Ionicons name="mail-outline" size={56} color={colors.text.primary} />
         </View>
         <AppText style={styles.title}>{t("notifications.types.invitation")}</AppText>
         <AppText style={styles.subtitle}>
@@ -151,7 +154,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
                 : "alert-circle-outline"
             }
             size={56}
-            color={Colors.icon.muted}
+            color={colors.icon.muted}
           />
           <AppText style={styles.errorTitle}>
             {isEmailMismatchError ? t("common.error") : t("common.noData")}
@@ -188,7 +191,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
   return (
     <ScreenShell>
       <View style={styles.iconWrapper}>
-        <Ionicons name="cut-outline" size={48} color={Colors.text.primary} />
+        <Ionicons name="cut-outline" size={48} color={colors.text.primary} />
       </View>
 
       <AppText style={styles.title}>{t("notifications.types.invitation")}</AppText>
@@ -196,9 +199,9 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
         {t("barbers.inviteViaEmail")}
       </AppText>
 
-      <View style={[styles.card, Neu.raised(Colors.bg.surface, 1.2)]}>
+      <View style={[styles.card, Neu.raised(colors.bg.surface, 1.2)]}>
         <View style={styles.cardRow}>
-          <Ionicons name="storefront-outline" size={20} color={Colors.icon.muted} />
+          <Ionicons name="storefront-outline" size={20} color={colors.icon.muted} />
           <View style={styles.cardTextWrapper}>
             <AppText style={styles.cardLabel}>{t("barbershop.nameLabel")}</AppText>
             <AppText style={styles.cardValue}>{invitation.organizationName}</AppText>
@@ -208,7 +211,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
         <View style={styles.divider} />
 
         <View style={styles.cardRow}>
-          <Ionicons name="person-outline" size={20} color={Colors.icon.muted} />
+          <Ionicons name="person-outline" size={20} color={colors.icon.muted} />
           <View style={styles.cardTextWrapper}>
             <AppText style={styles.cardLabel}>{t("barbers.inviteBarber")}</AppText>
             <AppText style={styles.cardValue}>{invitation.inviterEmail}</AppText>
@@ -218,7 +221,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
         <View style={styles.divider} />
 
         <View style={styles.cardRow}>
-          <Ionicons name="ribbon-outline" size={20} color={Colors.icon.muted} />
+          <Ionicons name="ribbon-outline" size={20} color={colors.icon.muted} />
           <View style={styles.cardTextWrapper}>
             <AppText style={styles.cardLabel}>{t("barbers.role")}</AppText>
             <AppText style={styles.cardValue}>
@@ -236,7 +239,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
           disabled={isPending}
         />
         <TouchableOpacity
-          style={[styles.rejectBtn, Neu.soft(Colors.bg.surface, 0.7), isPending && styles.disabled]}
+          style={[styles.rejectBtn, Neu.soft(colors.bg.surface, 0.7), isPending && styles.disabled]}
           onPress={handleReject}
           activeOpacity={0.85}
           disabled={isPending}
@@ -250,119 +253,120 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  center: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 80,
-    gap: 12,
-  },
-  loadingText: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    marginTop: 8,
-  },
-  errorTitle: {
-    fontSize: 22,
-    fontWeight: "600",
-    color: Colors.text.primary,
-    textAlign: "center",
-  },
-  errorSubtitle: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    textAlign: "center",
-    marginTop: 4,
-    lineHeight: 20,
-  },
-  backLink: {
-    marginTop: 16,
-  },
-  backLinkText: {
-    fontSize: 14,
-    color: Colors.text.primary,
-    fontWeight: "500",
-    textDecorationLine: "underline",
-  },
-  iconWrapper: {
-    alignItems: "center",
-    marginTop: 48,
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "600",
-    color: Colors.text.primary,
-    textAlign: "center",
-  },
-  subtitle: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    textAlign: "center",
-    marginTop: 6,
-    marginBottom: 28,
-    lineHeight: 20,
-  },
-  loginButton: {
-    marginTop: 8,
-  },
-  registerLink: {
-    marginTop: 16,
-    alignItems: "center",
-  },
-  registerLinkText: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-  },
-  registerLinkBold: {
-    fontWeight: "600",
-    color: Colors.text.primary,
-  },
-  card: {
-    borderRadius: 20,
-    padding: 20,
-    marginBottom: 24,
-  },
-  cardRow: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 12,
-    paddingVertical: 4,
-  },
-  cardTextWrapper: {
-    flex: 1,
-  },
-  cardLabel: {
-    fontSize: 12,
-    color: Colors.text.muted,
-    marginBottom: 2,
-  },
-  cardValue: {
-    fontSize: 15,
-    fontWeight: "500",
-    color: Colors.text.primary,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: Colors.border.light,
-    marginVertical: 12,
-  },
-  actions: {
-    gap: 12,
-  },
-  rejectBtn: {
-    height: 52,
-    borderRadius: 999,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  rejectLabel: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: Colors.text.primary,
-  },
-  disabled: {
-    opacity: 0.5,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    center: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingTop: 80,
+      gap: 12,
+    },
+    loadingText: {
+      fontSize: 14,
+      color: c.text.secondary,
+      marginTop: 8,
+    },
+    errorTitle: {
+      fontSize: 22,
+      fontWeight: "600",
+      color: c.text.primary,
+      textAlign: "center",
+    },
+    errorSubtitle: {
+      fontSize: 14,
+      color: c.text.secondary,
+      textAlign: "center",
+      marginTop: 4,
+      lineHeight: 20,
+    },
+    backLink: {
+      marginTop: 16,
+    },
+    backLinkText: {
+      fontSize: 14,
+      color: c.text.primary,
+      fontWeight: "500",
+      textDecorationLine: "underline",
+    },
+    iconWrapper: {
+      alignItems: "center",
+      marginTop: 48,
+      marginBottom: 20,
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: "600",
+      color: c.text.primary,
+      textAlign: "center",
+    },
+    subtitle: {
+      fontSize: 14,
+      color: c.text.secondary,
+      textAlign: "center",
+      marginTop: 6,
+      marginBottom: 28,
+      lineHeight: 20,
+    },
+    loginButton: {
+      marginTop: 8,
+    },
+    registerLink: {
+      marginTop: 16,
+      alignItems: "center",
+    },
+    registerLinkText: {
+      fontSize: 14,
+      color: c.text.secondary,
+    },
+    registerLinkBold: {
+      fontWeight: "600",
+      color: c.text.primary,
+    },
+    card: {
+      borderRadius: 20,
+      padding: 20,
+      marginBottom: 24,
+    },
+    cardRow: {
+      flexDirection: "row",
+      alignItems: "flex-start",
+      gap: 12,
+      paddingVertical: 4,
+    },
+    cardTextWrapper: {
+      flex: 1,
+    },
+    cardLabel: {
+      fontSize: 12,
+      color: c.text.muted,
+      marginBottom: 2,
+    },
+    cardValue: {
+      fontSize: 15,
+      fontWeight: "500",
+      color: c.text.primary,
+    },
+    divider: {
+      height: 1,
+      backgroundColor: c.border.light,
+      marginVertical: 12,
+    },
+    actions: {
+      gap: 12,
+    },
+    rejectBtn: {
+      height: 52,
+      borderRadius: 999,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    rejectLabel: {
+      fontSize: 16,
+      fontWeight: "500",
+      color: c.text.primary,
+    },
+    disabled: {
+      opacity: 0.5,
+    },
+  });

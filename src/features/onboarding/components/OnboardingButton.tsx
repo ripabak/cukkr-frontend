@@ -1,13 +1,14 @@
 import React from "react";
 import { AppText } from "@/src/components/AppText";
-import { Neu } from "@/src/theme/styles";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import {
   StyleSheet,
   TextStyle,
   TouchableOpacity,
   ViewStyle,
 } from "react-native";
-import { OnboardingTheme } from "../onboarding-theme";
+import { buildOnboardingTheme } from "../onboarding-theme";
 
 interface OnboardingButtonProps {
   label: string;
@@ -25,13 +26,16 @@ export const OnboardingButton: React.FC<OnboardingButtonProps> = ({
   textStyle,
 }) => {
   const isSecondary = variant === "secondary";
+  const { colors } = useTheme();
+  const theme = buildOnboardingTheme(colors);
+  const styles = useThemedStyles(createStyles);
 
   return (
     <TouchableOpacity
       style={[
         styles.button,
         isSecondary
-          ? Neu.soft(OnboardingTheme.colors.white)
+          ? Neu.soft(theme.colors.white)
           : Neu.accent(0.9),
         style,
       ]}
@@ -51,23 +55,26 @@ export const OnboardingButton: React.FC<OnboardingButtonProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) => {
+  const theme = buildOnboardingTheme(c);
+  return StyleSheet.create({
   button: {
-    paddingVertical: OnboardingTheme.spacing.md,
-    paddingHorizontal: OnboardingTheme.spacing.lg,
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
     borderRadius: 999,
     width: "100%",
     alignItems: "center",
-    marginTop: OnboardingTheme.spacing.md,
+    marginTop: theme.spacing.md,
   },
   buttonText: {
-    color: OnboardingTheme.colors.dark,
+    color: theme.colors.dark,
     fontSize: 16,
     fontWeight: "600",
   },
   buttonTextSecondary: {
-    color: OnboardingTheme.colors.dark,
+    color: theme.colors.dark,
   },
-});
+  });
+};
 
 export default OnboardingButton;

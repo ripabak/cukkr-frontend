@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SortMenu } from "@/src/components/SortMenu";
 import { getHistoryStatusOptions } from "@/src/components/StatusFilterMenu";
@@ -38,6 +39,8 @@ export function HistoryBookingsScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState(today);
   const [calendarVisible, setCalendarVisible] = useState(false);
@@ -76,18 +79,18 @@ export function HistoryBookingsScreen() {
 
   return (
     <ScreenShell
-      backgroundColor={Colors.bg.default}
+      backgroundColor={colors.bg.default}
       headerSlot={
         <View style={styles.topBar}>
           <TouchableOpacity
             onPress={() => router.back()}
             activeOpacity={0.85}
-            style={[styles.backBtn, Neu.soft(Colors.bg.surface, 0.7)]}
+            style={[styles.backBtn, Neu.soft(colors.bg.surface, 0.7)]}
           >
             <Ionicons
               name="chevron-back"
               size={20}
-              color={Colors.text.primary}
+              color={colors.text.primary}
             />
           </TouchableOpacity>
           <View style={styles.topActions}>
@@ -95,9 +98,9 @@ export function HistoryBookingsScreen() {
               ref={sortBtnRef}
               onPress={handleOpenSortMenu}
               activeOpacity={0.85}
-              style={[styles.iconBtn, Neu.soft(Colors.bg.surface, 0.7)]}
+              style={[styles.iconBtn, Neu.soft(colors.bg.surface, 0.7)]}
             >
-              <Ionicons name="filter" size={18} color={Colors.text.primary} />
+              <Ionicons name="filter" size={18} color={colors.text.primary} />
             </TouchableOpacity>
             <DateSelectorPill
               label={formatDatePill(selectedDate)}
@@ -126,7 +129,7 @@ export function HistoryBookingsScreen() {
           {t("schedule.history.allBooking")} <AppText style={styles.titleCount}>({bookings.length})</AppText>
         </AppText>
         <FilterPicker
-          options={getHistoryStatusOptions(t)}
+          options={getHistoryStatusOptions(colors, t)}
           selected={statusFilter}
           onSelect={setStatusFilter}
           pillStyle={styles.filterPill}
@@ -182,7 +185,8 @@ export function HistoryBookingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   topBar: {
     flexDirection: "row",
     alignItems: "center",
@@ -222,11 +226,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   titleCount: {
     fontWeight: "400",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   filterPill: {
     flexDirection: "row",
@@ -239,7 +243,7 @@ const styles = StyleSheet.create({
   filterLabel: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   list: {},
   rowMargin: {
@@ -249,7 +253,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 40,
     fontSize: 14,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   menuOverlay: {
     position: "absolute",
@@ -259,4 +263,4 @@ const styles = StyleSheet.create({
     bottom: 0,
     zIndex: 50,
   },
-});
+  });

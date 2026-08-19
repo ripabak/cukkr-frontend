@@ -1,6 +1,6 @@
 import { useI18nContext } from "@/src/lib/i18n/provider";
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
 import {
@@ -33,6 +33,8 @@ export function SortMenu({
   style,
 }: Props) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const resolvedOptions = options ?? [
     { label: t("components.sortMenu.sortByName"), value: "name" },
     { label: t("components.sortMenu.sortByLowest"), value: "lowest" },
@@ -49,7 +51,7 @@ export function SortMenu({
         onPress={onClose}
         activeOpacity={1}
       />
-      <View style={[styles.menu, Neu.float(Colors.bg.default, 1.2), style]}>
+      <View style={[styles.menu, Neu.float(colors.bg.default, 1.2), style]}>
         {resolvedOptions.map((opt, index) => (
           <TouchableOpacity
             key={opt.value}
@@ -78,38 +80,39 @@ export function SortMenu({
   );
 }
 
-const styles = StyleSheet.create({
-  backdrop: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  menu: {
-    position: "absolute",
-    top: 56,
-    right: 20,
-    borderRadius: 16,
-    minWidth: 200,
-    zIndex: 100,
-    overflow: "hidden",
-  },
-  item: {
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  itemBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border.light,
-  },
-  itemText: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: Colors.text.primary,
-  },
-  itemTextSelected: {
-    fontWeight: "600",
-    color: Colors.brand.text,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    backdrop: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+    },
+    menu: {
+      position: "absolute",
+      top: 56,
+      right: 20,
+      borderRadius: 16,
+      minWidth: 200,
+      zIndex: 100,
+      overflow: "hidden",
+    },
+    item: {
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+    },
+    itemBorder: {
+      borderBottomWidth: 1,
+      borderBottomColor: c.border.light,
+    },
+    itemText: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: c.text.primary,
+    },
+    itemTextSelected: {
+      fontWeight: "600",
+      color: c.brand.text,
+    },
+  });

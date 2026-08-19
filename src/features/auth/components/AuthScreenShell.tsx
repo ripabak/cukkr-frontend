@@ -7,8 +7,10 @@ import {
   View,
 } from "react-native";
 import { AppText } from "@/src/components/AppText";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 
-import { authTheme } from "../auth-theme";
+import { authSpacing } from "../auth-theme";
 
 type AuthScreenShellProps = PropsWithChildren<{
   title: string;
@@ -22,6 +24,8 @@ export function AuthScreenShell({
   footer,
   title,
 }: AuthScreenShellProps) {
+  const styles = useThemedStyles(createStyles);
+
   return (
     <View style={styles.page}>
       <KeyboardAvoidingView
@@ -48,41 +52,42 @@ export function AuthScreenShell({
   );
 }
 
-const styles = StyleSheet.create({
-  page: {
-    flex: 1,
-    backgroundColor: authTheme.colors.pageBackground,
-  },
-  keyboardAvoidingView: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: "center",
-    paddingHorizontal: authTheme.spacing.xl,
-    paddingVertical: authTheme.spacing.xl,
-  },
-  header: {
-    gap: authTheme.spacing.sm,
-    marginBottom: authTheme.spacing.xl,
-  },
-  title: {
-    color: authTheme.colors.textPrimary,
-    fontSize: 32,
-    fontWeight: "700",
-    fontFamily: "PlusJakartaSans_700Bold",
-    letterSpacing: -0.8,
-  },
-  description: {
-    color: authTheme.colors.textSecondary,
-    fontSize: 15,
-    lineHeight: 22,
-    fontFamily: "PlusJakartaSans_400Regular",
-  },
-  content: {
-    gap: authTheme.spacing.md,
-  },
-  footer: {
-    marginTop: authTheme.spacing.lg,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    page: {
+      flex: 1,
+      backgroundColor: c.bg.default,
+    },
+    keyboardAvoidingView: {
+      flex: 1,
+    },
+    scrollContent: {
+      flexGrow: 1,
+      justifyContent: "center",
+      paddingHorizontal: authSpacing.xl,
+      paddingVertical: authSpacing.xl,
+    },
+    header: {
+      gap: authSpacing.sm,
+      marginBottom: authSpacing.xl,
+    },
+    title: {
+      color: c.text.primary,
+      fontSize: 32,
+      fontWeight: "700",
+      fontFamily: "PlusJakartaSans_700Bold",
+      letterSpacing: -0.8,
+    },
+    description: {
+      color: c.text.secondary,
+      fontSize: 15,
+      lineHeight: 22,
+      fontFamily: "PlusJakartaSans_400Regular",
+    },
+    content: {
+      gap: authSpacing.md,
+    },
+    footer: {
+      marginTop: authSpacing.lg,
+    },
+  });

@@ -1,5 +1,5 @@
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
 import {
@@ -26,32 +26,32 @@ interface Props {
 
 type TFunction = (key: string, params?: Record<string, string>) => string;
 
-export function getScheduleStatusOptions(t: TFunction): StatusOption[] {
+export function getScheduleStatusOptions(c: ThemeColors, t: TFunction): StatusOption[] {
   return [
     { label: t("common.all"), value: "all" },
     { label: t("schedule.status.requested"), value: "requested" },
-    { label: t("schedule.status.waiting"), value: "waiting", color: Colors.status.waiting },
+    { label: t("schedule.status.waiting"), value: "waiting", color: c.status.waiting },
     {
       label: t("schedule.status.inProgress"),
       value: "in_progress",
-      color: Colors.status.inProgress,
+      color: c.status.inProgress,
     },
-    { label: t("schedule.status.completed"), value: "completed", color: Colors.status.success },
-    { label: t("schedule.status.cancelled"), value: "cancelled", color: Colors.status.danger },
+    { label: t("schedule.status.completed"), value: "completed", color: c.status.success },
+    { label: t("schedule.status.cancelled"), value: "cancelled", color: c.status.danger },
   ];
 }
 
-export function getHistoryStatusOptions(t: TFunction): StatusOption[] {
+export function getHistoryStatusOptions(c: ThemeColors, t: TFunction): StatusOption[] {
   return [
     { label: t("common.all"), value: "all" },
-    { label: t("schedule.status.completed"), value: "completed", color: Colors.status.success },
-    { label: t("schedule.status.waiting"), value: "waiting", color: Colors.status.waiting },
+    { label: t("schedule.status.completed"), value: "completed", color: c.status.success },
+    { label: t("schedule.status.waiting"), value: "waiting", color: c.status.waiting },
     {
       label: t("schedule.status.inProgress"),
       value: "in_progress",
-      color: Colors.status.inProgress,
+      color: c.status.inProgress,
     },
-    { label: t("schedule.status.cancelled"), value: "canceled", color: Colors.status.danger },
+    { label: t("schedule.status.cancelled"), value: "canceled", color: c.status.danger },
   ];
 }
 
@@ -63,6 +63,8 @@ export function StatusFilterMenu({
   onClose,
   style,
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   if (!visible) return null;
 
   return (
@@ -72,7 +74,7 @@ export function StatusFilterMenu({
         onPress={onClose}
         activeOpacity={1}
       />
-      <View style={[styles.menu, Neu.float(Colors.bg.default, 1.2), style]}>
+      <View style={[styles.menu, Neu.float(colors.bg.default, 1.2), style]}>
         {options.map((opt, index) => (
           <TouchableOpacity
             key={opt.value}
@@ -102,37 +104,38 @@ export function StatusFilterMenu({
   );
 }
 
-const styles = StyleSheet.create({
-  backdrop: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  menu: {
-    position: "absolute",
-    top: 56,
-    right: 20,
-    borderRadius: 16,
-    minWidth: 160,
-    zIndex: 100,
-    overflow: "hidden",
-  },
-  item: {
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  itemBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border.light,
-  },
-  itemText: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: Colors.text.primary,
-  },
-  itemTextBold: {
-    fontWeight: "600",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    backdrop: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+    },
+    menu: {
+      position: "absolute",
+      top: 56,
+      right: 20,
+      borderRadius: 16,
+      minWidth: 160,
+      zIndex: 100,
+      overflow: "hidden",
+    },
+    item: {
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+    },
+    itemBorder: {
+      borderBottomWidth: 1,
+      borderBottomColor: c.border.light,
+    },
+    itemText: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: c.text.primary,
+    },
+    itemTextBold: {
+      fontWeight: "600",
+    },
+  });

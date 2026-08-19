@@ -1,4 +1,5 @@
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import React, { useEffect, useRef } from "react";
 import {
   Animated,
@@ -13,8 +14,8 @@ import {
  * Shared skeleton primitives — native-feeling loading placeholders.
  *
  * Every block pulses with a soft opacity wave so the whole page "breathes"
- * together instead of showing spinners. Tuned to the Cukkr skeleton tones
- * (warm gray, slightly darker than the card surface).
+ * together instead of showing spinners. Tuned to the active theme's skeleton
+ * tones (warm gray, slightly darker than the card surface).
  *
  * Usage:
  *   <Skeleton width={120} height={16} radius={8} />
@@ -22,8 +23,6 @@ import {
  *   <SkeletonRows rows={4} />
  *   <SkeletonCard />            // full-width card (like BookingCard / lists)
  */
-export const SKELETON_BASE = Colors.border.light; // #f2ede3
-export const SKELETON_TONE = Colors.bg.chrome; // slightly deeper pulse
 
 const pulse = () => {
   // One shared value per component instance; loops softly.
@@ -63,6 +62,7 @@ function SkeletonBlock({
   style,
 }: SkeletonProps) {
   const opacity = pulse();
+  const styles = useThemedStyles(createStyles);
   return (
     <Animated.View
       style={[
@@ -132,6 +132,7 @@ function Card({
   radius?: number;
   style?: StyleProp<ViewStyle>;
 }) {
+  const styles = useThemedStyles(createStyles);
   return (
     <View
       style={[
@@ -167,6 +168,7 @@ function StatTiles({
   height?: number;
   radius?: number;
 }) {
+  const styles = useThemedStyles(createStyles);
   return (
     <View style={styles.tilesRow}>
       {Array.from({ length: count }).map((_, i) => (
@@ -193,15 +195,16 @@ export const Skeleton = Object.assign(SkeletonBlock, {
 
 export default Skeleton;
 
-const styles = StyleSheet.create({
-  block: {
-    backgroundColor: SKELETON_BASE,
-  },
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    block: {
+      backgroundColor: c.border.light,
+    },
   card: {
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
   },
   cardBody: {
     flex: 1,
@@ -213,9 +216,9 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   tile: {
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: c.border.light,
     padding: 12,
     gap: 8,
   },

@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
@@ -37,8 +38,10 @@ export function ServiceSelectionCard({
   required,
 }: Props) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
-    <View style={[styles.wrapper, Neu.raised(Colors.bg.surface, 1.1), style]}>
+    <View style={[styles.wrapper, Neu.raised(colors.bg.surface, 1.1), style]}>
       <AppText style={styles.sectionLabel}>
         {t("bookings.services")}
         {required ? <AppText style={styles.asterisk}> *</AppText> : null}
@@ -52,7 +55,7 @@ export function ServiceSelectionCard({
           <Ionicons
             name="add-circle-outline"
             size={18}
-            color={Colors.icon.muted}
+            color={colors.icon.muted}
           />
           <AppText style={styles.emptyText}>{t("services.selectService")}</AppText>
         </TouchableOpacity>
@@ -91,7 +94,8 @@ export function ServiceSelectionCard({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   wrapper: {
     borderRadius: 20,
     padding: 16,
@@ -99,11 +103,11 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontSize: 12,
-    color: Colors.icon.muted,
+    color: c.icon.muted,
     marginBottom: 2,
   },
   asterisk: {
-    color: Colors.status.danger,
+    color: c.status.danger,
   },
   emptyRow: {
     flexDirection: "row",
@@ -113,12 +117,12 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 14,
-    color: Colors.text.muted,
+    color: c.text.muted,
   },
   serviceRow: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
     borderRadius: 12,
     padding: 10,
     gap: 12,
@@ -127,7 +131,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 8,
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
   },
   serviceImage: {
     width: 48,
@@ -142,16 +146,16 @@ const styles = StyleSheet.create({
   serviceName: {
     fontSize: 15,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   servicePrice: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   defaultBadge: {
     borderWidth: 1,
-    borderColor: Colors.text.primary,
+    borderColor: c.text.primary,
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 4,
@@ -159,14 +163,14 @@ const styles = StyleSheet.create({
   defaultText: {
     fontSize: 12,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   changeRow: {
     alignSelf: "flex-end",
   },
   changeText: {
     fontSize: 13,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     textDecorationLine: "underline",
   },
-});
+  });

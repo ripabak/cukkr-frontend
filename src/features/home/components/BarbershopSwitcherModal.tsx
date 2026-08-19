@@ -1,7 +1,8 @@
 import { AppText } from "@/src/components/AppText";
 import { AppTextInput } from "@/src/components/AppTextInput";
 import { BottomSheet } from "@/src/components/BottomSheet";
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { haptics } from "@/src/utils/haptics";
 import { authClient } from "@/src/lib/auth-client";
 import { useToast } from "@/src/lib/providers";
@@ -34,6 +35,8 @@ interface Props {
 
 export function BarbershopSwitcherModal({ visible, onClose }: Props) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const router = useRouter();
   const toast = useToast();
   const insets = useSafeAreaInsets();
@@ -104,7 +107,7 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
       >
         <View style={styles.switchingOverlay}>
           <View style={styles.switchingCard}>
-            <ActivityIndicator size="large" color={Colors.brand.primary} />
+            <ActivityIndicator size="large" color={colors.brand.primary} />
             <AppText style={styles.switchingTitle}>
               {t("barbershop.switchingWorkspace")}
             </AppText>
@@ -125,11 +128,11 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
       >
         {/* Search */}
         <View style={[styles.searchRow, { paddingBottom: insets.bottom > 0 ? 6 : 12 }]}>
-          <Ionicons name="search-outline" size={16} color={Colors.icon.muted} />
+          <Ionicons name="search-outline" size={16} color={colors.icon.muted} />
           <AppTextInput
             style={styles.searchInput}
             placeholder={t("barbershop.searchPlaceholder")}
-            placeholderTextColor={Colors.text.muted}
+            placeholderTextColor={colors.text.muted}
             value={search}
             onChangeText={setSearch}
             autoCorrect={false}
@@ -141,7 +144,7 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
               hitSlop={8}
               accessibilityLabel={t("common.clear")}
             >
-              <Ionicons name="close-circle" size={16} color={Colors.icon.muted} />
+              <Ionicons name="close-circle" size={16} color={colors.icon.muted} />
             </TouchableOpacity>
           )}
         </View>
@@ -154,7 +157,7 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
           {isLoading ? (
             <ActivityIndicator
               size="small"
-              color={Colors.brand.primary}
+              color={colors.brand.primary}
               style={styles.loader}
             />
           ) : filtered.length === 0 ? (
@@ -212,7 +215,7 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
                     <Ionicons
                       name="checkmark-circle"
                       size={18}
-                      color={Colors.brand.primary}
+                      color={colors.brand.primary}
                     />
                   )}
                 </TouchableOpacity>
@@ -227,7 +230,7 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
           activeOpacity={0.7}
         >
           <View style={styles.createIcon}>
-            <Ionicons name="add" size={20} color={Colors.text.secondary} />
+            <Ionicons name="add" size={20} color={colors.text.secondary} />
           </View>
           <View>
             <AppText style={styles.createLabel}>
@@ -243,7 +246,8 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   searchRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -254,14 +258,14 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 11,
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: c.border.light,
   },
   searchInput: {
     flex: 1,
     fontSize: 14,
-    color: Colors.text.primary,
+    color: c.text.primary,
     padding: 0,
   },
   list: {
@@ -272,7 +276,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 13,
-    color: Colors.text.muted,
+    color: c.text.muted,
     textAlign: "center",
     marginVertical: 20,
   },
@@ -285,15 +289,15 @@ const styles = StyleSheet.create({
     borderRadius: 14,
   },
   itemActive: {
-    backgroundColor: Colors.brand.primarySurface,
+    backgroundColor: c.brand.primarySurface,
   },
   avatar: {
     width: 40,
     height: 40,
     borderRadius: 13,
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: c.border.light,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -303,22 +307,22 @@ const styles = StyleSheet.create({
     borderRadius: 13,
   },
   avatarActive: {
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
     borderColor: "transparent",
   },
   avatarText: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   avatarTextActive: {
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   itemName: {
     flex: 1,
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   itemTexts: {
     flex: 1,
@@ -332,13 +336,13 @@ const styles = StyleSheet.create({
   itemRole: {
     fontSize: 11,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     textTransform: "capitalize",
   },
   unreadLabel: {
     fontSize: 12,
     fontWeight: "500",
-    color: Colors.status.danger,
+    color: c.status.danger,
   },
   createRow: {
     flexDirection: "row",
@@ -347,32 +351,32 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 8,
     borderTopWidth: 1,
-    borderTopColor: Colors.border.light,
+    borderTopColor: c.border.light,
     marginTop: 6,
   },
   createIcon: {
     width: 40,
     height: 40,
     borderRadius: 13,
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: c.border.light,
     alignItems: "center",
     justifyContent: "center",
   },
   createLabel: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   createSub: {
     fontSize: 12,
-    color: Colors.text.muted,
+    color: c.text.muted,
     marginTop: 1,
   },
   switchingOverlay: {
     flex: 1,
-    backgroundColor: Colors.bg.overlay,
+    backgroundColor: c.bg.overlay,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -382,18 +386,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     alignItems: "center",
     gap: 12,
-    backgroundColor: Colors.bg.elevated,
+    backgroundColor: c.bg.elevated,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: c.border.light,
   },
   switchingTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
     marginTop: 4,
   },
   switchingSubText: {
     fontSize: 13,
-    color: Colors.text.muted,
+    color: c.text.muted,
   },
-});
+  });

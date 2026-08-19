@@ -1,4 +1,5 @@
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import React from "react";
 import { View, ScrollView, StyleSheet, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -15,6 +16,8 @@ interface Props {
 }
 
 export function MessageThread({ messages, style }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <View style={[styles.container, style]}>
       <ScrollView
@@ -34,36 +37,37 @@ export function MessageThread({ messages, style }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: Colors.bg.default,
-    borderRadius: 16,
-    padding: 16,
-    minHeight: 160,
-  },
-  list: {
-    gap: 16,
-  },
-  messageGroup: {
-    gap: 4,
-  },
-  bubble: {
-    alignSelf: "flex-start",
-    backgroundColor: Colors.brand.primary,
-    borderRadius: 12,
-    borderBottomLeftRadius: 4,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    maxWidth: "85%",
-  },
-  bubbleText: {
-    fontSize: 13,
-    color: Colors.text.primary,
-    lineHeight: 18,
-  },
-  timestamp: {
-    fontSize: 11,
-    color: Colors.icon.muted,
-    alignSelf: "flex-end",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    container: {
+      backgroundColor: c.bg.default,
+      borderRadius: 16,
+      padding: 16,
+      minHeight: 160,
+    },
+    list: {
+      gap: 16,
+    },
+    messageGroup: {
+      gap: 4,
+    },
+    bubble: {
+      alignSelf: "flex-start",
+      backgroundColor: c.brand.primary,
+      borderRadius: 12,
+      borderBottomLeftRadius: 4,
+      paddingHorizontal: 14,
+      paddingVertical: 10,
+      maxWidth: "85%",
+    },
+    bubbleText: {
+      fontSize: 13,
+      color: c.text.primary,
+      lineHeight: 18,
+    },
+    timestamp: {
+      fontSize: 11,
+      color: c.icon.muted,
+      alignSelf: "flex-end",
+    },
+  });

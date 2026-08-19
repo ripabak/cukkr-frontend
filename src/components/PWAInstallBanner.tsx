@@ -10,11 +10,15 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { AppTheme } from "@/src/app-theme";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { usePWAInstall } from "@/src/hooks/usePWAInstall";
 import { IOSInstallModal } from "./IOSInstallModal";
 
 export function PWAInstallBanner() {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const {
     showBanner,
     isIOS,
@@ -65,7 +69,7 @@ export function PWAInstallBanner() {
             style={styles.closeBtn}
             hitSlop={8}
           >
-            <Ionicons name="close" size={18} color={AppTheme.colors.gray} />
+            <Ionicons name="close" size={18} color={colors.text.secondary} />
           </TouchableOpacity>
         </View>
       </View>
@@ -79,64 +83,65 @@ export function PWAInstallBanner() {
   );
 }
 
-const styles = StyleSheet.create({
-  banner: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "#fff",
-    paddingHorizontal: AppTheme.spacing.lg,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: AppTheme.colors.border,
-  },
-  left: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    flex: 1,
-  },
-  iconWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
-    overflow: "hidden",
-    backgroundColor: AppTheme.colors.surface,
-  },
-  icon: {
-    width: 40,
-    height: 40,
-  },
-  textWrap: {
-    flex: 1,
-  },
-  appName: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: AppTheme.colors.dark,
-  },
-  desc: {
-    fontSize: 12,
-    color: AppTheme.colors.gray,
-    marginTop: 1,
-  },
-  right: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  installBtn: {
-    backgroundColor: AppTheme.colors.accent,
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    borderRadius: AppTheme.borderRadius.full,
-  },
-  installBtnText: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: AppTheme.colors.dark,
-  },
-  closeBtn: {
-    padding: 4,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    banner: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      backgroundColor: c.bg.surface,
+      paddingHorizontal: AppTheme.spacing.lg,
+      paddingVertical: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: c.border.default,
+    },
+    left: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 10,
+      flex: 1,
+    },
+    iconWrap: {
+      width: 40,
+      height: 40,
+      borderRadius: 10,
+      overflow: "hidden",
+      backgroundColor: c.bg.surface,
+    },
+    icon: {
+      width: 40,
+      height: 40,
+    },
+    textWrap: {
+      flex: 1,
+    },
+    appName: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: c.text.primary,
+    },
+    desc: {
+      fontSize: 12,
+      color: c.text.secondary,
+      marginTop: 1,
+    },
+    right: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+    },
+    installBtn: {
+      backgroundColor: c.brand.primary,
+      paddingHorizontal: 14,
+      paddingVertical: 7,
+      borderRadius: AppTheme.borderRadius.full,
+    },
+    installBtnText: {
+      fontSize: 13,
+      fontWeight: "600",
+      color: c.text.primary,
+    },
+    closeBtn: {
+      padding: 4,
+    },
+  });

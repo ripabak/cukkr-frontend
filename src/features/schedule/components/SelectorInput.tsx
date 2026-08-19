@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { TouchableOpacity, StyleSheet, View, ViewStyle } from "react-native";
@@ -29,6 +30,8 @@ export function SelectorInput({
   onClear,
   style,
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <View>
       {label ? (
@@ -40,13 +43,13 @@ export function SelectorInput({
       <TouchableOpacity
         onPress={onPress}
         activeOpacity={0.85}
-        style={[styles.container, Neu.inset(Colors.bg.surface, 0.6), style]}
+        style={[styles.container, Neu.inset(colors.bg.surface, 0.6), style]}
       >
         {leftElement ?? (iconName ? (
           <Ionicons
             name={iconName}
             size={18}
-            color={Colors.icon.muted}
+            color={colors.icon.muted}
             style={styles.icon}
           />
         ) : null)}
@@ -66,24 +69,25 @@ export function SelectorInput({
             activeOpacity={0.7}
             style={styles.clearBtn}
           >
-            <Ionicons name="close" size={16} color={Colors.text.secondary} />
+            <Ionicons name="close" size={16} color={colors.text.secondary} />
           </TouchableOpacity>
         ) : null}
-        <Ionicons name="chevron-forward" size={16} color={Colors.icon.muted} />
+        <Ionicons name="chevron-forward" size={16} color={colors.icon.muted} />
       </TouchableOpacity>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   label: {
     fontSize: 13,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     marginBottom: 6,
   },
   asterisk: {
-    color: Colors.status.danger,
+    color: c.status.danger,
   },
   container: {
     borderRadius: 999,
@@ -99,17 +103,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   textPlaceholder: {
-    color: Colors.text.muted,
+    color: c.text.muted,
   },
   textFilled: {
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   clearBtn: {
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: Colors.bg.cream,
+    backgroundColor: c.bg.cream,
     alignItems: "center",
     justifyContent: "center",
   },
-});
+  });

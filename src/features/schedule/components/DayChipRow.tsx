@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
@@ -38,6 +39,8 @@ export function DayChipRow({
   waitingDates,
 }: Props) {
   const scrollRef = useRef<ScrollView>(null);
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [scrollX, setScrollX] = useState(0);
   const [contentWidth, setContentWidth] = useState(0);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -88,7 +91,7 @@ export function DayChipRow({
         <Ionicons
           name={isLeft ? "chevron-back" : "chevron-forward"}
           size={20}
-          color={disabled ? Colors.icon.muted : Colors.text.primary}
+          color={disabled ? colors.icon.muted : colors.text.primary}
         />
       </TouchableOpacity>
     );
@@ -119,7 +122,7 @@ export function DayChipRow({
               activeOpacity={0.85}
               style={[
                 styles.chip,
-                Neu.soft(isSelected ? Colors.brand.primary : Colors.bg.surface, 0.8),
+                Neu.soft(isSelected ? colors.brand.primary : colors.bg.surface, 0.8),
                 isSelected && styles.chipSelected,
               ]}
             >
@@ -152,12 +155,12 @@ export function DayChipRow({
           <TouchableOpacity
             onPress={onShowMore}
             activeOpacity={0.85}
-            style={[styles.chip, Neu.soft(Colors.bg.surface, 0.6), styles.moreChip]}
+            style={[styles.chip, Neu.soft(colors.bg.surface, 0.6), styles.moreChip]}
           >
             <Ionicons
               name="chevron-forward"
               size={18}
-              color={Colors.icon.muted}
+              color={colors.icon.muted}
             />
           </TouchableOpacity>
         ) : null}
@@ -167,7 +170,8 @@ export function DayChipRow({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   wrapper: {
     position: "relative",
   },
@@ -185,27 +189,27 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   chipSelected: {
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
   },
   moreChip: {
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
   },
   dayLabel: {
     fontSize: 12,
     fontWeight: "500",
-    color: Colors.text.muted,
+    color: c.text.muted,
     letterSpacing: 0.5,
   },
   dayLabelSelected: {
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   dayNumber: {
     fontSize: 22,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   dayNumberSelected: {
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   dotsRow: {
     flexDirection: "row",
@@ -216,13 +220,13 @@ const styles = StyleSheet.create({
     width: 5,
     height: 5,
     borderRadius: 3,
-    backgroundColor: Colors.status.danger,
+    backgroundColor: c.status.danger,
   },
   waitingDot: {
     width: 5,
     height: 5,
     borderRadius: 3,
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
   },
   dotPlaceholder: {
     width: 5,
@@ -247,4 +251,4 @@ const styles = StyleSheet.create({
     opacity: 0,
     pointerEvents: "none",
   },
-});
+  });

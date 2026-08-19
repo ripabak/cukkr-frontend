@@ -1,4 +1,5 @@
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
@@ -8,7 +9,7 @@ import { OnboardingButton } from "../components/OnboardingButton";
 import { OnboardingCard } from "../components/OnboardingCard";
 import { OnboardingContainer } from "../components/OnboardingContainer";
 import { OnboardingIndicator } from "../components/OnboardingIndicator";
-import { OnboardingTheme } from "../onboarding-theme";
+import { buildOnboardingTheme } from "../onboarding-theme";
 import { useOnboardingStore } from "../stores/onboardingStore";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -17,6 +18,9 @@ export function OnboardingCustomerHappyScreen() {
   const router = useRouter();
   const { t } = useI18nContext();
   const markOnboardingSeen = useOnboardingStore((s) => s.markOnboardingSeen);
+  const { colors } = useTheme();
+  const theme = buildOnboardingTheme(colors);
+  const styles = useThemedStyles(createStyles);
 
   return (
     <OnboardingContainer style={styles.container}>
@@ -68,17 +72,19 @@ export function OnboardingCustomerHappyScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) => {
+  const theme = buildOnboardingTheme(c);
+  return StyleSheet.create({
   container: {
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
     justifyContent: "flex-start",
     alignItems: "flex-start",
   },
   content: {
     flex: 1,
     width: "100%",
-    paddingHorizontal: OnboardingTheme.spacing.lg,
-    paddingBottom: OnboardingTheme.spacing.xl,
+    paddingHorizontal: theme.spacing.lg,
+    paddingBottom: theme.spacing.xl,
   },
   card: {
     height: SCREEN_HEIGHT * 0.42,
@@ -92,10 +98,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-end",
     justifyContent: "space-around",
-    padding: OnboardingTheme.spacing.md,
-    backgroundColor: Colors.brand.primarySurface,
-    borderRadius: OnboardingTheme.borderRadius.lg,
-    margin: OnboardingTheme.spacing.xs,
+    padding: theme.spacing.md,
+    backgroundColor: c.brand.primarySurface,
+    borderRadius: theme.borderRadius.lg,
+    margin: theme.spacing.xs,
   },
   figureLeft: {
     alignItems: "center",
@@ -109,14 +115,14 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: OnboardingTheme.colors.dark,
+    backgroundColor: theme.colors.dark,
     opacity: 0.15,
   },
   figureBody: {
     width: 44,
     height: 80,
-    borderRadius: OnboardingTheme.borderRadius.md,
-    backgroundColor: OnboardingTheme.colors.dark,
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.dark,
     opacity: 0.2,
   },
   figureBodyDark: {
@@ -126,13 +132,13 @@ const styles = StyleSheet.create({
     width: 24,
     height: 40,
     borderRadius: 6,
-    backgroundColor: OnboardingTheme.colors.primary,
+    backgroundColor: theme.colors.primary,
   },
   comb: {
     width: 24,
     height: 20,
     borderRadius: 4,
-    backgroundColor: OnboardingTheme.colors.dark,
+    backgroundColor: theme.colors.dark,
     opacity: 0.4,
   },
   checkmarkArea: {
@@ -144,7 +150,7 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: OnboardingTheme.colors.primary,
+    backgroundColor: theme.colors.primary,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -153,7 +159,7 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     borderWidth: 3,
-    borderColor: OnboardingTheme.colors.dark,
+    borderColor: theme.colors.dark,
     backgroundColor: "transparent",
   },
   arrowUp: {
@@ -164,22 +170,22 @@ const styles = StyleSheet.create({
     borderBottomWidth: 20,
     borderLeftColor: "transparent",
     borderRightColor: "transparent",
-    borderBottomColor: OnboardingTheme.colors.primary,
+    borderBottomColor: theme.colors.primary,
   },
   textContent: {
-    marginTop: OnboardingTheme.spacing.xl,
+    marginTop: theme.spacing.xl,
     alignItems: "center",
   },
   heading: {
     fontSize: 26,
     fontWeight: "600",
-    color: OnboardingTheme.colors.textDark,
+    color: theme.colors.textDark,
     textAlign: "center",
-    marginBottom: OnboardingTheme.spacing.sm,
+    marginBottom: theme.spacing.sm,
   },
   body: {
     fontSize: 14,
-    color: OnboardingTheme.colors.textGray,
+    color: theme.colors.textGray,
     textAlign: "center",
     lineHeight: 22,
   },
@@ -189,4 +195,5 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 0,
   },
-});
+  });
+};

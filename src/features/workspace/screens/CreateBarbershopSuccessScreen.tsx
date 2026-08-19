@@ -1,4 +1,3 @@
-import { Colors } from "@/src/theme/colors";
 import { GradientButton } from "@/src/features/workspace/components/GradientButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { useI18nContext } from "@/src/lib/i18n/provider";
@@ -7,10 +6,14 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet } from "react-native";
 import { AppText } from "@/src/components/AppText";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 
 export function CreateBarbershopSuccessScreen() {
   const router = useRouter();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { formData, resetFormData } = useCreateBarbershopForm();
   const barbershopName = formData.name || t("createBarbershop.yourBarbershop");
 
@@ -41,20 +44,21 @@ export function CreateBarbershopSuccessScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 26,
-    fontWeight: "600",
-    color: Colors.text.primary,
-    textAlign: "center",
-  },
-  subtitle: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    textAlign: "center",
-    marginTop: 12,
-  },
-  button: {
-    marginTop: 48,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    title: {
+      fontSize: 26,
+      fontWeight: "600",
+      color: c.text.primary,
+      textAlign: "center",
+    },
+    subtitle: {
+      fontSize: 14,
+      color: c.text.secondary,
+      textAlign: "center",
+      marginTop: 12,
+    },
+    button: {
+      marginTop: 48,
+    },
+  });

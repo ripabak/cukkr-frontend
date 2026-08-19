@@ -1,5 +1,5 @@
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import React from "react";
 import {
   View,
@@ -40,6 +40,8 @@ export function TextInputField({
   style,
   inputStyle,
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <View style={style}>
       {label ? (
@@ -48,12 +50,12 @@ export function TextInputField({
           {required ? <AppText style={styles.asterisk}> *</AppText> : null}
         </AppText>
       ) : null}
-      <View style={[styles.inputContainer, Neu.inset(Colors.bg.surface, 0.6)]}>
+      <View style={[styles.inputContainer, Neu.inset(colors.bg.surface, 0.6)]}>
         <AppTextInput
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
-          placeholderTextColor={Colors.text.muted}
+          placeholderTextColor={colors.text.muted}
           keyboardType={keyboardType}
           secureTextEntry={secureTextEntry}
           editable={editable}
@@ -66,25 +68,26 @@ export function TextInputField({
   );
 }
 
-const styles = StyleSheet.create({
-  label: {
-    fontSize: 13,
-    fontWeight: "500",
-    color: Colors.text.secondary,
-    marginBottom: 6,
-  },
-  asterisk: {
-    color: Colors.status.danger,
-  },
-  inputContainer: {
-    borderRadius: 999,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  input: {
-    fontSize: 16,
-    color: Colors.text.primary,
-    padding: 0,
-    flex: 1,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    label: {
+      fontSize: 13,
+      fontWeight: "500",
+      color: c.text.secondary,
+      marginBottom: 6,
+    },
+    asterisk: {
+      color: c.status.danger,
+    },
+    inputContainer: {
+      borderRadius: 999,
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+    },
+    input: {
+      fontSize: 16,
+      color: c.text.primary,
+      padding: 0,
+      flex: 1,
+    },
+  });

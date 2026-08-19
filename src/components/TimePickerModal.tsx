@@ -1,4 +1,5 @@
-import { Colors } from "@/src/theme/colors";
+import { useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
@@ -102,6 +103,7 @@ function ScrollPicker({
 }) {
   const scrollRef = useRef<ScrollView>(null);
   const scrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pickerStyles = useThemedStyles(createPickerStyles);
 
   useEffect(() => {
     if (scrollTimer.current) clearTimeout(scrollTimer.current);
@@ -161,38 +163,39 @@ function ScrollPicker({
   );
 }
 
-const pickerStyles = StyleSheet.create({
-  col: {
-    flex: 1,
-    alignItems: "center",
-    position: "relative",
-  },
-  item: {
-    height: ITEM_HEIGHT,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  itemText: {
-    fontSize: 18,
-    color: Colors.text.muted,
-    fontWeight: "400",
-  },
-  itemTextSelected: {
-    fontSize: 22,
-    color: Colors.text.primary,
-    fontWeight: "600",
-  },
-  selectionBar: {
-    position: "absolute",
-    top: ITEM_HEIGHT,
-    left: 0,
-    right: 0,
-    height: ITEM_HEIGHT,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: Colors.border.default,
-  },
-});
+const createPickerStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    col: {
+      flex: 1,
+      alignItems: "center",
+      position: "relative",
+    },
+    item: {
+      height: ITEM_HEIGHT,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    itemText: {
+      fontSize: 18,
+      color: c.text.muted,
+      fontWeight: "400",
+    },
+    itemTextSelected: {
+      fontSize: 22,
+      color: c.text.primary,
+      fontWeight: "600",
+    },
+    selectionBar: {
+      position: "absolute",
+      top: ITEM_HEIGHT,
+      left: 0,
+      right: 0,
+      height: ITEM_HEIGHT,
+      borderTopWidth: 1,
+      borderBottomWidth: 1,
+      borderColor: c.border.default,
+    },
+  });
 
 export function TimePickerModal({
   visible,
@@ -207,6 +210,8 @@ export function TimePickerModal({
   style,
 }: Props) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const MINUTES =
     minuteStep > 1
       ? Array.from(
@@ -359,7 +364,7 @@ export function TimePickerModal({
           activeOpacity={0.9}
           style={styles.confirmSurface}
         >
-          <Ionicons name="checkmark" size={18} color={Colors.text.primary} />
+          <Ionicons name="checkmark" size={18} color={colors.text.primary} />
           <AppText style={styles.confirmText}>{t("common.confirm")}</AppText>
         </TouchableOpacity>
       </View>
@@ -367,53 +372,54 @@ export function TimePickerModal({
   );
 }
 
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 4,
-  },
-  rangeChip: {
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    backgroundColor: Colors.bg.default,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-  },
-  rangeText: {
-    fontSize: 12,
-    fontWeight: "500",
-    color: Colors.text.secondary,
-  },
-  columns: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 6,
-  },
-  separator: {
-    fontSize: 22,
-    fontWeight: "600",
-    color: Colors.text.primary,
-    marginHorizontal: 2,
-  },
-  footer: {
-    marginTop: 10,
-    marginBottom: 4,
-  },
-  confirmSurface: {
-    borderRadius: 18,
-    height: 54,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-    backgroundColor: Colors.brand.primary,
-  },
-  confirmText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: Colors.text.primary,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 4,
+    },
+    rangeChip: {
+      borderRadius: 20,
+      paddingHorizontal: 12,
+      paddingVertical: 5,
+      backgroundColor: c.bg.default,
+      borderWidth: 1,
+      borderColor: c.border.light,
+    },
+    rangeText: {
+      fontSize: 12,
+      fontWeight: "500",
+      color: c.text.secondary,
+    },
+    columns: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: 6,
+    },
+    separator: {
+      fontSize: 22,
+      fontWeight: "600",
+      color: c.text.primary,
+      marginHorizontal: 2,
+    },
+    footer: {
+      marginTop: 10,
+      marginBottom: 4,
+    },
+    confirmSurface: {
+      borderRadius: 18,
+      height: 54,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      backgroundColor: c.brand.primary,
+    },
+    confirmText: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: c.text.primary,
+    },
+  });

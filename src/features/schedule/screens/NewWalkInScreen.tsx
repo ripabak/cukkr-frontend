@@ -1,4 +1,3 @@
-import { Colors } from "@/src/theme/colors";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { BookingForm } from "@/src/features/schedule/components/BookingForm";
@@ -10,9 +9,10 @@ import { useToast } from "@/src/lib/providers";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { getErrorMessage } from "@/src/lib/utils/error-handler";
 import { useRouter } from "expo-router";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
-
 type BookingType = "appointment" | "walkin";
 
 export function NewWalkInScreen() {
@@ -20,6 +20,8 @@ export function NewWalkInScreen() {
   const toast = useToast();
   const { t } = useI18nContext();
   const { formData, updateFormData, resetFormData } = useNewBookingForm();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { mutate: createBooking, isPending } = useCreateBooking();
 
   const [bookingType, setBookingType] = useState<BookingType>("walkin");
@@ -91,7 +93,7 @@ export function NewWalkInScreen() {
           />
         </View>
       }
-      backgroundColor={Colors.bg.default}
+      backgroundColor={colors.bg.default}
       contentStyle={{ paddingTop: 24 }}
     >
       <BookingForm
@@ -113,10 +115,11 @@ export function NewWalkInScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (_c: ThemeColors) =>
+  StyleSheet.create({
   footer: {
     paddingHorizontal: 20,
     paddingBottom: 24,
     paddingTop: 12,
   },
-});
+  });

@@ -1,6 +1,7 @@
 import { AppText } from "@/src/components/AppText";
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import React from "react";
 import {
@@ -33,6 +34,8 @@ export function CustomerCard({
   style,
 }: Props) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const selectable = !selectionMode || hasContact;
 
   return (
@@ -41,17 +44,17 @@ export function CustomerCard({
       activeOpacity={selectable ? 0.85 : 1}
       style={[
         styles.card,
-        Neu.raised(selected ? Colors.bg.default : Colors.bg.surface),
+        Neu.raised(selected ? colors.bg.default : colors.bg.surface),
         selected && styles.cardSelected,
         !selectable && styles.cardDisabled,
         style,
       ]}
     >
-      <View style={[styles.avatar, selected ? styles.avatarSelected : Neu.inset(Colors.bg.surface, 0.6)]}>
+      <View style={[styles.avatar, selected ? styles.avatarSelected : Neu.inset(colors.bg.surface, 0.6)]}>
         <Ionicons
           name="person"
           size={22}
-          color={hasContact ? Colors.text.primary : Colors.icon.muted}
+          color={hasContact ? colors.text.primary : colors.icon.muted}
         />
       </View>
       <View style={styles.info}>
@@ -64,55 +67,56 @@ export function CustomerCard({
           <AppText style={styles.metaBold}>{bookValue}</AppText>
         </AppText>
       </View>
-      <Ionicons name="chevron-forward" size={18} color={Colors.icon.muted} />
+      <Ionicons name="chevron-forward" size={18} color={colors.icon.muted} />
     </TouchableOpacity>
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 20,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    gap: 12,
-  },
-  cardSelected: {
-    borderWidth: 2,
-    borderColor: Colors.brand.primary,
-  },
-  avatar: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  avatarSelected: {
-    backgroundColor: Colors.brand.primary,
-  },
-  cardDisabled: {
-    opacity: 0.5,
-  },
-  textMuted: {
-    color: Colors.text.muted,
-  },
-  info: {
-    flex: 1,
-    gap: 3,
-  },
-  name: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: Colors.text.primary,
-  },
-  meta: {
-    fontSize: 12,
-    color: Colors.text.secondary,
-  },
-  metaBold: {
-    fontWeight: "500",
-    color: Colors.text.primary,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    card: {
+      flexDirection: "row",
+      alignItems: "center",
+      borderRadius: 20,
+      paddingVertical: 14,
+      paddingHorizontal: 16,
+      gap: 12,
+    },
+    cardSelected: {
+      borderWidth: 2,
+      borderColor: c.brand.primary,
+    },
+    avatar: {
+      width: 44,
+      height: 44,
+      borderRadius: 14,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    avatarSelected: {
+      backgroundColor: c.brand.primary,
+    },
+    cardDisabled: {
+      opacity: 0.5,
+    },
+    textMuted: {
+      color: c.text.muted,
+    },
+    info: {
+      flex: 1,
+      gap: 3,
+    },
+    name: {
+      fontSize: 15,
+      fontWeight: "600",
+      color: c.text.primary,
+    },
+    meta: {
+      fontSize: 12,
+      color: c.text.secondary,
+    },
+    metaBold: {
+      fontWeight: "500",
+      color: c.text.primary,
+    },
+  });

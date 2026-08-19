@@ -1,5 +1,5 @@
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -24,15 +24,17 @@ export function MultilineInputField({
   editable,
   style,
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <View style={style}>
       {label ? <AppText style={styles.label}>{label}</AppText> : null}
-      <View style={[styles.inputContainer, Neu.inset(Colors.bg.surface, 0.6)]}>
+      <View style={[styles.inputContainer, Neu.inset(colors.bg.surface, 0.6)]}>
         <AppTextInput
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
-          placeholderTextColor={Colors.text.muted}
+          placeholderTextColor={colors.text.muted}
           multiline
           numberOfLines={numberOfLines}
           textAlignVertical="top"
@@ -44,25 +46,26 @@ export function MultilineInputField({
   );
 }
 
-const styles = StyleSheet.create({
-  label: {
-    fontSize: 13,
-    fontWeight: "500",
-    color: Colors.text.secondary,
-    marginBottom: 6,
-  },
-  inputContainer: {
-    borderRadius: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    minHeight: 100,
-  },
-  input: {
-    fontSize: 16,
-    color: Colors.text.primary,
-    padding: 0,
-    textAlignVertical: "top",
-    flex: 1,
-    minHeight: 72,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    label: {
+      fontSize: 13,
+      fontWeight: "500",
+      color: c.text.secondary,
+      marginBottom: 6,
+    },
+    inputContainer: {
+      borderRadius: 16,
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+      minHeight: 100,
+    },
+    input: {
+      fontSize: 16,
+      color: c.text.primary,
+      padding: 0,
+      textAlignVertical: "top",
+      flex: 1,
+      minHeight: 72,
+    },
+  });

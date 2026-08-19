@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useBookings } from "@/src/features/schedule/hooks";
 import { formatDisplayDate, formatTime12h, toApiDate } from "@/src/utils/date";
@@ -20,6 +21,8 @@ interface Props {
 
 export function BookingTimelinePreview({ scheduledAt, bookingId }: Props) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [expanded, setExpanded] = useState(false);
   const scheduleDate = new Date(scheduledAt as unknown as Date);
   const dateKey = toApiDate(scheduleDate);
@@ -53,8 +56,8 @@ export function BookingTimelinePreview({ scheduledAt, bookingId }: Props) {
 
   if (isLoading) {
     return (
-      <View style={[styles.container, Neu.raised(Colors.bg.surface)]}>
-        <ActivityIndicator size="small" color={Colors.text.secondary} />
+      <View style={[styles.container, Neu.raised(colors.bg.surface)]}>
+        <ActivityIndicator size="small" color={colors.text.secondary} />
       </View>
     );
   }
@@ -75,20 +78,20 @@ export function BookingTimelinePreview({ scheduledAt, bookingId }: Props) {
       })();
 
   return (
-    <View style={[styles.container, Neu.raised(Colors.bg.surface)]}>
+    <View style={[styles.container, Neu.raised(colors.bg.surface)]}>
       <TouchableOpacity
         onPress={() => setExpanded(!expanded)}
         activeOpacity={0.85}
         style={styles.header}
       >
         <View style={styles.headerLeft}>
-          <Ionicons name="time-outline" size={18} color={Colors.text.secondary} />
+          <Ionicons name="time-outline" size={18} color={colors.text.secondary} />
           <AppText style={styles.title}>{dateLabel}</AppText>
         </View>
         <Ionicons
           name={expanded ? "chevron-up" : "chevron-down"}
           size={18}
-          color={Colors.text.muted}
+          color={colors.text.muted}
         />
       </TouchableOpacity>
 
@@ -137,7 +140,7 @@ export function BookingTimelinePreview({ scheduledAt, bookingId }: Props) {
                     {formatTime12h(timeDate)}
                   </AppText>
                   {isCurrent && (
-                    <View style={[styles.youBadge, Neu.soft(Colors.brand.primary)]}>
+                    <View style={[styles.youBadge, Neu.soft(colors.brand.primary)]}>
                       <AppText style={styles.youBadgeText}>
                         {t("bookings.timelineYouAreHere")}
                       </AppText>
@@ -159,7 +162,7 @@ export function BookingTimelinePreview({ scheduledAt, bookingId }: Props) {
                       <Ionicons
                         name="cut-outline"
                         size={10}
-                        color={isCurrent ? Colors.brand.primary : Colors.text.muted}
+                        color={isCurrent ? colors.brand.primary : colors.text.muted}
                       />
                       <AppText
                         style={[
@@ -209,7 +212,8 @@ export function BookingTimelinePreview({ scheduledAt, bookingId }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   container: {
     borderRadius: 20,
     padding: 16,
@@ -228,14 +232,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   timeline: {
     marginTop: 12,
   },
   truncatedHint: {
     fontSize: 11,
-    color: Colors.text.muted,
+    color: c.text.muted,
     marginVertical: 4,
     paddingLeft: 14,
   },
@@ -248,7 +252,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   timelineRowHighlight: {
-    backgroundColor: Colors.brand.primarySurface,
+    backgroundColor: c.brand.primarySurface,
   },
   timelineRowDimmed: {
     opacity: 0.45,
@@ -265,15 +269,15 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   dotHighlight: {
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
   },
   dotDimmed: {
-    backgroundColor: Colors.border.default,
+    backgroundColor: c.border.default,
   },
   lineConnector: {
     width: 2,
     flex: 1,
-    backgroundColor: Colors.border.light,
+    backgroundColor: c.border.light,
     marginVertical: 2,
     minHeight: 16,
   },
@@ -289,10 +293,10 @@ const styles = StyleSheet.create({
   timeLabel: {
     fontSize: 13,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   timeLabelHighlight: {
-    color: Colors.brand.text,
+    color: c.brand.text,
   },
   youBadge: {
     borderRadius: 8,
@@ -302,12 +306,12 @@ const styles = StyleSheet.create({
   youBadgeText: {
     fontSize: 10,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   customerName: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
     marginBottom: 2,
   },
   customerNameHighlight: {
@@ -319,22 +323,22 @@ const styles = StyleSheet.create({
   },
   barberName: {
     fontSize: 11,
-    color: Colors.text.muted,
+    color: c.text.muted,
     flexShrink: 1,
   },
   barberNameHighlight: {
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   separator: {
     fontSize: 11,
-    color: Colors.text.muted,
+    color: c.text.muted,
   },
   serviceNames: {
     fontSize: 11,
-    color: Colors.text.muted,
+    color: c.text.muted,
     flexShrink: 1,
   },
   serviceNamesHighlight: {
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
-});
+  });

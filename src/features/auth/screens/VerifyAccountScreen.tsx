@@ -5,7 +5,8 @@ import { AppText } from "@/src/components/AppText";
 
 import { useToast } from "@/src/lib/providers";
 import { useI18nContext } from "@/src/lib/i18n/provider";
-import { authTheme } from "../auth-theme";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { AuthButton } from "../components/AuthButton";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { OtpCodeInput } from "../components/OtpCodeInput";
@@ -26,6 +27,7 @@ export function VerifyAccountScreen() {
   const { mutateAsync: verifyEmail, isPending: verifying } = useVerifyEmail();
   const { mutateAsync: sendOtp, isPending: resending } =
     useSendVerificationOtp();
+  const styles = useThemedStyles(createStyles);
 
   const handleVerify = async () => {
     if (!otp) return;
@@ -75,14 +77,15 @@ export function VerifyAccountScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  metaBlock: {
-    alignItems: "center",
-  },
-  timer: {
-    color: authTheme.colors.textPrimary,
-    fontSize: 28,
-    fontWeight: "400",
-    letterSpacing: 1,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    metaBlock: {
+      alignItems: "center",
+    },
+    timer: {
+      color: c.text.primary,
+      fontSize: 28,
+      fontWeight: "400",
+      letterSpacing: 1,
+    },
+  });

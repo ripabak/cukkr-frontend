@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import React from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -13,11 +14,13 @@ interface Props {
 }
 
 export function MetricCard({ label, value, icon, accentColor, style }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <View
       style={[
         styles.card,
-        Neu.raised(Colors.bg.surface),
+        Neu.raised(colors.bg.surface),
         style,
       ]}
     >
@@ -41,7 +44,8 @@ export function MetricCard({ label, value, icon, accentColor, style }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   card: {
     borderRadius: 16,
     padding: 12,
@@ -49,7 +53,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 12,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   valueRow: {
     flexDirection: "row",
@@ -63,6 +67,6 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 22,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
-});
+  });

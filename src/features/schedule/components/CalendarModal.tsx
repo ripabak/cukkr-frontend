@@ -1,5 +1,6 @@
 import { useI18nContext } from "@/src/lib/i18n/provider";
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { BottomSheet } from "@/src/components/BottomSheet";
@@ -47,6 +48,8 @@ export function CalendarModal({
   onClose,
 }: Props) {
   const { t, language } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const today = new Date();
 
   const locale = language === 'id' ? 'id-ID' : 'en-US';
@@ -162,7 +165,7 @@ export function CalendarModal({
           style={styles.navBtn}
           contentStyle={styles.navBtnSurface}
         >
-          <Ionicons name="chevron-back" size={18} color={Colors.text.primary} />
+          <Ionicons name="chevron-back" size={18} color={colors.text.primary} />
         </SoftPressable>
         <AppText style={styles.monthTitle}>
           {localizedMonths[viewMonth]} {viewYear}
@@ -173,7 +176,7 @@ export function CalendarModal({
           style={styles.navBtn}
           contentStyle={styles.navBtnSurface}
         >
-          <Ionicons name="chevron-forward" size={18} color={Colors.text.primary} />
+          <Ionicons name="chevron-forward" size={18} color={colors.text.primary} />
         </SoftPressable>
       </View>
 
@@ -287,7 +290,8 @@ export function CalendarModal({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   monthRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -303,16 +307,16 @@ const styles = StyleSheet.create({
   navBtnSurface: {
     flex: 1,
     borderRadius: 12,
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: c.border.light,
     alignItems: "center",
     justifyContent: "center",
   },
   monthTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   dayLabelRow: {
     flexDirection: "row",
@@ -323,10 +327,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 11,
     fontWeight: "500",
-    color: Colors.text.muted,
+    color: c.text.muted,
   },
   dayLabelClosed: {
-    color: Colors.text.muted,
+    color: c.text.muted,
     opacity: 0.5,
   },
   week: {
@@ -350,31 +354,31 @@ const styles = StyleSheet.create({
     opacity: 0.4,
   },
   dayBtnSelected: {
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
   },
   dayBtnToday: {
     borderWidth: 1.5,
-    borderColor: Colors.brand.primary,
+    borderColor: c.brand.primary,
   },
   dayText: {
     fontSize: 14,
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   dayTextSelected: {
-    color: Colors.text.primary,
+    color: c.text.primary,
     fontWeight: "600",
   },
   dayTextPast: {
-    color: Colors.text.muted,
+    color: c.text.muted,
   },
   dayTextClosed: {
-    color: Colors.text.muted,
+    color: c.text.muted,
   },
   closedDot: {
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: Colors.text.muted,
+    backgroundColor: c.text.muted,
     position: "absolute",
     bottom: 2,
   },
@@ -388,13 +392,13 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: Colors.status.danger,
+    backgroundColor: c.status.danger,
   },
   waitingDot: {
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
   },
   legend: {
     flexDirection: "row",
@@ -403,13 +407,13 @@ const styles = StyleSheet.create({
     marginTop: 12,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: Colors.border.light,
+    borderTopColor: c.border.light,
   },
   legendDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: Colors.text.muted,
+    backgroundColor: c.text.muted,
   },
   legendDotFirst: {
     marginLeft: 0,
@@ -418,18 +422,18 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: Colors.status.danger,
+    backgroundColor: c.status.danger,
     marginLeft: 12,
   },
   legendWaitingDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
     marginLeft: 12,
   },
   legendText: {
     fontSize: 12,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
-});
+  });

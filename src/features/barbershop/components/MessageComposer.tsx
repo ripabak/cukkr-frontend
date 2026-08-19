@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 import { AppTextInput } from "@/src/components/AppTextInput";
@@ -19,14 +20,16 @@ export function MessageComposer({
   style,
 }: Props) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const resolvedPlaceholder = placeholder ?? t("customers.messagePlaceholder");
   return (
-    <View style={[styles.container, Neu.inset(Colors.bg.surface, 0.6), style]}>
+    <View style={[styles.container, Neu.inset(colors.bg.surface, 0.6), style]}>
       <AppTextInput
         value={value}
         onChangeText={onChangeText}
         placeholder={resolvedPlaceholder}
-        placeholderTextColor={Colors.text.muted}
+        placeholderTextColor={colors.text.muted}
         multiline
         textAlignVertical="top"
         style={styles.input}
@@ -35,17 +38,18 @@ export function MessageComposer({
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    borderRadius: 16,
-    padding: 16,
-    minHeight: 120,
-  },
-  input: {
-    fontSize: 16,
-    color: Colors.text.primary,
-    lineHeight: 22,
-    flex: 1,
-    minHeight: 88,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    container: {
+      borderRadius: 16,
+      padding: 16,
+      minHeight: 120,
+    },
+    input: {
+      fontSize: 16,
+      color: c.text.primary,
+      lineHeight: 22,
+      flex: 1,
+      minHeight: 88,
+    },
+  });

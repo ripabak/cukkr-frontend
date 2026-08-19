@@ -1,7 +1,8 @@
 import { AppText } from "@/src/components/AppText";
 import { BottomSheet } from "@/src/components/BottomSheet";
 import { SoftPressable } from "@/src/components/SoftPressable";
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { haptics } from "@/src/utils/haptics";
 import React from "react";
 import { StyleSheet, View } from "react-native";
@@ -21,6 +22,8 @@ export function AlertModal({
   actionLabel,
   onAction,
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <BottomSheet visible={visible} onClose={onAction ?? (() => {})}>
       <View style={styles.body}>
@@ -48,7 +51,8 @@ export function AlertModal({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   body: {
     alignItems: "center",
     paddingTop: 6,
@@ -58,9 +62,9 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 14,
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
     borderWidth: 1,
-    borderColor: Colors.border.light,
+    borderColor: c.border.light,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 14,
@@ -68,19 +72,19 @@ const styles = StyleSheet.create({
   iconGlyph: {
     fontSize: 20,
     fontWeight: "700",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     lineHeight: 22,
   },
   title: {
     fontSize: 19,
     fontWeight: "600",
     textAlign: "center",
-    color: Colors.text.primary,
+    color: c.text.primary,
     letterSpacing: -0.3,
   },
   description: {
     fontSize: 14,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     textAlign: "center",
     marginTop: 8,
     lineHeight: 20,
@@ -92,14 +96,14 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   btn: {
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
     borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
   },
   btnLabel: {
-    color: Colors.text.primary,
+    color: c.text.primary,
     fontSize: 16,
     fontWeight: "600",
   },
-});
+  });

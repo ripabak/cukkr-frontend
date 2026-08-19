@@ -1,4 +1,5 @@
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { DayHoursRow } from "@/src/components/DayHoursRow";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenShell } from "@/src/components/ScreenShell";
@@ -39,6 +40,8 @@ export function CreateBarbershopOpenHoursScreen() {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [days, setDays] = useState<DayConfig[]>(DEFAULT_DAYS);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -104,31 +107,32 @@ export function CreateBarbershopOpenHoursScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  wizard: {
-    marginBottom: 32,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "600",
-    color: Colors.text.primary,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    marginTop: 8,
-    marginBottom: 24,
-  },
-  card: {
-    backgroundColor: Colors.brand.primarySurface,
-    borderRadius: 16,
-    marginBottom: 24,
-  },
-  flex: {
-    flex: 1,
-    minHeight: 32,
-  },
-  button: {
-    marginBottom: 16,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    wizard: {
+      marginBottom: 32,
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: "600",
+      color: c.text.primary,
+    },
+    subtitle: {
+      fontSize: 14,
+      color: c.text.secondary,
+      marginTop: 8,
+      marginBottom: 24,
+    },
+    card: {
+      backgroundColor: c.brand.primarySurface,
+      borderRadius: 16,
+      marginBottom: 24,
+    },
+    flex: {
+      flex: 1,
+      minHeight: 32,
+    },
+    button: {
+      marginBottom: 16,
+    },
+  });

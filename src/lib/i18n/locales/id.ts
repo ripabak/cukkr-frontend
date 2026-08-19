@@ -40,6 +40,7 @@ export const id = {
   auth: {
     login: 'Masuk',
     loginTitle: 'Masuk dulu, yuk',
+    loginFailed: 'Gagal masuk',
     unauthorizedTitle: 'Akses Ditolak',
     unauthorizedMessage: 'Kamu harus masuk akun dulu untuk mengakses halaman ini.',
     register: 'Daftar',
@@ -103,6 +104,14 @@ export const id = {
     loadFailed: 'Gagal memuat profil',
     subscription: 'Langganan',
     plan: 'Paket & Langganan',
+    appearance: 'Tampilan',
+    themeMode: 'Mode Tampilan',
+    themeLight: 'Terang',
+    themeLightDesc: 'Selalu terang',
+    themeDark: 'Gelap',
+    themeDarkDesc: 'Selalu gelap',
+    themeSystem: 'Sistem',
+    themeSystemDesc: 'Ikut pengaturan perangkat',
   },
   billing: {
     title: 'Paket & Langganan',

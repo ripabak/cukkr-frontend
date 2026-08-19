@@ -40,6 +40,7 @@ export const en = {
   auth: {
     login: 'Sign In',
     loginTitle: 'Sign in to your account',
+    loginFailed: 'Sign in failed',
     unauthorizedTitle: 'Access Denied',
     unauthorizedMessage: 'You need to sign in to access this page.',
     register: 'Sign Up',
@@ -103,6 +104,14 @@ export const en = {
     loadFailed: 'Failed to load profile',
     subscription: 'Subscription',
     plan: 'Plan & Billing',
+    appearance: 'Appearance',
+    themeMode: 'Display Mode',
+    themeLight: 'Light',
+    themeLightDesc: 'Always light',
+    themeDark: 'Dark',
+    themeDarkDesc: 'Always dark',
+    themeSystem: 'System',
+    themeSystemDesc: 'Match device settings',
   },
   billing: {
     title: 'Plan & Billing',

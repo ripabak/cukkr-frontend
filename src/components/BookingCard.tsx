@@ -1,4 +1,3 @@
-import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
@@ -9,7 +8,13 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { Neu, Status, type BookingStatus } from "@/src/theme/styles";
+import {
+  Neu,
+  Status,
+  useThemedStyles,
+  type BookingStatus,
+} from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 
 export type BookingType = "walk_in" | "appointment";
 
@@ -38,6 +43,8 @@ export function BookingCard({
   style,
 }: Props) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const statusStyle = Status.getStyle(status);
   const iconName =
     bookingType === "walk_in"
@@ -50,7 +57,7 @@ export function BookingCard({
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.85}
-      style={[styles.card, Neu.raised(Colors.bg.surface), style]}
+      style={[styles.card, Neu.raised(colors.bg.surface), style]}
     >
       <View style={[styles.iconCircle, { backgroundColor: statusStyle.surface }]}>
         <Ionicons name={iconName as any} size={22} color={statusStyle.color} />
@@ -58,7 +65,7 @@ export function BookingCard({
       <View style={styles.info}>
         <AppText style={styles.timeLabel}>{timeLabel}</AppText>
         <View style={styles.barberRow}>
-          <Ionicons name="cut" size={12} color={Colors.icon.muted} />
+          <Ionicons name="cut" size={12} color={colors.icon.muted} />
           <AppText style={styles.barberName} numberOfLines={1} ellipsizeMode="tail">
             {" "}{barberName}
           </AppText>
@@ -79,60 +86,61 @@ export function BookingCard({
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 20,
-    padding: 16,
-    gap: 14,
-  },
-  iconCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  info: {
-    flex: 1,
-    gap: 4,
-  },
-  timeLabel: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: Colors.text.primary,
-  },
-  barberRow: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  barberName: {
-    fontSize: 13,
-    color: Colors.icon.muted,
-  },
-  youPill: {
-    backgroundColor: Colors.brand.primarySurface,
-    borderRadius: 6,
-    paddingHorizontal: 5,
-    paddingVertical: 1,
-    marginLeft: 6,
-  },
-  youPillText: {
-    fontSize: 9.5,
-    fontWeight: "600",
-    color: Colors.brand.text,
-  },
-  right: {
-    alignItems: "flex-end",
-    gap: 2,
-  },
-  customerName: {
-    fontSize: 14,
-    fontWeight: "500",
-  },
-  duration: {
-    fontSize: 13,
-    color: Colors.icon.muted,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    card: {
+      flexDirection: "row",
+      alignItems: "center",
+      borderRadius: 20,
+      padding: 16,
+      gap: 14,
+    },
+    iconCircle: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    info: {
+      flex: 1,
+      gap: 4,
+    },
+    timeLabel: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: c.text.primary,
+    },
+    barberRow: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    barberName: {
+      fontSize: 13,
+      color: c.icon.muted,
+    },
+    youPill: {
+      backgroundColor: c.brand.primarySurface,
+      borderRadius: 6,
+      paddingHorizontal: 5,
+      paddingVertical: 1,
+      marginLeft: 6,
+    },
+    youPillText: {
+      fontSize: 9.5,
+      fontWeight: "600",
+      color: c.brand.text,
+    },
+    right: {
+      alignItems: "flex-end",
+      gap: 2,
+    },
+    customerName: {
+      fontSize: 14,
+      fontWeight: "500",
+    },
+    duration: {
+      fontSize: 13,
+      color: c.icon.muted,
+    },
+  });

@@ -1,10 +1,25 @@
 # Global Toast - Usage Examples
 
-Toast global sudah setup di root level dan bisa diakses dari **feature apapun** langsung!
+Toast global sudah setup di root level dan bisa diakses dari **feature apapun** langsung.
+
+## Visual & Jenis
+
+Toast adalah kartu **putih** dengan:
+
+- **Icon bulat** — icon solid putih di dalam lingkaran berwarna sesuai jenis toast
+- **Title** (tebal)
+- **Description** singkat (opsional, 2 baris maks)
+- **Tombol X** untuk menutup (atau ketuk kartunya, atau auto-dismiss)
+
+| Jenis | Warna | Icon |
+|---|---|---|
+| `neutral` | Abu-abu | `notifications` |
+| `success` | Hijau | `checkmark-circle` |
+| `info` | Biru | `information-circle` |
+| `warning` | Oranye | `alert-circle` |
+| `error` | Merah | `close-circle` |
 
 ## 🔧 Basic Usage
-
-### Minimal Example
 
 ```tsx
 import { useToast } from "@/src/lib/providers";
@@ -12,19 +27,42 @@ import { useToast } from "@/src/lib/providers";
 export function MyComponent() {
   const toast = useToast();
 
-  return <Button onPress={() => toast.success("Done!")} />;
+  return (
+    <Button onPress={() => toast.success("Berhasil disimpan")} />
+  );
 }
 ```
 
+Semua bentuk berikut tetap didukung:
+
+```tsx
+const toast = useToast();
+
+toast.success("Selesai");                       // title saja
+toast.success("Selesai", 2500);                 // title + durasi
+toast.success("Selesai", "Catatan tersimpan");  // title + description
+toast.success("Selesai", "Catatan tersimpan", 3000);
+
+// Bentuk terstruktur penuh:
+toast.show({ type: "warning", title: "Hati-hati", description: "Aksi ini tidak bisa dibatalkan" });
+
+// Jenis lain:
+toast.neutral("Info umum");
+toast.info("Memproses...", 0);        // 0 = sticky, hanya bisa ditutup manual
+toast.warning("Periksa kembali input");
+toast.error("Koneksi gagal");
+toast.error(getErrorMessage(error));  // pakai error converter
+```
+
+`duration` satuan **milidetik**. Default 3000. `0` = tidak auto-dismiss (sticky).
+
 ## 📲 Real-world Examples
 
-### Example 1: Error Handling in screen with hooks
+### Example 1: Error Handling di screen dengan hooks
 
 ```tsx
 export function LoginScreen() {
   const toast = useToast();
-  const [identifier, setIdentifier] = useState("");
-  const [password, setPassword] = useState("");
   const { mutateAsync: signIn, isPending } = useSignIn();
 
   const handleLogin = async () => {
@@ -34,7 +72,11 @@ export function LoginScreen() {
       await signIn({ email: identifier, password });
       router.replace("/");
     } catch (error) {
-      toast.error(getErrorMessage(error));
+      toast.show({
+        type: "error",
+        title: "Gagal masuk",
+        description: getErrorMessage(error),
+      });
     }
   };
 }
@@ -43,131 +85,42 @@ export function LoginScreen() {
 ### Example 2: Form Validation
 
 ```tsx
-import { useToast } from "@/src/lib/providers";
-
-export function FormScreen() {
-  const toast = useToast();
-  const [email, setEmail] = useState("");
-
-  const handleSubmit = () => {
-    if (!email.includes("@")) {
-      toast.error("Please enter a valid email", 2000);
-      return;
-    }
-    // submit form
-    toast.success("Form submitted!");
-  };
-
-  return (
-    <>
-      <TextInput value={email} onChangeText={setEmail} />
-      <Button onPress={handleSubmit} />
-    </>
-  );
-}
-```
-
-### Example 3: Multi-step Process
-
-```tsx
-import { useToast } from "@/src/lib/providers";
-
-export function UploadFlow() {
-  const toast = useToast();
-
-  const handleCompleteSetup = async (files: any) => {
-    try {
-      toast.info("Uploading...");
-
-      // Step 1
-      const logo = await uploadLogo(files.logo);
-      toast.success("Logo uploaded!");
-
-      // Step 2
-      const service = await createService(files.service);
-      toast.success("Service created!");
-
-      // Step 3
-      await inviteTeam(files.team);
-      toast.success("Team invited! Setup complete!", 5000); // longer duration
-    } catch (error) {
-      toast.error(`Setup failed: ${getErrorMessage(error)}`, 5000);
-    }
-  };
-
-  return <Button onPress={() => handleCompleteSetup({...})} />;
-}
-```
-
-### Example 4: Network Request Status
-
-```tsx
-import { useToast } from "@/src/lib/providers";
-
-export function DataFetch() {
-  const toast = useToast();
-  const [data, setData] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/data");
-        const result = await response.json();
-        setData(result);
-        toast.success("Data loaded!");
-      } catch (error) {
-        toast.error("Failed to load data");
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  return <View>{/* render data */}</View>;
-}
-```
-
-### Example 5: Copy to Clipboard
-
-```tsx
-import { useToast } from "@/src/lib/providers";
-import * as Clipboard from "expo-clipboard";
-
-export function ShareCode() {
-  const toast = useToast();
-
-  const handleCopy = async (text: string) => {
-    try {
-      await Clipboard.setStringAsync(text);
-      toast.success("Copied to clipboard!");
-    } catch {
-      toast.error("Failed to copy");
-    }
-  };
-
-  return <Button onPress={() => handleCopy("code-to-copy")} />;
-}
-```
-
-## 🎨 Toast Types
-
-```tsx
 const toast = useToast();
 
-// Success - untuk aksi berhasil
-toast.success("Profile updated!"); // Green
-toast.success("File saved!", 2000); // With custom duration
+const handleSubmit = () => {
+  if (!email.includes("@")) {
+    toast.warning("Cek kembali email", "Format email belum valid", 2000);
+    return;
+  }
+  toast.success("Form terkirim");
+};
+```
 
-// Error - untuk error/failure
-toast.error("Connection failed"); // Red
-toast.error(getErrorMessage(error)); // Using error converter
+### Example 3: Progress status (loading → sukses)
 
-// Warning - untuk peringatan tapi tidak fatal
-toast.warning("This action cannot be undone", 4000); // Orange
+```tsx
+const handleLongOperation = async () => {
+  try {
+    toast.info("Mengunggah...", 0); // sticky info
+    await longRunningTask();
+    toast.success("Berhasil", "Semua langkah selesai");
+  } catch (error) {
+    toast.error("Gagal", getErrorMessage(error));
+  }
+};
+```
 
-// Info - untuk informasi umum
-toast.info("Processing..."); // Dark
-toast.info("Tap to dismiss", 0); // Never auto-dismiss
+### Example 4: Copy to Clipboard
+
+```tsx
+const handleCopy = async (text: string) => {
+  try {
+    await Clipboard.setStringAsync(text);
+    toast.success("Disalin ke clipboard");
+  } catch {
+    toast.error("Gagal menyalin");
+  }
+};
 ```
 
 ## 🧠 Smart Patterns
@@ -175,12 +128,10 @@ toast.info("Tap to dismiss", 0); // Never auto-dismiss
 ### Pattern 1: Error Converter Utility
 
 ```tsx
-// Create reusable error handler
 const handleApiError = (error: unknown, toast: ReturnType<typeof useToast>) => {
-  toast.error(getErrorMessage(error), 4000);
+  toast.show({ type: "error", title: "Terjadi kesalahan", description: getErrorMessage(error) });
 };
 
-// Use it everywhere
 try {
   await api.call();
 } catch (error) {
@@ -188,200 +139,53 @@ try {
 }
 ```
 
-### Pattern 2: Loading Toast
+### Pattern 2: Wrapper Function
 
 ```tsx
-const handleLongOperation = async () => {
-  const loadingId = toast.info("Loading...", 0); // 0 = no auto-dismiss
-  try {
-    await longRunningTask();
-    // Toast will be replaced by success
-    toast.success("Complete!");
-  } catch (error) {
-    toast.error(getErrorMessage(error));
-  }
-};
-
-// Note: Previous toast replaced automatically
-```
-
-### Pattern 3: Wrapper Function
-
-```tsx
-// Create service wrapper with automatic error handling
 const withToast = async (
-  promise: Promise<any>,
-  successMsg: string,
-  errorMsg?: string,
+  promise: Promise<unknown>,
+  successTitle: string,
+  successDesc?: string,
 ) => {
   try {
     const result = await promise;
-    toast.success(successMsg);
+    toast.success(successTitle, successDesc);
     return result;
   } catch (error) {
-    toast.error(errorMsg || getErrorMessage(error));
+    toast.error("Gagal", getErrorMessage(error));
     throw error;
   }
 };
-
-// Usage
-const data = await withToast(
-  api.getData(),
-  "Data loaded!",
-  "Failed to load data",
-);
 ```
 
-## 🚀 Integration Points
+## 💡 Best Practice
 
-### In Screens
-
-```tsx
-import { useToast } from "@/src/lib/providers";
-
-export function MyScreen() {
-  const toast = useToast();
-  // Use toast directly
-}
-```
-
-### In Custom Hooks
-
-```tsx
-export function useMyHook() {
-  const toast = useToast();
-
-  return {
-    doSomething: async () => {
-      try {
-        // Logic
-        toast.success("Done!");
-      } catch (error) {
-        toast.error(getErrorMessage(error));
-      }
-    },
-  };
-}
-```
-
-### In Context/Providers
-
-```tsx
-export function MyProvider({ children }) {
-  const toast = useToast();
-
-  return <MyContext.Provider value={{ toast }}>{children}</MyContext.Provider>;
-}
-```
+- **Title** = ringkas, satu baris (mis. "Berhasil disimpan", "Gagal masuk").
+- **Description** = detail pendek maks 2 baris (pesan error asli, konteks).
+- **Error** selalu pakai `getErrorMessage(error)` di description, bukan menampilkan objek error mentah.
+- Durasi singkat (< 2s) untuk konfirmasi cepat; `0` untuk pesan penting yang harus dibaca dulu.
+- Toast di-closing via X, sentuh kartu mana saja, atau auto-dismiss.
 
 ## ❌ What NOT to do
 
 ```tsx
-// ❌ Wrong: Can't use outside component
-async function apiCall() {
-  const toast = useToast(); // Error! Hooks only in components
-}
-
-// ✅ Right: Use in component
-export function MyComponent() {
-  const toast = useToast(); // OK
-  const handleAction = async () => {
-    try {
-      await apiCall();
-      toast.success("Done!");
-    } catch {
-      toast.error("Failed");
-    }
-  };
-}
-```
-
-```tsx
-// ❌ Wrong: Forgetting error handling
+// ❌ Salah: tidak pakai try-catch — kalau gagal tidak ada feedback
 const handleSave = async () => {
-  await barbershopService.updateSettings(data);
-  toast.success("Saved!"); // What if it fails?
+  await service.update(data);
+  toast.success("Tersimpan");
 };
 
-// ✅ Right: Always wrap with try-catch
+// ✅ Benar:
 const handleSave = async () => {
   try {
-    await barbershopService.updateSettings(data);
-    toast.success("Saved!");
+    await service.update(data);
+    toast.success("Tersimpan");
   } catch (error) {
-    toast.error(getErrorMessage(error));
-  }
-};
-```
-
-## 📱 Mobile-Specific Tips
-
-### Handling Keyboard
-
-```tsx
-const handleSubmit = async () => {
-  Keyboard.dismiss(); // Hide keyboard first
-  try {
-    await api.submit(data);
-    toast.success("Submitted!"); // Now toast is visible
-  } catch {
-    toast.error("Failed");
-  }
-};
-```
-
-### Persisting Messages
-
-```tsx
-// For important messages, don't auto-dismiss
-const handleCriticalAction = async () => {
-  try {
-    await criticalOperation();
-    toast.success("Critical operation complete - tap to dismiss", 0);
-  } catch {
-    toast.error("Critical error - fix required", 0);
-  }
-};
-```
-
-### Different Durations
-
-```tsx
-// Quick confirmations (< 2s)
-toast.success("Copied!", 1500);
-
-// Normal feedback (3s default)
-toast.warning("Please check your input");
-
-// Important errors (> 4s)
-toast.error("Connection lost. Please try again", 5000);
-
-// Critical or complex messages (no auto-dismiss)
-toast.info("Setup complete. Review settings and tap to continue", 0);
-```
-
-## 🔍 Debugging
-
-```tsx
-// Add logging for debugging
-const handleDebug = async () => {
-  const debugToast = (msg: string) => {
-    console.log("Toast:", msg);
-    toast.info(msg);
-  };
-
-  try {
-    debugToast("Step 1: Fetching data...");
-    const data = await fetch("/api/data");
-    debugToast("Step 2: Processing data...");
-    // ...
-    debugToast("Complete!");
-  } catch (error) {
-    debugToast(`Error: ${getErrorMessage(error)}`);
+    toast.error("Gagal menyimpan", getErrorMessage(error));
   }
 };
 ```
 
 ---
 
-Ready to use! Buka file apapun, import `useToast`, dan langsung mulai pakai! 🚀
+Ready to use! Buka file apapun, import `useToast`, dan langsung pakai! 🚀

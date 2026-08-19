@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import React, { useCallback, useState } from "react";
 import { View, StyleSheet, ViewStyle, LayoutChangeEvent } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -22,10 +23,12 @@ interface Props {
 export default function CustomerBookingChart({
   title,
   subtitle,
-  subtitleColor = Colors.brand.primary,
+  subtitleColor,
   data,
   style,
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [chartWidth, setChartWidth] = useState(0);
   const hasData = data.length > 0 && data.some((d) => d.value > 0);
 
@@ -38,10 +41,10 @@ export default function CustomerBookingChart({
   }, []);
 
   return (
-    <View style={[styles.card, Neu.raised(Colors.bg.surface, 1.1), style]}>
+    <View style={[styles.card, Neu.raised(colors.bg.surface, 1.1), style]}>
       <AppText style={styles.title}>{title}</AppText>
       {subtitle ? (
-        <AppText style={[styles.subtitle, { color: subtitleColor }]}>
+        <AppText style={[styles.subtitle, { color: subtitleColor ?? colors.brand.primary }]}>
           {subtitle}
         </AppText>
       ) : null}
@@ -63,13 +66,13 @@ export default function CustomerBookingChart({
                 <>
                   <Line
                     points={points.value}
-                    color={Colors.brand.primary}
+                    color={colors.brand.primary}
                     strokeWidth={2.5}
                     curveType="monotoneX"
                   />
                   <Scatter
                     points={points.value}
-                    color={Colors.brand.primary}
+                    color={colors.brand.primary}
                     radius={4}
                     style="fill"
                   />
@@ -94,44 +97,45 @@ export default function CustomerBookingChart({
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    borderRadius: 20,
-    padding: 16,
-  },
-  title: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: Colors.text.primary,
-    marginBottom: 2,
-  },
-  subtitle: {
-    fontSize: 12,
-    fontWeight: "500",
-    marginBottom: 8,
-  },
-  chartContainer: {
-    height: 200,
-    flex: 1,
-  },
-  chartPlaceholder: {
-    height: 200,
-    flex: 1,
-  },
-  emptyText: {
-    fontSize: 13,
-    color: Colors.text.muted,
-    textAlign: "center",
-    paddingVertical: 90,
-  },
-  xLabels: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 4,
-  },
-  xLabel: {
-    fontSize: 10,
-    color: Colors.icon.muted,
-    textAlign: "center",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    card: {
+      borderRadius: 20,
+      padding: 16,
+    },
+    title: {
+      fontSize: 15,
+      fontWeight: "600",
+      color: c.text.primary,
+      marginBottom: 2,
+    },
+    subtitle: {
+      fontSize: 12,
+      fontWeight: "500",
+      marginBottom: 8,
+    },
+    chartContainer: {
+      height: 200,
+      flex: 1,
+    },
+    chartPlaceholder: {
+      height: 200,
+      flex: 1,
+    },
+    emptyText: {
+      fontSize: 13,
+      color: c.text.muted,
+      textAlign: "center",
+      paddingVertical: 90,
+    },
+    xLabels: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginTop: 4,
+    },
+    xLabel: {
+      fontSize: 10,
+      color: c.icon.muted,
+      textAlign: "center",
+    },
+  });

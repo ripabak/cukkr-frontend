@@ -1,4 +1,5 @@
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 
@@ -9,6 +10,8 @@ interface Props {
 }
 
 export function WizardProgress({ totalSteps, currentStep, style }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <View style={[styles.container, style]}>
       {Array.from({ length: totalSteps }, (_, i) => (
@@ -24,20 +27,21 @@ export function WizardProgress({ totalSteps, currentStep, style }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  step: {
-    flex: 1,
-    height: 6,
-    borderRadius: 999,
-  },
-  active: {
-    backgroundColor: Colors.brand.primary,
-  },
-  upcoming: {
-    backgroundColor: Colors.border.default,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      gap: 8,
+    },
+    step: {
+      flex: 1,
+      height: 6,
+      borderRadius: 999,
+    },
+    active: {
+      backgroundColor: c.brand.primary,
+    },
+    upcoming: {
+      backgroundColor: c.border.default,
+    },
+  });

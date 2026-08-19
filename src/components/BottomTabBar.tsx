@@ -1,7 +1,8 @@
 import { AppText } from "@/src/components/AppText";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useMemberRole } from "@/src/hooks";
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { haptics } from "@/src/utils/haptics";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -35,6 +36,8 @@ export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
   const { t } = useI18nContext();
   const insets = useSafeAreaInsets();
   const { role } = useMemberRole();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const TABS: {
     key: Tab;
@@ -96,7 +99,7 @@ export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
                 name={tab.icon}
                 size={18}
                 color={
-                  isActive ? Colors.brand.primary : Colors.icon.muted
+                  isActive ? colors.brand.primary : colors.icon.muted
                 }
               />
               <AppText
@@ -113,11 +116,12 @@ export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    backgroundColor: Colors.bg.elevated,
-  },
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      backgroundColor: c.bg.elevated,
+    },
   tab: {
     flex: 1,
     position: "relative",
@@ -138,7 +142,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 3,
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
     borderBottomLeftRadius: 3,
     borderBottomRightRadius: 3,
     zIndex: 1,
@@ -146,11 +150,11 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 9.5,
     fontWeight: "400",
-    color: Colors.icon.muted,
+    color: c.icon.muted,
   },
   labelActive: {
     // Neutral on purpose — the icon carries the brand accent.
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     fontWeight: "400",
   },
 });

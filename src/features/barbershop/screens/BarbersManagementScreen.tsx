@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { Permission } from "@/src/components/Permission";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
@@ -40,6 +41,8 @@ export function BarbersManagementScreen() {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { user: currentUser } = useAuthUser();
   const { role } = useMemberRole();
   const canManage = role === "owner" || role === "admin";
@@ -262,41 +265,42 @@ export function BarbersManagementScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 30,
-    fontWeight: "600",
-    color: Colors.text.primary,
-    marginTop: 8,
-    letterSpacing: -0.8,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    marginTop: 4,
-    marginBottom: 24,
-  },
-  inviteBtn: {
-    marginBottom: 24,
-    marginTop: 8,
-  },
-  sectionLabel: {
-    fontSize: 13,
-    fontWeight: "500",
-    color: Colors.text.secondary,
-    marginBottom: 8,
-    letterSpacing: 0.5,
-  },
-  list: {
-    marginBottom: 24,
-  },
-  cardMargin: {
-    marginBottom: 16,
-  },
-  empty: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    textAlign: "center",
-    marginTop: 40,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    title: {
+      fontSize: 30,
+      fontWeight: "600",
+      color: c.text.primary,
+      marginTop: 8,
+      letterSpacing: -0.8,
+    },
+    subtitle: {
+      fontSize: 14,
+      color: c.text.secondary,
+      marginTop: 4,
+      marginBottom: 24,
+    },
+    inviteBtn: {
+      marginBottom: 24,
+      marginTop: 8,
+    },
+    sectionLabel: {
+      fontSize: 13,
+      fontWeight: "500",
+      color: c.text.secondary,
+      marginBottom: 8,
+      letterSpacing: 0.5,
+    },
+    list: {
+      marginBottom: 24,
+    },
+    cardMargin: {
+      marginBottom: 16,
+    },
+    empty: {
+      fontSize: 14,
+      color: c.text.secondary,
+      textAlign: "center",
+      marginTop: 40,
+    },
+  });

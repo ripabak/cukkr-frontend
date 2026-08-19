@@ -1,4 +1,5 @@
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { MultilineInputField } from "@/src/components/MultilineInputField";
 import { LabeledInput } from "@/src/components/LabeledInput";
 import { PriceInput } from "@/src/components/PriceInput";
@@ -29,6 +30,8 @@ export function CreateBarbershopFirstServiceScreen() {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { formData, updateFormData } = useCreateBarbershopForm();
   const [serviceName, setServiceName] = useState(formData.serviceName || "");
   const [description, setDescription] = useState(formData.description || "");
@@ -176,38 +179,39 @@ export function CreateBarbershopFirstServiceScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  wizard: {
-    marginBottom: 32,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: "600",
-    color: Colors.text.primary,
-  },
-  subtitle: {
-    fontSize: 13,
-    color: Colors.text.secondary,
-    marginTop: 8,
-    marginBottom: 24,
-    textAlign: "center",
-  },
-  descInput: {
-    marginTop: 16,
-  },
-  fieldSpacing: {
-    marginTop: 16,
-  },
-  flex: {
-    flex: 1,
-    minHeight: 32,
-  },
-  buttonRow: {
-    flexDirection: "row",
-    gap: 12,
-    marginBottom: 16,
-  },
-  primaryButtonWrapper: {
-    flex: 1,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    wizard: {
+      marginBottom: 32,
+    },
+    title: {
+      fontSize: 26,
+      fontWeight: "600",
+      color: c.text.primary,
+    },
+    subtitle: {
+      fontSize: 13,
+      color: c.text.secondary,
+      marginTop: 8,
+      marginBottom: 24,
+      textAlign: "center",
+    },
+    descInput: {
+      marginTop: 16,
+    },
+    fieldSpacing: {
+      marginTop: 16,
+    },
+    flex: {
+      flex: 1,
+      minHeight: 32,
+    },
+    buttonRow: {
+      flexDirection: "row",
+      gap: 12,
+      marginBottom: 16,
+    },
+    primaryButtonWrapper: {
+      flex: 1,
+    },
+  });

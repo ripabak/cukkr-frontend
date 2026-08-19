@@ -1,8 +1,8 @@
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { Skeleton } from "@/src/components/Skeleton";
 import { FilterPicker } from "@/src/components/FilterPicker";
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -32,23 +32,26 @@ function getTypeOptions(t: (key: string) => string) {
 }
 
 function BookingTypeIcon({ type }: { type: "walk_in" | "appointment" }) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createBookingTypeStyles);
   return (
     <View
       style={[
-        bookingTypeStyles.badge,
-        type === "walk_in" ? bookingTypeStyles.walkIn : bookingTypeStyles.appt,
+        styles.badge,
+        type === "walk_in" ? styles.walkIn : styles.appt,
       ]}
     >
       <Ionicons
         name={type === "walk_in" ? "walk" : "calendar"}
         size={10}
-        color={Colors.text.inverse}
+        color={colors.text.inverse}
       />
     </View>
   );
 }
 
-const bookingTypeStyles = StyleSheet.create({
+const createBookingTypeStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   badge: {
     width: 18,
     height: 18,
@@ -56,9 +59,9 @@ const bookingTypeStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  walkIn: { backgroundColor: Colors.status.info },
-  appt: { backgroundColor: Colors.status.warning },
-});
+  walkIn: { backgroundColor: c.status.info },
+  appt: { backgroundColor: c.status.warning },
+  });
 
 export function AnalyticsRevenueScreen() {
   const router = useRouter();
@@ -71,6 +74,8 @@ export function AnalyticsRevenueScreen() {
     "all" | "walk_in" | "appointment"
   >("all");
   const [page, setPage] = useState(1);
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const { data: revData, isLoading: revLoading } = useAnalyticsRevenue(range);
   const { data: bookingsData, isLoading: bookingsLoading } =
@@ -98,10 +103,10 @@ export function AnalyticsRevenueScreen() {
       <View style={styles.topBar}>
         <TouchableOpacity
           onPress={() => router.back()}
-          style={[styles.backBtn, Neu.soft(Colors.bg.surface, 0.7)]}
+          style={[styles.backBtn, Neu.soft(colors.bg.surface, 0.7)]}
           activeOpacity={0.85}
         >
-          <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
+          <Ionicons name="chevron-back" size={20} color={colors.text.primary} />
         </TouchableOpacity>
         <AppText style={styles.pageTitle}>{t("services.price")}</AppText>
         <View style={styles.topBarRight} />
@@ -112,7 +117,7 @@ export function AnalyticsRevenueScreen() {
       {revLoading && !revData ? (
         <View style={styles.skeletonWrap}>
           <Skeleton.StatTiles perRow={3} count={3} height={128} />
-          <View style={[styles.chartCard, Neu.raised(Colors.bg.surface)]}>
+          <View style={[styles.chartCard, Neu.raised(colors.bg.surface)]}>
             <View style={styles.chartCardHeader}>
               <Skeleton width="30%" height={13} />
               <Skeleton width={48} height={18} radius={9} />
@@ -131,7 +136,7 @@ export function AnalyticsRevenueScreen() {
               <Ionicons
                 name="receipt"
                 size={16}
-                color={Colors.brand.primary}
+                color={colors.brand.primary}
               />
             }
             stat={stats.totalBookings ?? EMPTY_STAT}
@@ -144,7 +149,7 @@ export function AnalyticsRevenueScreen() {
               <Ionicons
                 name="cash"
                 size={16}
-                color={Colors.brand.primary}
+                color={colors.brand.primary}
               />
             }
             stat={stats.avgRevenuePerBooking ?? EMPTY_STAT}
@@ -157,7 +162,7 @@ export function AnalyticsRevenueScreen() {
               <Ionicons
                 name="time"
                 size={16}
-                color={Colors.brand.primary}
+                color={colors.brand.primary}
               />
             }
             stat={stats.avgTime ?? EMPTY_STAT}
@@ -167,7 +172,7 @@ export function AnalyticsRevenueScreen() {
       ) : null}
 
       {chart && chart.length > 0 ? (
-        <View style={[styles.chartCard, Neu.raised(Colors.bg.surface)]}>
+        <View style={[styles.chartCard, Neu.raised(colors.bg.surface)]}>
           <View style={styles.chartCardHeader}>
             <AppText style={styles.chartCardTitle}>{t("services.price")}</AppText>
             {stats ? (
@@ -191,7 +196,7 @@ export function AnalyticsRevenueScreen() {
             options={getTypeOptions(t)}
             selected={typeFilter}
             onSelect={handleTypeChange}
-            pillStyle={[styles.filterPill, Neu.soft(Colors.bg.surface, 0.7)]}
+            pillStyle={[styles.filterPill, Neu.soft(colors.bg.surface, 0.7)]}
             pillTextStyle={styles.filterPillText}
           />
         </View>
@@ -249,12 +254,12 @@ export function AnalyticsRevenueScreen() {
             <TouchableOpacity
               disabled={!meta.hasPrev}
               onPress={() => setPage((p) => p - 1)}
-              style={[styles.pageBtn, Neu.soft(Colors.bg.surface, 0.7), !meta.hasPrev && styles.pageBtnDisabled]}
+              style={[styles.pageBtn, Neu.soft(colors.bg.surface, 0.7), !meta.hasPrev && styles.pageBtnDisabled]}
             >
               <Ionicons
                 name="chevron-back"
                 size={16}
-                color={meta.hasPrev ? Colors.text.primary : Colors.text.muted}
+                color={meta.hasPrev ? colors.text.primary : colors.text.muted}
               />
             </TouchableOpacity>
             <AppText style={styles.pageLabel}>
@@ -263,12 +268,12 @@ export function AnalyticsRevenueScreen() {
             <TouchableOpacity
               disabled={!meta.hasNext}
               onPress={() => setPage((p) => p + 1)}
-              style={[styles.pageBtn, Neu.soft(Colors.bg.surface, 0.7), !meta.hasNext && styles.pageBtnDisabled]}
+              style={[styles.pageBtn, Neu.soft(colors.bg.surface, 0.7), !meta.hasNext && styles.pageBtnDisabled]}
             >
               <Ionicons
                 name="chevron-forward"
                 size={16}
-                color={meta.hasNext ? Colors.text.primary : Colors.text.muted}
+                color={meta.hasNext ? colors.text.primary : colors.text.muted}
               />
             </TouchableOpacity>
           </View>
@@ -278,7 +283,8 @@ export function AnalyticsRevenueScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   scrollContent: {
     paddingBottom: 200,
   },
@@ -299,7 +305,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 17,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   topBarRight: {
     width: 40,
@@ -312,7 +318,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border.light,
+    borderBottomColor: c.border.light,
     gap: 12,
   },
   skeletonBookingLeft: {
@@ -350,7 +356,7 @@ const styles = StyleSheet.create({
   chartCardTitle: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   listSection: {
     marginTop: 20,
@@ -366,7 +372,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 17,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   filterPill: {
     flexDirection: "row",
@@ -379,20 +385,20 @@ const styles = StyleSheet.create({
   filterPillText: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   emptyText: {
     textAlign: "center",
     marginTop: 32,
     fontSize: 15,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   bookingRow: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border.light,
+    borderBottomColor: c.border.light,
     gap: 12,
   },
   bookingLeft: {
@@ -407,18 +413,18 @@ const styles = StyleSheet.create({
   bookingCustomer: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
     flex: 1,
   },
   bookingMeta: {
     fontSize: 12,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     paddingLeft: 24,
   },
   bookingRevenue: {
     fontSize: 14,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   pagination: {
     flexDirection: "row",
@@ -441,6 +447,6 @@ const styles = StyleSheet.create({
   pageLabel: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
-});
+  });

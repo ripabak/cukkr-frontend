@@ -1,4 +1,5 @@
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { InviteRow } from "@/src/features/workspace/components/InviteRow";
 import { BackButton } from "@/src/components/BackButton";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
@@ -18,6 +19,8 @@ import { AppText } from "@/src/components/AppText";
 export function CreateBarbershopInviteBarberFilledScreen() {
   const router = useRouter();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { formData, updateFormData } = useCreateBarbershopForm();
   const [barber, setBarber] = useState("");
   const { mutate: inviteBarber, isPending: isInviting } = useInviteBarber();
@@ -134,48 +137,49 @@ export function CreateBarbershopInviteBarberFilledScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  wizard: {
-    marginBottom: 32,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "600",
-    color: Colors.text.primary,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    marginTop: 8,
-    marginBottom: 24,
-  },
-  barbersLabel: {
-    fontSize: 15,
-    fontWeight: "500",
-    color: Colors.text.primary,
-    marginBottom: 12,
-  },
-  inviteRowTop: {
-    marginTop: 8,
-  },
-  inputTop: {
-    marginTop: 16,
-  },
-  inviteBtn: {
-    marginTop: 12,
-    alignSelf: "center",
-    width: "auto",
-    paddingHorizontal: 32,
-  },
-  flex: {
-    flex: 1,
-  },
-  buttonRow: {
-    flexDirection: "row",
-    gap: 12,
-    marginBottom: 16,
-  },
-  primaryButtonWrapper: {
-    flex: 1,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    wizard: {
+      marginBottom: 32,
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: "600",
+      color: c.text.primary,
+    },
+    subtitle: {
+      fontSize: 14,
+      color: c.text.secondary,
+      marginTop: 8,
+      marginBottom: 24,
+    },
+    barbersLabel: {
+      fontSize: 15,
+      fontWeight: "500",
+      color: c.text.primary,
+      marginBottom: 12,
+    },
+    inviteRowTop: {
+      marginTop: 8,
+    },
+    inputTop: {
+      marginTop: 16,
+    },
+    inviteBtn: {
+      marginTop: 12,
+      alignSelf: "center",
+      width: "auto",
+      paddingHorizontal: 32,
+    },
+    flex: {
+      flex: 1,
+    },
+    buttonRow: {
+      flexDirection: "row",
+      gap: 12,
+      marginBottom: 16,
+    },
+    primaryButtonWrapper: {
+      flex: 1,
+    },
+  });

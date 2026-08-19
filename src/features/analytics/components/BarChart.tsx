@@ -1,4 +1,5 @@
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -18,10 +19,13 @@ interface Props {
 
 export function BarChart({
   data,
-  barColor = Colors.brand.primary,
+  barColor,
   chartHeight = 120,
   maxBars = 14,
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
+  const filledColor = barColor ?? colors.brand.primary;
   const visible = data.length > maxBars ? data.slice(-maxBars) : data;
   const maxVal = Math.max(...visible.map((d) => d.value), 1);
 
@@ -40,7 +44,7 @@ export function BarChart({
                 {
                   height: barH,
                   backgroundColor:
-                    point.value > 0 ? barColor : Colors.border.default,
+                    point.value > 0 ? filledColor : colors.border.default,
                   opacity: point.value > 0 ? 1 : 0.5,
                 },
               ]}
@@ -55,26 +59,27 @@ export function BarChart({
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-    gap: 3,
-  },
-  col: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-end",
-  },
-  bar: {
-    width: "80%",
-    borderRadius: 4,
-    minWidth: 4,
-  },
-  label: {
-    fontSize: 9,
-    color: Colors.text.muted,
-    marginTop: 5,
-    textAlign: "center",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      alignItems: "flex-end",
+      gap: 3,
+    },
+    col: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "flex-end",
+    },
+    bar: {
+      width: "80%",
+      borderRadius: 4,
+      minWidth: 4,
+    },
+    label: {
+      fontSize: 9,
+      color: c.text.muted,
+      marginTop: 5,
+      textAlign: "center",
+    },
+  });

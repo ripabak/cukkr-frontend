@@ -1,6 +1,7 @@
 import { AppText } from "@/src/components/AppText";
 import { BottomSheet } from "@/src/components/BottomSheet";
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { haptics } from "@/src/utils/haptics";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Ionicons } from "@expo/vector-icons";
@@ -31,6 +32,8 @@ export function SwipeConfirmationModal({
   onCancel,
 }: Props) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const resolvedSwipeLabel = swipeLabel ?? t("schedule.swipeToComplete");
 
   const handleClose = () => {
@@ -45,7 +48,7 @@ export function SwipeConfirmationModal({
           <Ionicons
             name="checkmark"
             size={26}
-            color={Colors.text.primary}
+            color={colors.text.primary}
           />
         </View>
         <AppText style={styles.title}>{title}</AppText>
@@ -64,7 +67,8 @@ export function SwipeConfirmationModal({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   body: {
     alignItems: "center",
     paddingTop: 6,
@@ -74,7 +78,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 18,
-    backgroundColor: Colors.brand.primarySurface,
+    backgroundColor: c.brand.primarySurface,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 16,
@@ -82,14 +86,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 19,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
     textAlign: "center",
     marginBottom: 8,
     letterSpacing: -0.3,
   },
   description: {
     fontSize: 13,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     textAlign: "center",
     lineHeight: 18,
     marginBottom: 24,
@@ -100,4 +104,4 @@ const styles = StyleSheet.create({
     width: 280,
     marginBottom: 8,
   },
-});
+  });

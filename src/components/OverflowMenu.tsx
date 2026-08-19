@@ -1,5 +1,5 @@
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
 import {
@@ -23,6 +23,8 @@ interface Props {
 }
 
 export function OverflowMenu({ visible, items, onClose, style }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   if (!visible) return null;
 
   return (
@@ -32,7 +34,7 @@ export function OverflowMenu({ visible, items, onClose, style }: Props) {
         onPress={onClose}
         activeOpacity={1}
       />
-      <View style={[styles.menu, Neu.float(Colors.bg.surface, 1.2), style]}>
+      <View style={[styles.menu, Neu.float(colors.bg.surface, 1.2), style]}>
         {items.map((item, index) => (
           <TouchableOpacity
             key={index}
@@ -55,37 +57,38 @@ export function OverflowMenu({ visible, items, onClose, style }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  backdrop: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  menu: {
-    position: "absolute",
-    top: 56,
-    right: 20,
-    borderRadius: 16,
-    minWidth: 180,
-    zIndex: 100,
-    overflow: "hidden",
-  },
-  item: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-  },
-  itemBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border.light,
-  },
-  itemText: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: Colors.text.primary,
-  },
-  itemTextDanger: {
-    color: Colors.status.danger,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    backdrop: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+    },
+    menu: {
+      position: "absolute",
+      top: 56,
+      right: 20,
+      borderRadius: 16,
+      minWidth: 180,
+      zIndex: 100,
+      overflow: "hidden",
+    },
+    item: {
+      paddingHorizontal: 16,
+      paddingVertical: 16,
+    },
+    itemBorder: {
+      borderBottomWidth: 1,
+      borderBottomColor: c.border.light,
+    },
+    itemText: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: c.text.primary,
+    },
+    itemTextDanger: {
+      color: c.status.danger,
+    },
+  });

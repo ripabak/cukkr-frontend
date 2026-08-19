@@ -1,4 +1,5 @@
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import AppTheme from "@/src/app-theme";
 import { HelperCopy } from "@/src/components/HelperCopy";
 import { IconActionButton } from "@/src/features/barbershop/components/IconActionButton";
@@ -19,6 +20,8 @@ export function InviteBarberScreen() {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { role } = useMemberRole();
   const canInvite = role === "owner" || role === "admin";
   const [contact, setContact] = useState("");
@@ -86,29 +89,30 @@ export function InviteBarberScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: Colors.bg.default,
-    paddingTop: AppTheme.spacing.lg,
-  },
-  container: {
-    flex: 1,
-  },
-  content: {
-    paddingHorizontal: 20,
-    paddingTop: 24,
-  },
-  viewOnlyBanner: {
-    marginTop: 24,
-    padding: 12,
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 12,
-    alignItems: "center",
-  },
-  viewOnlyText: {
-    fontSize: 13,
-    color: Colors.text.muted,
-    textAlign: "center",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    safeArea: {
+      flex: 1,
+      backgroundColor: c.bg.default,
+      paddingTop: AppTheme.spacing.lg,
+    },
+    container: {
+      flex: 1,
+    },
+    content: {
+      paddingHorizontal: 20,
+      paddingTop: 24,
+    },
+    viewOnlyBanner: {
+      marginTop: 24,
+      padding: 12,
+      backgroundColor: c.bg.surface,
+      borderRadius: 12,
+      alignItems: "center",
+    },
+    viewOnlyText: {
+      fontSize: 13,
+      color: c.text.muted,
+      textAlign: "center",
+    },
+  });

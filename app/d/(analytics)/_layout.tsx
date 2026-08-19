@@ -1,5 +1,4 @@
 import { useMemberRole } from "@/src/hooks";
-import { Colors } from "@/src/theme/colors";
 import { ProtectedRoute } from "@/src/components/ProtectedRoute";
 import { WorkspaceRoute } from "@/src/components/WorkspaceRoute";
 import { Stack, useRouter } from "expo-router";

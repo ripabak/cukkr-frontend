@@ -1,5 +1,5 @@
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import React from "react";
 import { View, StyleSheet, ViewStyle, KeyboardTypeOptions } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -26,16 +26,18 @@ export function PrefixedInputField({
   keyboardType,
   style,
 }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
-    <View style={[label ? styles.rowContainer : styles.container, !label && Neu.inset(Colors.bg.surface, 0.6), style]}>
+    <View style={[label ? styles.rowContainer : styles.container, !label && Neu.inset(colors.bg.surface, 0.6), style]}>
       {label ? <AppText style={styles.label}>{label}</AppText> : null}
-      <View style={[styles.inputWrapper, !label && styles.inputWrapperFull, Neu.inset(Colors.bg.surface, 0.6)]}>
+      <View style={[styles.inputWrapper, !label && styles.inputWrapperFull, Neu.inset(colors.bg.surface, 0.6)]}>
         <AppText style={styles.prefix}>{prefix}</AppText>
         <AppTextInput
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
-          placeholderTextColor={Colors.text.muted}
+          placeholderTextColor={colors.text.muted}
           editable={editable}
           keyboardType={keyboardType}
           style={styles.input}
@@ -45,51 +47,52 @@ export function PrefixedInputField({
   );
 }
 
-const styles = StyleSheet.create({
-  rowContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 999,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: Colors.text.secondary,
-    minWidth: 72,
-  },
-  inputWrapper: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 999,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  inputWrapperFull: {
-    flex: 0,
-    paddingHorizontal: 0,
-    paddingVertical: 0,
-    backgroundColor: "transparent",
-    borderRadius: 0,
-    borderWidth: 0,
-  },
-  prefix: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: Colors.text.primary,
-    marginRight: 8,
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    color: Colors.text.primary,
-    padding: 0,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    rowContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+    },
+    container: {
+      flexDirection: "row",
+      alignItems: "center",
+      borderRadius: 999,
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+    },
+    label: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: c.text.secondary,
+      minWidth: 72,
+    },
+    inputWrapper: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      borderRadius: 999,
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+    },
+    inputWrapperFull: {
+      flex: 0,
+      paddingHorizontal: 0,
+      paddingVertical: 0,
+      backgroundColor: "transparent",
+      borderRadius: 0,
+      borderWidth: 0,
+    },
+    prefix: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: c.text.primary,
+      marginRight: 8,
+    },
+    input: {
+      flex: 1,
+      fontSize: 16,
+      color: c.text.primary,
+      padding: 0,
+    },
+  });

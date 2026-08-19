@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { useFrame } from "@/src/components/FrameContext";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -26,6 +27,8 @@ const FALLBACK_PANEL_HEIGHT = 280;
 
 export function NewBookBottomSheet({ visible, onClose }: Props) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { frameWidth } = useFrame();
@@ -109,7 +112,7 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
 
         <View style={styles.buttonsRow}>
           <TouchableOpacity
-            style={[styles.bookingBtn, Neu.raised(Colors.bg.surface, 1.1)]}
+            style={[styles.bookingBtn, Neu.raised(colors.bg.surface, 1.1)]}
             activeOpacity={0.85}
             onPress={() => {
               onClose();
@@ -119,13 +122,13 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
             <Ionicons
               name="walk-outline"
               size={36}
-              color={Colors.text.primary}
+              color={colors.text.primary}
             />
             <AppText style={styles.btnLabel}>{t("home.walkIn")}</AppText>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.bookingBtn, Neu.raised(Colors.bg.surface, 1.1)]}
+            style={[styles.bookingBtn, Neu.raised(colors.bg.surface, 1.1)]}
             activeOpacity={0.85}
             onPress={() => {
               onClose();
@@ -135,7 +138,7 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
             <Ionicons
               name="calendar-outline"
               size={36}
-              color={Colors.text.primary}
+              color={colors.text.primary}
             />
             <AppText style={styles.btnLabel}>{t("home.appointment")}</AppText>
           </TouchableOpacity>
@@ -145,14 +148,15 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   backdrop: {
-    backgroundColor: Colors.bg.overlay,
+    backgroundColor: c.bg.overlay,
   },
   panel: {
     position: "absolute",
     bottom: 0,
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     paddingTop: 12,
@@ -167,14 +171,14 @@ const styles = StyleSheet.create({
     width: 36,
     height: 4,
     borderRadius: 2,
-    backgroundColor: Colors.border.default,
+    backgroundColor: c.border.default,
     alignSelf: "center",
     marginBottom: 16,
   },
   title: {
     fontSize: 18,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
     marginBottom: 20,
     textAlign: "center",
   },
@@ -193,6 +197,6 @@ const styles = StyleSheet.create({
   btnLabel: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
-});
+  });

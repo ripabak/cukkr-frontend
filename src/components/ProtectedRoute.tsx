@@ -1,5 +1,6 @@
 import { useAuthGuard } from "@/src/hooks/useAuthGuard";
-import { Colors } from "@/src/theme/colors";
+import { useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -9,11 +10,13 @@ interface ProtectedRouteProps {
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { isLoading, isAuthenticated } = useAuthGuard();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   if (isLoading || !isAuthenticated) {
     return (
       <SafeAreaView style={styles.centered}>
-        <ActivityIndicator size="large" color={Colors.brand.primary} />
+        <ActivityIndicator size="large" color={colors.brand.primary} />
       </SafeAreaView>
     );
   }
@@ -21,11 +24,12 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   return <>{children}</>;
 }
 
-const styles = StyleSheet.create({
-  centered: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.bg.default,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    centered: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: c.bg.default,
+    },
+  });

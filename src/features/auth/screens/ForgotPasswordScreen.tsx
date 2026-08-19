@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useToast } from "@/src/lib/providers";
 import { useI18nContext } from "@/src/lib/i18n/provider";
-import { Colors } from "@/src/theme/colors";
+import { useTheme } from "@/src/theme/ThemeContext";
 import { AuthButton } from "../components/AuthButton";
 import { AuthScreenShell } from "../components/AuthScreenShell";
 import { AuthTextField } from "../components/AuthTextField";
@@ -19,6 +19,7 @@ export function ForgotPasswordScreen() {
   const toast = useToast();
   const { t } = useI18nContext();
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
   const { callbackURL } = useLocalSearchParams<{ callbackURL?: string }>();
   const [email, setEmail] = useState("");
   const { mutateAsync: sendOtp, isPending } = useSendVerificationOtp();
@@ -52,7 +53,7 @@ export function ForgotPasswordScreen() {
         onPress={() => router.back()}
         style={[styles.backBtn, { top: insets.top + 12 }]}
       >
-        <Ionicons name="chevron-back" size={24} color={Colors.text.primary} />
+        <Ionicons name="chevron-back" size={24} color={colors.text.primary} />
       </TouchableOpacity>
       <AuthScreenShell
         title={t("auth.forgotPasswordTitle")}

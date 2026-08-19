@@ -1,48 +1,49 @@
 import React, { useState, useCallback, useRef } from "react";
 import { ToastContainer } from "./ToastContainer";
-import { Toast, ToastContext } from "./ToastContext";
+import { Toast, ToastContext, ShowToastOptions } from "./ToastContext";
 
+/**
+ * Holds the toast list. Timers + exit animations are owned by ToastContainer
+ * so every dismiss path (auto-dismiss, X, tap) plays the slide-out first.
+ */
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const toastIdRef = useRef(0);
-  const timeoutsRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(
-    new Map(),
-  );
 
   const hideToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
-    const timeout = timeoutsRef.current.get(id);
-    if (timeout) {
-      clearTimeout(timeout);
-      timeoutsRef.current.delete(id);
-    }
   }, []);
 
   const showToast = useCallback(
     (message: string, type: Toast["type"] = "info", duration = 3000) => {
       const id = String(toastIdRef.current++);
-      const toast: Toast = { id, message, type, duration };
-
-      setToasts((prev) => [...prev, toast]);
-
-      if (duration > 0) {
-        const timeout = setTimeout(() => hideToast(id), duration);
-        timeoutsRef.current.set(id, timeout);
-      }
-
+      setToasts((prev) => [...prev, { id, type, title: message, duration }]);
       return id;
     },
-    [hideToast],
+    [],
+  );
+
+  const show = useCallback(
+    (options: ShowToastOptions) => {
+      const { type = "info", title, description, duration = 3000 } = options;
+      const id = String(toastIdRef.current++);
+      setToasts((prev) => [
+        ...prev,
+        { id, type, title, description, duration },
+      ]);
+      return id;
+    },
+    [],
   );
 
   const clearAll = useCallback(() => {
-    timeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
-    timeoutsRef.current.clear();
     setToasts([]);
   }, []);
 
   return (
-    <ToastContext.Provider value={{ toasts, showToast, hideToast, clearAll }}>
+    <ToastContext.Provider
+      value={{ toasts, show, showToast, hideToast, clearAll }}
+    >
       {children}
       <ToastContainer />
     </ToastContext.Provider>

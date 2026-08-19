@@ -1,5 +1,5 @@
-import { Colors } from "@/src/theme/colors";
 import { getStatusColor, getStatusSurface } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import React from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -21,33 +21,34 @@ interface Props {
   style?: ViewStyle;
 }
 
-const STATUS_COLORS: Record<StatusVariant, string> = {
-  active: Colors.status.success,
-  pending: Colors.status.warning,
+const STATUS_COLORS = (c: ThemeColors): Record<StatusVariant, string> => ({
+  active: c.status.success,
+  pending: c.status.warning,
   waiting: getStatusColor("waiting"),
   in_progress: getStatusColor("in_progress"),
   completed: getStatusColor("completed"),
   canceled: getStatusColor("cancelled"),
   requested: getStatusColor("requested"),
   declined: getStatusColor("declined"),
-  default: Colors.text.secondary,
-};
+  default: c.text.secondary,
+});
 
-const STATUS_SURFACES: Record<StatusVariant, string> = {
-  active: Colors.status.successSurface,
-  pending: Colors.status.warningSurface,
+const STATUS_SURFACES = (c: ThemeColors): Record<StatusVariant, string> => ({
+  active: c.status.successSurface,
+  pending: c.status.warningSurface,
   waiting: getStatusSurface("waiting"),
   in_progress: getStatusSurface("in_progress"),
   completed: getStatusSurface("completed"),
   canceled: getStatusSurface("cancelled"),
   requested: getStatusSurface("requested"),
   declined: getStatusSurface("declined"),
-  default: Colors.bg.surface,
-};
+  default: c.bg.surface,
+});
 
 export function StatusBadge({ label, variant = "default", style }: Props) {
-  const color = STATUS_COLORS[variant];
-  const surface = STATUS_SURFACES[variant];
+  const { colors } = useTheme();
+  const color = STATUS_COLORS(colors)[variant];
+  const surface = STATUS_SURFACES(colors)[variant];
 
   return (
     <View style={[styles.badge, { backgroundColor: surface, borderColor: color }, style]}>

@@ -1,8 +1,8 @@
-import { Colors } from "@/src/theme/colors";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
 import React from "react";
 import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
-import { Neu } from "@/src/theme/styles";
 
 interface Props {
   label: string;
@@ -12,6 +12,8 @@ interface Props {
 }
 
 export function PrimaryButton({ label, onPress, disabled, style }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -29,20 +31,21 @@ export function PrimaryButton({ label, onPress, disabled, style }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  button: {
-    borderRadius: 999,
-    height: 52,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-  },
-  disabled: {
-    opacity: 0.5,
-  },
-  label: {
-    color: Colors.text.primary,
-    fontSize: 16,
-    fontWeight: "600",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    button: {
+      borderRadius: 999,
+      height: 52,
+      alignItems: "center",
+      justifyContent: "center",
+      width: "100%",
+    },
+    disabled: {
+      opacity: 0.5,
+    },
+    label: {
+      color: c.text.primary,
+      fontSize: 16,
+      fontWeight: "600",
+    },
+  });

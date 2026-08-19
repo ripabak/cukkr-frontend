@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { SearchInput } from "@/src/components/SearchInput";
@@ -20,6 +21,8 @@ import { Skeleton } from "@/src/components/Skeleton";
 export function SelectServicesScreen() {
   const router = useRouter();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { formData, setServices } = useNewBookingForm();
   const [query, setQuery] = useState("");
 
@@ -73,7 +76,7 @@ export function SelectServicesScreen() {
               <Ionicons
                 name="checkmark"
                 size={20}
-                color={Colors.text.primary}
+                color={colors.text.primary}
               />
             </TouchableOpacity>
           }
@@ -116,14 +119,14 @@ export function SelectServicesScreen() {
                   styles.checkbox,
                   selected.has(item.id)
                     ? [styles.checkboxSelected, Neu.accent(0.75)]
-                    : Neu.inset(Colors.bg.surface, 0.6),
+                    : Neu.inset(colors.bg.surface, 0.6),
                 ]}
               >
                 {selected.has(item.id) ? (
                   <Ionicons
                     name="checkmark"
                     size={14}
-                    color={Colors.text.primary}
+                    color={colors.text.primary}
                   />
                 ) : null}
               </View>
@@ -135,7 +138,8 @@ export function SelectServicesScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   content: {
     paddingTop: 24,
     gap: 16,
@@ -166,12 +170,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   checkboxSelected: {
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
   },
   emptyText: {
     textAlign: "center",
     marginTop: 40,
     fontSize: 14,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
-});
+  });

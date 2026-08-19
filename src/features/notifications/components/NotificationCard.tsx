@@ -1,6 +1,7 @@
 import { useI18nContext } from "@/src/lib/i18n/provider";
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
 import {
@@ -61,11 +62,13 @@ export function NotificationCard({
   style,
 }: Props) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={isClickable ? 0.85 : 1}
-      style={[styles.card, Neu.raised(Colors.bg.surface), style]}
+      style={[styles.card, Neu.raised(colors.bg.surface), style]}
     >
       <View style={styles.topRow}>
         <AppText style={styles.typeLabel}>
@@ -77,7 +80,7 @@ export function NotificationCard({
             <Ionicons
               name="chevron-forward"
               size={13}
-              color={Colors.text.muted}
+              color={colors.text.muted}
               style={styles.chevron}
             />
           ) : null}
@@ -85,7 +88,7 @@ export function NotificationCard({
       </View>
       <View style={styles.bodyRow}>
         <View style={styles.bodyLeft}>
-          {status === "pending" ? <View style={[styles.dot, Neu.inset(Colors.bg.surface, 0.6)]} /> : null}
+          {status === "pending" ? <View style={[styles.dot, Neu.inset(colors.bg.surface, 0.6)]} /> : null}
           <View style={styles.bodyText}>
             <AppText style={styles.name}>{name}</AppText>
             {detail ? <AppText style={styles.detail}>{detail}</AppText> : null}
@@ -111,11 +114,11 @@ export function NotificationCard({
             ) : null}
           </View>
         </View>
-        <View style={[styles.iconCircle, Neu.inset(Colors.bg.surface, 0.6)]}>
+        <View style={[styles.iconCircle, Neu.inset(colors.bg.surface, 0.6)]}>
           <Ionicons
             name={TYPE_ICON[type]}
             size={20}
-            color={Colors.icon.muted}
+            color={colors.icon.muted}
           />
         </View>
       </View>
@@ -123,7 +126,8 @@ export function NotificationCard({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   card: {
     borderRadius: 20,
     padding: 16,
@@ -144,12 +148,12 @@ const styles = StyleSheet.create({
   },
   typeLabel: {
     fontSize: 12,
-    color: Colors.icon.muted,
+    color: c.icon.muted,
     fontWeight: "500",
   },
   timestamp: {
     fontSize: 12,
-    color: Colors.text.muted,
+    color: c.text.muted,
   },
   bodyRow: {
     flexDirection: "row",
@@ -166,7 +170,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: Colors.status.inProgress,
+    backgroundColor: c.status.inProgress,
     marginTop: 6,
   },
   bodyText: {
@@ -175,12 +179,12 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
     marginBottom: 4,
   },
   detail: {
     fontSize: 13,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     lineHeight: 18,
   },
   declinedBadge: {
@@ -194,4 +198,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 12,
   },
-});
+  });

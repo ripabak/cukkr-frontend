@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
@@ -12,30 +13,33 @@ interface Props {
 }
 
 export function DateSelectorPill({ label, onPress, style }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.85}
-      style={[styles.pill, Neu.soft(Colors.bg.surface), style]}
+      style={[styles.pill, Neu.soft(colors.bg.surface), style]}
     >
       <Ionicons
         name="calendar-outline"
         size={16}
-        color={Colors.text.primary}
+        color={colors.text.primary}
         style={styles.icon}
       />
       <AppText style={styles.label}>{label}</AppText>
       <Ionicons
         name="chevron-down"
         size={14}
-        color={Colors.text.primary}
+        color={colors.text.primary}
         style={styles.chevron}
       />
     </TouchableOpacity>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   pill: {
     flexDirection: "row",
     alignItems: "center",
@@ -50,9 +54,9 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 15,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   chevron: {
     marginLeft: 8,
   },
-});
+  });

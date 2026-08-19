@@ -1,5 +1,6 @@
 import { AppText } from "@/src/components/AppText";
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { haptics } from "@/src/utils/haptics";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Ionicons } from "@expo/vector-icons";
@@ -33,6 +34,8 @@ const LABEL_OFFSET = THUMB_SIZE + 4;
  */
 export function SwipeToCompleteSlider({ label, onComplete, style }: Props) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const resolvedLabel = label ?? t("schedule.swipeToComplete");
   const pan = useRef(new Animated.Value(0)).current;
   const trackWidthRef = useRef(0);
@@ -88,7 +91,7 @@ export function SwipeToCompleteSlider({ label, onComplete, style }: Props) {
         style={[styles.thumb, { transform: [{ translateX: pan }] }]}
         {...panResponder.panHandlers}
       >
-        <Ionicons name="arrow-forward" size={22} color={Colors.brand.primary} />
+        <Ionicons name="arrow-forward" size={22} color={colors.brand.primary} />
       </Animated.View>
       <AppText style={styles.swipeLabel} numberOfLines={1}>
         {done ? t("schedule.swipeCompleted") : resolvedLabel}
@@ -97,12 +100,13 @@ export function SwipeToCompleteSlider({ label, onComplete, style }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   track: {
     alignSelf: "stretch",
     height: THUMB_SIZE + 8,
     borderRadius: 999,
-    backgroundColor: Colors.status.success,
+    backgroundColor: c.status.success,
     justifyContent: "center",
     overflow: "hidden",
     paddingHorizontal: 8,
@@ -116,7 +120,7 @@ const styles = StyleSheet.create({
     width: THUMB_SIZE,
     height: THUMB_SIZE,
     borderRadius: THUMB_SIZE / 2,
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
     alignItems: "center",
     justifyContent: "center",
     position: "absolute",
@@ -130,7 +134,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.bg.surface,
+    color: c.bg.surface,
     marginLeft: LABEL_OFFSET,
   },
-});
+  });

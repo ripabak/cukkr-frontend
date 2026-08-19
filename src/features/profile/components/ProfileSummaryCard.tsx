@@ -1,5 +1,5 @@
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
 import React from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 
@@ -9,12 +9,15 @@ interface Props {
 }
 
 export function ProfileSummaryCard({ children, style }: Props) {
-  return <View style={[styles.card, Neu.raised(Colors.bg.surface), style]}>{children}</View>;
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
+  return <View style={[styles.card, Neu.raised(colors.bg.surface), style]}>{children}</View>;
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   card: {
     borderRadius: 20,
     overflow: "hidden",
   },
-});
+  });

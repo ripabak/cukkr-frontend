@@ -1,4 +1,5 @@
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { BookingType } from "@/src/components/BookingCard";
 import { InfoRow } from "@/src/components/InfoRow";
@@ -93,6 +94,8 @@ export function BookingDetailCard({
   onCustomerPress,
 }: Props) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const resolvedMetaIcon = bookingType
     ? bookingType === "walk_in"
       ? "walk"
@@ -107,7 +110,7 @@ export function BookingDetailCard({
       showsVerticalScrollIndicator={false}
     >
       {/* Header */}
-      <View style={[styles.header, Neu.raised(Colors.bg.surface)]}>
+      <View style={[styles.header, Neu.raised(colors.bg.surface)]}>
         <View style={styles.headerLeft}>
           {onCustomerPress ? (
             <TouchableOpacity
@@ -119,7 +122,7 @@ export function BookingDetailCard({
               <Ionicons
                 name="chevron-forward"
                 size={18}
-                color={Colors.brand.primary}
+                color={colors.brand.primary}
               />
             </TouchableOpacity>
           ) : (
@@ -130,7 +133,7 @@ export function BookingDetailCard({
             <Ionicons
               name={resolvedMetaIcon as any}
               size={14}
-              color={Colors.text.secondary}
+              color={colors.text.secondary}
             />
             <View style={styles.metaText}>
               <AppText style={styles.metaLine}>{metaLine1}</AppText>
@@ -149,7 +152,7 @@ export function BookingDetailCard({
 
       {/* Info rows */}
       {infoRows.length > 0 ? (
-        <View style={[styles.section, Neu.raised(Colors.bg.surface)]}>
+        <View style={[styles.section, Neu.raised(colors.bg.surface)]}>
           {infoRows.map((row, i) => (
             <InfoRow
               key={i}
@@ -167,7 +170,7 @@ export function BookingDetailCard({
 
       {/* Services */}
       {services.length > 0 ? (
-        <View style={[styles.section, Neu.raised(Colors.bg.surface)]}>
+        <View style={[styles.section, Neu.raised(colors.bg.surface)]}>
           <AppText style={styles.sectionTitle}>{t("bookings.services")}</AppText>
           {services.map((s, i) => (
             <View key={i} style={styles.serviceLine}>
@@ -187,7 +190,7 @@ export function BookingDetailCard({
 
       {/* Payment Summary */}
       {paymentSummary.length > 0 ? (
-        <View style={[styles.section, Neu.raised(Colors.bg.surface)]}>
+        <View style={[styles.section, Neu.raised(colors.bg.surface)]}>
           <AppText style={styles.sectionTitle}>{t("bookings.paymentSummary")}</AppText>
           {paymentSummary.map((line, i) => (
             <View key={i} style={styles.paymentLine}>
@@ -203,7 +206,8 @@ export function BookingDetailCard({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   scroll: {
     flex: 1,
   },
@@ -226,7 +230,7 @@ const styles = StyleSheet.create({
   customerName: {
     fontSize: 30,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
     letterSpacing: -0.8,
     marginBottom: 2,
   },
@@ -239,12 +243,12 @@ const styles = StyleSheet.create({
   customerNameLink: {
     fontSize: 30,
     fontWeight: "600",
-    color: Colors.brand.text,
+    color: c.brand.text,
     letterSpacing: -0.8,
   },
   dateLabel: {
     fontSize: 14,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     marginBottom: 8,
   },
   metaRow: {
@@ -258,7 +262,7 @@ const styles = StyleSheet.create({
   },
   metaLine: {
     fontSize: 13,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     lineHeight: 18,
   },
   badge: {
@@ -271,7 +275,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
     marginBottom: 10,
   },
   serviceLine: {
@@ -281,25 +285,25 @@ const styles = StyleSheet.create({
   },
   serviceLabel: {
     fontSize: 14,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     flex: 1,
     flexShrink: 1,
   },
   servicePrice: {
     fontSize: 14,
-    color: Colors.text.primary,
+    color: c.text.primary,
     fontWeight: "500",
     marginLeft: 12,
     flexShrink: 0,
   },
   divider: {
     height: 1,
-    backgroundColor: Colors.border.light,
+    backgroundColor: c.border.light,
     marginVertical: 12,
   },
   notes: {
     fontSize: 13,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     lineHeight: 18,
   },
   paymentLine: {
@@ -309,14 +313,14 @@ const styles = StyleSheet.create({
   },
   paymentLabel: {
     fontSize: 14,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     flex: 1,
     flexShrink: 1,
   },
   paymentValue: {
     fontSize: 14,
-    color: Colors.text.primary,
+    color: c.text.primary,
     fontWeight: "500",
     marginLeft: 12,
   },
-});
+  });

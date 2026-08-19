@@ -1,4 +1,4 @@
-import { Colors } from "@/src/theme/colors";
+import { useTheme } from "@/src/theme/ThemeContext";
 import { useReducedMotion } from "motion/react";
 import React, { CSSProperties } from "react";
 import { Platform, StyleProp, View, ViewStyle } from "react-native";
@@ -18,9 +18,10 @@ interface Props {
  * Respects `prefers-reduced-motion` by skipping the animation entirely.
  */
 export function PageTransition({ children, style }: Props) {
+  const { colors } = useTheme();
   if (Platform.OS !== "web") {
     return (
-      <View style={[{ flex: 1, backgroundColor: Colors.bg.default }, style]}>
+      <View style={[{ flex: 1, backgroundColor: colors.bg.default }, style]}>
         {children}
       </View>
     );
@@ -29,6 +30,7 @@ export function PageTransition({ children, style }: Props) {
 }
 
 function WebTransition({ children, style }: Props) {
+  const { colors } = useTheme();
   const reduceMotion = useReducedMotion();
   // Lazy require keeps `motion/react` (a DOM library) out of native bundles
   // and out of the top-level module graph for native platforms.
@@ -40,7 +42,7 @@ function WebTransition({ children, style }: Props) {
     flex: 1,
     display: "flex",
     flexDirection: "column",
-    backgroundColor: Colors.bg.default,
+    backgroundColor: colors.bg.default,
   };
 
   if (reduceMotion) {

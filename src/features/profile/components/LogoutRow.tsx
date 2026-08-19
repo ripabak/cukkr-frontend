@@ -1,5 +1,5 @@
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
 import React from "react";
 import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
 import { AppText } from "@/src/components/AppText";
@@ -13,19 +13,22 @@ interface Props {
 
 export function LogoutRow({ onPress, style }: Props) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.85}
-      style={[styles.container, Neu.raised(Colors.status.dangerSurface, 1.1), style]}
+      style={[styles.container, Neu.raised(colors.status.dangerSurface, 1.1), style]}
     >
       <AppText style={styles.label}>{t("common.logout")}</AppText>
-      <Ionicons name="exit-outline" size={20} color={Colors.status.danger} />
+      <Ionicons name="exit-outline" size={20} color={colors.status.danger} />
     </TouchableOpacity>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   container: {
     borderRadius: 16,
     flexDirection: "row",
@@ -37,6 +40,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 15,
     fontWeight: "500",
-    color: Colors.status.danger,
+    color: c.status.danger,
   },
-});
+  });

@@ -1,6 +1,7 @@
 import { useI18nContext } from "@/src/lib/i18n/provider";
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
 import {
@@ -26,6 +27,8 @@ export function InlineDecisionButtons({
   style,
 }: Props) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const resolvedDecline = declineLabel ?? t("bookings.actionDecline");
   const resolvedAccept = acceptLabel ?? t("bookings.actionAccept");
   return (
@@ -33,7 +36,7 @@ export function InlineDecisionButtons({
       <TouchableOpacity
         onPress={onDecline}
         activeOpacity={0.85}
-        style={[styles.btn, Neu.soft(Colors.bg.surface)]}
+        style={[styles.btn, Neu.soft(colors.bg.surface)]}
       >
         <AppText style={styles.declineLabel}>{resolvedDecline}</AppText>
       </TouchableOpacity>
@@ -48,7 +51,8 @@ export function InlineDecisionButtons({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   row: {
     flexDirection: "row",
     gap: 10,
@@ -64,11 +68,11 @@ const styles = StyleSheet.create({
   declineLabel: {
     fontSize: 13,
     fontWeight: "500",
-    color: Colors.status.danger,
+    color: c.status.danger,
   },
   acceptLabel: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
-});
+  });

@@ -1,7 +1,7 @@
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { Skeleton } from "@/src/components/Skeleton";
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -30,6 +30,8 @@ export function AnalyticsServicesScreen() {
   }>();
   const [range, setRange] = useState<AnalyticsRange>(rangeParam ?? "month");
   const [page, setPage] = useState(1);
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const { data: svcData, isLoading: svcLoading } = useAnalyticsServices(range);
   const { data: listData, isLoading: listLoading } = useAnalyticsServicesList(
@@ -56,13 +58,13 @@ export function AnalyticsServicesScreen() {
         <View style={styles.topBar}>
           <TouchableOpacity
             onPress={() => router.back()}
-            style={[styles.backBtn, Neu.soft(Colors.bg.surface, 0.7)]}
+            style={[styles.backBtn, Neu.soft(colors.bg.surface, 0.7)]}
             activeOpacity={0.85}
           >
             <Ionicons
               name="chevron-back"
               size={20}
-              color={Colors.text.primary}
+              color={colors.text.primary}
             />
           </TouchableOpacity>
           <AppText style={styles.pageTitle}>{t("services.title")}</AppText>
@@ -75,7 +77,7 @@ export function AnalyticsServicesScreen() {
       {svcLoading && !svcData ? (
         <View style={styles.skeletonWrap}>
           <Skeleton.StatTiles perRow={2} count={2} height={104} />
-          <View style={[styles.chartCard, Neu.raised(Colors.bg.surface, 1.1)]}>
+          <View style={[styles.chartCard, Neu.raised(colors.bg.surface, 1.1)]}>
             <Skeleton width="30%" height={13} style={styles.skeletonChartTitle} />
             <Skeleton width="100%" height={150} radius={12} />
           </View>
@@ -91,7 +93,7 @@ export function AnalyticsServicesScreen() {
               <Ionicons
                 name="receipt"
                 size={16}
-                color={Colors.brand.primary}
+                color={colors.brand.primary}
               />
             }
             stat={stats.totalBookings ?? EMPTY_STAT}
@@ -104,7 +106,7 @@ export function AnalyticsServicesScreen() {
               <Ionicons
                 name="cash"
                 size={16}
-                color={Colors.brand.primary}
+                color={colors.brand.primary}
               />
             }
             stat={stats.totalRevenue ?? EMPTY_STAT}
@@ -114,7 +116,7 @@ export function AnalyticsServicesScreen() {
       ) : null}
 
       {chart.length > 0 ? (
-        <View style={[styles.chartCard, Neu.raised(Colors.bg.surface, 1.1)]}>
+        <View style={[styles.chartCard, Neu.raised(colors.bg.surface, 1.1)]}>
           <AppText style={styles.chartCardTitle}>{t("services.title")}</AppText>
           <BarChart data={chart} chartHeight={130} maxBars={8} />
         </View>
@@ -142,7 +144,7 @@ export function AnalyticsServicesScreen() {
           services.map((svc, i) => (
             <TouchableOpacity
               key={svc.serviceId}
-              style={[styles.serviceRow, Neu.soft(Colors.bg.surface, 0.7)]}
+              style={[styles.serviceRow, Neu.soft(colors.bg.surface, 0.7)]}
               activeOpacity={0.85}
               onPress={() =>
                 router.push({
@@ -189,12 +191,12 @@ export function AnalyticsServicesScreen() {
             <TouchableOpacity
               disabled={!meta.hasPrev}
               onPress={() => setPage((p) => p - 1)}
-              style={[styles.pageBtn, Neu.soft(Colors.bg.surface, 0.7), !meta.hasPrev && styles.pageBtnDisabled]}
+              style={[styles.pageBtn, Neu.soft(colors.bg.surface, 0.7), !meta.hasPrev && styles.pageBtnDisabled]}
             >
               <Ionicons
                 name="chevron-back"
                 size={16}
-                color={meta.hasPrev ? Colors.text.primary : Colors.text.muted}
+                color={meta.hasPrev ? colors.text.primary : colors.text.muted}
               />
             </TouchableOpacity>
             <AppText style={styles.pageLabel}>
@@ -203,12 +205,12 @@ export function AnalyticsServicesScreen() {
             <TouchableOpacity
               disabled={!meta.hasNext}
               onPress={() => setPage((p) => p + 1)}
-              style={[styles.pageBtn, Neu.soft(Colors.bg.surface, 0.7), !meta.hasNext && styles.pageBtnDisabled]}
+              style={[styles.pageBtn, Neu.soft(colors.bg.surface, 0.7), !meta.hasNext && styles.pageBtnDisabled]}
             >
               <Ionicons
                 name="chevron-forward"
                 size={16}
-                color={meta.hasNext ? Colors.text.primary : Colors.text.muted}
+                color={meta.hasNext ? colors.text.primary : colors.text.muted}
               />
             </TouchableOpacity>
           </View>
@@ -218,7 +220,8 @@ export function AnalyticsServicesScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   scrollContent: {
     paddingBottom: 100,
   },
@@ -227,7 +230,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
     gap: 12,
   },
   backBtn: {
@@ -241,7 +244,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 17,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   topBarRight: {
     width: 36,
@@ -271,7 +274,7 @@ const styles = StyleSheet.create({
   chartCardTitle: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     marginBottom: 12,
   },
   listSection: {
@@ -286,13 +289,13 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   emptyText: {
     textAlign: "center",
     marginTop: 32,
     fontSize: 14,
-    color: Colors.text.muted,
+    color: c.text.muted,
   },
   serviceRow: {
     flexDirection: "row",
@@ -306,9 +309,9 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
     borderWidth: 1,
-    borderColor: Colors.border.default,
+    borderColor: c.border.default,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 2,
@@ -316,7 +319,7 @@ const styles = StyleSheet.create({
   serviceRankText: {
     fontSize: 11,
     fontWeight: "600",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   serviceInfo: {
     flex: 1,
@@ -330,11 +333,11 @@ const styles = StyleSheet.create({
   serviceName: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
     flex: 1,
   },
   serviceCountBadge: {
-    backgroundColor: Colors.brand.primarySurface,
+    backgroundColor: c.brand.primarySurface,
     borderRadius: 6,
     paddingHorizontal: 7,
     paddingVertical: 2,
@@ -342,22 +345,22 @@ const styles = StyleSheet.create({
   serviceCountText: {
     fontSize: 11,
     fontWeight: "600",
-    color: Colors.brand.primaryDark,
+    color: c.brand.primaryDark,
   },
   progressWrap: {
     height: 5,
-    backgroundColor: Colors.border.light,
+    backgroundColor: c.border.light,
     borderRadius: 3,
     overflow: "hidden",
   },
   progressBar: {
     height: 5,
-    backgroundColor: Colors.brand.primary,
+    backgroundColor: c.brand.primary,
     borderRadius: 3,
   },
   serviceMeta: {
     fontSize: 12,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   pagination: {
     flexDirection: "row",
@@ -379,6 +382,6 @@ const styles = StyleSheet.create({
   pageLabel: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
-});
+  });

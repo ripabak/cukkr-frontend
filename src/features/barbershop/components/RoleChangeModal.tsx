@@ -1,7 +1,8 @@
 import { AppText } from "@/src/components/AppText";
 import { BottomSheet } from "@/src/components/BottomSheet";
 import { SoftPressable } from "@/src/components/SoftPressable";
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { haptics } from "@/src/utils/haptics";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Ionicons } from "@expo/vector-icons";
@@ -35,6 +36,8 @@ export function RoleChangeModal({
   onCancel,
 }: Props) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const initialRole = currentRole === "admin" ? "admin" : "member";
   const [selectedRole, setSelectedRole] = useState<"admin" | "member">(initialRole);
   const hasChanged = selectedRole !== initialRole;
@@ -89,7 +92,7 @@ export function RoleChangeModal({
                   <Ionicons
                     name={opt.icon as React.ComponentProps<typeof Ionicons>["name"]}
                     size={22}
-                    color={isSelected ? Colors.text.primary : Colors.text.secondary}
+                    color={isSelected ? colors.text.primary : colors.text.secondary}
                   />
                 </View>
                 <AppText
@@ -133,101 +136,102 @@ export function RoleChangeModal({
   );
 }
 
-const styles = StyleSheet.create({
-  body: {
-    paddingTop: 4,
-  },
-  currentRoleRow: {
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  currentRoleLabel: {
-    fontSize: 13,
-    fontWeight: "500",
-    color: Colors.text.muted,
-  },
-  optionsRow: {
-    flexDirection: "row",
-    gap: 12,
-    marginBottom: 24,
-  },
-  option: {
-    flex: 1,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    backgroundColor: Colors.bg.surface,
-    paddingVertical: 18,
-    alignItems: "center",
-    gap: 8,
-  },
-  optionSelected: {
-    backgroundColor: Colors.brand.primarySurface,
-    borderColor: Colors.brand.primary,
-  },
-  optionIconChip: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
-    backgroundColor: Colors.bg.default,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  optionIconSelected: {
-    backgroundColor: Colors.brand.primary,
-  },
-  optionText: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: Colors.text.secondary,
-  },
-  optionTextSelected: {
-    color: Colors.text.primary,
-    fontWeight: "600",
-  },
-  actions: {
-    flexDirection: "row",
-    gap: 12,
-    marginBottom: 4,
-  },
-  btn: {
-    flex: 1,
-    height: 52,
-  },
-  btnSecondary: {
-    flex: 1,
-    backgroundColor: Colors.bg.surface,
-    borderWidth: 1,
-    borderColor: Colors.border.default,
-    borderRadius: 18,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  btnPrimary: {
-    flex: 1,
-    backgroundColor: Colors.brand.primary,
-    borderRadius: 18,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  btnSaveDisabled: {
-    flex: 1,
-    backgroundColor: Colors.bg.surface,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    borderRadius: 18,
-    alignItems: "center",
-    justifyContent: "center",
-    opacity: 0.5,
-  },
-  btnSecondaryText: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: Colors.text.primary,
-  },
-  btnPrimaryText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: Colors.text.primary,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    body: {
+      paddingTop: 4,
+    },
+    currentRoleRow: {
+      alignItems: "center",
+      marginBottom: 16,
+    },
+    currentRoleLabel: {
+      fontSize: 13,
+      fontWeight: "500",
+      color: c.text.muted,
+    },
+    optionsRow: {
+      flexDirection: "row",
+      gap: 12,
+      marginBottom: 24,
+    },
+    option: {
+      flex: 1,
+      borderRadius: 20,
+      borderWidth: 1,
+      borderColor: c.border.light,
+      backgroundColor: c.bg.surface,
+      paddingVertical: 18,
+      alignItems: "center",
+      gap: 8,
+    },
+    optionSelected: {
+      backgroundColor: c.brand.primarySurface,
+      borderColor: c.brand.primary,
+    },
+    optionIconChip: {
+      width: 44,
+      height: 44,
+      borderRadius: 14,
+      backgroundColor: c.bg.default,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    optionIconSelected: {
+      backgroundColor: c.brand.primary,
+    },
+    optionText: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: c.text.secondary,
+    },
+    optionTextSelected: {
+      color: c.text.primary,
+      fontWeight: "600",
+    },
+    actions: {
+      flexDirection: "row",
+      gap: 12,
+      marginBottom: 4,
+    },
+    btn: {
+      flex: 1,
+      height: 52,
+    },
+    btnSecondary: {
+      flex: 1,
+      backgroundColor: c.bg.surface,
+      borderWidth: 1,
+      borderColor: c.border.default,
+      borderRadius: 18,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    btnPrimary: {
+      flex: 1,
+      backgroundColor: c.brand.primary,
+      borderRadius: 18,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    btnSaveDisabled: {
+      flex: 1,
+      backgroundColor: c.bg.surface,
+      borderWidth: 1,
+      borderColor: c.border.light,
+      borderRadius: 18,
+      alignItems: "center",
+      justifyContent: "center",
+      opacity: 0.5,
+    },
+    btnSecondaryText: {
+      fontSize: 16,
+      fontWeight: "500",
+      color: c.text.primary,
+    },
+    btnPrimaryText: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: c.text.primary,
+    },
+  });

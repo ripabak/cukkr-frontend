@@ -1,4 +1,5 @@
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
@@ -8,13 +9,16 @@ import { OnboardingButton } from "../components/OnboardingButton";
 import { OnboardingCard } from "../components/OnboardingCard";
 import { OnboardingContainer } from "../components/OnboardingContainer";
 import { OnboardingIndicator } from "../components/OnboardingIndicator";
-import { OnboardingTheme } from "../onboarding-theme";
+import { buildOnboardingTheme } from "../onboarding-theme";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 export function OnboardingRunBarbershopScreen() {
   const router = useRouter();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const theme = buildOnboardingTheme(colors);
+  const styles = useThemedStyles(createStyles);
 
   return (
     <OnboardingContainer style={styles.container}>
@@ -76,17 +80,19 @@ export function OnboardingRunBarbershopScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) => {
+  const theme = buildOnboardingTheme(c);
+  return StyleSheet.create({
   container: {
-    backgroundColor: Colors.bg.default,
+    backgroundColor: c.bg.default,
     justifyContent: "flex-start",
     alignItems: "flex-start",
   },
   content: {
     flex: 1,
     width: "100%",
-    paddingHorizontal: OnboardingTheme.spacing.lg,
-    paddingBottom: OnboardingTheme.spacing.xl,
+    paddingHorizontal: theme.spacing.lg,
+    paddingBottom: theme.spacing.xl,
   },
   card: {
     height: SCREEN_HEIGHT * 0.42,
@@ -97,13 +103,13 @@ const styles = StyleSheet.create({
   },
   illustration: {
     flex: 1,
-    backgroundColor: OnboardingTheme.colors.primary,
-    borderRadius: OnboardingTheme.borderRadius.lg,
-    margin: OnboardingTheme.spacing.xs,
-    padding: OnboardingTheme.spacing.md,
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.lg,
+    margin: theme.spacing.xs,
+    padding: theme.spacing.md,
     flexDirection: "row",
     alignItems: "flex-end",
-    gap: OnboardingTheme.spacing.md,
+    gap: theme.spacing.md,
   },
   bgBlock: {
     position: "absolute",
@@ -111,40 +117,40 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: OnboardingTheme.colors.primary,
-    borderRadius: OnboardingTheme.borderRadius.lg,
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.lg,
   },
   figureArea: {
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-end",
-    gap: OnboardingTheme.spacing.xs,
+    gap: theme.spacing.xs,
   },
   figure: {
     width: 60,
     height: 120,
-    backgroundColor: OnboardingTheme.colors.dark,
-    borderRadius: OnboardingTheme.borderRadius.lg,
+    backgroundColor: theme.colors.dark,
+    borderRadius: theme.borderRadius.lg,
   },
   tablet: {
     width: 80,
-    backgroundColor: OnboardingTheme.colors.white,
-    borderRadius: OnboardingTheme.borderRadius.md,
+    backgroundColor: theme.colors.white,
+    borderRadius: theme.borderRadius.md,
     padding: 6,
     gap: 4,
   },
   tabletRow: {
     height: 6,
     borderRadius: 3,
-    backgroundColor: Colors.bg.surface,
+    backgroundColor: c.bg.surface,
   },
   tabletRowAccent: {
-    backgroundColor: OnboardingTheme.colors.dark,
+    backgroundColor: theme.colors.dark,
   },
   checkmarks: {
-    gap: OnboardingTheme.spacing.sm,
+    gap: theme.spacing.sm,
     justifyContent: "center",
-    marginBottom: OnboardingTheme.spacing.md,
+    marginBottom: theme.spacing.md,
   },
   checkRow: {
     flexDirection: "row",
@@ -156,33 +162,33 @@ const styles = StyleSheet.create({
     height: 16,
     borderRadius: 8,
     borderWidth: 2,
-    borderColor: OnboardingTheme.colors.dark,
+    borderColor: theme.colors.dark,
     backgroundColor: "transparent",
   },
   checkIconActive: {
-    backgroundColor: OnboardingTheme.colors.dark,
+    backgroundColor: theme.colors.dark,
   },
   checkBar: {
     width: 48,
     height: 6,
     borderRadius: 3,
-    backgroundColor: OnboardingTheme.colors.dark,
+    backgroundColor: theme.colors.dark,
     opacity: 0.7,
   },
   textContent: {
-    marginTop: OnboardingTheme.spacing.xl,
+    marginTop: theme.spacing.xl,
     alignItems: "center",
   },
   heading: {
     fontSize: 26,
     fontWeight: "600",
-    color: OnboardingTheme.colors.textDark,
+    color: theme.colors.textDark,
     textAlign: "center",
-    marginBottom: OnboardingTheme.spacing.sm,
+    marginBottom: theme.spacing.sm,
   },
   body: {
     fontSize: 14,
-    color: OnboardingTheme.colors.textGray,
+    color: theme.colors.textGray,
     textAlign: "center",
     lineHeight: 22,
   },
@@ -192,4 +198,5 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 0,
   },
-});
+  });
+};

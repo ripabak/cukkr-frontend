@@ -3,8 +3,9 @@ import { ScreenShell } from "@/src/components/ScreenShell";
 import { SearchInput } from "@/src/components/SearchInput";
 import { useNewBookingForm } from "@/src/features/schedule/context/NewBookingContext";
 import { useScheduleBarbers } from "@/src/features/schedule/hooks";
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -16,6 +17,8 @@ import { Skeleton } from "@/src/components/Skeleton";
 export function SelectBarberScreen() {
   const router = useRouter();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { setBarber } = useNewBookingForm();
   const [query, setQuery] = useState("");
 
@@ -50,7 +53,7 @@ export function SelectBarberScreen() {
           {[0, 1, 2, 3, 4].map((i) => (
             <View
               key={i}
-              style={[styles.barberRow, Neu.raised(Colors.bg.surface)]}
+              style={[styles.barberRow, Neu.raised(colors.bg.surface)]}
             >
               <Skeleton.Circle size={48} />
               <View style={{ flex: 1, gap: 8 }}>
@@ -68,21 +71,21 @@ export function SelectBarberScreen() {
             <TouchableOpacity
               key={item.id}
               activeOpacity={0.85}
-              style={[styles.barberRow, Neu.raised(Colors.bg.surface)]}
+              style={[styles.barberRow, Neu.raised(colors.bg.surface)]}
               onPress={() => handleSelect(item.id, item.name, item.avatarUrl)}
             >
-              <View style={[styles.avatar, Neu.inset(Colors.bg.surface, 0.6)]}>
+              <View style={[styles.avatar, Neu.inset(colors.bg.surface, 0.6)]}>
                 {item.avatarUrl ? (
                   <Image source={{ uri: item.avatarUrl }} style={styles.avatarImage} />
                 ) : (
-                  <Ionicons name="person-outline" size={24} color={Colors.icon.muted} />
+                  <Ionicons name="person-outline" size={24} color={colors.icon.muted} />
                 )}
               </View>
               <AppText style={styles.barberName}>{item.name}</AppText>
               <Ionicons
                 name="chevron-forward"
                 size={18}
-                color={Colors.text.primary}
+                color={colors.text.primary}
               />
             </TouchableOpacity>
           ))}
@@ -92,7 +95,8 @@ export function SelectBarberScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   content: {
     paddingTop: 24,
     gap: 16,
@@ -121,7 +125,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 15,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   avatarImage: {
     width: 48,
@@ -133,6 +137,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 40,
     fontSize: 14,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
-});
+  });

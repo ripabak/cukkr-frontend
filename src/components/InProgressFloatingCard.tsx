@@ -1,5 +1,6 @@
 import { useI18nContext } from "@/src/lib/i18n/provider";
-import { Colors } from "@/src/theme/colors";
+import { useThemedStyles } from "@/src/theme/styles";
+import type { ThemeColors } from "@/src/theme/ThemeContext";
 import { formatTime12h } from "@/src/utils/date";
 import { haptics } from "@/src/utils/haptics";
 import { Ionicons } from "@expo/vector-icons";
@@ -60,6 +61,7 @@ export function InProgressFloatingCard({
   const router = useRouter();
   const elapsed = useElapsedTime(startedAt);
   const pulseAnim = useRef(new Animated.Value(0)).current;
+  const styles = useThemedStyles(createStyles);
 
   useEffect(() => {
     const loop = Animated.loop(
@@ -133,69 +135,71 @@ export function InProgressFloatingCard({
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    marginHorizontal: 16,
-    marginBottom: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 13,
-    borderRadius: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    overflow: "hidden",
-    backgroundColor: Colors.status.inProgress,
-    shadowColor: "rgba(59, 130, 246, 0.4)",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 1,
-    shadowRadius: 16,
-    elevation: 5,
-  },
-  left: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    flex: 1,
-  },
-  dot: {
-    width: 9,
-    height: 9,
-    borderRadius: 5,
-    backgroundColor: "#fff",
-  },
-  textGroup: {
-    flex: 1,
-  },
-  label: {
-    fontSize: 10,
-    fontWeight: "500",
-    color: "rgba(255,255,255,0.8)",
-    letterSpacing: 0.5,
-    textTransform: "uppercase",
-    marginBottom: 1,
-  },
-  name: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#fff",
-  },
-  right: {
-    alignItems: "flex-end",
-    gap: 2,
-  },
-  startTime: {
-    fontSize: 10,
-    color: "rgba(255,255,255,0.7)",
-  },
-  elapsedRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 2,
-  },
-  elapsed: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#fff",
-    letterSpacing: 0.3,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    card: {
+      marginHorizontal: 16,
+      marginBottom: 12,
+      paddingHorizontal: 16,
+      paddingVertical: 13,
+      borderRadius: 20,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      overflow: "hidden",
+      backgroundColor: c.status.inProgress,
+      shadowColor: "rgba(59, 130, 246, 0.4)",
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 1,
+      shadowRadius: 16,
+      elevation: 5,
+    },
+    left: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 10,
+      flex: 1,
+    },
+    dot: {
+      width: 9,
+      height: 9,
+      borderRadius: 5,
+      backgroundColor: "#fff",
+    },
+    textGroup: {
+      flex: 1,
+    },
+    label: {
+      fontSize: 10,
+      fontWeight: "500",
+      color: "rgba(255,255,255,0.8)",
+      letterSpacing: 0.5,
+      textTransform: "uppercase",
+      marginBottom: 1,
+    },
+    name: {
+      fontSize: 15,
+      fontWeight: "600",
+      color: "#fff",
+    },
+    right: {
+      alignItems: "flex-end",
+      gap: 2,
+    },
+    startTime: {
+      fontSize: 10,
+      color: "rgba(255,255,255,0.7)",
+    },
+    elapsedRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 2,
+    },
+    elapsed: {
+      fontSize: 15,
+      fontWeight: "600",
+      color: "#fff",
+      letterSpacing: 0.3,
+    },
+  });
+

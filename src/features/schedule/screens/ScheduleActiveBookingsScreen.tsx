@@ -22,9 +22,10 @@ import {
   sortBookingsQueue,
 } from "@/src/features/schedule/utils/booking-formatters";
 import { formatTime12h, toApiDate } from "@/src/utils/date";
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { authClient } from "@/src/lib/auth-client";
 import { useRouter } from "expo-router";
@@ -63,48 +64,50 @@ function RequestCard({
   onDecline,
 }: RequestCardProps) {
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createReqStyles);
   const iconName = bookingType === "walk_in" ? "walk" : "calendar";
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.85}
-      style={[reqStyles.card, Neu.raised(Colors.bg.surface)]}
+      style={[styles.card, Neu.raised(colors.bg.surface)]}
     >
-      <View style={reqStyles.iconRow}>
-        <View style={[reqStyles.iconCircle, Neu.inset(Colors.bg.surface, 0.6)]}>
-          <Ionicons name={iconName as any} size={16} color={Colors.text.secondary} />
+      <View style={styles.iconRow}>
+        <View style={[styles.iconCircle, Neu.inset(colors.bg.surface, 0.6)]}>
+          <Ionicons name={iconName as any} size={16} color={colors.text.secondary} />
         </View>
-        <AppText style={reqStyles.time}>{timeLabel}</AppText>
+        <AppText style={styles.time}>{timeLabel}</AppText>
       </View>
-      <AppText style={reqStyles.customerName} numberOfLines={1}>
+      <AppText style={styles.customerName} numberOfLines={1}>
         {customerName}
       </AppText>
-      <View style={reqStyles.barberRow}>
-        <Ionicons name="cut" size={11} color={Colors.text.muted} />
-        <AppText style={reqStyles.barberName} numberOfLines={1}>
+      <View style={styles.barberRow}>
+        <Ionicons name="cut" size={11} color={colors.text.muted} />
+        <AppText style={styles.barberName} numberOfLines={1}>
           {" "}
           {barberName}
         </AppText>
         {barberIsYou ? (
-          <View style={reqStyles.youPill}>
-            <AppText style={reqStyles.youPillText}>{t("bookings.you")}</AppText>
+          <View style={styles.youPill}>
+            <AppText style={styles.youPillText}>{t("bookings.you")}</AppText>
           </View>
         ) : null}
       </View>
-      <View style={reqStyles.actions}>
+      <View style={styles.actions}>
         <TouchableOpacity
           onPress={onDecline}
           activeOpacity={0.85}
-          style={[reqStyles.declineBtn, Neu.soft(Colors.bg.surface)]}
+          style={[styles.declineBtn, Neu.soft(colors.bg.surface)]}
         >
-          <AppText style={reqStyles.declineText}>{t("bookings.actionDecline")}</AppText>
+          <AppText style={styles.declineText}>{t("bookings.actionDecline")}</AppText>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={onAccept}
           activeOpacity={0.85}
-          style={[reqStyles.acceptBtn, Neu.accent(0.9)]}
+          style={[styles.acceptBtn, Neu.accent(0.9)]}
         >
-          <AppText style={reqStyles.acceptText}>{t("bookings.actionAccept")}</AppText>
+          <AppText style={styles.acceptText}>{t("bookings.actionAccept")}</AppText>
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
@@ -143,6 +146,8 @@ export function ScheduleActiveBookingsScreen() {
   const router = useRouter();
   const today = new Date();
   const { t, language } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { data: activeMember } = authClient.useActiveMember();
   const [selectedDate, setSelectedDate] = useState(today);
   const [selectedKey, setSelectedKey] = useState(toApiDate(today));
@@ -230,10 +235,10 @@ export function ScheduleActiveBookingsScreen() {
 
   return (
     <ScreenShell
-      backgroundColor={Colors.bg.default}
+      backgroundColor={colors.bg.default}
       contentStyle={styles.scrollContentPadding}
       headerSlot={
-        <View style={{ backgroundColor: Colors.bg.default }}>
+        <View style={{ backgroundColor: colors.bg.default }}>
           <View style={styles.topBar}>
             <DateSelectorPill
               label={formatDatePill(selectedDate, language)}
@@ -242,12 +247,12 @@ export function ScheduleActiveBookingsScreen() {
             <TouchableOpacity
               onPress={handleRequestsPress}
               activeOpacity={0.85}
-              style={[styles.requestsBtn, Neu.soft(Colors.bg.surface)]}
+              style={[styles.requestsBtn, Neu.soft(colors.bg.surface)]}
             >
               <Ionicons
                 name="list-outline"
                 size={18}
-                color={Colors.text.primary}
+                color={colors.text.primary}
               />
               <AppText style={styles.requestsBtnLabel}>
                 {t("schedule.requestsButton")}
@@ -279,7 +284,7 @@ export function ScheduleActiveBookingsScreen() {
           activeOpacity={0.85}
           style={[styles.fab, Neu.accent(1.2)]}
         >
-          <Ionicons name="add" size={28} color={Colors.text.primary} />
+          <Ionicons name="add" size={28} color={colors.text.primary} />
         </TouchableOpacity>
       }
     >
@@ -344,7 +349,7 @@ export function ScheduleActiveBookingsScreen() {
           <AppText style={styles.sectionCount}>({bookings.length})</AppText>
         </AppText>
         <FilterPicker
-          options={getScheduleStatusOptions(t)}
+          options={getScheduleStatusOptions(colors, t)}
           selected={statusFilter}
           onSelect={(value) =>
             setStatusFilter(
@@ -415,7 +420,8 @@ export function ScheduleActiveBookingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   topBar: {
     flexDirection: "row",
     alignItems: "center",
@@ -435,10 +441,10 @@ const styles = StyleSheet.create({
   requestsBtnLabel: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   requestsBadge: {
-    backgroundColor: Colors.status.danger,
+    backgroundColor: c.status.danger,
     borderRadius: 10,
     minWidth: 20,
     height: 20,
@@ -467,12 +473,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 26,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
     letterSpacing: -0.6,
   },
   sectionCount: {
     fontWeight: "500",
-    color: Colors.text.muted,
+    color: c.text.muted,
   },
   filterPill: {
     borderRadius: 999,
@@ -482,7 +488,7 @@ const styles = StyleSheet.create({
   filterLabel: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   list: {
     gap: 0,
@@ -505,14 +511,14 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 18,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
     textAlign: "center",
     marginBottom: 8,
   },
   emptySubtitle: {
     fontSize: 15,
     fontWeight: "400",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     textAlign: "center",
     lineHeight: 22,
   },
@@ -525,7 +531,7 @@ const styles = StyleSheet.create({
   requestsTitle: {
     fontSize: 17,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
     marginBottom: 12,
     marginTop: 8,
   },
@@ -544,9 +550,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     zIndex: 40,
   },
-});
+  });
 
-const reqStyles = StyleSheet.create({
+const createReqStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   card: {
     width: 200,
     borderRadius: 20,
@@ -568,12 +575,12 @@ const reqStyles = StyleSheet.create({
   time: {
     fontSize: 13,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   customerName: {
     fontSize: 15,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   barberRow: {
     flexDirection: "row",
@@ -581,10 +588,10 @@ const reqStyles = StyleSheet.create({
   },
   barberName: {
     fontSize: 13,
-    color: Colors.text.muted,
+    color: c.text.muted,
   },
   youPill: {
-    backgroundColor: Colors.brand.primarySurface,
+    backgroundColor: c.brand.primarySurface,
     borderRadius: 6,
     paddingHorizontal: 5,
     paddingVertical: 1,
@@ -593,7 +600,7 @@ const reqStyles = StyleSheet.create({
   youPillText: {
     fontSize: 9.5,
     fontWeight: "600",
-    color: Colors.brand.text,
+    color: c.brand.text,
   },
   actions: {
     flexDirection: "row",
@@ -609,7 +616,7 @@ const reqStyles = StyleSheet.create({
   declineText: {
     fontSize: 13,
     fontWeight: "500",
-    color: Colors.status.danger,
+    color: c.status.danger,
   },
   acceptBtn: {
     flex: 1,
@@ -621,6 +628,6 @@ const reqStyles = StyleSheet.create({
   acceptText: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
-});
+  });

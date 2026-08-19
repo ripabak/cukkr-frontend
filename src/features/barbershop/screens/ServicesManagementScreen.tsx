@@ -1,5 +1,4 @@
 import { Permission } from "@/src/components/Permission";
-import { Colors } from "@/src/theme/colors";
 import { IconActionButton } from "@/src/features/barbershop/components/IconActionButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
@@ -20,6 +19,8 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
 import { Skeleton } from "@/src/components/Skeleton";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 
 type SortOption =
   | "name_asc"
@@ -40,6 +41,8 @@ export function ServicesManagementScreen() {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { role } = useMemberRole();
   const canManage = role === "owner" || role === "admin";
   const [search, setSearch] = useState("");
@@ -72,12 +75,12 @@ export function ServicesManagementScreen() {
                   <TouchableOpacity
                     onPress={onPress}
                     activeOpacity={0.85}
-                    style={[styles.headerIcon, Neu.soft(Colors.bg.surface)]}
+                    style={[styles.headerIcon, Neu.soft(colors.bg.surface)]}
                   >
                     <Ionicons
                       name="filter-outline"
                       size={18}
-                      color={Colors.text.primary}
+                      color={colors.text.primary}
                     />
                   </TouchableOpacity>
                 )}
@@ -161,43 +164,44 @@ export function ServicesManagementScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 30,
-    fontWeight: "600",
-    color: Colors.text.primary,
-    marginTop: 8,
-    letterSpacing: -0.8,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    marginTop: 4,
-    marginBottom: 24,
-  },
-  search: {
-    marginBottom: 16,
-  },
-  empty: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    textAlign: "center",
-    marginTop: 40,
-  },
-  list: {},
-  cardMargin: {
-    marginBottom: 16,
-  },
-  headerActions: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  headerIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    title: {
+      fontSize: 30,
+      fontWeight: "600",
+      color: c.text.primary,
+      marginTop: 8,
+      letterSpacing: -0.8,
+    },
+    subtitle: {
+      fontSize: 14,
+      color: c.text.secondary,
+      marginTop: 4,
+      marginBottom: 24,
+    },
+    search: {
+      marginBottom: 16,
+    },
+    empty: {
+      fontSize: 14,
+      color: c.text.secondary,
+      textAlign: "center",
+      marginTop: 40,
+    },
+    list: {},
+    cardMargin: {
+      marginBottom: 16,
+    },
+    headerActions: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+    },
+    headerIcon: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+  });

@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { DayHoursRow } from "@/src/components/DayHoursRow";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
@@ -44,6 +45,8 @@ export function OpenHoursScreen() {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { data: apiDays } = useOpenHours();
   const { mutate: updateHours } = useUpdateOpenHours();
   const { role } = useMemberRole();
@@ -113,7 +116,7 @@ export function OpenHoursScreen() {
         {t("createBarbershop.openHoursSubtitle")}
       </AppText>
 
-      <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
+      <View style={[styles.card, Neu.raised(colors.bg.surface)]}>
         {days.map((day, index) => (
           <DayHoursRow
             key={day.dayOfWeek}
@@ -145,39 +148,40 @@ export function OpenHoursScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 30,
-    fontWeight: "600",
-    color: Colors.text.primary,
-    marginTop: 8,
-    letterSpacing: -0.8,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    marginTop: 4,
-    marginBottom: 24,
-  },
-  card: {
-    borderRadius: 20,
-    marginBottom: 24,
-  },
-  saveStatus: {
-    fontSize: 12,
-    color: Colors.text.muted,
-    textAlign: "center",
-    marginBottom: 16,
-  },
-  viewOnlyBanner: {
-    padding: 12,
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  viewOnlyText: {
-    fontSize: 13,
-    color: Colors.text.muted,
-    textAlign: "center",
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    title: {
+      fontSize: 30,
+      fontWeight: "600",
+      color: c.text.primary,
+      marginTop: 8,
+      letterSpacing: -0.8,
+    },
+    subtitle: {
+      fontSize: 14,
+      color: c.text.secondary,
+      marginTop: 4,
+      marginBottom: 24,
+    },
+    card: {
+      borderRadius: 20,
+      marginBottom: 24,
+    },
+    saveStatus: {
+      fontSize: 12,
+      color: c.text.muted,
+      textAlign: "center",
+      marginBottom: 16,
+    },
+    viewOnlyBanner: {
+      padding: 12,
+      backgroundColor: c.bg.surface,
+      borderRadius: 8,
+      alignItems: "center",
+    },
+    viewOnlyText: {
+      fontSize: 13,
+      color: c.text.muted,
+      textAlign: "center",
+    },
+  });

@@ -1,4 +1,5 @@
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { HelperCopy } from "@/src/components/HelperCopy";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { MessageComposer } from "@/src/features/barbershop/components/MessageComposer";
@@ -14,6 +15,8 @@ export function SendMessagesToCustomersScreen() {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const params = useLocalSearchParams<{
     count?: string;
     recipientName?: string;
@@ -28,7 +31,7 @@ export function SendMessagesToCustomersScreen() {
     : t("customers.sendMessages", { count: String(count) });
 
   const selectionMode = !recipientName;
-  const bgColor = selectionMode ? Colors.brand.primary : Colors.bg.default;
+  const bgColor = selectionMode ? colors.brand.primary : colors.bg.default;
 
   const handleSend = () => {
     if (!message.trim()) {
@@ -55,14 +58,14 @@ export function SendMessagesToCustomersScreen() {
                 styles.sendBtn,
                 {
                   backgroundColor: canSend
-                    ? Colors.brand.primary
-                    : Colors.bg.surface,
+                    ? colors.brand.primary
+                    : colors.bg.surface,
                 },
               ]}
               onPress={handleSend}
               activeOpacity={0.7}
             >
-              <Ionicons name="send" size={20} color={Colors.text.primary} />
+              <Ionicons name="send" size={20} color={colors.text.primary} />
             </TouchableOpacity>
           }
         />
@@ -88,16 +91,17 @@ export function SendMessagesToCustomersScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1 },
-  container: { flex: 1 },
-  sendBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  content: { paddingHorizontal: 20, paddingTop: 24, gap: 16 },
-  helper: { marginTop: 4 },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    safe: { flex: 1 },
+    container: { flex: 1 },
+    sendBtn: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    content: { paddingHorizontal: 20, paddingTop: 24, gap: 16 },
+    helper: { marginTop: 4 },
+  });

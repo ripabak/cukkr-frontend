@@ -10,7 +10,8 @@ import {
 } from "@/src/features/barbershop/hooks";
 import { useDebounce, useMemberRole } from "@/src/hooks";
 import { useToast } from "@/src/lib/providers";
-import { Colors } from "@/src/theme/colors";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { formatDateTime } from "@/src/utils/date";
 import { useRouter } from "expo-router";
@@ -27,6 +28,8 @@ export function EditBookingUrlScreen() {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const { data: barbershop, isLoading: isFetching } = useBarbershopCurrent();
   const { mutate: updateSettings, isPending: isSaving } =
@@ -84,35 +87,35 @@ export function EditBookingUrlScreen() {
     if (!hasMinLength && debouncedSlug.length > 0) {
       return {
         text: t("barbershop.slugMinLength"),
-        color: Colors.status.danger,
+        color: colors.status.danger,
       };
     }
     if (!isValidSlug) {
       return {
         text: t("barbershop.slugInvalid"),
-        color: Colors.status.danger,
+        color: colors.status.danger,
       };
     }
     if (isTyping || isCheckingSlug) {
       return {
         text: t("barbershop.slugChecking", { url }),
-        color: Colors.status.warning,
+        color: colors.status.warning,
       };
     }
     if (isAvailable === true) {
       return {
         text: t("barbershop.slugAvailable", { url }),
-        color: Colors.status.success,
+        color: colors.status.success,
       };
     }
     if (isAvailable === false) {
       return {
         text: t("barbershop.slugUnavailable", { url }),
-        color: Colors.status.danger,
+        color: colors.status.danger,
       };
     }
     return null;
-  }, [isChanged, debouncedSlug, isValidSlug, hasMinLength, isTyping, isCheckingSlug, isAvailable, t]);
+  }, [isChanged, debouncedSlug, isValidSlug, hasMinLength, isTyping, isCheckingSlug, isAvailable, t, colors]);
 
   const canSave =
     !isSaving &&
@@ -227,36 +230,37 @@ export function EditBookingUrlScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  content: {
-    paddingTop: 24,
-    paddingBottom: 200,
-  },
-  loader: {
-    marginTop: 20,
-  },
-  slugFeedback: {
-    fontSize: 13,
-    marginTop: 6,
-  },
-  helper: {
-    marginTop: 8,
-  },
-  viewOnlyBanner: {
-    marginTop: 24,
-    padding: 12,
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  viewOnlyText: {
-    fontSize: 13,
-    color: Colors.text.muted,
-    textAlign: "center",
-  },
-  cooldownInfo: {
-    fontSize: 13,
-    color: Colors.status.warning,
-    marginTop: 12,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    content: {
+      paddingTop: 24,
+      paddingBottom: 200,
+    },
+    loader: {
+      marginTop: 20,
+    },
+    slugFeedback: {
+      fontSize: 13,
+      marginTop: 6,
+    },
+    helper: {
+      marginTop: 8,
+    },
+    viewOnlyBanner: {
+      marginTop: 24,
+      padding: 12,
+      backgroundColor: c.bg.surface,
+      borderRadius: 8,
+      alignItems: "center",
+    },
+    viewOnlyText: {
+      fontSize: 13,
+      color: c.text.muted,
+      textAlign: "center",
+    },
+    cooldownInfo: {
+      fontSize: 13,
+      color: c.status.warning,
+      marginTop: 12,
+    },
+  });

@@ -62,6 +62,8 @@ export const Colors = {
   },
 
   status: {
+    neutral: "#7a746b", // warm gray — neutral toasts, informational without urgency
+    neutralSurface: "#f4f2ee",
     info: "#3b82f6",
     infoSurface: "#eff6ff",
     success: "#10b981",

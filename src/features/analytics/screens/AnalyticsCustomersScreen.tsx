@@ -1,8 +1,8 @@
 import { ScreenShell } from "@/src/components/ScreenShell";
 import { Skeleton } from "@/src/components/Skeleton";
 import { FilterPicker } from "@/src/components/FilterPicker";
-import { Colors } from "@/src/theme/colors";
-import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { Neu, useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -23,27 +23,29 @@ const EMPTY_STAT = {
   direction: "neutral" as const,
 };
 
-function getStatusOptions(t: (key: string) => string) {
+function getStatusOptions(t: (key: string) => string, c: ThemeColors) {
   return [
     { label: t("analytics.all"), value: "all" },
-    { label: t("analytics.newCustomer"), value: "new", color: Colors.status.success },
-    { label: t("analytics.returnCustomer"), value: "return", color: Colors.status.info },
+    { label: t("analytics.newCustomer"), value: "new", color: c.status.success },
+    { label: t("analytics.returnCustomer"), value: "return", color: c.status.info },
   ];
 }
 
 function CustomerStatusPill({ status, t }: { status: "new" | "return"; t: (key: string) => string }) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStatusStyles);
   const isNew = status === "new";
   return (
     <View
       style={[
-        statusStyles.pill,
-        isNew ? statusStyles.new : statusStyles.return,
+        styles.pill,
+        isNew ? styles.new : styles.return,
       ]}
     >
       <AppText
         style={[
-          statusStyles.text,
-          isNew ? statusStyles.newText : statusStyles.returnText,
+          styles.text,
+          isNew ? styles.newText : styles.returnText,
         ]}
       >
         {isNew ? t("analytics.newCustomer") : t("analytics.returnCustomer")}
@@ -52,14 +54,15 @@ function CustomerStatusPill({ status, t }: { status: "new" | "return"; t: (key: 
   );
 }
 
-const statusStyles = StyleSheet.create({
+const createStatusStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   pill: { borderRadius: 999, paddingHorizontal: 8, paddingVertical: 2 },
-  new: { backgroundColor: Colors.status.successSurface },
-  return: { backgroundColor: Colors.status.infoSurface },
+  new: { backgroundColor: c.status.successSurface },
+  return: { backgroundColor: c.status.infoSurface },
   text: { fontSize: 11, fontWeight: "500" },
-  newText: { color: Colors.status.success },
-  returnText: { color: Colors.status.info },
-});
+  newText: { color: c.status.success },
+  returnText: { color: c.status.info },
+  });
 
 export function AnalyticsCustomersScreen() {
   const router = useRouter();
@@ -72,6 +75,8 @@ export function AnalyticsCustomersScreen() {
     "all",
   );
   const [page, setPage] = useState(1);
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const { data: custData, isLoading: custLoading } =
     useAnalyticsCustomers(range);
@@ -103,10 +108,10 @@ export function AnalyticsCustomersScreen() {
       <View style={styles.topBar}>
         <TouchableOpacity
           onPress={() => router.back()}
-          style={[styles.backBtn, Neu.soft(Colors.bg.surface, 0.7)]}
+          style={[styles.backBtn, Neu.soft(colors.bg.surface, 0.7)]}
           activeOpacity={0.85}
         >
-          <Ionicons name="chevron-back" size={20} color={Colors.text.primary} />
+          <Ionicons name="chevron-back" size={20} color={colors.text.primary} />
         </TouchableOpacity>
         <AppText style={styles.pageTitle}>{t("customers.title")}</AppText>
         <View style={styles.topBarRight} />
@@ -137,7 +142,7 @@ export function AnalyticsCustomersScreen() {
           </View>
 
           {/* Customer chart */}
-          <View style={[styles.chartCard, Neu.raised(Colors.bg.surface)]}>
+          <View style={[styles.chartCard, Neu.raised(colors.bg.surface)]}>
             <View style={styles.chartCardHeader}>
               <Skeleton width="30%" height={13} />
               <Skeleton width={48} height={18} radius={9} />
@@ -158,19 +163,19 @@ export function AnalyticsCustomersScreen() {
                 <Ionicons
                   name="people"
                   size={16}
-                  color={Colors.brand.primary}
+                  color={colors.brand.primary}
                 />
               }
               stat={stats.totalCustomers ?? EMPTY_STAT}
               style={styles.statFlex}
             />
             <View style={styles.splitCol}>
-              <View style={[styles.splitCard, Neu.soft(Colors.bg.surface, 0.7)]}>
+              <View style={[styles.splitCard, Neu.soft(colors.bg.surface, 0.7)]}>
                 <View style={styles.splitCardHeader}>
                   <Ionicons
                     name="walk"
                     size={12}
-                    color={Colors.brand.primary}
+                    color={colors.brand.primary}
                   />
                   <AppText style={styles.splitLabel}>{t("home.walkIn")}</AppText>
                 </View>
@@ -178,12 +183,12 @@ export function AnalyticsCustomersScreen() {
                   {stats.totalWalkIn?.current ?? 0}
                 </AppText>
               </View>
-              <View style={[styles.splitCard, Neu.soft(Colors.bg.surface, 0.7)]}>
+              <View style={[styles.splitCard, Neu.soft(colors.bg.surface, 0.7)]}>
                 <View style={styles.splitCardHeader}>
                   <Ionicons
                     name="calendar"
                     size={12}
-                    color={Colors.brand.primary}
+                    color={colors.brand.primary}
                   />
                   <AppText style={styles.splitLabel}>{t("home.appointment")}</AppText>
                 </View>
@@ -203,7 +208,7 @@ export function AnalyticsCustomersScreen() {
                 <Ionicons
                   name="person-add"
                   size={16}
-                  color={Colors.brand.primary}
+                  color={colors.brand.primary}
                 />
               }
               stat={stats.totalNew ?? EMPTY_STAT}
@@ -216,7 +221,7 @@ export function AnalyticsCustomersScreen() {
                 <Ionicons
                   name="repeat"
                   size={16}
-                  color={Colors.brand.primary}
+                  color={colors.brand.primary}
                 />
               }
               stat={stats.totalReturn ?? EMPTY_STAT}
@@ -227,7 +232,7 @@ export function AnalyticsCustomersScreen() {
       ) : null}
 
       {chart && chart.length > 0 ? (
-        <View style={[styles.chartCard, Neu.raised(Colors.bg.surface)]}>
+        <View style={[styles.chartCard, Neu.raised(colors.bg.surface)]}>
           <View style={styles.chartCardHeader}>
             <AppText style={styles.chartCardTitle}>{t("customers.title")}</AppText>
             {stats ? (
@@ -239,7 +244,7 @@ export function AnalyticsCustomersScreen() {
           </View>
           <BarChart
             data={chart}
-            barColor={Colors.status.info}
+            barColor={colors.status.info}
             chartHeight={130}
           />
         </View>
@@ -252,10 +257,10 @@ export function AnalyticsCustomersScreen() {
             {t("customers.title")}{meta ? ` (${meta.totalItems})` : ""}
           </AppText>
           <FilterPicker
-            options={getStatusOptions(t)}
+            options={getStatusOptions(t, colors)}
             selected={statusFilter}
             onSelect={handleStatusChange}
-            pillStyle={[styles.filterPill, Neu.soft(Colors.bg.surface, 0.7)]}
+            pillStyle={[styles.filterPill, Neu.soft(colors.bg.surface, 0.7)]}
             pillTextStyle={styles.filterPillText}
           />
         </View>
@@ -272,7 +277,7 @@ export function AnalyticsCustomersScreen() {
           customers.map((c) => (
             <TouchableOpacity
               key={c.customerId}
-              style={[styles.customerRow, Neu.raised(Colors.bg.surface)]}
+              style={[styles.customerRow, Neu.raised(colors.bg.surface)]}
               activeOpacity={0.85}
               onPress={() =>
                 router.push({
@@ -310,12 +315,12 @@ export function AnalyticsCustomersScreen() {
             <TouchableOpacity
               disabled={!meta.hasPrev}
               onPress={() => setPage((p) => p - 1)}
-              style={[styles.pageBtn, Neu.soft(Colors.bg.surface, 0.7), !meta.hasPrev && styles.pageBtnDisabled]}
+              style={[styles.pageBtn, Neu.soft(colors.bg.surface, 0.7), !meta.hasPrev && styles.pageBtnDisabled]}
             >
               <Ionicons
                 name="chevron-back"
                 size={16}
-                color={meta.hasPrev ? Colors.text.primary : Colors.text.muted}
+                color={meta.hasPrev ? colors.text.primary : colors.text.muted}
               />
             </TouchableOpacity>
             <AppText style={styles.pageLabel}>
@@ -324,12 +329,12 @@ export function AnalyticsCustomersScreen() {
             <TouchableOpacity
               disabled={!meta.hasNext}
               onPress={() => setPage((p) => p + 1)}
-              style={[styles.pageBtn, Neu.soft(Colors.bg.surface, 0.7), !meta.hasNext && styles.pageBtnDisabled]}
+              style={[styles.pageBtn, Neu.soft(colors.bg.surface, 0.7), !meta.hasNext && styles.pageBtnDisabled]}
             >
               <Ionicons
                 name="chevron-forward"
                 size={16}
-                color={meta.hasNext ? Colors.text.primary : Colors.text.muted}
+                color={meta.hasNext ? colors.text.primary : colors.text.muted}
               />
             </TouchableOpacity>
           </View>
@@ -339,7 +344,8 @@ export function AnalyticsCustomersScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   scrollContent: {
     paddingBottom: 200,
   },
@@ -360,7 +366,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 17,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   topBarRight: {
     width: 40,
@@ -401,13 +407,13 @@ const styles = StyleSheet.create({
   },
   splitLabel: {
     fontSize: 11,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
     fontWeight: "500",
   },
   splitValue: {
     fontSize: 18,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   chartCard: {
     marginTop: 14,
@@ -423,7 +429,7 @@ const styles = StyleSheet.create({
   chartCardTitle: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   listSection: {
     marginTop: 20,
@@ -439,7 +445,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 17,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   filterPill: {
     flexDirection: "row",
@@ -452,13 +458,13 @@ const styles = StyleSheet.create({
   filterPillText: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   emptyText: {
     textAlign: "center",
     marginTop: 32,
     fontSize: 15,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   customerRow: {
     flexDirection: "row",
@@ -472,16 +478,16 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: Colors.brand.primarySurface,
+    backgroundColor: c.brand.primarySurface,
     borderWidth: 1,
-    borderColor: Colors.brand.primary,
+    borderColor: c.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   customerInitial: {
     fontSize: 15,
     fontWeight: "600",
-    color: Colors.brand.primaryDark,
+    color: c.brand.primaryDark,
   },
   customerInfo: {
     flex: 1,
@@ -495,17 +501,17 @@ const styles = StyleSheet.create({
   customerName: {
     fontSize: 15,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
     flex: 1,
   },
   customerMeta: {
     fontSize: 12,
-    color: Colors.text.secondary,
+    color: c.text.secondary,
   },
   customerRevenue: {
     fontSize: 14,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
   pagination: {
     flexDirection: "row",
@@ -527,6 +533,6 @@ const styles = StyleSheet.create({
   pageLabel: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
   },
-});
+  });

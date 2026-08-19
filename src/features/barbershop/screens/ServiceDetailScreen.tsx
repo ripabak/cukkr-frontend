@@ -1,7 +1,8 @@
 import { Permission } from "@/src/components/Permission";
 import { useImagePicker, useMemberRole } from "@/src/hooks";
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { InfoRow } from "@/src/components/InfoRow";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
@@ -40,6 +41,8 @@ export function ServiceDetailScreen() {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { role } = useMemberRole();
   const canManage = role === "owner" || role === "admin";
   const { serviceId = "" } = useLocalSearchParams<{ serviceId?: string }>();
@@ -174,7 +177,7 @@ export function ServiceDetailScreen() {
                   <Ionicons
                     name="ellipsis-horizontal"
                     size={18}
-                    color={Colors.text.primary}
+                    color={colors.text.primary}
                   />
                 </TouchableOpacity>
             </Permission>
@@ -194,7 +197,7 @@ export function ServiceDetailScreen() {
                   : undefined
               }
               activeOpacity={canManage ? 0.85 : 1}
-              style={[styles.imageBox, Neu.raised(Colors.bg.surface)]}
+              style={[styles.imageBox, Neu.raised(colors.bg.surface)]}
             >
               {service?.imageMed ? (
                 <Image
@@ -208,7 +211,7 @@ export function ServiceDetailScreen() {
                     name="camera-outline"
                     size={24}
                     color={
-                      canManage ? Colors.icon.muted : Colors.border.default
+                      canManage ? colors.icon.muted : colors.border.default
                     }
                   />
                 </View>
@@ -217,7 +220,7 @@ export function ServiceDetailScreen() {
           </View>
 
           <AppText style={styles.sectionLabel}>{t("services.management")}</AppText>
-          <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
+          <View style={[styles.card, Neu.raised(colors.bg.surface)]}>
             <InfoRow
               label={t("services.serviceName")}
               value={service?.name ?? "—"}
@@ -236,7 +239,7 @@ export function ServiceDetailScreen() {
           <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
             {t("services.price")} & {t("services.duration")}
           </AppText>
-          <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
+          <View style={[styles.card, Neu.raised(colors.bg.surface)]}>
             <InfoRow
               label={t("services.duration")}
               value={service ? `${service.duration} minutes` : "—"}
@@ -262,7 +265,7 @@ export function ServiceDetailScreen() {
             <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
               {t("services.operational")}
             </AppText>
-            <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
+            <View style={[styles.card, Neu.raised(colors.bg.surface)]}>
               <ToggleRow
                 label={t("services.active")}
                 value={service?.isActive ?? false}
@@ -329,95 +332,96 @@ export function ServiceDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: Colors.bg.default,
-  },
-  outer: {
-    flex: 1,
-  },
-  overflowBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 200,
-  },
-  skeletonCard: {
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 20,
-    overflow: "hidden",
-    padding: 16,
-  },
-  skSectionTop: {
-    marginTop: 24,
-  },
-  imageWrapper: {
-    alignItems: "center",
-    marginBottom: 24,
-  },
-  imageBox: {
-    borderRadius: 22,
-    padding: 6,
-  },
-  serviceImageContent: {
-    width: 88,
-    height: 88,
-    borderRadius: 16,
-  },
-  serviceImagePlaceholder: {
-    width: 88,
-    height: 88,
-    borderRadius: 16,
-    backgroundColor: Colors.bg.surface,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sectionLabel: {
-    fontSize: 13,
-    fontWeight: "500",
-    color: Colors.text.secondary,
-    marginBottom: 8,
-    letterSpacing: 0.5,
-  },
-  sectionLabelTop: {
-    marginTop: 24,
-  },
-  card: {
-    borderRadius: 20,
-    overflow: "hidden",
-  },
-  operationalSubtitle: {
-    fontSize: 12,
-    color: Colors.text.muted,
-    marginBottom: 8,
-  },
-  overflowOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 50,
-  },
-  defaultRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-  },
-  defaultLabel: {
-    flex: 1,
-    fontWeight: "600",
-    fontSize: 14,
-    color: Colors.text.primary,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    safeArea: {
+      flex: 1,
+      backgroundColor: c.bg.default,
+    },
+    outer: {
+      flex: 1,
+    },
+    overflowBtn: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    scrollView: {
+      flex: 1,
+    },
+    scrollContent: {
+      paddingHorizontal: 20,
+      paddingBottom: 200,
+    },
+    skeletonCard: {
+      backgroundColor: c.bg.surface,
+      borderRadius: 20,
+      overflow: "hidden",
+      padding: 16,
+    },
+    skSectionTop: {
+      marginTop: 24,
+    },
+    imageWrapper: {
+      alignItems: "center",
+      marginBottom: 24,
+    },
+    imageBox: {
+      borderRadius: 22,
+      padding: 6,
+    },
+    serviceImageContent: {
+      width: 88,
+      height: 88,
+      borderRadius: 16,
+    },
+    serviceImagePlaceholder: {
+      width: 88,
+      height: 88,
+      borderRadius: 16,
+      backgroundColor: c.bg.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    sectionLabel: {
+      fontSize: 13,
+      fontWeight: "500",
+      color: c.text.secondary,
+      marginBottom: 8,
+      letterSpacing: 0.5,
+    },
+    sectionLabelTop: {
+      marginTop: 24,
+    },
+    card: {
+      borderRadius: 20,
+      overflow: "hidden",
+    },
+    operationalSubtitle: {
+      fontSize: 12,
+      color: c.text.muted,
+      marginBottom: 8,
+    },
+    overflowOverlay: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 50,
+    },
+    defaultRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 16,
+      paddingVertical: 16,
+    },
+    defaultLabel: {
+      flex: 1,
+      fontWeight: "600",
+      fontSize: 14,
+      color: c.text.primary,
+    },
+  });

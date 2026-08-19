@@ -1,5 +1,6 @@
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
@@ -12,11 +13,13 @@ interface Props {
 }
 
 export function WorkspacePill({ name, onPress, style }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.85}
-      style={[styles.container, Neu.soft(Colors.bg.surface), style]}
+      style={[styles.container, Neu.soft(colors.bg.surface), style]}
     >
       <AppText style={styles.name} numberOfLines={1}>
         {name}
@@ -24,14 +27,15 @@ export function WorkspacePill({ name, onPress, style }: Props) {
       <Ionicons
         name="chevron-down"
         size={16}
-        color={Colors.icon.muted}
+        color={colors.icon.muted}
         style={styles.icon}
       />
     </TouchableOpacity>
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
@@ -43,11 +47,11 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: c.text.primary,
     flex: 1,
   },
   icon: {
     marginLeft: 4,
     flexShrink: 0,
   },
-});
+  });

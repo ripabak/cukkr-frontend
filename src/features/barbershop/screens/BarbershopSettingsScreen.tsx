@@ -12,8 +12,9 @@ import {
 import { useImagePicker, useMemberRole } from "@/src/hooks";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useToast } from "@/src/lib/providers";
-import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
+import { useTheme, type ThemeColors } from "@/src/theme/ThemeContext";
+import { useThemedStyles } from "@/src/theme/styles";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -25,6 +26,8 @@ export function BarbershopSettingsScreen() {
   const router = useRouter();
   const toast = useToast();
   const { t } = useI18nContext();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { data: barbershop, isLoading } = useBarbershopCurrent();
   const { role } = useMemberRole();
   const isOwner = role === "owner";
@@ -105,7 +108,7 @@ export function BarbershopSettingsScreen() {
               : handleCameraBadge
           }
           activeOpacity={0.85}
-          style={[styles.avatar, Neu.raised(Colors.bg.surface)]}
+          style={[styles.avatar, Neu.raised(colors.bg.surface)]}
         >
           {barbershop?.logoMed ? (
             <Image
@@ -144,7 +147,7 @@ export function BarbershopSettingsScreen() {
           />
         </View>
       ) : (
-      <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
+      <View style={[styles.card, Neu.raised(colors.bg.surface)]}>
         <InfoRow
           label={t("barbershop.nameLabel")}
           value={barbershop?.name}
@@ -199,7 +202,7 @@ export function BarbershopSettingsScreen() {
           <Skeleton.Lines lines={1} firstWidth="55%" height={13} />
         </View>
       ) : (
-      <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
+      <View style={[styles.card, Neu.raised(colors.bg.surface)]}>
         <InfoRow
           label={t("barbershop.bookUrl")}
           value={
@@ -224,7 +227,7 @@ export function BarbershopSettingsScreen() {
           <Skeleton.Lines lines={1} firstWidth="48%" height={13} />
         </View>
       ) : (
-      <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
+      <View style={[styles.card, Neu.raised(colors.bg.surface)]}>
         <InfoRow
           label={t("barbershop.bookingPreferences")}
           value={
@@ -257,7 +260,7 @@ export function BarbershopSettingsScreen() {
           />
         </View>
       ) : (
-      <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
+      <View style={[styles.card, Neu.raised(colors.bg.surface)]}>
         <OperationRow
           label={t("barbers.title")}
           onPress={
@@ -318,83 +321,84 @@ export function BarbershopSettingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  titleRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 24,
-    gap: 4,
-  },
-  backButton: {
-    padding: 4,
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: "600",
-    color: Colors.text.primary,
-    letterSpacing: -0.8,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: Colors.text.secondary,
-    marginTop: 6,
-    marginBottom: 24,
-  },
-  avatarWrapper: {
-    alignSelf: "center",
-    marginBottom: 28,
-    position: "relative",
-  },
-  avatar: {
-    width: 96,
-    height: 96,
-    borderRadius: 28,
-    padding: 5,
-    overflow: "hidden",
-  },
-  avatarImage: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 22,
-  },
-  avatarFallback: {
-    width: "100%",
-    height: "100%",
-    borderRadius: 22,
-    backgroundColor: Colors.brand.primarySurface,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  avatarInitials: {
-    fontSize: 32,
-    fontWeight: "600",
-    color: Colors.brand.primaryDark,
-    letterSpacing: 1,
-  },
-  sectionLabel: {
-    fontSize: 13,
-    fontWeight: "500",
-    color: Colors.text.secondary,
-    marginBottom: 8,
-    letterSpacing: 0.5,
-  },
-  sectionLabelTop: {
-    marginTop: 24,
-  },
-  card: {
-    borderRadius: 20,
-    overflow: "hidden",
-  },
-  skeletonCard: {
-    backgroundColor: Colors.bg.surface,
-    borderRadius: 20,
-    overflow: "hidden",
-    padding: 16,
-  },
-  dangerBtn: {
-    marginTop: 16,
-  },
-  scrollContentPadding: {
-    paddingBottom: 200,
-  },
-});
+const createStyles = (c: ThemeColors) =>
+  StyleSheet.create({
+    titleRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: 24,
+      gap: 4,
+    },
+    backButton: {
+      padding: 4,
+    },
+    title: {
+      fontSize: 30,
+      fontWeight: "600",
+      color: c.text.primary,
+      letterSpacing: -0.8,
+    },
+    subtitle: {
+      fontSize: 14,
+      color: c.text.secondary,
+      marginTop: 6,
+      marginBottom: 24,
+    },
+    avatarWrapper: {
+      alignSelf: "center",
+      marginBottom: 28,
+      position: "relative",
+    },
+    avatar: {
+      width: 96,
+      height: 96,
+      borderRadius: 28,
+      padding: 5,
+      overflow: "hidden",
+    },
+    avatarImage: {
+      width: "100%",
+      height: "100%",
+      borderRadius: 22,
+    },
+    avatarFallback: {
+      width: "100%",
+      height: "100%",
+      borderRadius: 22,
+      backgroundColor: c.brand.primarySurface,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    avatarInitials: {
+      fontSize: 32,
+      fontWeight: "600",
+      color: c.brand.primaryDark,
+      letterSpacing: 1,
+    },
+    sectionLabel: {
+      fontSize: 13,
+      fontWeight: "500",
+      color: c.text.secondary,
+      marginBottom: 8,
+      letterSpacing: 0.5,
+    },
+    sectionLabelTop: {
+      marginTop: 24,
+    },
+    card: {
+      borderRadius: 20,
+      overflow: "hidden",
+    },
+    skeletonCard: {
+      backgroundColor: c.bg.surface,
+      borderRadius: 20,
+      overflow: "hidden",
+      padding: 16,
+    },
+    dangerBtn: {
+      marginTop: 16,
+    },
+    scrollContentPadding: {
+      paddingBottom: 200,
+    },
+  });
