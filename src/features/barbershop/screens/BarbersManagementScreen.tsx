@@ -21,6 +21,7 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
+import { Skeleton } from "@/src/components/Skeleton";
 
 interface RemoveTarget {
   id: string;
@@ -116,6 +117,20 @@ export function BarbersManagementScreen() {
     >
       <AppText style={styles.title}>{t("barbers.title")}</AppText>
       <AppText style={styles.subtitle}>{t("barbers.managementSubtitle")}</AppText>
+
+      {isLoading ? (
+        <View style={styles.list}>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton.Card
+              key={i}
+              thumb={56}
+              height={84}
+              radius={20}
+              style={i < 4 ? styles.cardMargin : undefined}
+            />
+          ))}
+        </View>
+      ) : null}
 
       {!isLoading && pendingInvitations.length > 0 ? (
         <>

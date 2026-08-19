@@ -1,4 +1,5 @@
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { Skeleton } from "@/src/components/Skeleton";
 import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
@@ -6,12 +7,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { AppText } from "@/src/components/AppText";
 import { useI18nContext } from "@/src/lib/i18n/provider";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useAnalyticsServices, useAnalyticsServicesList } from "../hooks";
 import type { AnalyticsRange } from "../services/analytics.service";
 import { formatRupiah } from "../utils/format";
@@ -77,8 +73,12 @@ export function AnalyticsServicesScreen() {
       <RangePicker value={range} onChange={handleRangeChange} />
 
       {svcLoading && !svcData ? (
-        <View style={styles.loadingWrap}>
-          <ActivityIndicator size="small" color={Colors.brand.primary} />
+        <View style={styles.skeletonWrap}>
+          <Skeleton.StatTiles perRow={2} count={2} height={104} />
+          <View style={[styles.chartCard, Neu.raised(Colors.bg.surface, 1.1)]}>
+            <Skeleton width="30%" height={13} style={styles.skeletonChartTitle} />
+            <Skeleton width="100%" height={150} radius={12} />
+          </View>
         </View>
       ) : null}
 
@@ -129,11 +129,11 @@ export function AnalyticsServicesScreen() {
         </View>
 
         {listLoading && services.length === 0 ? (
-          <ActivityIndicator
-            size="small"
-            color={Colors.brand.primary}
-            style={styles.listLoader}
-          />
+          <View style={styles.listSkeleton}>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton.Card key={i} thumb={24} height={74} radius={16} />
+            ))}
+          </View>
         ) : services.length === 0 ? (
           <AppText style={styles.emptyText}>
             {t("components.emptyState.defaultMessage")}
@@ -246,9 +246,14 @@ const styles = StyleSheet.create({
   topBarRight: {
     width: 36,
   },
-  loadingWrap: {
-    paddingVertical: 40,
-    alignItems: "center",
+  skeletonWrap: {
+    paddingTop: 16,
+  },
+  skeletonChartTitle: {
+    marginBottom: 12,
+  },
+  listSkeleton: {
+    gap: 8,
   },
   statsRow: {
     flexDirection: "row",
@@ -282,9 +287,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: Colors.text.primary,
-  },
-  listLoader: {
-    marginTop: 20,
   },
   emptyText: {
     textAlign: "center",

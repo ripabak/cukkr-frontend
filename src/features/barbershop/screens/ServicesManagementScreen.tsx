@@ -18,6 +18,7 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
+import { Skeleton } from "@/src/components/Skeleton";
 import { Neu } from "@/src/theme/styles";
 
 type SortOption =
@@ -101,6 +102,20 @@ export function ServicesManagementScreen() {
         onChangeText={setSearch}
         style={styles.search}
       />
+
+      {isLoading ? (
+        <View style={styles.list}>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton.Card
+              key={i}
+              thumb={56}
+              height={84}
+              radius={20}
+              style={i < 4 ? styles.cardMargin : undefined}
+            />
+          ))}
+        </View>
+      ) : null}
 
       {!isLoading && services.length === 0 ? (
         <AppText style={styles.empty}>

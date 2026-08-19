@@ -10,6 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useGlobalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { AppText } from "@/src/components/AppText";
+import { Skeleton } from "@/src/components/Skeleton";
 import {
   ActivityIndicator,
   ScrollView,
@@ -102,8 +103,12 @@ export function EditUserProfileFieldsScreen() {
           { paddingTop: insets.top, paddingBottom: insets.bottom },
         ]}
       >
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={Colors.text.primary} />
+        <View style={styles.skLoading}>
+          <Skeleton width="32%" height={18} radius={8} />
+          <Skeleton width="100%" height={52} radius={14} style={{ marginTop: 26 }} />
+          <Skeleton width="100%" height={12} radius={6} style={{ marginTop: 6 }} />
+          <Skeleton width="100%" height={52} radius={14} style={{ marginTop: 26 }} />
+          <Skeleton width="100%" height={12} radius={6} style={{ marginTop: 6 }} />
         </View>
       </View>
     );
@@ -265,6 +270,11 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: Colors.bg.default,
+  },
+  skLoading: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 16,
   },
   content: {
     padding: 20,

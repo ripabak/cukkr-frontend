@@ -1,4 +1,5 @@
 import { BookingCard } from "@/src/components/BookingCard";
+import { Skeleton } from "@/src/components/Skeleton";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { AppText } from "@/src/components/AppText";
 import { useBarbershopCurrent } from "@/src/features/barbershop/hooks";
@@ -126,11 +127,12 @@ export function HomeDashboardScreen() {
   const queryClient = useQueryClient();
   const { data: barbershop } = useBarbershopCurrent();
   const { data: summary } = useBookingSummary(today);
-  const { data: activeBookings = [] } = useHomeActiveBookings(today);
+  const { data: activeBookings, isLoading: activeBookingsLoading } =
+    useHomeActiveBookings(today);
   const nextYear = toApiDate(new Date(Date.now() + 365 * 86400 * 1000));
   const { data: requestsData = [] } = useRequestedBookings(today, nextYear);
   const requestCount = requestsData.length;
-  const { data: currentPinData } = useCurrentPin();
+  const { data: currentPinData, isLoading: pinLoading } = useCurrentPin();
   const { mutate: generatePin, isPending: isGenerating } =
     useGenerateWalkInPin();
   const { data: unreadCount } = useUnreadNotificationsCount();
@@ -376,7 +378,8 @@ export function HomeDashboardScreen() {
     }
   };
 
-  const waitingBookings = activeBookings
+  const activeBookingsList = activeBookings ?? [];
+  const waitingBookings = activeBookingsList
     .filter((b) => b.status === "waiting")
     .slice(0, 2);
 
@@ -455,6 +458,15 @@ export function HomeDashboardScreen() {
                 )}
               </View>
 
+              {!summary ? (
+                <Skeleton.StatTiles
+                  perRow={4}
+                  count={4}
+                  height={92}
+                  radius={18}
+                />
+              ) : (
+                <>
               {TODAY_LAYOUT === 1 && (
                 <View style={styles.statBar}>
                   {getSummaryItems(t).map((item) => (
@@ -552,6 +564,8 @@ export function HomeDashboardScreen() {
                   </View>
                 </View>
               )}
+              </>
+              )}
             </View>
           </Animated.View>
 
@@ -599,9 +613,13 @@ export function HomeDashboardScreen() {
               <Animated.View
                 style={[styles.pinValueRow, { transform: [{ scale: pinScale }] }]}
               >
-                <AppText style={styles.pinValue} numberOfLines={1}>
-                  {activePin ?? "----"}
-                </AppText>
+                {pinLoading ? (
+                  <Skeleton width={140} height={42} radius={10} />
+                ) : (
+                  <AppText style={styles.pinValue} numberOfLines={1}>
+                    {activePin ?? "----"}
+                  </AppText>
+                )}
                 <View style={styles.pinActionRow}>
                   <TouchableOpacity
                     onPress={handleCopyLink}
@@ -734,7 +752,13 @@ export function HomeDashboardScreen() {
                 <AppText style={styles.seeAll}>{t("home.seeAll")}</AppText>
               </TouchableOpacity>
             </View>
-            {waitingBookings.length > 0 ? (
+            {activeBookingsLoading ? (
+              <View style={{ gap: 12 }}>
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <Skeleton.Card key={i} thumb={48} height={92} radius={20} />
+                ))}
+              </View>
+            ) : waitingBookings.length > 0 ? (
               waitingBookings.map((booking, i) => {
                 const timeDate =
                   booking.type === "appointment" && booking.scheduledAt

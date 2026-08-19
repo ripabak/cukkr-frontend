@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import {
-  ActivityIndicator,
   Linking,
   Pressable,
   StyleSheet,
@@ -14,6 +13,7 @@ import { ConfirmationModal } from "@/src/components/ConfirmationModal";
 import { PrimaryButton } from "@/src/components/PrimaryButton";
 import { ScreenHeader } from "@/src/components/ScreenHeader";
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { Skeleton } from "@/src/components/Skeleton";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
@@ -118,10 +118,34 @@ export function BillingScreen() {
   if (plansLoading) {
     return (
       <ScreenShell
+        headerSlot={
+          <ScreenHeader title={t("billing.title")} onBack={() => router.back()} />
+        }
         backgroundColor={Colors.bg.default}
-        contentStyle={{ justifyContent: "center", alignItems: "center" }}
+        contentStyle={styles.skeletonContent}
       >
-        <ActivityIndicator size="large" color={Colors.text.primary} />
+        {/* Current plan banner */}
+        <View style={[styles.currentPlanCard, Neu.soft(Colors.brand.primarySurface)]}>
+          <View style={styles.currentPlanRow}>
+            <Skeleton width={34} height={34} radius={12} />
+            <View style={styles.currentPlanText}>
+              <Skeleton width={90} height={12} />
+              <Skeleton width={150} height={18} style={styles.skeletonPlanName} />
+            </View>
+          </View>
+        </View>
+
+        <Skeleton width={110} height={13} style={styles.skeletonSectionLabel} />
+
+        {/* Plan cards */}
+        {Array.from({ length: 3 }).map((_, i) => (
+          <View key={i} style={[styles.planCard, Neu.raised(Colors.bg.surface)]}>
+            <Skeleton width={80} height={11} />
+            <Skeleton width={150} height={22} />
+            <Skeleton width={110} height={26} />
+            <Skeleton width="85%" height={13} />
+          </View>
+        ))}
       </ScreenShell>
     );
   }
@@ -730,5 +754,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.status.danger,
     textAlign: "center",
+  },
+  skeletonContent: {
+    paddingTop: 20,
+    gap: 12,
+  },
+  skeletonPlanName: {
+    marginTop: 4,
+  },
+  skeletonSectionLabel: {
+    marginTop: 4,
   },
 });

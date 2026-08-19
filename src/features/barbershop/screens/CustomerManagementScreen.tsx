@@ -15,6 +15,7 @@ import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { AppText } from "@/src/components/AppText";
+import { Skeleton } from "@/src/components/Skeleton";
 
 type CustomerSort = "name_asc" | "recent" | "bookings_desc" | "spend_desc";
 
@@ -186,6 +187,14 @@ export function CustomerManagementScreen() {
           placeholder={t("customers.searchPlaceholder")}
         />
       </View>
+
+      {isLoading ? (
+        <View style={styles.list}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton.Card key={i} thumb={44} height={72} radius={20} />
+          ))}
+        </View>
+      ) : null}
 
       {!isLoading && customers.length === 0 ? (
         <AppText style={styles.empty}>

@@ -15,8 +15,8 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { AppText } from "@/src/components/AppText";
+import { Skeleton } from "@/src/components/Skeleton";
 import {
-  ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -28,6 +28,23 @@ import { getErrorMessage } from "../utils/error-handler";
 
 interface Props {
   hideBack?: boolean;
+}
+
+/** Skeleton for a single profile info row — mirrors InfoRow's label/value layout. */
+function SkeletonInfoRow({ isLast = false }: { isLast?: boolean }) {
+  return (
+    <View
+      style={[
+        styles.skRow,
+        isLast ? null : styles.skRowBorder,
+      ]}
+    >
+      <Skeleton width="30%" height={12} radius={6} />
+      <View style={styles.skRowValue}>
+        <Skeleton width="48%" height={14} radius={6} />
+      </View>
+    </View>
+  );
 }
 
 export function UserProfileScreen({ hideBack = false }: Props = {}) {
@@ -76,10 +93,30 @@ export function UserProfileScreen({ hideBack = false }: Props = {}) {
   if (isLoading) {
     return (
       <ScreenShell
+        headerSlot={
+          <ScreenHeader
+            title={t("profile.title")}
+            onBack={hideBack ? undefined : () => router.back()}
+          />
+        }
         backgroundColor={Colors.bg.default}
-        contentStyle={{ justifyContent: "center", alignItems: "center" }}
+        contentStyle={{ paddingTop: 20, gap: 12 }}
       >
-        <ActivityIndicator size="large" color={Colors.text.primary} />
+        <View style={styles.avatarWrapper}>
+          <Skeleton.Circle size={96} />
+        </View>
+        <Skeleton width="34%" height={13} radius={7} style={styles.skLabel} />
+        <ProfileSummaryCard style={styles.card}>
+          {[0, 1, 2, 3].map((i) => (
+            <SkeletonInfoRow key={i} isLast={i === 3} />
+          ))}
+        </ProfileSummaryCard>
+        <Skeleton width="34%" height={13} radius={7} style={styles.skLabel} />
+        <ProfileSummaryCard style={styles.card}>
+          {[0, 1].map((i) => (
+            <SkeletonInfoRow key={i} isLast={i === 1} />
+          ))}
+        </ProfileSummaryCard>
       </ScreenShell>
     );
   }
@@ -200,6 +237,24 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginBottom: 8,
     position: "relative",
+  },
+  skLabel: {
+    marginTop: 8,
+    marginBottom: 4,
+  },
+  skRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+  },
+  skRowBorder: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: Colors.border.light,
+  },
+  skRowValue: {
+    flex: 1,
+    alignItems: "flex-end",
   },
   avatarBox: {
     width: 96,

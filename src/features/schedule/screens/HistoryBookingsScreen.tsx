@@ -17,6 +17,7 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { AppText } from "@/src/components/AppText";
+import { Skeleton } from "@/src/components/Skeleton";
 
 function getSortOptions(t: (key: string) => string) {
   return [
@@ -134,6 +135,17 @@ export function HistoryBookingsScreen() {
       </View>
 
       <View style={styles.list}>
+        {isLoading
+          ? [0, 1, 2, 3, 4].map((i) => (
+              <Skeleton.Card
+                key={i}
+                thumb={44}
+                radius={16}
+                height={72}
+                style={styles.rowMargin}
+              />
+            ))
+          : null}
         {bookings.map((booking, i) => (
           <HistoryBookingRow
             key={booking.id}

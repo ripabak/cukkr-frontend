@@ -1,4 +1,5 @@
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { Skeleton } from "@/src/components/Skeleton";
 import { FilterPicker } from "@/src/components/FilterPicker";
 import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
@@ -7,12 +8,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { AppText } from "@/src/components/AppText";
 import { useI18nContext } from "@/src/lib/i18n/provider";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useAnalyticsRevenue, useAnalyticsRevenueBookings } from "../hooks";
 import type { AnalyticsRange } from "../services/analytics.service";
 import { formatDate, formatRupiah, formatRupiahFull } from "../utils/format";
@@ -114,8 +110,15 @@ export function AnalyticsRevenueScreen() {
       <RangePicker value={range} onChange={handleRangeChange} />
 
       {revLoading && !revData ? (
-        <View style={styles.loadingWrap}>
-          <ActivityIndicator size="small" color={Colors.brand.primary} />
+        <View style={styles.skeletonWrap}>
+          <Skeleton.StatTiles perRow={3} count={3} height={128} />
+          <View style={[styles.chartCard, Neu.raised(Colors.bg.surface)]}>
+            <View style={styles.chartCardHeader}>
+              <Skeleton width="30%" height={13} />
+              <Skeleton width={48} height={18} radius={9} />
+            </View>
+            <Skeleton width="100%" height={150} radius={12} />
+          </View>
         </View>
       ) : null}
 
@@ -194,11 +197,20 @@ export function AnalyticsRevenueScreen() {
         </View>
 
         {bookingsLoading && bookings.length === 0 ? (
-          <ActivityIndicator
-            size="small"
-            color={Colors.brand.primary}
-            style={styles.listLoader}
-          />
+          <View style={styles.listSkeleton}>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <View key={i} style={styles.skeletonBookingRow}>
+                <View style={styles.skeletonBookingLeft}>
+                  <Skeleton width={18} height={18} radius={9} />
+                  <View style={styles.skeletonBookingLines}>
+                    <Skeleton width="52%" height={13} />
+                    <Skeleton width="70%" height={11} />
+                  </View>
+                </View>
+                <Skeleton width={64} height={13} />
+              </View>
+            ))}
+          </View>
         ) : bookings.length === 0 ? (
           <AppText style={styles.emptyText}>{t("components.emptyState.defaultMessage")}</AppText>
         ) : (
@@ -292,9 +304,29 @@ const styles = StyleSheet.create({
   topBarRight: {
     width: 40,
   },
-  loadingWrap: {
-    paddingVertical: 40,
+  skeletonWrap: {
+    paddingTop: 20,
+  },
+  skeletonBookingRow: {
+    flexDirection: "row",
     alignItems: "center",
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border.light,
+    gap: 12,
+  },
+  skeletonBookingLeft: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  skeletonBookingLines: {
+    flex: 1,
+    gap: 4,
+  },
+  listSkeleton: {
+    gap: 0,
   },
   statsRow: {
     flexDirection: "row",
@@ -348,9 +380,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "500",
     color: Colors.text.primary,
-  },
-  listLoader: {
-    marginTop: 20,
   },
   emptyText: {
     textAlign: "center",

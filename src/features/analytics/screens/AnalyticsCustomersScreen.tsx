@@ -1,4 +1,5 @@
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { Skeleton } from "@/src/components/Skeleton";
 import { FilterPicker } from "@/src/components/FilterPicker";
 import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
@@ -7,12 +8,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { AppText } from "@/src/components/AppText";
 import { useI18nContext } from "@/src/lib/i18n/provider";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useAnalyticsCustomers, useAnalyticsCustomersList } from "../hooks";
 import type { AnalyticsRange } from "../services/analytics.service";
 import { formatDate, formatRupiah } from "../utils/format";
@@ -119,8 +115,35 @@ export function AnalyticsCustomersScreen() {
       <RangePicker value={range} onChange={handleRangeChange} />
 
       {custLoading && !custData ? (
-        <View style={styles.loadingWrap}>
-          <ActivityIndicator size="small" color={Colors.brand.primary} />
+        <View style={styles.skeletonWrap}>
+          {/* Total + walk-in/appointment split row */}
+          <View style={styles.statsRow}>
+            <View style={styles.skeletonStatFlex}>
+              <Skeleton width="100%" height={128} radius={20} />
+            </View>
+            <View style={styles.splitCol}>
+              <Skeleton width="100%" height={60} radius={16} />
+              <Skeleton width="100%" height={60} radius={16} />
+            </View>
+          </View>
+          {/* New / Return row */}
+          <View style={[styles.statsRow, { marginTop: 10 }]}>
+            <View style={styles.skeletonStatFlex}>
+              <Skeleton width="100%" height={128} radius={20} />
+            </View>
+            <View style={styles.skeletonStatFlex}>
+              <Skeleton width="100%" height={128} radius={20} />
+            </View>
+          </View>
+
+          {/* Customer chart */}
+          <View style={[styles.chartCard, Neu.raised(Colors.bg.surface)]}>
+            <View style={styles.chartCardHeader}>
+              <Skeleton width="30%" height={13} />
+              <Skeleton width={48} height={18} radius={9} />
+            </View>
+            <Skeleton width="100%" height={150} radius={12} />
+          </View>
         </View>
       ) : null}
 
@@ -238,11 +261,11 @@ export function AnalyticsCustomersScreen() {
         </View>
 
         {listLoading && customers.length === 0 ? (
-          <ActivityIndicator
-            size="small"
-            color={Colors.brand.primary}
-            style={styles.listLoader}
-          />
+          <View style={styles.listSkeleton}>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton.Card key={i} thumb={44} height={80} radius={20} />
+            ))}
+          </View>
         ) : customers.length === 0 ? (
           <AppText style={styles.emptyText}>{t("components.emptyState.defaultMessage")}</AppText>
         ) : (
@@ -342,9 +365,14 @@ const styles = StyleSheet.create({
   topBarRight: {
     width: 40,
   },
-  loadingWrap: {
-    paddingVertical: 40,
-    alignItems: "center",
+  skeletonWrap: {
+    paddingTop: 20,
+  },
+  skeletonStatFlex: {
+    flex: 1,
+  },
+  listSkeleton: {
+    gap: 8,
   },
   statsRow: {
     flexDirection: "row",
@@ -425,9 +453,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "500",
     color: Colors.text.primary,
-  },
-  listLoader: {
-    marginTop: 20,
   },
   emptyText: {
     textAlign: "center",

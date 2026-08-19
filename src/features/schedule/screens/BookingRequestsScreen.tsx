@@ -11,6 +11,7 @@ import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useRouter } from "expo-router";
 import React, { useMemo } from "react";
 import { AppText } from "@/src/components/AppText";
+import { Skeleton } from "@/src/components/Skeleton";
 import {
   Image,
   ScrollView,
@@ -90,7 +91,28 @@ export function BookingRequestsScreen() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          {isLoading ? null : grouped.length === 0 ? (
+          {isLoading ? (
+            <View>
+              {[0, 1].map((g) => (
+                <View key={g} style={styles.dateGroup}>
+                  <Skeleton
+                    width={140}
+                    height={15}
+                    radius={8}
+                    style={styles.skeletonDateHeader}
+                  />
+                  {[0, 1, 2].map((i) => (
+                    <Skeleton.Card
+                      key={i}
+                      thumb={48}
+                      radius={20}
+                      style={styles.cardMargin}
+                    />
+                  ))}
+                </View>
+              ))}
+            </View>
+          ) : grouped.length === 0 ? (
             renderEmptyState()
           ) : (
             grouped.map((group) => (
@@ -153,6 +175,9 @@ const styles = StyleSheet.create({
   },
   cardMargin: {
     marginBottom: 14,
+  },
+  skeletonDateHeader: {
+    marginBottom: 12,
   },
   emptyState: {
     alignItems: "center",

@@ -1,5 +1,6 @@
 import { Permission } from "@/src/components/Permission";
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { Skeleton } from "@/src/components/Skeleton";
 import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
@@ -7,12 +8,7 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { AppText } from "@/src/components/AppText";
 import { useI18nContext } from "@/src/lib/i18n/provider";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { BarChart } from "../components/BarChart";
 import { HighlightRow } from "../components/HighlightRow";
 import { RangePicker } from "../components/RangePicker";
@@ -52,8 +48,56 @@ export function AnalyticsOverviewScreen() {
       <RangePicker value={range} onChange={setRange} />
 
       {isLoading && !data ? (
-        <View style={styles.loadingWrap}>
-          <ActivityIndicator size="small" color={Colors.brand.primary} />
+        <View style={styles.skeletonWrap}>
+          {/* Stat cards 2x2 */}
+          <Skeleton.StatTiles perRow={2} count={4} height={104} />
+
+          {/* Revenue chart card */}
+          <View style={[styles.chartCard, Neu.raised(Colors.bg.surface)]}>
+            <View style={styles.chartCardHeader}>
+              <Skeleton width="34%" height={13} />
+              <Skeleton width={52} height={20} radius={10} />
+            </View>
+            <Skeleton width={140} height={26} />
+            <Skeleton width={96} height={12} style={styles.skeletonCardGap} />
+            <View style={styles.chartWrap}>
+              <Skeleton width="100%" height={140} radius={12} />
+            </View>
+          </View>
+
+          {/* Customers chart card */}
+          <View style={[styles.chartCard, Neu.raised(Colors.bg.surface)]}>
+            <View style={styles.chartCardHeader}>
+              <Skeleton width="34%" height={13} />
+              <Skeleton width={52} height={20} radius={10} />
+            </View>
+            <Skeleton width={70} height={26} />
+            <Skeleton width={96} height={12} style={styles.skeletonCardGap} />
+            <View style={styles.chartWrap}>
+              <Skeleton width="100%" height={140} radius={12} />
+            </View>
+          </View>
+
+          {/* Highlights */}
+          <View style={styles.highlightsSection}>
+            <Skeleton
+              width={120}
+              height={18}
+              style={styles.skeletonSectionTitle}
+            />
+            <Skeleton.Card
+              thumb={48}
+              height={80}
+              radius={20}
+              style={styles.skeletonHighlightRow}
+            />
+            <Skeleton.Card
+              thumb={48}
+              height={80}
+              radius={20}
+              style={styles.skeletonHighlightRow}
+            />
+          </View>
         </View>
       ) : null}
 
@@ -247,9 +291,17 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
     marginTop: 4,
   },
-  loadingWrap: {
-    paddingVertical: 48,
-    alignItems: "center",
+  skeletonWrap: {
+    paddingTop: 20,
+  },
+  skeletonCardGap: {
+    marginTop: 4,
+  },
+  skeletonSectionTitle: {
+    marginBottom: 12,
+  },
+  skeletonHighlightRow: {
+    marginBottom: 12,
   },
   statGrid: {
     flexDirection: "row",

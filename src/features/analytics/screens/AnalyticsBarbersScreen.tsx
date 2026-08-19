@@ -1,4 +1,5 @@
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { Skeleton } from "@/src/components/Skeleton";
 import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
@@ -7,12 +8,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { AppText } from "@/src/components/AppText";
 import { useI18nContext } from "@/src/lib/i18n/provider";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useAnalyticsBarbers, useAnalyticsBarbersList } from "../hooks";
 import type { AnalyticsRange } from "../services/analytics.service";
 import { formatRupiah } from "../utils/format";
@@ -64,8 +60,47 @@ export function AnalyticsBarbersScreen() {
       <RangePicker value={range} onChange={setRange} />
 
       {(chartLoading || listLoading) && barbers.length === 0 ? (
-        <View style={styles.loadingWrap}>
-          <ActivityIndicator size="small" color={Colors.brand.primary} />
+        <View style={styles.skeletonWrap}>
+          {/* Revenue by barber chart */}
+          <View style={[styles.chartCard, Neu.raised(Colors.bg.surface, 1.1)]}>
+            <Skeleton width="30%" height={13} style={styles.skeletonChartTitle} />
+            <Skeleton width="100%" height={150} radius={12} />
+          </View>
+
+          {/* Barbers list */}
+          <View style={styles.listSection}>
+            <Skeleton
+              width={130}
+              height={17}
+              style={styles.skeletonListHeaderGap}
+            />
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton.Card
+                key={i}
+                thumb={40}
+                height={68}
+                radius={16}
+                style={styles.skeletonListRow}
+              />
+            ))}
+
+            {/* Revenue-share progress rows */}
+            <View style={styles.skeletonShareSection}>
+              <Skeleton width={100} height={13} />
+              {Array.from({ length: 4 }).map((_, i) => (
+                <View key={i} style={styles.skeletonShareRow}>
+                  <Skeleton width={64} height={12} />
+                  <Skeleton
+                    width="100%"
+                    height={8}
+                    radius={4}
+                    style={styles.skeletonShareBar}
+                  />
+                  <Skeleton width={32} height={11} />
+                </View>
+              ))}
+            </View>
+          </View>
         </View>
       ) : null}
 
@@ -200,9 +235,29 @@ const styles = StyleSheet.create({
   topBarRight: {
     width: 36,
   },
-  loadingWrap: {
-    paddingVertical: 40,
+  skeletonWrap: {
+    paddingTop: 8,
+  },
+  skeletonChartTitle: {
+    marginBottom: 12,
+  },
+  skeletonListHeaderGap: {
+    marginBottom: 12,
+  },
+  skeletonListRow: {
+    marginBottom: 8,
+  },
+  skeletonShareSection: {
+    marginTop: 20,
+    gap: 10,
+  },
+  skeletonShareRow: {
+    flexDirection: "row",
     alignItems: "center",
+    gap: 10,
+  },
+  skeletonShareBar: {
+    flex: 1,
   },
   chartCard: {
     marginTop: 16,

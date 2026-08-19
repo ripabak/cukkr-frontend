@@ -14,6 +14,7 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
+import { Skeleton } from "@/src/components/Skeleton";
 import {
   useAcceptNotification,
   useDeclineNotification,
@@ -81,6 +82,20 @@ export function NotificationsListScreen() {
       headerSlot={<ScreenHeader onBack={() => router.back()} />}
       contentStyle={styles.content}
     >
+      {isLoading ? (
+        <View style={styles.list}>
+          {[0, 1, 2, 3, 4].map((i) => (
+            <Skeleton.Card
+              key={i}
+              thumb={40}
+              radius={20}
+              height={108}
+              style={styles.cardMargin}
+            />
+          ))}
+        </View>
+      ) : null}
+
       {!isLoading && isError ? (
         <View style={styles.centered}>
           <AppText style={styles.errorText}>{t("common.loadFailed")}</AppText>

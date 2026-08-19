@@ -1,5 +1,6 @@
 import { BookingCard } from "@/src/components/BookingCard";
 import { ScreenShell } from "@/src/components/ScreenShell";
+import { Skeleton } from "@/src/components/Skeleton";
 import { getScheduleStatusOptions } from "@/src/components/StatusFilterMenu";
 import { FilterPicker } from "@/src/components/FilterPicker";
 
@@ -361,6 +362,16 @@ export function ScheduleActiveBookingsScreen() {
       </View>
 
       <View style={styles.list}>
+        {isLoading
+          ? [0, 1, 2, 3, 4].map((i) => (
+              <Skeleton.Card
+                key={i}
+                thumb={48}
+                radius={20}
+                style={styles.cardMargin}
+              />
+            ))
+          : null}
         {bookings.map((booking, i) => {
           const timeDate =
             booking.type === "appointment" && booking.scheduledAt

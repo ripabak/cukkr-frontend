@@ -19,6 +19,7 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
+import { Skeleton } from "@/src/components/Skeleton";
 
 export function BarbershopSettingsScreen() {
   const router = useRouter();
@@ -94,6 +95,9 @@ export function BarbershopSettingsScreen() {
       <AppText style={styles.subtitle}>{t("barbershop.setupSubtitle")}</AppText>
 
       <View style={styles.avatarWrapper}>
+        {isLoading ? (
+          <Skeleton width={96} height={96} radius={28} />
+        ) : (
         <TouchableOpacity
           onPress={
             isLoading || isPicking || isUploading
@@ -124,9 +128,22 @@ export function BarbershopSettingsScreen() {
             </View>
           )}
         </TouchableOpacity>
+        )}
       </View>
 
       <AppText style={styles.sectionLabel}>{t("barbershop.information")}</AppText>
+      {isLoading ? (
+        <View style={styles.skeletonCard}>
+          <Skeleton.Lines
+            lines={3}
+            firstWidth="40%"
+            lineWidth="86%"
+            lastWidth="58%"
+            gap={10}
+            height={13}
+          />
+        </View>
+      ) : (
       <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
         <InfoRow
           label={t("barbershop.nameLabel")}
@@ -172,10 +189,16 @@ export function BarbershopSettingsScreen() {
           }
         />
       </View>
+      )}
 
       <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
         {t("barbershop.bookingWeb")}
       </AppText>
+      {isLoading ? (
+        <View style={styles.skeletonCard}>
+          <Skeleton.Lines lines={1} firstWidth="55%" height={13} />
+        </View>
+      ) : (
       <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
         <InfoRow
           label={t("barbershop.bookUrl")}
@@ -191,10 +214,16 @@ export function BarbershopSettingsScreen() {
           }
         />
       </View>
+      )}
 
       <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
         {t("barbershop.bookingPreferences")}
       </AppText>
+      {isLoading ? (
+        <View style={styles.skeletonCard}>
+          <Skeleton.Lines lines={1} firstWidth="48%" height={13} />
+        </View>
+      ) : (
       <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
         <InfoRow
           label={t("barbershop.bookingPreferences")}
@@ -212,10 +241,22 @@ export function BarbershopSettingsScreen() {
           }
         />
       </View>
+      )}
 
       <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
         {t("barbershop.operations")}
       </AppText>
+      {isLoading ? (
+        <View style={styles.skeletonCard}>
+          <Skeleton.Lines
+            lines={4}
+            firstWidth="36%"
+            lineWidth="62%"
+            gap={16}
+            height={13}
+          />
+        </View>
+      ) : (
       <View style={[styles.card, Neu.raised(Colors.bg.surface)]}>
         <OperationRow
           label={t("barbers.title")}
@@ -241,6 +282,7 @@ export function BarbershopSettingsScreen() {
           onPress={isLoading ? undefined : () => router.push("/d/open-hours")}
         />
       </View>
+      )}
 
       <AppText style={[styles.sectionLabel, styles.sectionLabelTop]}>
         {isOwner ? t("barbershop.deleteBarbershop") : t("barbershop.leaveBarbershop")}
@@ -342,6 +384,12 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 20,
     overflow: "hidden",
+  },
+  skeletonCard: {
+    backgroundColor: Colors.bg.surface,
+    borderRadius: 20,
+    overflow: "hidden",
+    padding: 16,
   },
   dangerBtn: {
     marginTop: 16,

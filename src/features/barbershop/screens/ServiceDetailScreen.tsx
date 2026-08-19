@@ -23,8 +23,8 @@ import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { AppText } from "@/src/components/AppText";
+import { Skeleton } from "@/src/components/Skeleton";
 import {
-  ActivityIndicator,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -120,11 +120,41 @@ export function ServiceDetailScreen() {
   if (isLoading) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <ActivityIndicator
-          size="large"
-          color={Colors.brand.primary}
-          style={styles.loader}
-        />
+        <View style={styles.outer}>
+          <ScreenHeader onBack={() => router.back()} />
+          <View style={[styles.scrollView, styles.scrollContent]}>
+            <View style={styles.imageWrapper}>
+              <Skeleton width={100} height={100} radius={22} />
+            </View>
+            <Skeleton width={120} height={13} radius={7} />
+            <View style={styles.skeletonCard}>
+              <Skeleton.Lines
+                lines={2}
+                firstWidth="45%"
+                lineWidth="80%"
+                lastWidth="50%"
+                gap={16}
+                height={13}
+              />
+            </View>
+            <Skeleton
+              width={150}
+              height={13}
+              radius={7}
+              style={styles.skSectionTop}
+            />
+            <View style={styles.skeletonCard}>
+              <Skeleton.Lines
+                lines={3}
+                firstWidth="48%"
+                lineWidth="74%"
+                lastWidth="56%"
+                gap={16}
+                height={13}
+              />
+            </View>
+          </View>
+        </View>
       </SafeAreaView>
     );
   }
@@ -307,9 +337,6 @@ const styles = StyleSheet.create({
   outer: {
     flex: 1,
   },
-  loader: {
-    marginTop: 80,
-  },
   overflowBtn: {
     width: 40,
     height: 40,
@@ -323,6 +350,15 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 20,
     paddingBottom: 200,
+  },
+  skeletonCard: {
+    backgroundColor: Colors.bg.surface,
+    borderRadius: 20,
+    overflow: "hidden",
+    padding: 16,
+  },
+  skSectionTop: {
+    marginTop: 24,
   },
   imageWrapper: {
     alignItems: "center",

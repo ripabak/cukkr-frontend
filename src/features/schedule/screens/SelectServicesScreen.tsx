@@ -15,6 +15,7 @@ import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { AppText } from "@/src/components/AppText";
+import { Skeleton } from "@/src/components/Skeleton";
 
 export function SelectServicesScreen() {
   const router = useRouter();
@@ -80,9 +81,19 @@ export function SelectServicesScreen() {
       }
       contentStyle={styles.content}
     >
-      <SearchInput value={query} onChangeText={setQuery} placeholder={t("common.search")} />
+      <SearchInput
+        value={query}
+        onChangeText={setQuery}
+        placeholder={t("common.search")}
+      />
 
-      {!isLoading && filtered.length === 0 ? (
+      {isLoading ? (
+        <View style={styles.list}>
+          {[0, 1, 2, 3, 4].map((i) => (
+            <Skeleton.Card key={i} thumb={56} height={88} radius={20} />
+          ))}
+        </View>
+      ) : !isLoading && filtered.length === 0 ? (
         <AppText style={styles.emptyText}>{t("services.noServices")}</AppText>
       ) : (
         <View style={styles.list}>

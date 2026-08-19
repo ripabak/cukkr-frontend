@@ -26,8 +26,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { AppText } from "@/src/components/AppText";
+import { Skeleton } from "@/src/components/Skeleton";
 import {
-  ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -75,11 +75,21 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
 
   if (isLoadingCustomer) {
     return (
-      <ScreenShell>
-        <ActivityIndicator
-          size="large"
-          color={Colors.brand.primary}
-          style={styles.loader}
+      <ScreenShell contentStyle={styles.content}>
+        <View style={styles.topBar}>
+          <Skeleton width={40} height={40} radius={20} />
+          <View style={styles.topBarSpacer} />
+          <Skeleton width={36} height={36} radius={18} />
+        </View>
+        <Skeleton width="60%" height={30} radius={12} style={styles.skName} />
+        <Skeleton width="48%" height={14} radius={7} style={styles.skSub} />
+        <Skeleton width="100%" height={48} radius={24} style={styles.skTabs} />
+        <Skeleton.StatTiles perRow={2} count={4} height={104} radius={20} />
+        <Skeleton
+          width="100%"
+          height={150}
+          radius={20}
+          style={styles.skChart}
         />
       </ScreenShell>
     );
@@ -188,7 +198,11 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
             </TouchableOpacity>
           </View>
           {isLoadingBookings ? (
-            <ActivityIndicator size="small" color={Colors.brand.primary} />
+            <View style={styles.bookingList}>
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton.Card key={i} thumb={48} height={80} radius={20} />
+              ))}
+            </View>
           ) : (
             <View style={styles.bookingList}>
               {bookings.map((b: { id: string; referenceNumber: string; status: string; type: string; handledByName: string | null; createdAt: Date; totalAmount: number }) => (
@@ -247,8 +261,11 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
 }
 
 const styles = StyleSheet.create({
-  loader: { marginTop: 80 },
   content: { paddingBottom: 200 },
+  skName: { marginTop: 8 },
+  skSub: { marginTop: 4, marginBottom: 18 },
+  skTabs: { marginBottom: 16 },
+  skChart: { marginTop: 4 },
   topBar: {
     flexDirection: "row",
     alignItems: "center",

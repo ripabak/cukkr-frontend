@@ -16,8 +16,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
+import { Skeleton } from "@/src/components/Skeleton";
 import {
-  ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -76,7 +76,9 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
     return (
       <ScreenShell>
         <View style={styles.center}>
-          <ActivityIndicator size="large" color={Colors.text.primary} />
+          <Skeleton.Circle size={56} />
+          <Skeleton width="68%" height={22} radius={8} style={{ marginTop: 24 }} />
+          <Skeleton width="84%" height={14} radius={6} style={{ marginTop: 12 }} />
         </View>
       </ScreenShell>
     );
@@ -125,8 +127,12 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
     return (
       <ScreenShell>
         <View style={styles.center}>
-          <ActivityIndicator size="large" color={Colors.text.primary} />
-          <AppText style={styles.loadingText}>{t("common.loading")}</AppText>
+          <Skeleton.Circle size={56} />
+          <Skeleton width="68%" height={22} radius={8} style={{ marginTop: 24 }} />
+          <Skeleton width="84%" height={14} radius={6} style={{ marginTop: 12 }} />
+          <Skeleton width="60%" height={14} radius={6} style={{ marginTop: 8 }} />
+          <Skeleton width="100%" height={52} radius={16} style={{ marginTop: 32 }} />
+          <Skeleton width="100%" height={48} radius={16} style={{ marginTop: 12 }} />
         </View>
       </ScreenShell>
     );

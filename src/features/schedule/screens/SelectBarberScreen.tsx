@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { AppText } from "@/src/components/AppText";
+import { Skeleton } from "@/src/components/Skeleton";
 
 export function SelectBarberScreen() {
   const router = useRouter();
@@ -38,9 +39,28 @@ export function SelectBarberScreen() {
       }
       contentStyle={styles.content}
     >
-      <SearchInput value={query} onChangeText={setQuery} placeholder={t("common.search")} />
+      <SearchInput
+        value={query}
+        onChangeText={setQuery}
+        placeholder={t("common.search")}
+      />
 
-      {!isLoading && filtered.length === 0 ? (
+      {isLoading ? (
+        <View style={styles.list}>
+          {[0, 1, 2, 3, 4].map((i) => (
+            <View
+              key={i}
+              style={[styles.barberRow, Neu.raised(Colors.bg.surface)]}
+            >
+              <Skeleton.Circle size={48} />
+              <View style={{ flex: 1, gap: 8 }}>
+                <Skeleton width="55%" height={14} radius={6} />
+                <Skeleton width="35%" height={11} radius={6} />
+              </View>
+            </View>
+          ))}
+        </View>
+      ) : !isLoading && filtered.length === 0 ? (
         <AppText style={styles.emptyText}>{t("barbers.noBarbers")}</AppText>
       ) : (
         <View style={styles.list}>

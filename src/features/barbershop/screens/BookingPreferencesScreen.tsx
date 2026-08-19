@@ -12,8 +12,9 @@ import { useToast } from "@/src/lib/providers";
 import { Colors } from "@/src/theme/colors";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { AppText } from "@/src/components/AppText";
+import { Skeleton } from "@/src/components/Skeleton";
 
 export function BookingPreferencesScreen() {
   const router = useRouter();
@@ -82,11 +83,11 @@ export function BookingPreferencesScreen() {
       contentStyle={styles.content}
     >
       {isFetching && !initialized ? (
-        <ActivityIndicator
-          size="small"
-          color={Colors.brand.primary}
-          style={styles.loader}
-        />
+        <View style={{ gap: 10 }}>
+          <Skeleton width="32%" height={12} radius={6} />
+          <Skeleton width="100%" height={52} radius={14} />
+          <Skeleton width="100%" height={14} radius={6} />
+        </View>
       ) : (
         <>
           <TextInputField

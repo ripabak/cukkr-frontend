@@ -30,8 +30,9 @@ import { useI18nContext } from "@/src/lib/i18n/provider";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { AppText } from "@/src/components/AppText";
+import { Skeleton } from "@/src/components/Skeleton";
 import {
-  ActivityIndicator,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -231,9 +232,80 @@ export function BookingDetailScreen() {
   const renderContent = () => {
     if (isLoading) {
       return (
-        <View style={styles.centered}>
-          <ActivityIndicator size="large" color={Colors.brand.primary} />
-        </View>
+        <ScrollView
+          style={styles.skeletonScroll}
+          contentContainerStyle={styles.skeletonContent}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Header card — mirrors BookingDetailCard header */}
+          <View
+            style={[
+              Neu.raised(Colors.bg.surface),
+              styles.skeletonHeaderSection,
+            ]}
+          >
+            <Skeleton width="48%" height={30} radius={10} />
+            <Skeleton width="35%" height={14} style={styles.skeletonGap} />
+            <Skeleton width="60%" height={13} style={styles.skeletonMetaGap} />
+            <Skeleton width="70%" height={13} style={styles.skeletonMetaGap} />
+            <Skeleton
+              width={96}
+              height={26}
+              radius={13}
+              style={styles.skeletonGap}
+            />
+          </View>
+
+          {/* Info rows section */}
+          <View
+            style={[
+              Neu.raised(Colors.bg.surface),
+              styles.skeletonSection,
+              styles.skeletonRowsGap,
+            ]}
+          >
+            {[0, 1, 2].map((i) => (
+              <View key={i} style={styles.skeletonRow}>
+                <Skeleton width="28%" height={14} />
+                <Skeleton width="44%" height={14} />
+              </View>
+            ))}
+          </View>
+
+          {/* Services section */}
+          <View
+            style={[
+              Neu.raised(Colors.bg.surface),
+              styles.skeletonSection,
+              styles.skeletonRowsGap,
+            ]}
+          >
+            <Skeleton width={120} height={14} />
+            {[0, 1, 2].map((i) => (
+              <View key={i} style={styles.skeletonRow}>
+                <Skeleton width="48%" height={14} />
+                <Skeleton width="22%" height={14} />
+              </View>
+            ))}
+          </View>
+
+          {/* Payment summary section */}
+          <View
+            style={[
+              Neu.raised(Colors.bg.surface),
+              styles.skeletonSection,
+              styles.skeletonRowsGap,
+            ]}
+          >
+            <Skeleton width={160} height={14} />
+            {[0, 1].map((i) => (
+              <View key={i} style={styles.skeletonRow}>
+                <Skeleton width="52%" height={14} />
+                <Skeleton width="20%" height={14} />
+              </View>
+            ))}
+          </View>
+        </ScrollView>
       );
     }
 
@@ -530,6 +602,37 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 14,
     color: Colors.text.secondary,
+  },
+  skeletonScroll: {
+    flex: 1,
+  },
+  skeletonContent: {
+    paddingHorizontal: 20,
+    paddingTop: 24,
+    paddingBottom: 140,
+    gap: 12,
+  },
+  skeletonHeaderSection: {
+    borderRadius: 24,
+    padding: 20,
+  },
+  skeletonSection: {
+    borderRadius: 20,
+    padding: 16,
+  },
+  skeletonRowsGap: {
+    gap: 16,
+  },
+  skeletonGap: {
+    marginTop: 12,
+  },
+  skeletonMetaGap: {
+    marginTop: 8,
+  },
+  skeletonRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   overflowBtn: {
     width: 40,
