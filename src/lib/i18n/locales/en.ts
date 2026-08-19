@@ -106,6 +106,9 @@ export const en = {
     plan: 'Plan & Billing',
     appearance: 'Appearance',
     themeMode: 'Display Mode',
+    themePromptTitle: 'Choose your theme',
+    themePromptSubtitle:
+      'Light or dark? You can change it anytime from the Profile page.',
     themeLight: 'Light',
     themeLightDesc: 'Always light',
     themeDark: 'Dark',

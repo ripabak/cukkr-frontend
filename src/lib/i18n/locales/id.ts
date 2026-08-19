@@ -106,6 +106,9 @@ export const id = {
     plan: 'Paket & Langganan',
     appearance: 'Tampilan',
     themeMode: 'Mode Tampilan',
+    themePromptTitle: 'Pilih tema aplikasi',
+    themePromptSubtitle:
+      'Terang atau gelap? Bisa kamu ubah kapan saja di halaman Profil.',
     themeLight: 'Terang',
     themeLightDesc: 'Selalu terang',
     themeDark: 'Gelap',

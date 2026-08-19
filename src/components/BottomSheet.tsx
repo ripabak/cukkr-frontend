@@ -78,6 +78,10 @@ export function BottomSheet({
   const translateY = useRef(new Animated.Value(0)).current;
   const backdropOpacity = useRef(new Animated.Value(0)).current;
 
+  // Ref so the once-created PanResponder always sees the latest `dismissible`.
+  const dismissibleRef = useRef(dismissible);
+  dismissibleRef.current = dismissible;
+
   // Real-time drag-to-dismiss gesture.
   const panResponder = useRef(
     PanResponder.create({
@@ -101,6 +105,22 @@ export function BottomSheet({
         const shouldDismiss =
           dy > heightRef.current * DISMISS_FRACTION || gs.vy > DISMISS_VELOCITY;
         if (shouldDismiss) {
+          if (!dismissibleRef.current) {
+            // Non-dismissible sheet: spring back in place (no close, no haptic).
+            Animated.spring(translateY, {
+              toValue: 0,
+              stiffness: 220,
+              damping: 24,
+              mass: 0.8,
+              useNativeDriver: USE_NATIVE_DRIVER,
+            }).start();
+            Animated.timing(backdropOpacity, {
+              toValue: 1,
+              duration: 160,
+              useNativeDriver: USE_NATIVE_DRIVER,
+            }).start();
+            return;
+          }
           haptics.light();
           dismiss();
         } else {

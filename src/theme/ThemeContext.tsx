@@ -15,6 +15,7 @@ export type ThemeMode = "light" | "dark" | "system";
 export type ResolvedTheme = "light" | "dark";
 
 const STORAGE_KEY = "cukkr_theme_mode";
+const STORAGE_CHOSEN_KEY = "cukkr_theme_chosen";
 const VALID = ["light", "dark", "system"] as const;
 
 /** Palette type with widened `string` values so light & dark both satisfy it. */
@@ -30,6 +31,9 @@ export interface ThemeContextValue {
   /** Active palette (light or dark mirror of `Colors`). */
   colors: ThemeColors;
   setMode: (mode: ThemeMode) => void;
+  /** Whether the user has picked a theme (mandatory first-run means this only
+   *  becomes true once they actually choose one). */
+  hasChosen: boolean;
   /** True once the persisted preference has been read from storage. */
   hydrated: boolean;
 }
@@ -39,22 +43,29 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const systemScheme = useColorScheme(); // 'light' | 'dark' | null
   const [mode, setModeState] = useState<ThemeMode>("light");
+  const [hasChosen, setHasChosen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
 
   // Hydrate the persisted preference before first paint to avoid a
   // light → dark flash on app start.
   useEffect(() => {
     let cancelled = false;
-    AsyncStorage.getItem(STORAGE_KEY)
-      .then((stored) => {
-        if (!cancelled && VALID.includes(stored as ThemeMode)) {
+    (async () => {
+      try {
+        const [stored, chosen] = await Promise.all([
+          AsyncStorage.getItem(STORAGE_KEY),
+          AsyncStorage.getItem(STORAGE_CHOSEN_KEY),
+        ]);
+        if (cancelled) return;
+        if (VALID.includes(stored as ThemeMode)) {
           setModeState(stored as ThemeMode);
         }
-      })
-      .catch(() => {})
-      .finally(() => {
+        if (chosen === "1") setHasChosen(true);
+      } catch {
+      } finally {
         if (!cancelled) setHydrated(true);
-      });
+      }
+    })();
     return () => {
       cancelled = true;
     };
@@ -62,7 +73,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const setMode = useCallback((next: ThemeMode) => {
     setModeState(next);
-    AsyncStorage.setItem(STORAGE_KEY, next).catch(() => {});
+    setHasChosen(true);
+    AsyncStorage.multiSet([
+      [STORAGE_KEY, next],
+      [STORAGE_CHOSEN_KEY, "1"],
+    ]).catch(() => {});
   }, []);
 
   const value = useMemo<ThemeContextValue | null>(() => {
@@ -80,9 +95,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       isDark,
       colors: isDark ? DarkColors : Colors,
       setMode,
+      hasChosen,
       hydrated,
     };
-  }, [hydrated, mode, systemScheme, setMode]);
+  }, [hydrated, mode, systemScheme, setMode, hasChosen]);
 
   if (!value) return null; // block first frame until preference is known
 

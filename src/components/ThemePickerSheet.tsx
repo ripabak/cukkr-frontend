@@ -10,16 +10,27 @@ import { Pressable, StyleSheet, View } from "react-native";
 
 interface Props {
   visible: boolean;
-  onClose: () => void;
+  onClose?: () => void;
+  /** Optional overrides — used by the first-run prompt. */
+  title?: string;
+  subtitle?: string;
+  /** Mandatory picker: cannot be dismissed (no scrim / drag / back) — user must choose. */
+  mandatory?: boolean;
 }
 
 const MODES = ["light", "dark", "system"] as const;
 
 /**
  * Bottom sheet to pick the display theme (Light / Dark / System).
- * Reused from the Profile page and the login screen ("post-login" picker).
+ * Reused from the Profile page, the login screen, and (mandatory) first-run.
  */
-export function ThemePickerSheet({ visible, onClose }: Props) {
+export function ThemePickerSheet({
+  visible,
+  onClose,
+  title,
+  subtitle,
+  mandatory = false,
+}: Props) {
   const { t } = useI18nContext();
   const { mode, setMode } = useTheme();
   const styles = useThemedStyles(createStyles);
@@ -47,9 +58,11 @@ export function ThemePickerSheet({ visible, onClose }: Props) {
   return (
     <BottomSheet
       visible={visible}
-      onClose={onClose}
-      title={t("profile.themeMode")}
-      subtitle={t("profile.appearance")}
+      onClose={onClose ?? (() => {})}
+      title={title ?? t("profile.themeMode")}
+      subtitle={subtitle ?? t("profile.appearance")}
+      dismissible={!mandatory}
+      showHandle={!mandatory}
     >
       <View style={styles.list}>
         {MODES.map((m) => {
@@ -60,7 +73,7 @@ export function ThemePickerSheet({ visible, onClose }: Props) {
               onPress={() => {
                 haptics.light();
                 setMode(m);
-                onClose();
+                onClose?.();
               }}
               style={({ pressed }) => [
                 styles.row,
