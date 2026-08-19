@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   installBtnText: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#1a1a1a",
+    color: AppTheme.colors.dark,
   },
   closeBtn: {
     padding: 4,

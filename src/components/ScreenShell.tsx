@@ -9,10 +9,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Props {
   children: React.ReactNode;
@@ -32,22 +29,6 @@ interface Props {
   edges?: ("top" | "bottom" | "left" | "right")[];
   /** Wrap scroll content in KeyboardAvoidingView — use for form screens */
   keyboardAvoid?: boolean;
-  /**
-   * Render headerSlot as an absolute overlay above the ScrollView so it can
-   * collapse on scroll (drive the transform from `onScroll`).
-   * Content is top-padded by `stickyHeaderHeight` so it clears the header.
-   */
-  stickyHeader?: boolean;
-  /** Measured height of the header slot (used for the content top-pad & collapse math). */
-  stickyHeaderHeight?: number;
-  /** Scroll event callback — attach for scroll-aware headers */
-  onScroll?: (event: any) => void;
-  /** Throttle for onScroll (ms) — default: 16 */
-  scrollEventThrottle?: number;
-  /** Called when user lifts finger after dragging */
-  onScrollEndDrag?: (event: any) => void;
-  /** Called when momentum scroll finishes */
-  onMomentumScrollEnd?: (event: any) => void;
 }
 
 export function ScreenShell({
@@ -60,29 +41,14 @@ export function ScreenShell({
   style,
   edges,
   keyboardAvoid = false,
-  stickyHeader = false,
-  stickyHeaderHeight = 0,
-  onScroll,
-  scrollEventThrottle = 16,
-  onScrollEndDrag,
-  onMomentumScrollEnd,
 }: Props) {
-  const insets = useSafeAreaInsets();
 
   const scrollView = (
     <ScrollView
       style={styles.scroll}
-      contentContainerStyle={[
-        styles.scrollContent,
-        stickyHeader ? { paddingTop: stickyHeaderHeight } : null,
-        contentStyle,
-      ]}
+      contentContainerStyle={[styles.scrollContent, contentStyle]}
       showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="handled"
-      onScroll={onScroll}
-      scrollEventThrottle={scrollEventThrottle}
-      onScrollEndDrag={onScrollEndDrag}
-      onMomentumScrollEnd={onMomentumScrollEnd}
     >
       {children}
     </ScrollView>
@@ -94,14 +60,7 @@ export function ScreenShell({
       edges={edges}
     >
       {headerSlot ? (
-        <View
-          style={[
-            styles.headerSlotWrapper,
-            stickyHeader && [styles.stickyHeaderWrapper, { top: insets.top }],
-          ]}
-        >
-          {headerSlot}
-        </View>
+        <View style={styles.headerSlotWrapper}>{headerSlot}</View>
       ) : null}
       {keyboardAvoid ? (
         <KeyboardAvoidingView
@@ -128,15 +87,6 @@ const styles = StyleSheet.create({
   },
   headerSlotWrapper: {
     position: "relative",
-    zIndex: 100,
-  },
-  stickyHeaderWrapper: {
-    // Transparent by design: the collapsible header paints its own
-    // background on the animated element so no white band lingers behind
-    // once it slides away.
-    position: "absolute",
-    left: 0,
-    right: 0,
     zIndex: 100,
   },
   scroll: {

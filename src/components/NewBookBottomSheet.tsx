@@ -44,8 +44,8 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
             style={styles.option}
             contentStyle={styles.optionSurface}
           >
-            <View style={[styles.iconChip, styles.walkInChip]}>
-              <Ionicons name="walk-outline" size={24} color={Colors.status.inProgress} />
+            <View style={styles.iconChip}>
+              <Ionicons name="walk" size={24} color={Colors.brand.primary} />
             </View>
             <AppText style={styles.optionLabel}>{t("bookings.walkIn")}</AppText>
             <AppText style={styles.optionHint} numberOfLines={2}>
@@ -58,12 +58,8 @@ export function NewBookBottomSheet({ visible, onClose }: Props) {
             style={styles.option}
             contentStyle={styles.optionSurface}
           >
-            <View style={[styles.iconChip, styles.apptChip]}>
-              <Ionicons
-                name="calendar-outline"
-                size={24}
-                color={Colors.status.info}
-              />
+            <View style={styles.iconChip}>
+              <Ionicons name="calendar" size={24} color={Colors.brand.primary} />
             </View>
             <AppText style={styles.optionLabel}>{t("bookings.appointment")}</AppText>
             <AppText style={styles.optionHint} numberOfLines={2}>
@@ -108,12 +104,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 4,
-  },
-  walkInChip: {
-    backgroundColor: Colors.status.inProgressSurface,
-  },
-  apptChip: {
-    backgroundColor: Colors.status.infoSurface,
+    backgroundColor: Colors.brand.primarySurface,
   },
   optionLabel: {
     fontSize: 15,

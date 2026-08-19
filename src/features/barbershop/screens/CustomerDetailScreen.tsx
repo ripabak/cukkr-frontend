@@ -21,6 +21,7 @@ import {
 } from "@/src/features/barbershop/hooks";
 import { formatCurrency } from "@/src/features/barbershop/utils/form-validators";
 import { useI18nContext } from "@/src/lib/i18n/provider";
+import { authClient } from "@/src/lib/auth-client";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -61,6 +62,8 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
   const [activeTab, setActiveTab] = useState<string>(defaultTab);
   const [filterVisible, setFilterVisible] = useState(false);
   const [statusFilter, setStatusFilter] = useState<BookingStatus>("all");
+  const { data: session } = authClient.useSession();
+  const currentUserName = session?.user?.name ?? null;
 
   const { data: customer, isLoading: isLoadingCustomer } =
     useCustomerById(customerId);
@@ -193,6 +196,9 @@ export function CustomerDetailScreen({ defaultTab = "general" }: Props) {
                   key={b.id}
                   customerName={b.referenceNumber}
                   barberName={b.handledByName ?? "—"}
+                  barberIsYou={!!(
+                    currentUserName && b.handledByName === currentUserName
+                  )}
                   timeLabel={new Date(b.createdAt as Date).toLocaleDateString(
                     "id-ID",
                   )}

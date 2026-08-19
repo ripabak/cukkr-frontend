@@ -4,13 +4,9 @@ import { Colors } from "@/src/theme/colors";
 import { haptics } from "@/src/utils/haptics";
 import { useI18nContext } from "@/src/lib/i18n/provider";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useRef, useState } from "react";
-import {
-  Animated,
-  PanResponder,
-  StyleSheet,
-  View,
-} from "react-native";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { SwipeToCompleteSlider } from "./SwipeToCompleteSlider";
 
 interface Props {
   visible: boolean;
@@ -21,10 +17,11 @@ interface Props {
   onCancel?: () => void;
 }
 
-const SWIPE_TRACK_WIDTH = 280;
-const THUMB_SIZE = 52;
-const SWIPE_THRESHOLD = SWIPE_TRACK_WIDTH - THUMB_SIZE - 16;
-
+/**
+ * Confirmation sheet with a swipe-to-complete action. The slider itself is the
+ * shared `SwipeToCompleteSlider` — the exact same component used inline at the
+ * bottom of the booking detail, so the drag behaviour is identical everywhere.
+ */
 export function SwipeConfirmationModal({
   visible,
   title,
@@ -35,51 +32,14 @@ export function SwipeConfirmationModal({
 }: Props) {
   const { t } = useI18nContext();
   const resolvedSwipeLabel = swipeLabel ?? t("schedule.swipeToComplete");
-  const pan = useRef(new Animated.Value(0)).current;
-  const [completed, setCompleted] = useState(false);
-
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: (_, gs) => {
-        const clampedX = Math.max(0, Math.min(gs.dx, SWIPE_THRESHOLD));
-        pan.setValue(clampedX);
-      },
-      onPanResponderRelease: (_, gs) => {
-        if (gs.dx >= SWIPE_THRESHOLD) {
-          haptics.success();
-          Animated.timing(pan, {
-            toValue: SWIPE_THRESHOLD,
-            duration: 100,
-            useNativeDriver: false,
-          }).start(() => {
-            setCompleted(true);
-            onComplete();
-          });
-        } else {
-          Animated.spring(pan, {
-            toValue: 0,
-            useNativeDriver: false,
-            stiffness: 240,
-            damping: 22,
-          }).start();
-        }
-      },
-    }),
-  ).current;
 
   const handleClose = () => {
-    pan.setValue(0);
-    setCompleted(false);
     haptics.light();
     onCancel?.();
   };
 
   return (
-    <BottomSheet
-      visible={visible}
-      onClose={handleClose}
-    >
+    <BottomSheet visible={visible} onClose={handleClose}>
       <View style={styles.body}>
         <View style={styles.iconWrapper}>
           <Ionicons
@@ -93,26 +53,11 @@ export function SwipeConfirmationModal({
           <AppText style={styles.description}>{description}</AppText>
         ) : null}
 
-        {/* Swipe track */}
         <View style={styles.trackWrap}>
-          <View style={styles.track}>
-            <Animated.View
-              style={[
-                styles.thumb,
-                { transform: [{ translateX: pan }] },
-              ]}
-              {...panResponder.panHandlers}
-            >
-              <Ionicons
-                name="arrow-forward"
-                size={22}
-                color={Colors.text.primary}
-              />
-            </Animated.View>
-            <AppText style={styles.swipeLabel} numberOfLines={1}>
-              {completed ? t("schedule.swipeCompleted") : resolvedSwipeLabel}
-            </AppText>
-          </View>
+          <SwipeToCompleteSlider
+            label={resolvedSwipeLabel}
+            onComplete={onComplete}
+          />
         </View>
       </View>
     </BottomSheet>
@@ -152,35 +97,7 @@ const styles = StyleSheet.create({
   },
   trackWrap: {
     alignSelf: "center",
+    width: 280,
     marginBottom: 8,
-  },
-  track: {
-    width: SWIPE_TRACK_WIDTH,
-    height: THUMB_SIZE + 8,
-    borderRadius: 999,
-    backgroundColor: Colors.bg.default,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
-    justifyContent: "center",
-    overflow: "hidden",
-    paddingHorizontal: 8,
-  },
-  thumb: {
-    width: THUMB_SIZE,
-    height: THUMB_SIZE,
-    borderRadius: THUMB_SIZE / 2,
-    backgroundColor: Colors.brand.primary,
-    alignItems: "center",
-    justifyContent: "center",
-    position: "absolute",
-    left: 4,
-    zIndex: 1,
-  },
-  swipeLabel: {
-    textAlign: "center",
-    fontSize: 14,
-    fontWeight: "500",
-    color: Colors.status.success,
-    marginLeft: THUMB_SIZE + 4,
   },
 });

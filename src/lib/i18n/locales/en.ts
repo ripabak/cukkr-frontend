@@ -319,6 +319,7 @@ export const en = {
     startedAt: 'Started at {time}',
     arrivedAt: 'Arrived at {time}',
     duration: 'Duration {duration}',
+    you: '(You)',
     bookNo: 'Book No',
     handledBy: 'Handled By',
     source: 'Source',

@@ -33,7 +33,7 @@ export function QueueStatCard({
       disabled={!onPress}
     >
       <View style={[styles.iconCircle, Neu.inset(Colors.bg.surface, 0.6)]}>
-        <Ionicons name={icon} size={24} color={Colors.brand.primaryDark} />
+        <Ionicons name={icon} size={24} color={Colors.brand.primary} />
       </View>
       <AppText style={styles.value}>{value}</AppText>
       <AppText style={styles.label}>{label}</AppText>

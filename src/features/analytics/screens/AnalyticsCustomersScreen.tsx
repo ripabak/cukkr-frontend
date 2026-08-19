@@ -133,9 +133,9 @@ export function AnalyticsCustomersScreen() {
               value={String(stats.totalCustomers?.current ?? 0)}
               icon={
                 <Ionicons
-                  name="people-outline"
+                  name="people"
                   size={16}
-                  color={Colors.text.primary}
+                  color={Colors.brand.primary}
                 />
               }
               stat={stats.totalCustomers ?? EMPTY_STAT}
@@ -145,9 +145,9 @@ export function AnalyticsCustomersScreen() {
               <View style={[styles.splitCard, Neu.soft(Colors.bg.surface, 0.7)]}>
                 <View style={styles.splitCardHeader}>
                   <Ionicons
-                    name="walk-outline"
+                    name="walk"
                     size={12}
-                    color={Colors.text.secondary}
+                    color={Colors.brand.primary}
                   />
                   <AppText style={styles.splitLabel}>{t("home.walkIn")}</AppText>
                 </View>
@@ -158,9 +158,9 @@ export function AnalyticsCustomersScreen() {
               <View style={[styles.splitCard, Neu.soft(Colors.bg.surface, 0.7)]}>
                 <View style={styles.splitCardHeader}>
                   <Ionicons
-                    name="calendar-outline"
+                    name="calendar"
                     size={12}
-                    color={Colors.text.secondary}
+                    color={Colors.brand.primary}
                   />
                   <AppText style={styles.splitLabel}>{t("home.appointment")}</AppText>
                 </View>
@@ -178,9 +178,9 @@ export function AnalyticsCustomersScreen() {
               value={String(stats.totalNew?.current ?? 0)}
               icon={
                 <Ionicons
-                  name="person-add-outline"
+                  name="person-add"
                   size={16}
-                  color={Colors.text.primary}
+                  color={Colors.brand.primary}
                 />
               }
               stat={stats.totalNew ?? EMPTY_STAT}
@@ -191,9 +191,9 @@ export function AnalyticsCustomersScreen() {
               value={String(stats.totalReturn?.current ?? 0)}
               icon={
                 <Ionicons
-                  name="repeat-outline"
+                  name="repeat"
                   size={16}
-                  color={Colors.text.primary}
+                  color={Colors.brand.primary}
                 />
               }
               stat={stats.totalReturn ?? EMPTY_STAT}

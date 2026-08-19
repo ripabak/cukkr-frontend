@@ -110,6 +110,6 @@ const styles = StyleSheet.create({
   },
   itemTextSelected: {
     fontWeight: "600",
-    color: Colors.brand.primaryDark,
+    color: Colors.brand.text,
   },
 });

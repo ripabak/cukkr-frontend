@@ -212,7 +212,7 @@ export function BarbershopSwitcherModal({ visible, onClose }: Props) {
                     <Ionicons
                       name="checkmark-circle"
                       size={18}
-                      color={Colors.brand.primaryDark}
+                      color={Colors.brand.primary}
                     />
                   )}
                 </TouchableOpacity>

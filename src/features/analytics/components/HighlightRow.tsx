@@ -43,7 +43,7 @@ export function HighlightRow({
             <Ionicons
               name={fallbackIcon}
               size={20}
-              color={Colors.text.secondary}
+              color={Colors.brand.primary}
             />
           </View>
         )}

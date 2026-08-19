@@ -2,6 +2,7 @@ import { Colors } from "@/src/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { AppText } from "@/src/components/AppText";
+import { useI18nContext } from "@/src/lib/i18n/provider";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -19,6 +20,8 @@ interface Props {
   duration: string;
   status: BookingStatus;
   bookingType?: BookingType;
+  /** True when the displayed barber is the currently logged-in user. */
+  barberIsYou?: boolean;
   onPress?: () => void;
   style?: ViewStyle;
 }
@@ -30,9 +33,11 @@ export function BookingCard({
   duration,
   status,
   bookingType,
+  barberIsYou,
   onPress,
   style,
 }: Props) {
+  const { t } = useI18nContext();
   const statusStyle = Status.getStyle(status);
   const iconName =
     bookingType === "walk_in"
@@ -57,6 +62,11 @@ export function BookingCard({
           <AppText style={styles.barberName} numberOfLines={1} ellipsizeMode="tail">
             {" "}{barberName}
           </AppText>
+          {barberIsYou ? (
+            <View style={styles.youPill}>
+              <AppText style={styles.youPillText}>{t("bookings.you")}</AppText>
+            </View>
+          ) : null}
         </View>
       </View>
       <View style={styles.right}>
@@ -100,6 +110,18 @@ const styles = StyleSheet.create({
   barberName: {
     fontSize: 13,
     color: Colors.icon.muted,
+  },
+  youPill: {
+    backgroundColor: Colors.brand.primarySurface,
+    borderRadius: 6,
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    marginLeft: 6,
+  },
+  youPillText: {
+    fontSize: 9.5,
+    fontWeight: "600",
+    color: Colors.brand.text,
   },
   right: {
     alignItems: "flex-end",

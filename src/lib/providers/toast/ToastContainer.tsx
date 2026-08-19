@@ -61,14 +61,14 @@ function AnimatedToast({
   const getBackgroundColor = () => {
     switch (type) {
       case "success":
-        return "#34C759";
+        return "#10b981";
       case "error":
-        return "#FF3B30";
+        return "#ef4444";
       case "warning":
-        return "#FF9500";
+        return "#f97316";
       case "info":
       default:
-        return "#1A1A1A";
+        return "#1e1b16";
     }
   };
 

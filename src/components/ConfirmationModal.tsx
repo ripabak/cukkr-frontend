@@ -53,7 +53,7 @@ export function ConfirmationModal({
             <Ionicons
               name={icon as React.ComponentProps<typeof Ionicons>["name"]}
               size={26}
-              color={Colors.brand.primaryDark}
+              color={Colors.brand.primary}
             />
           </View>
         ) : null}

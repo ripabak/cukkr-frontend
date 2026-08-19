@@ -6,6 +6,7 @@ import { BookingDetailCard } from "@/src/features/schedule/components/BookingDet
 import { DualActionFooter } from "@/src/features/schedule/components/DualActionFooter";
 import { StickyCta } from "@/src/features/schedule/components/StickyCta";
 import { SwipeConfirmationModal } from "@/src/features/schedule/components/SwipeConfirmationModal";
+import { SwipeToCompleteSlider } from "@/src/features/schedule/components/SwipeToCompleteSlider";
 import { DeclineReasonModal } from "@/src/features/schedule/components/DeclineReasonModal";
 import { BookingTimelinePreview } from "@/src/features/schedule/components/BookingTimelinePreview";
 import {
@@ -273,13 +274,27 @@ export function BookingDetailScreen() {
       booking.requestedBarber.memberId !== booking.handledByBarber.memberId;
 
     const infoRows = [
-      { label: t("bookings.bookNo"), value: `#${booking.referenceNumber}` },
+      {
+        label: t("bookings.bookNo"),
+        value: `#${booking.referenceNumber}`,
+        noEllipsis: true,
+        valueStyle: {
+          fontSize: 13,
+          color: Colors.text.secondary,
+          letterSpacing: 0.3,
+        },
+      },
       ...(booking.requestedBarber
         ? [
             {
               label: t("bookings.requested"),
               value: booking.requestedBarber.name,
               valueIconName: "cut",
+              valueSuffix:
+                activeMember &&
+                booking.requestedBarber.memberId === activeMember.id
+                  ? t("bookings.you")
+                  : undefined,
             },
           ]
         : []),
@@ -289,6 +304,11 @@ export function BookingDetailScreen() {
               label: t("bookings.handledBy"),
               value: booking.handledByBarber.name,
               valueIconName: "cut",
+              valueSuffix:
+                activeMember &&
+                booking.handledByBarber.memberId === activeMember.id
+                  ? t("bookings.you")
+                  : undefined,
             },
           ]
         : []),
@@ -345,20 +365,16 @@ export function BookingDetailScreen() {
         );
       }
       if (booking.status === "in_progress") {
-        if (role === "member") {
-          const isHandlingBarber =
-            booking.handledByBarber &&
-            activeMember?.id === booking.handledByBarber.memberId;
-          if (isHandlingBarber) {
-            return (
-              <StickyCta
-                label={t("bookings.complete")}
-                onPress={() => setSwipeModalVisible(true)}
-                color={Colors.status.success}
-                textColor={Colors.text.primary}
-              />
-            );
-          }
+        const isHandlingBarber =
+          booking.handledByBarber &&
+          activeMember?.id === booking.handledByBarber.memberId;
+        if (isHandlingBarber) {
+          return (
+            <SwipeToCompleteSlider
+              onComplete={handleComplete}
+              style={styles.completeSlider}
+            />
+          );
         }
         return null;
       }
@@ -521,6 +537,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
+  },
+  completeSlider: {
+    position: "absolute",
+    bottom: 32,
+    left: 20,
+    right: 20,
   },
   menuOverlay: {
     position: "absolute",

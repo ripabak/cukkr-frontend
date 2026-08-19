@@ -300,6 +300,9 @@ export function NewAppointmentScreen() {
             selectedBarber={formData.barberName ?? undefined}
             selectedBarberAvatarUrl={formData.barberAvatarUrl ?? undefined}
             onBarberPress={() => router.push("/d/select-barber")}
+            onBarberClear={() =>
+              updateFormData({ barberId: null, barberName: null, barberAvatarUrl: null })
+            }
             selectedDateTime={displayDateTime ?? displayDateOnly}
             onDateTimePress={openDatePicker}
             showDateTimeSelector={false}
@@ -345,6 +348,9 @@ export function NewAppointmentScreen() {
           selectedBarber={formData.barberName ?? undefined}
           selectedBarberAvatarUrl={formData.barberAvatarUrl ?? undefined}
           onBarberPress={() => router.push("/d/select-barber")}
+          onBarberClear={() =>
+            updateFormData({ barberId: null, barberName: null, barberAvatarUrl: null })
+          }
           selectedDateTime={displayDateTime ?? displayDateOnly}
           onDateTimePress={openDatePicker}
           showDateTimeSelector

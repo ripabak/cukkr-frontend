@@ -126,9 +126,9 @@ export function AnalyticsRevenueScreen() {
             value={String(stats.totalBookings?.current ?? 0)}
             icon={
               <Ionicons
-                name="receipt-outline"
+                name="receipt"
                 size={16}
-                color={Colors.text.primary}
+                color={Colors.brand.primary}
               />
             }
             stat={stats.totalBookings ?? EMPTY_STAT}
@@ -139,9 +139,9 @@ export function AnalyticsRevenueScreen() {
             value={formatRupiah(stats.avgRevenuePerBooking?.current ?? 0)}
             icon={
               <Ionicons
-                name="cash-outline"
+                name="cash"
                 size={16}
-                color={Colors.text.primary}
+                color={Colors.brand.primary}
               />
             }
             stat={stats.avgRevenuePerBooking ?? EMPTY_STAT}
@@ -152,9 +152,9 @@ export function AnalyticsRevenueScreen() {
             value={`${stats.avgTime?.current ?? 0}m`}
             icon={
               <Ionicons
-                name="time-outline"
+                name="time"
                 size={16}
-                color={Colors.text.primary}
+                color={Colors.brand.primary}
               />
             }
             stat={stats.avgTime ?? EMPTY_STAT}

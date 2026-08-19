@@ -89,7 +89,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   activeCell: {
-    backgroundColor: authTheme.colors.accentSurface ?? "rgba(255, 200, 30, 0.12)",
+    backgroundColor:
+      authTheme.colors.accentSurface ?? "rgba(245, 185, 35, 0.12)",
   },
   cellText: {
     color: authTheme.colors.textPrimary,

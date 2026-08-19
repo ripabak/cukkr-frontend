@@ -1,6 +1,5 @@
 import { BookingCard } from "@/src/components/BookingCard";
 import { ConfirmationModal } from "@/src/components/ConfirmationModal";
-import { SoftPressable } from "@/src/components/SoftPressable";
 import { AppText } from "@/src/components/AppText";
 import { useBarbershopCurrent } from "@/src/features/barbershop/hooks";
 import { BarbershopSwitcherModal } from "@/src/features/home/components/BarbershopSwitcherModal";
@@ -20,7 +19,7 @@ import { notificationsService } from "@/src/features/notifications/services/noti
 import { pwaNotificationService } from "@/src/services/pwa-notification.service";
 import { mapApiStatusToBookingStatus } from "@/src/features/schedule/utils/booking-formatters";
 import { useRequestedBookings } from "@/src/features/schedule/hooks";
-import { useAuthUser, useMemberRole } from "@/src/hooks";
+import { useMemberRole } from "@/src/hooks";
 import { usePwaTheme } from "@/src/hooks/usePwaTheme";
 import { authClient } from "@/src/lib/auth-client";
 import { useI18nContext } from "@/src/lib/i18n/provider";
@@ -46,8 +45,27 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const TOP_BAR_HEIGHT = 58;
+const TOP_BAR_HEIGHT = 64;
 const OPEN_HOURS_STRIP_HEIGHT = 38;
+const OPEN_HOURS_STRIP_MARGIN_TOP = 10;
+const OPEN_HOURS_STRIP_MARGIN_BOTTOM = 12;
+
+// Custom quick-action PNG icons (3D-style badge art).
+// All tiles share one uniform container background in ShortcutTile.
+const QUICK_ICONS = {
+  newBooking: require("@/assets/icons/quick-actions/book-new.png"),
+  requests: require("@/assets/icons/quick-actions/book-requests.png"),
+  barbers: require("@/assets/icons/quick-actions/barbers.png"),
+  customers: require("@/assets/icons/quick-actions/customers.png"),
+  services: require("@/assets/icons/quick-actions/services.png"),
+  openHours: require("@/assets/icons/quick-actions/open-hours.png"),
+} as const;
+
+// Same empty-state illustration as the Schedule / Booking Management page.
+const NO_BOOKING_PLACEHOLDER = require("@/assets/images/no-booking-placeholder.png");
+
+// One uniform background for all quick-action icon tiles.
+const QUICK_ICON_BG = Colors.bg.cream;
 
 function getSummaryItems(t: (key: string) => string): {
   key: string;
@@ -61,29 +79,29 @@ function getSummaryItems(t: (key: string) => string): {
       key: "walkIn",
       label: t("home.walkInShort"),
       icon: "walk",
-      tint: Colors.status.info,
-      surface: Colors.status.infoSurface,
+      tint: Colors.brand.primary,
+      surface: Colors.brand.primarySurface,
     },
     {
       key: "appointment",
       label: t("home.appointShort"),
       icon: "calendar",
-      tint: Colors.status.requested,
-      surface: Colors.status.requestedSurface,
+      tint: Colors.brand.primary,
+      surface: Colors.brand.primarySurface,
     },
     {
       key: "waiting",
       label: t("home.waiting"),
       icon: "time",
-      tint: Colors.status.warning,
-      surface: Colors.status.warningSurface,
+      tint: Colors.brand.primary,
+      surface: Colors.brand.primarySurface,
     },
     {
       key: "inProgress",
       label: t("home.inProgress"),
       icon: "cut",
-      tint: Colors.status.success,
-      surface: Colors.status.successSurface,
+      tint: Colors.brand.primary,
+      surface: Colors.brand.primarySurface,
     },
   ];
 }
@@ -106,7 +124,6 @@ export function HomeDashboardScreen() {
   const toast = useToast();
 
   const queryClient = useQueryClient();
-  const { user } = useAuthUser();
   const { data: barbershop } = useBarbershopCurrent();
   const { data: summary } = useBookingSummary(today);
   const { data: activeBookings = [] } = useHomeActiveBookings(today);
@@ -179,7 +196,11 @@ export function HomeDashboardScreen() {
   }, [currentPinData]);
 
   const stickyHeaderHeight =
-    insets.top + TOP_BAR_HEIGHT + OPEN_HOURS_STRIP_HEIGHT;
+    insets.top +
+    TOP_BAR_HEIGHT +
+    OPEN_HOURS_STRIP_HEIGHT +
+    OPEN_HOURS_STRIP_MARGIN_TOP +
+    OPEN_HOURS_STRIP_MARGIN_BOTTOM;
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const headerTranslateY = useRef(new Animated.Value(0)).current;
@@ -372,14 +393,6 @@ export function HomeDashboardScreen() {
   };
   const totalToday = (summary?.walkIn ?? 0) + (summary?.appointment ?? 0);
 
-  const avatarInitials = user?.name
-    ? user.name
-        .split(" ")
-        .slice(0, 2)
-        .filter(Boolean)
-        .map((w: string) => w[0].toUpperCase())
-        .join("")
-    : "";
 
   const { role } = useMemberRole();
   const roleLabel =
@@ -391,11 +404,21 @@ export function HomeDashboardScreen() {
           ? t("barbers.member")
           : "";
 
-  const SHOP_NAME_MAX = 16;
+  const SHOP_NAME_MAX = 26;
   const shopDisplayName =
     barbershop?.name && barbershop.name.length > SHOP_NAME_MAX
       ? `${barbershop.name.slice(0, SHOP_NAME_MAX).trimEnd()}…`
       : barbershop?.name ?? "...";
+
+  const shopLogo = barbershop?.logoThumb ?? barbershop?.logoUrl ?? null;
+  const shopInitials = barbershop?.name
+    ? barbershop.name
+        .split(" ")
+        .slice(0, 2)
+        .filter(Boolean)
+        .map((w) => w[0].toUpperCase())
+        .join("")
+    : "";
 
   const isOpen = isCurrentlyOpen;
 
@@ -538,7 +561,7 @@ export function HomeDashboardScreen() {
               <View style={styles.pinHeader}>
                 <View style={styles.pinTitleGroup}>
                   <View style={styles.pinChip}>
-                    <Ionicons name="walk-outline" size={20} color={Colors.brand.primaryDark} />
+                    <Ionicons name="walk" size={20} color={Colors.brand.primary} />
                   </View>
                   <View>
                     <AppText style={styles.pinLabel}>{t("home.walkinPin")}</AppText>
@@ -618,9 +641,13 @@ export function HomeDashboardScreen() {
                   label={t("home.newBooking")}
                   variant="small"
                   icon={
-                    <Ionicons name="calendar" size={22} color={Colors.brand.primaryDark} />
+                    <Image
+                      source={QUICK_ICONS.newBooking}
+                      style={styles.quickIcon}
+                      resizeMode="contain"
+                    />
                   }
-                  iconBg={Colors.brand.primarySurface}
+                  iconBg={QUICK_ICON_BG}
                   onPress={() => setNewBookVisible(true)}
                 />
                 <ShortcutTile
@@ -629,45 +656,65 @@ export function HomeDashboardScreen() {
                   badgeCount={requestCount}
                   dotColor={requestCount > 0 ? Colors.status.danger : undefined}
                   icon={
-                    <Ionicons name="calendar-number" size={22} color={Colors.status.requested} />
+                    <Image
+                      source={QUICK_ICONS.requests}
+                      style={styles.quickIcon}
+                      resizeMode="contain"
+                    />
                   }
-                  iconBg={Colors.status.requestedSurface}
+                  iconBg={QUICK_ICON_BG}
                   onPress={() => router.push("/d/booking-requests")}
                 />
                 <ShortcutTile
                   label={t("barbers.title")}
                   variant="small"
                   icon={
-                    <Ionicons name="people" size={22} color={Colors.status.info} />
+                    <Image
+                      source={QUICK_ICONS.barbers}
+                      style={styles.quickIcon}
+                      resizeMode="contain"
+                    />
                   }
-                  iconBg={Colors.status.infoSurface}
+                  iconBg={QUICK_ICON_BG}
                   onPress={() => router.push("/d/barbers-management")}
                 />
                 <ShortcutTile
                   label={t("customers.title")}
                   variant="small"
                   icon={
-                    <Ionicons name="person" size={22} color={Colors.status.success} />
+                    <Image
+                      source={QUICK_ICONS.customers}
+                      style={styles.quickIcon}
+                      resizeMode="contain"
+                    />
                   }
-                  iconBg={Colors.status.successSurface}
+                  iconBg={QUICK_ICON_BG}
                   onPress={() => router.push("/d/customer-management")}
                 />
                 <ShortcutTile
                   label={t("services.title")}
                   variant="small"
                   icon={
-                    <Ionicons name="cut" size={22} color={Colors.status.warning} />
+                    <Image
+                      source={QUICK_ICONS.services}
+                      style={styles.quickIcon}
+                      resizeMode="contain"
+                    />
                   }
-                  iconBg={Colors.status.warningSurface}
+                  iconBg={QUICK_ICON_BG}
                   onPress={() => router.push("/d/services-management")}
                 />
                 <ShortcutTile
                   label={t("home.openHours")}
                   variant="small"
                   icon={
-                    <Ionicons name="time" size={22} color={Colors.text.secondary} />
+                    <Image
+                      source={QUICK_ICONS.openHours}
+                      style={styles.quickIcon}
+                      resizeMode="contain"
+                    />
                   }
-                  iconBg={Colors.bg.default}
+                  iconBg={QUICK_ICON_BG}
                   onPress={() => router.push("/d/open-hours")}
                 />
               </Animated.ScrollView>
@@ -713,10 +760,14 @@ export function HomeDashboardScreen() {
               })
             ) : (
               <View style={styles.emptyState}>
-                <View style={styles.emptyIcon}>
-                  <Ionicons name="checkmark-done" size={24} color={Colors.status.success} />
-                </View>
-                <AppText style={styles.emptyText}>{t("home.noBookingsToday")}</AppText>
+                <Image
+                  source={NO_BOOKING_PLACEHOLDER}
+                  style={styles.emptyImage}
+                  resizeMode="cover"
+                />
+                <AppText style={styles.emptyText}>
+                  {t("home.noBookingsToday")}
+                </AppText>
               </View>
             )}
           </Animated.View>
@@ -735,9 +786,25 @@ export function HomeDashboardScreen() {
         ]}
       >
         <View style={styles.headerRow}>
-          {/* Workspace switcher — far left (display only; tap the chevron) */}
-          <View style={styles.shopWrap}>
+          {/* Workspace switcher — tap anywhere to switch barbershop */}
+          <TouchableOpacity
+            style={styles.shopWrap}
+            activeOpacity={0.85}
+            onPress={() => {
+              haptics.light();
+              setSwitcherVisible(true);
+            }}
+          >
             <View style={styles.shopDisplay}>
+              {shopLogo ? (
+                <Image source={{ uri: shopLogo }} style={styles.shopAvatar} />
+              ) : (
+                <View style={styles.shopAvatarFallback}>
+                  <AppText style={styles.shopAvatarInitials} numberOfLines={1}>
+                    {shopInitials || "?"}
+                  </AppText>
+                </View>
+              )}
               <View style={styles.shopTextCol}>
                 <AppText style={styles.shopName} numberOfLines={1}>
                   {shopDisplayName}
@@ -749,22 +816,15 @@ export function HomeDashboardScreen() {
                 ) : null}
               </View>
             </View>
-            <TouchableOpacity
-              style={styles.chevronBtn}
-              activeOpacity={0.85}
-              onPress={() => {
-                haptics.light();
-                setSwitcherVisible(true);
-              }}
-            >
+            <View style={styles.chevronBtn}>
               <Ionicons
                 name="chevron-down"
-                size={16}
+                size={18}
                 color={Colors.text.secondary}
               />
               {otherOrgHasUnread ? <View style={styles.shopDot} /> : null}
-            </TouchableOpacity>
-          </View>
+            </View>
+          </TouchableOpacity>
 
           {/* Notification — center-right */}
           <TouchableOpacity
@@ -811,29 +871,21 @@ export function HomeDashboardScreen() {
             }}
           >
             <Ionicons
-              name="notifications-outline"
-              size={20}
+              name="notifications"
+              size={22}
               color={Colors.text.primary}
             />
             {(unreadCount ?? 0) > 0 ? <View style={styles.notifDot} /> : null}
           </TouchableOpacity>
 
           {/* Profile — far right */}
-          <SoftPressable
+          <TouchableOpacity
             style={styles.profileBtn}
-            contentStyle={styles.profileContent}
+            activeOpacity={0.85}
             onPress={() => router.push("/d/user-profile")}
           >
-            {user?.image ? (
-              <Image source={{ uri: user.image }} style={styles.profileAvatar} />
-            ) : (
-              <View style={styles.profileFallback}>
-                <AppText style={styles.profileInitials}>
-                  {avatarInitials || "?"}
-                </AppText>
-              </View>
-            )}
-          </SoftPressable>
+            <Ionicons name="person" size={22} color={Colors.brand.primary} />
+          </TouchableOpacity>
         </View>
 
         {/* Open/closed status pill */}
@@ -848,12 +900,6 @@ export function HomeDashboardScreen() {
             router.push("/d/open-hours");
           }}
         >
-          <View
-            style={[
-              styles.openStripDot,
-              { backgroundColor: isOpen ? Colors.status.success : Colors.status.danger },
-            ]}
-          />
           <AppText style={styles.openStripStatus}>
             {isOpen ? t("barbershop.open") : t("barbershop.closed")}
           </AppText>
@@ -869,11 +915,7 @@ export function HomeDashboardScreen() {
             </>
           ) : null}
           <View style={styles.openStripSpacer} />
-          <Ionicons
-            name="chevron-forward"
-            size={14}
-            color={Colors.text.secondary}
-          />
+          <Ionicons name="chevron-forward" size={14} color="#FFFFFF" />
         </TouchableOpacity>
       </Animated.View>
 
@@ -966,45 +1008,54 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   profileBtn: {
-    width: 42,
-    height: 42,
-  },
-  profileContent: {
-    flex: 1,
-    borderRadius: 21,
-    overflow: "hidden",
-  },
-  profileAvatar: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-  },
-  profileFallback: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    backgroundColor: Colors.brand.primary,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: Colors.bg.surface,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: Colors.brand.primaryDark,
-  },
-  profileInitials: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: Colors.text.primary,
   },
   shopWrap: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: 10,
+    height: 48,
+    justifyContent: "center",
+    backgroundColor: Colors.bg.surface,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+    borderRadius: 24,
+    paddingLeft: 14,
+    paddingRight: 6,
   },
   shopDisplay: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    gap: 7,
-    flexShrink: 1,
+    gap: 10,
+  },
+  shopAvatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: Colors.border.light,
+  },
+  shopAvatarFallback: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: Colors.brand.primarySurface,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  shopAvatarInitials: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: Colors.brand.text,
   },
   shopTextCol: {
     flexShrink: 1,
@@ -1013,21 +1064,18 @@ const styles = StyleSheet.create({
   shopName: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.text.primary,
+    color: Colors.text.secondary,
     letterSpacing: -0.2,
   },
   shopRole: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: "500",
-    color: Colors.brand.primaryDark,
+    color: Colors.brand.text,
   },
   chevronBtn: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: Colors.bg.surface,
-    borderWidth: 1,
-    borderColor: Colors.border.light,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -1043,9 +1091,9 @@ const styles = StyleSheet.create({
     borderColor: Colors.bg.surface,
   },
   notifBtn: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: Colors.bg.surface,
     borderWidth: 1,
     borderColor: Colors.border.light,
@@ -1071,35 +1119,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
     marginHorizontal: 20,
+    marginTop: OPEN_HOURS_STRIP_MARGIN_TOP,
+    marginBottom: OPEN_HOURS_STRIP_MARGIN_BOTTOM,
     borderRadius: 19,
     paddingHorizontal: 14,
   },
   openStripOpen: {
-    backgroundColor: Colors.status.successSurface,
+    backgroundColor: Colors.status.success,
   },
   openStripClosed: {
-    backgroundColor: Colors.status.dangerSurface,
-  },
-  openStripDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    backgroundColor: Colors.status.danger,
   },
   openStripStatus: {
     fontSize: 13,
     fontWeight: "600",
-    color: Colors.text.primary,
+    color: "#FFFFFF",
   },
   openStripDivider: {
     width: 1,
     height: 12,
-    backgroundColor: Colors.border.default,
+    backgroundColor: "rgba(255, 255, 255, 0.4)",
     marginHorizontal: 2,
   },
   openStripRange: {
     fontSize: 13,
     fontWeight: "500",
-    color: Colors.text.secondary,
+    color: "#FFFFFF",
   },
   openStripSpacer: {
     flex: 1,
@@ -1323,7 +1368,7 @@ const styles = StyleSheet.create({
   pinValue: {
     fontSize: 38,
     fontWeight: "700",
-    color: Colors.brand.primaryDark,
+    color: Colors.brand.text,
     letterSpacing: 5,
     lineHeight: 48,
     flexShrink: 1,
@@ -1370,6 +1415,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 2,
   },
+  quickIcon: {
+    width: 54,
+    height: 54,
+  },
 
   /* Up next */
   sectionRow: {
@@ -1381,7 +1430,7 @@ const styles = StyleSheet.create({
   },
   seeAll: {
     fontSize: 13,
-    color: Colors.brand.primaryDark,
+    color: Colors.brand.text,
     fontWeight: "600",
   },
   cardMargin: {
@@ -1397,13 +1446,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     gap: 12,
   },
-  emptyIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 16,
-    backgroundColor: Colors.status.successSurface,
-    alignItems: "center",
-    justifyContent: "center",
+  emptyImage: {
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    marginBottom: 4,
   },
   emptyText: {
     fontSize: 13.5,

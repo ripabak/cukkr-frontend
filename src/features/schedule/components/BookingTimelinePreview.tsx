@@ -159,7 +159,7 @@ export function BookingTimelinePreview({ scheduledAt, bookingId }: Props) {
                       <Ionicons
                         name="cut-outline"
                         size={10}
-                        color={isCurrent ? Colors.brand.primaryDark : Colors.text.muted}
+                        color={isCurrent ? Colors.brand.primary : Colors.text.muted}
                       />
                       <AppText
                         style={[
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   dotHighlight: {
-    backgroundColor: Colors.brand.primaryDark,
+    backgroundColor: Colors.brand.primary,
   },
   dotDimmed: {
     backgroundColor: Colors.border.default,
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
   },
   timeLabelHighlight: {
-    color: Colors.brand.primaryDark,
+    color: Colors.brand.text,
   },
   youBadge: {
     borderRadius: 8,

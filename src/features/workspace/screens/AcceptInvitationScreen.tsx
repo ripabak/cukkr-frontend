@@ -145,7 +145,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
                 : "alert-circle-outline"
             }
             size={56}
-            color="#666666"
+            color={Colors.icon.muted}
           />
           <AppText style={styles.errorTitle}>
             {isEmailMismatchError ? t("common.error") : t("common.noData")}
@@ -192,7 +192,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
 
       <View style={[styles.card, Neu.raised(Colors.bg.surface, 1.2)]}>
         <View style={styles.cardRow}>
-          <Ionicons name="storefront-outline" size={20} color="#666666" />
+          <Ionicons name="storefront-outline" size={20} color={Colors.icon.muted} />
           <View style={styles.cardTextWrapper}>
             <AppText style={styles.cardLabel}>{t("barbershop.nameLabel")}</AppText>
             <AppText style={styles.cardValue}>{invitation.organizationName}</AppText>
@@ -202,7 +202,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
         <View style={styles.divider} />
 
         <View style={styles.cardRow}>
-          <Ionicons name="person-outline" size={20} color="#666666" />
+          <Ionicons name="person-outline" size={20} color={Colors.icon.muted} />
           <View style={styles.cardTextWrapper}>
             <AppText style={styles.cardLabel}>{t("barbers.inviteBarber")}</AppText>
             <AppText style={styles.cardValue}>{invitation.inviterEmail}</AppText>
@@ -212,7 +212,7 @@ export function AcceptInvitationScreen({ invitationId }: Props) {
         <View style={styles.divider} />
 
         <View style={styles.cardRow}>
-          <Ionicons name="ribbon-outline" size={20} color="#666666" />
+          <Ionicons name="ribbon-outline" size={20} color={Colors.icon.muted} />
           <View style={styles.cardTextWrapper}>
             <AppText style={styles.cardLabel}>{t("barbers.role")}</AppText>
             <AppText style={styles.cardValue}>
@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
   },
   cardLabel: {
     fontSize: 12,
-    color: "#999999",
+    color: Colors.text.muted,
     marginBottom: 2,
   },
   cardValue: {
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: "#F0F0F0",
+    backgroundColor: Colors.border.light,
     marginVertical: 12,
   },
   actions: {

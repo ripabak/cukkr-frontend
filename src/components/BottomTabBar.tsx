@@ -96,7 +96,7 @@ export function BottomTabBar({ activeTab, onTabPress, style }: Props) {
                 name={tab.icon}
                 size={18}
                 color={
-                  isActive ? Colors.brand.primaryDark : Colors.icon.muted
+                  isActive ? Colors.brand.primary : Colors.icon.muted
                 }
               />
               <AppText

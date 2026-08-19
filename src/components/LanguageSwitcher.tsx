@@ -90,6 +90,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   labelSelected: {
-    color: Colors.brand.primaryDark,
+    color: Colors.brand.text,
   },
 })

@@ -102,6 +102,9 @@ export function NewWalkInScreen() {
         selectedBarber={formData.barberName ?? undefined}
         selectedBarberAvatarUrl={formData.barberAvatarUrl ?? undefined}
         onBarberPress={() => router.push("/d/select-barber")}
+        onBarberClear={() =>
+          updateFormData({ barberId: null, barberName: null, barberAvatarUrl: null })
+        }
         showDateTimeSelector={false}
         services={formData.selectedServices}
         onServicePress={() => router.push("/d/select-services")}

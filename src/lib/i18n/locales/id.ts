@@ -319,6 +319,7 @@ export const id = {
     startedAt: 'Dimulai {time}',
     arrivedAt: 'Tiba {time}',
     duration: 'Durasi {duration}',
+    you: '(Kamu)',
     bookNo: 'No. Booking',
     handledBy: 'Ditangani Oleh',
     source: 'Sumber',

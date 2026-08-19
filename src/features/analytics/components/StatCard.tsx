@@ -36,6 +36,7 @@ export function TrendBadge({
   if (direction === "neutral" || change === null) return null;
   const isUp = direction === "up";
   const color = isUp ? Colors.brand.primaryDark : Colors.status.danger;
+  const colorIcon = isUp ? Colors.brand.primary : Colors.status.danger;
   const icon = isUp ? "trending-up" : "trending-down";
   const label = `${Math.abs(change).toFixed(change % 1 === 0 ? 0 : 1)}%`;
 
@@ -46,7 +47,7 @@ export function TrendBadge({
         Neu.soft(isUp ? Colors.brand.primarySurface : Colors.status.dangerSurface, 0.6),
       ]}
     >
-      <Ionicons name={icon} size={11} color={color} />
+      <Ionicons name={icon} size={11} color={colorIcon} />
       <AppText style={[trendStyles.text, { color }]}>{label}</AppText>
     </View>
   );
@@ -75,7 +76,7 @@ export function StatCard({ label, value, icon, stat, onPress, style }: Props) {
       {...(onPress ? { onPress, activeOpacity: 0.85 } : {})}
     >
       <View style={styles.topRow}>
-        <View style={[styles.iconWrap, Neu.inset(Colors.bg.surface, 0.6)]}>{icon}</View>
+        <View style={[styles.iconWrap, Neu.inset(Colors.brand.primarySurface, 0.6)]}>{icon}</View>
         <View style={styles.topRight}>
           <TrendBadge direction={stat.direction} change={stat.change} />
           {onPress ? (
@@ -113,6 +114,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: Colors.brand.primarySurface,
   },
   value: {
     fontSize: 22,

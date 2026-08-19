@@ -66,9 +66,9 @@ export function AnalyticsOverviewScreen() {
               value={formatRupiah(stats.totalSales?.current ?? 0)}
               icon={
                 <Ionicons
-                  name="cash-outline"
+                  name="cash"
                   size={16}
-                  color={Colors.text.primary}
+                  color={Colors.brand.primary}
                 />
               }
               stat={stats.totalSales ?? EMPTY_STAT}
@@ -79,9 +79,9 @@ export function AnalyticsOverviewScreen() {
               value={String(stats.totalCustomers?.current ?? 0)}
               icon={
                 <Ionicons
-                  name="person-outline"
+                  name="person"
                   size={16}
-                  color={Colors.text.primary}
+                  color={Colors.brand.primary}
                 />
               }
               stat={stats.totalCustomers ?? EMPTY_STAT}
@@ -96,9 +96,9 @@ export function AnalyticsOverviewScreen() {
               value={String(stats.walkIns?.current ?? 0)}
               icon={
                 <Ionicons
-                  name="walk-outline"
+                  name="walk"
                   size={16}
-                  color={Colors.text.primary}
+                  color={Colors.brand.primary}
                 />
               }
               stat={stats.walkIns ?? EMPTY_STAT}
@@ -111,9 +111,9 @@ export function AnalyticsOverviewScreen() {
               value={String(stats.appointments?.current ?? 0)}
               icon={
                 <Ionicons
-                  name="calendar-outline"
+                  name="calendar"
                   size={16}
-                  color={Colors.text.primary}
+                  color={Colors.brand.primary}
                 />
               }
               stat={stats.appointments ?? EMPTY_STAT}
@@ -182,7 +182,7 @@ export function AnalyticsOverviewScreen() {
               <View style={styles.chartWrap}>
                 <BarChart
                   data={charts.customers}
-                  barColor={Colors.status.info}
+                  barColor={Colors.brand.primary}
                 />
               </View>
             ) : null}

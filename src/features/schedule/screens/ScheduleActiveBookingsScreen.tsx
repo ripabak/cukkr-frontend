@@ -25,14 +25,12 @@ import { Colors } from "@/src/theme/colors";
 import { Neu } from "@/src/theme/styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useI18nContext } from "@/src/lib/i18n/provider";
+import { authClient } from "@/src/lib/auth-client";
 import { useRouter } from "expo-router";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { AppText } from "@/src/components/AppText";
 import {
-  Animated,
   Image,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -45,6 +43,7 @@ interface RequestCardProps {
   id: string;
   customerName: string;
   barberName: string;
+  barberIsYou?: boolean;
   timeLabel: string;
   bookingType?: string;
   onPress: () => void;
@@ -55,6 +54,7 @@ interface RequestCardProps {
 function RequestCard({
   customerName,
   barberName,
+  barberIsYou,
   timeLabel,
   bookingType,
   onPress,
@@ -84,6 +84,11 @@ function RequestCard({
           {" "}
           {barberName}
         </AppText>
+        {barberIsYou ? (
+          <View style={reqStyles.youPill}>
+            <AppText style={reqStyles.youPillText}>{t("bookings.you")}</AppText>
+          </View>
+        ) : null}
       </View>
       <View style={reqStyles.actions}>
         <TouchableOpacity
@@ -137,6 +142,7 @@ export function ScheduleActiveBookingsScreen() {
   const router = useRouter();
   const today = new Date();
   const { t, language } = useI18nContext();
+  const { data: activeMember } = authClient.useActiveMember();
   const [selectedDate, setSelectedDate] = useState(today);
   const [selectedKey, setSelectedKey] = useState(toApiDate(today));
   const [calendarVisible, setCalendarVisible] = useState(false);
@@ -144,34 +150,6 @@ export function ScheduleActiveBookingsScreen() {
     "all" | "waiting" | "in_progress" | "completed" | "cancelled"
   >("all");
   const [newBookVisible, setNewBookVisible] = useState(false);
-  const requestScrollRef = useRef<ScrollView>(null);
-
-  // Collapsing sticky header (mirrors HomeDashboard).
-  const headerTranslateY = useRef(new Animated.Value(0)).current;
-  const lastScrollY = useRef(0);
-  const isHeaderVisible = useRef(true);
-  const [stickyHeaderHeight, setStickyHeaderHeight] = useState(0);
-
-  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const y = event.nativeEvent.contentOffset.y;
-    const diff = y - lastScrollY.current;
-    if (diff > 10 && y > stickyHeaderHeight && isHeaderVisible.current) {
-      isHeaderVisible.current = false;
-      Animated.timing(headerTranslateY, {
-        toValue: -stickyHeaderHeight,
-        duration: 200,
-        useNativeDriver: true,
-      }).start();
-    } else if ((diff < -5 || y <= 0) && !isHeaderVisible.current) {
-      isHeaderVisible.current = true;
-      Animated.timing(headerTranslateY, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: true,
-      }).start();
-    }
-    lastScrollY.current = y;
-  };
 
   const days = generateDayChips(today, language);
 
@@ -253,18 +231,8 @@ export function ScheduleActiveBookingsScreen() {
     <ScreenShell
       backgroundColor={Colors.bg.default}
       contentStyle={styles.scrollContentPadding}
-      stickyHeader
-      stickyHeaderHeight={stickyHeaderHeight}
-      onScroll={handleScroll}
-      scrollEventThrottle={16}
       headerSlot={
-        <Animated.View
-          style={{
-            transform: [{ translateY: headerTranslateY }],
-            backgroundColor: Colors.bg.default,
-          }}
-          onLayout={(e) => setStickyHeaderHeight(e.nativeEvent.layout.height)}
-        >
+        <View style={{ backgroundColor: Colors.bg.default }}>
           <View style={styles.topBar}>
             <DateSelectorPill
               label={formatDatePill(selectedDate, language)}
@@ -302,7 +270,7 @@ export function ScheduleActiveBookingsScreen() {
               waitingDates={waitingDateSet}
             />
           </View>
-        </Animated.View>
+        </View>
       }
       overlaySlot={
         <TouchableOpacity
@@ -323,7 +291,6 @@ export function ScheduleActiveBookingsScreen() {
             </AppText>
           </AppText>
           <ScrollView
-            ref={requestScrollRef}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.requestsScroll}
@@ -339,6 +306,10 @@ export function ScheduleActiveBookingsScreen() {
                   id={booking.id}
                   customerName={booking.customerName}
                   barberName={booking.barber?.name ?? "—"}
+                  barberIsYou={!!(
+                    activeMember &&
+                    booking.barber?.memberId === activeMember.id
+                  )}
                   timeLabel={formatTime12h(timeDate)}
                   bookingType={booking.type}
                   onPress={() =>
@@ -401,6 +372,9 @@ export function ScheduleActiveBookingsScreen() {
               key={booking.id}
               customerName={booking.customerName}
               barberName={booking.barber?.name ?? "—"}
+              barberIsYou={!!(
+                activeMember && booking.barber?.memberId === activeMember.id
+              )}
               timeLabel={timeLabel}
               duration={formatDuration(booking.totalDuration)}
               status={mapApiStatusToBookingStatus(booking.status)}
@@ -597,6 +571,18 @@ const reqStyles = StyleSheet.create({
   barberName: {
     fontSize: 13,
     color: Colors.text.muted,
+  },
+  youPill: {
+    backgroundColor: Colors.brand.primarySurface,
+    borderRadius: 6,
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    marginLeft: 6,
+  },
+  youPillText: {
+    fontSize: 9.5,
+    fontWeight: "600",
+    color: Colors.brand.text,
   },
   actions: {
     flexDirection: "row",

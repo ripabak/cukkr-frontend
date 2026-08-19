@@ -153,7 +153,7 @@ export function BillingScreen() {
         <View style={[styles.currentPlanCard, Neu.soft(Colors.brand.primarySurface)]}>
           <View style={styles.currentPlanRow}>
             <View style={styles.currentPlanIcon}>
-              <Ionicons name="sparkles" size={16} color={Colors.brand.primaryDark} />
+              <Ionicons name="sparkles" size={16} color={Colors.brand.primary} />
             </View>
             <View style={styles.currentPlanText}>
               <AppText style={styles.currentPlanLabel}>
@@ -263,7 +263,7 @@ export function BillingScreen() {
                 </View>
               ) : (
                 <View style={styles.radio}>
-                  <Ionicons name="checkmark" size={14} color={Colors.brand.primaryDark} />
+                  <Ionicons name="checkmark" size={14} color={Colors.brand.primary} />
                 </View>
               )}
             </View>
@@ -274,7 +274,7 @@ export function BillingScreen() {
                 <AppText style={styles.featuresLabel}>{t("billing.planFeatures")}</AppText>
                 {plan.features.map((key) => (
                   <View key={key} style={styles.featureRow}>
-                    <Ionicons name="checkmark-circle" size={16} color={Colors.brand.primaryDark} />
+                    <Ionicons name="checkmark-circle" size={16} color={Colors.brand.primary} />
                     <AppText style={styles.featureText}>{featureLabel(key)}</AppText>
                   </View>
                 ))}
@@ -539,7 +539,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.8,
   },
   planBadgeSelected: {
-    color: Colors.brand.primaryDark,
+    color: Colors.brand.text,
   },
   planNameRow: {
     flexDirection: "row",
@@ -674,7 +674,7 @@ const styles = StyleSheet.create({
     color: Colors.text.primary,
   },
   methodNameActive: {
-    color: Colors.brand.primaryDark,
+    color: Colors.brand.text,
   },
   summaryCard: {
     borderRadius: 20,

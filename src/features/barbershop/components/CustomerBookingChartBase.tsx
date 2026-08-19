@@ -69,7 +69,7 @@ export default function CustomerBookingChart({
                   />
                   <Scatter
                     points={points.value}
-                    color={Colors.brand.primaryDark}
+                    color={Colors.brand.primary}
                     radius={4}
                     style="fill"
                   />

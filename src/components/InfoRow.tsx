@@ -4,6 +4,7 @@ import React from "react";
 import { AppText } from "@/src/components/AppText";
 import {
   StyleSheet,
+  TextStyle,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -18,6 +19,11 @@ interface Props {
   showChevron?: boolean;
   isLast?: boolean;
   multiline?: boolean;
+  /** Show the value in full (no truncation / ellipsis). */
+  noEllipsis?: boolean;
+  valueStyle?: TextStyle;
+  /** Brand-colored suffix pill after the value (e.g. "(You)"). */
+  valueSuffix?: string;
   style?: ViewStyle;
 }
 
@@ -30,6 +36,9 @@ export function InfoRow({
   showChevron,
   isLast,
   multiline,
+  noEllipsis,
+  valueStyle,
+  valueSuffix,
   style,
 }: Props) {
   const displayValue = value || null;
@@ -48,12 +57,17 @@ export function InfoRow({
             />
           ) : null}
           <AppText
-            style={styles.value}
-            numberOfLines={multiline ? undefined : 1}
-            ellipsizeMode={multiline ? undefined : "head"}
+            style={[styles.value, valueStyle]}
+            numberOfLines={noEllipsis || multiline ? undefined : 1}
+            ellipsizeMode={noEllipsis || multiline ? undefined : "head"}
           >
             {displayValue}
           </AppText>
+          {valueSuffix && displayValue ? (
+            <View style={styles.suffixPill}>
+              <AppText style={styles.suffixPillText}>{valueSuffix}</AppText>
+            </View>
+          ) : null}
         </View>
       ) : displayPlaceholder ? (
         <AppText style={styles.placeholder} numberOfLines={1} ellipsizeMode="tail">
@@ -115,5 +129,16 @@ const styles = StyleSheet.create({
     color: Colors.text.muted,
     flex: 0.5,
     textAlign: "right",
+  },
+  suffixPill: {
+    backgroundColor: Colors.brand.primarySurface,
+    borderRadius: 6,
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+  },
+  suffixPillText: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: Colors.brand.text,
   },
 });

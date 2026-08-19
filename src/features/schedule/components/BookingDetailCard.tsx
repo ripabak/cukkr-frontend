@@ -10,6 +10,7 @@ import { AppText } from "@/src/components/AppText";
 import {
   ScrollView,
   StyleSheet,
+  TextStyle,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -32,6 +33,12 @@ interface InfoLine {
   label: string;
   value: string;
   valueIconName?: string;
+  /** Optional style for the value text (e.g. smaller booking number). */
+  valueStyle?: TextStyle;
+  /** Show this row's value in full (no ellipsis). */
+  noEllipsis?: boolean;
+  /** Brand-colored suffix pill after the value (e.g. "(You)"). */
+  valueSuffix?: string;
 }
 
 interface Props {
@@ -112,7 +119,7 @@ export function BookingDetailCard({
               <Ionicons
                 name="chevron-forward"
                 size={18}
-                color={Colors.brand.primaryDark}
+                color={Colors.brand.primary}
               />
             </TouchableOpacity>
           ) : (
@@ -149,6 +156,9 @@ export function BookingDetailCard({
               label={row.label}
               value={row.value}
               valueIconName={row.valueIconName}
+              valueStyle={row.valueStyle}
+              noEllipsis={row.noEllipsis}
+              valueSuffix={row.valueSuffix}
               isLast={i === infoRows.length - 1}
             />
           ))}
@@ -229,7 +239,7 @@ const styles = StyleSheet.create({
   customerNameLink: {
     fontSize: 30,
     fontWeight: "600",
-    color: Colors.brand.primaryDark,
+    color: Colors.brand.text,
     letterSpacing: -0.8,
   },
   dateLabel: {

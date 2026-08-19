@@ -89,9 +89,9 @@ export function AnalyticsServicesScreen() {
             value={String(stats.totalBookings?.current ?? 0)}
             icon={
               <Ionicons
-                name="receipt-outline"
+                name="receipt"
                 size={16}
-                color={Colors.text.primary}
+                color={Colors.brand.primary}
               />
             }
             stat={stats.totalBookings ?? EMPTY_STAT}
@@ -102,9 +102,9 @@ export function AnalyticsServicesScreen() {
             value={formatRupiah(stats.totalRevenue?.current ?? 0)}
             icon={
               <Ionicons
-                name="cash-outline"
+                name="cash"
                 size={16}
-                color={Colors.text.primary}
+                color={Colors.brand.primary}
               />
             }
             stat={stats.totalRevenue ?? EMPTY_STAT}

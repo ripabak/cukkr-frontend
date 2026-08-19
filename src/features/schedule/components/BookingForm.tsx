@@ -21,6 +21,8 @@ interface Props {
   selectedBarber?: string;
   selectedBarberAvatarUrl?: string | null;
   onBarberPress?: () => void;
+  /** Clear the optional barber selection (× on the barber field). */
+  onBarberClear?: () => void;
   selectedDateTime?: string;
   onDateTimePress?: () => void;
   showDateTimeSelector?: boolean;
@@ -38,6 +40,7 @@ export function BookingForm({
   selectedBarber,
   selectedBarberAvatarUrl,
   onBarberPress,
+  onBarberClear,
   selectedDateTime,
   onDateTimePress,
   showDateTimeSelector = true,
@@ -70,6 +73,7 @@ export function BookingForm({
         iconName={selectedBarberAvatarUrl ? undefined : "person-outline"}
         leftElement={selectedBarberAvatarUrl ? <Image source={{ uri: selectedBarberAvatarUrl }} style={styles.barberAvatar} /> : undefined}
         onPress={onBarberPress}
+        onClear={onBarberClear}
       />
       {showDateTimeSelector ? (
         <SelectorInput

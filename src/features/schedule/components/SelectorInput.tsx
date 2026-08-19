@@ -13,6 +13,8 @@ interface Props {
   iconName?: keyof typeof Ionicons.glyphMap;
   leftElement?: React.ReactNode;
   onPress?: () => void;
+  /** When set and a value exists, renders a clear (×) button before the chevron. */
+  onClear?: () => void;
   style?: ViewStyle;
 }
 
@@ -24,6 +26,7 @@ export function SelectorInput({
   iconName,
   leftElement,
   onPress,
+  onClear,
   style,
 }: Props) {
   return (
@@ -56,6 +59,16 @@ export function SelectorInput({
         >
           {value || placeholder}
         </AppText>
+        {onClear && value ? (
+          <TouchableOpacity
+            onPress={onClear}
+            hitSlop={10}
+            activeOpacity={0.7}
+            style={styles.clearBtn}
+          >
+            <Ionicons name="close" size={16} color={Colors.text.secondary} />
+          </TouchableOpacity>
+        ) : null}
         <Ionicons name="chevron-forward" size={16} color={Colors.icon.muted} />
       </TouchableOpacity>
     </View>
@@ -90,5 +103,13 @@ const styles = StyleSheet.create({
   },
   textFilled: {
     color: Colors.text.primary,
+  },
+  clearBtn: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: Colors.bg.cream,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
